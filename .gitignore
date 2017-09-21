@@ -259,3 +259,16 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+#more vs stuff
+*.VC.opendb
+*.VC.db
+
+#do not need
+/px-rupture/bin
+/px-rupture/build
+/px-rupture/data
+#/px-rupture/doc
+/px-rupture/include
+/px-rupture/lib
+/px-rupture/log.txt
