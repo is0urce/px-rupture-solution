@@ -9,22 +9,20 @@
 
 namespace px {
 
-	class configuration
+	class configuration final
 	{
 	public:
 		template <typename Document>
-		void load(Document const& document)
+		void load(Document && document)
 		{
-			try
-			{
+			try	{
 				width = document["window"]["width"];
 				height = document["window"]["height"];
 				vsync = document["window"]["vsync"];
 				border = document["window"]["border"];
 				fullscreen = document["window"]["fullscreen"];
 			}
-			catch (std::exception const& exc)
-			{
+			catch (std::exception const& exc) {
 				throw std::runtime_error("px::configuration::load(document) - error while loading configuration, what=" + std::string(exc.what()));
 			}
 		}
