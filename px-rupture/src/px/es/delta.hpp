@@ -23,7 +23,7 @@ namespace px {
 		unsigned int tick_index;	// index of current tick or turn
 
 	public:
-		void advance(double new_real)
+		void advance(double new_real) noexcept
 		{
 			real_last = real_time;
 			real_delta = new_real - real_time;
@@ -33,7 +33,11 @@ namespace px {
 			simulation_delta = real_delta;
 			simulation_time = new_real - simulation_start;
 		}
-		void restart_real(double start_time)
+		void advance_tick() noexcept
+		{
+			++tick_index;
+		}
+		void restart_real(double start_time) noexcept
 		{
 			real_time = start_time;
 			real_last = start_time;
@@ -43,26 +47,26 @@ namespace px {
 		{
 			restart_real(0);
 		}
-		void restart_simulation(double start_time)
+		void restart_simulation(double start_time) noexcept
 		{
 			simulation_time = start_time;
 			simulation_last = start_time;
 			simulation_delta = 0;
 			simulation_start = real_time;
 		}
-		void restart_simulation()
+		void restart_simulation() noexcept
 		{
 			restart_simulation(0);
 		}
-		void restart_ticks(unsigned int start_tick)
+		void restart_ticks(unsigned int start_tick) noexcept
 		{
 			tick_index = start_tick;
 		}
-		void restart_ticks()
+		void restart_ticks() noexcept
 		{
 			restart_ticks(0);
 		}
-		void restart()
+		void restart() noexcept
 		{
 			restart_real();
 			restart_simulation();

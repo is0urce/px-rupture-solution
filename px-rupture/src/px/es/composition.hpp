@@ -5,6 +5,9 @@
 
 #pragma once
 
+// composition of components
+// has ownership of component collection
+
 #include <px/es/component.hpp>
 #include <px/memory/memory.hpp>
 

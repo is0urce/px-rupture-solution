@@ -1,4 +1,11 @@
+// name: system.hpp
+// type: c++ header
+// desc: template class
+// auth: is0urce
+
 #pragma once
+
+// abstract base class for system
 
 namespace px {
 
@@ -13,10 +20,12 @@ namespace px {
 		{
 			update_system(delta);
 		}
+
 		void fixed_update(delta_type delta)
 		{
 			fixed_update_system(delta);
 		}
+
 		void tick_update(delta_type delta)
 		{
 			tick_update_system(delta);

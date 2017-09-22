@@ -13,7 +13,8 @@ namespace px {
 		{
 			delta_time.advance(timer);
 			engine.update(delta_time);
-			engine.fixed_update(delta_time);
+
+			++delta_time.tick_index;
 			engine.tick_update(delta_time);
 		}
 		void resize(int screen_width, int screen_height)

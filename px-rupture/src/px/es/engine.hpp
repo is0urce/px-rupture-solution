@@ -1,4 +1,11 @@
+// name: engine.hpp
+// type: c++ header
+// desc: template class
+// auth: is0urce
+
 #pragma once
+
+// updates dispatcher
 
 #include <vector>
 
