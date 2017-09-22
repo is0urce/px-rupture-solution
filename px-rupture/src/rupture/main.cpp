@@ -5,8 +5,12 @@
 
 #include "configuration.hpp"
 #include "depot.hpp"
+#include "key.hpp"
 #include "settings.hpp"
+#include "shell.hpp"
 
+#include <px/common/bindings.hpp>
+#include <px/common/timer.hpp>
 #include <px/dev/logger.hpp>
 #include <px/rglfw/rglfw.hpp>
 
@@ -15,25 +19,16 @@
 namespace px {
 
 	// create main window from configuration
-	glfw_window create_window(configuration const& config, char const* name)
+	glfw_window create_window(configuration const& config, char const* name, GLFWmonitor * monitor)
 	{
-		auto monitor = glfwGetPrimaryMonitor();
-		auto mode = glfwGetVideoMode(monitor);
-
-		int width = config.width;
-		int height = config.height;
-
-		glfwWindowHint(GLFW_DECORATED, config.border ? 1 : 0); // border
-		if (config.fullscreen) {
+		if (monitor && config.fullscreen) {
+			auto *const mode = glfwGetVideoMode(monitor);
 			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-			width = mode->width;
-			height = mode->height;
 		}
-
-		return glfwCreateWindow(width, height, name, config.fullscreen ? monitor : nullptr, nullptr);
+		return glfwCreateWindow(config.width, config.height, name, monitor, nullptr);
 	}
 
 	// enable context and load opengl extensions
@@ -46,32 +41,56 @@ namespace px {
 
 	void process()
 	{
-		configuration config = configuration::from_document(depot::load_document(settings::configuration_path));
-
 		glfw_instance glfw;
-		glfw_window win = create_window(config, settings::application_name.c_str());
+
+		// load settings
+
+		auto config = configuration::from_document(depot::load_document(settings::configuration_path));
+		auto binds = bindings<int, key>::from_document(depot::load_document(settings::bindings_path));
+
+		auto monitor = glfwGetPrimaryMonitor();
+		auto *const mode = glfwGetVideoMode(monitor);
+		if (config.fullscreen) {
+			config.width = mode->width;
+			config.height = mode->height;
+		}
+
+		// create windows
+
+		glfw_window win = create_window(config, settings::application_name.c_str(), config.fullscreen ? monitor : nullptr);
 		create_context(win, config.vsync);
+		shell game(config.width, config.height);
+
+		// events
 
 		glfw_callback event_callback(win);
-		//event_callback.on_resize([&](int widht, int height) { std::cout << "Hello";	});
-		//event_callback.on_key([&](int os_key, int /* scancode */, int action, int /* mods */) {
-		//	if (action == GLFW_PRESS || action == GLFW_REPEAT) std::cout << "Hello";
-		//});
-		//event_callback.on_text([&](unsigned int codepoint) { std::cout << codepoint; });
-		//event_callback.on_click([&](int button, int action, int /* mods */) {
-		//	if (action == GLFW_PRESS) std::cout << "Hello";
-		//});
-		//event_callback.on_hover([&](double x, double y) {
-		//	//game.hover(static_cast<int>(x), static_cast<int>(y));
-		//});
-		//event_callback.on_scroll([&](double horisontal, double vertical) {
-		//	std::cout << "Hello";
-		//});
+		event_callback.on_resize([&](int widht, int height) {
+			game.resize(widht, height);
+		});
+		event_callback.on_click([&](int mouse_button, int action, int /* mods */) {
+			if (action == GLFW_PRESS) {
+				game.click(mouse_button);
+			}
+		});
+		event_callback.on_hover([&](double x, double y) {
+			game.hover(static_cast<int>(x), static_cast<int>(y));
+		});
+		event_callback.on_scroll([&](double horisontal, double vertical) {
+			game.scroll(horisontal, vertical);
+		});
+		event_callback.on_text([&](unsigned int codepoint) {
+			game.text(codepoint);
+		});
+		event_callback.on_key([&](int os_code, int /* scancode */, int action, int /* mods */) {
+			if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+				game.press(binds.get_or(os_code, key::not_valid));
+			}
+		});
 
 		// main loop
-
+		timer<glfw_time> time;
 		while (win.process()) {
-
+			game.frame(time);
 		}
 	}
 
