@@ -15,7 +15,7 @@
 namespace px {
 
 	template <typename T, size_t Size>
-	class pool_chain final
+	class pool_chain
 	{
 	public:
 		typedef T element_type;

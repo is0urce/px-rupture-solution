@@ -149,7 +149,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -170,6 +170,7 @@
     <ClInclude Include="src\px\common\point.hpp" />
     <ClInclude Include="src\px\common\pool.hpp" />
     <ClInclude Include="src\px\common\pool_chain.hpp" />
+    <ClInclude Include="src\px\common\qtree.hpp" />
     <ClInclude Include="src\px\common\timer.hpp" />
     <ClInclude Include="src\px\common\vector.hpp" />
     <ClInclude Include="src\px\dev\poly_logger.hpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="src\rupture\shell.hpp" />
     <ClInclude Include="src\tests\case\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\pool_test.hpp" />
+    <ClInclude Include="src\tests\case\qtree_test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />

@@ -112,6 +112,7 @@ namespace px {
 			: coordinate(static_cast<component>(p.x()), static_cast<component>(p.y()))
 		{
 		}
+		constexpr vector2(vector2 const&) noexcept = default;
 	};
 
 	template <typename T>

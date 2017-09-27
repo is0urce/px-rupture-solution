@@ -18,7 +18,7 @@
 namespace px {
 
 	template <typename T, size_t Size>
-	class pool final
+	class pool
 	{
 	public:
 		typedef T element_type;
