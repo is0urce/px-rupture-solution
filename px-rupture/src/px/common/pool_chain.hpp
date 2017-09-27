@@ -10,7 +10,6 @@
 
 #include <px/common/pool.hpp>
 
-#include <array>
 #include <memory>
 
 namespace px {

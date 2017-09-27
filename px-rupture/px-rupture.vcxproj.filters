@@ -102,10 +102,10 @@
     <ClInclude Include="src\px\memory\op_release_block.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tests\case\pool_test.hpp">
+    <ClInclude Include="src\px\common\pool_chain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\px\common\pool_chain.hpp">
+    <ClInclude Include="src\tests\case\pool_test.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,7 +113,7 @@
     <ClCompile Include="src\rupture\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tests\tests.cpp">
+    <ClCompile Include="src\tests\tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

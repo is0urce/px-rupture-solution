@@ -157,7 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp" />
-    <ClCompile Include="tests\tests.cpp" />
+    <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\px\common\bindings.hpp" />
@@ -190,7 +190,7 @@
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\settings.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
-    <ClInclude Include="tests\case\pool_test.hpp" />
+    <ClInclude Include="src\tests\case\pool_test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />
