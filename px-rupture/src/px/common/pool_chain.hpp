@@ -15,7 +15,7 @@
 namespace px {
 
 	template <typename T, size_t Size>
-	class pool_chain
+	class pool_chain final
 	{
 	public:
 		typedef T element_type;
@@ -23,8 +23,10 @@ namespace px {
 		typedef pool<T, Size> pool_type;
 		typedef typename pool_type::uq_ptr uq_ptr; // our
 
-		struct node
+	public:
+		class node
 		{
+		public:
 			pool_type chunk;
 			std::unique_ptr<node> next;
 		};
@@ -33,26 +35,31 @@ namespace px {
 		size_t size() const noexcept
 		{
 			size_t result = 0;
-			for (node const* i = &m_root; i != nullptr; i = i->next.get())
-			{
+			for (node const* i = &m_root; i != nullptr; i = i->next.get()) {
 				result += i->chunk.size();
 			}
 			return result;
 		}
 		bool empty() const noexcept
 		{
-			return size() == 0;
+			for (node const* i = &m_root; i != nullptr; i = i->next.get()) {
+				if (!i->chunk.empty()) return false;
+			}
+			return true;
 		}
+
 		// exposed for debug / performance queries, always has at least 1
 		size_t chunks() const noexcept
 		{
 			return m_chunks;
 		}
+
 		bool contains(T const* ptr) const noexcept
 		{
-			for (node const* i = &m_root; i != nullptr; i = i->next.get())
-			{
-				if (i->chunk.contains(ptr)) return true;
+			for (node const* i = &m_root; i != nullptr; i = i->next.get()) {
+				if (i->chunk.can_contain(ptr)) {
+					return i->chunk.contains(ptr);
+				}
 			}
 			return false;
 		}
@@ -62,6 +69,7 @@ namespace px {
 		{
 			return aquire_free_pool().request(std::forward<Args>(args)...);
 		}
+
 		// it's safe to release already released objects
 		void release(T * ptr)
 		{
@@ -107,10 +115,8 @@ namespace px {
 		// chain always has at least one root chunk after invoke even it's empty
 		void optimize() noexcept
 		{
-			for (std::unique_ptr<node> * i = &m_root.next; *i; i = &(*i)->next)
-			{
-				if ((*i)->chunk.size() == 0)
-				{
+			for (std::unique_ptr<node> * i = &m_root.next; *i; i = &(*i)->next) {
+				if ((*i)->chunk.size() == 0) {
 					std::swap(*i, (*i)->next);
 					--m_chunks;
 				}

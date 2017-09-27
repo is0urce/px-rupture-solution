@@ -21,13 +21,13 @@ namespace px {
 	class pool final
 	{
 	public:
-		struct links;
-		class ptr_deleter;
-
-	public:
 		typedef T element_type;
 		typedef T* pointer;
 		typedef uq_ptr<T> uq_ptr;
+		
+	public:
+		struct links;
+		class ptr_deleter;
 
 	public:
 		// returns nullptr if all object in pool were requested, full() returns true
@@ -119,7 +119,7 @@ namespace px {
 		bool can_contain(T const* ptr) const noexcept
 		{
 			return ptr >= reinterpret_cast<T const*>(&m_pool[0])
-				&& ptr < reinterpret_cast<T const*>(&m_pool[Size * sizeof(T)]);
+				&& ptr <= reinterpret_cast<T const*>(&m_pool[(Size - 1) * sizeof(T)]);
 		}
 		bool contains(T const* ptr) const noexcept
 		{
