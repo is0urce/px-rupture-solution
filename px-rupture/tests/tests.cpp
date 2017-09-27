@@ -10,6 +10,7 @@
 
 unsigned int px::test::total = 0;
 unsigned int px::test::fails = 0;
+const char * px::test::lastmsg = "not specified";
 
 void run_tests()
 {

@@ -13,7 +13,16 @@ namespace px {
 		static void require(bool result)
 		{
 			++total;
-			if (!result) ++fails;
+			if (!result) {
+				++fails;
+				if (lastmsg != nullptr) {
+					std::cout << "TEST FAIL, section " << std::string(lastmsg) << std::endl;
+				}
+			}
+		}
+		static void section(const char* section_name)
+		{
+			lastmsg = section_name;
 		}
 		static void print()
 		{
@@ -23,7 +32,7 @@ namespace px {
 			}
 			
 			if (fails > 0) {
-				std::cout << "TEST FAILS " << std::to_string(fails) << ", " << std::to_string(success) << " TESTS PASS ";
+				std::cout << "TEST FAILS " << std::to_string(fails) << ", " << std::to_string(success) << "/" << std::to_string(total) << " TESTS PASS ";
 			}
 			std::cout << std::endl;
 		}
@@ -31,5 +40,6 @@ namespace px {
 	public:
 		static unsigned int total;
 		static unsigned int fails;
+		static const char * lastmsg;
 	};
 }

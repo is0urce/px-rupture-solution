@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\pool.hpp" />
+    <ClInclude Include="src\px\common\pool_chain.hpp" />
     <ClInclude Include="src\px\common\timer.hpp" />
     <ClInclude Include="src\px\dev\poly_logger.hpp" />
     <ClInclude Include="src\px\dev\logger.hpp" />
