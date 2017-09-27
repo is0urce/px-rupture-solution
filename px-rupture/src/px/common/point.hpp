@@ -5,10 +5,13 @@
 #pragma once
 
 #include "coordinate.hpp"
+#include "coordinate_transform.hpp"
 
 namespace px {
 
-	struct point2 : public coordinate<int, 2>
+	class point2
+		: public coordinate<int, 2>
+		, public coordinate_transform<point2>
 	{
 	public:
 		constexpr component x() const noexcept
@@ -20,13 +23,6 @@ namespace px {
 			return m_array[1];
 		}
 
-		point2 moved(point2 movement) const { movement.move(*this); return movement; }
-		point2 moved(component x, component y) const { point2 result(x, y); result.move(*this); return result; }
-
-		point2 multiplied(point2 stretch) const { stretch.multiply(*this); return stretch; }
-
-		point2 operator-() const { point2 negated = *this; negated.negate(); return negated; }
-
 		point2 & operator+=(point2 const& rhs) { move(rhs); return *this; }
 		point2 & operator-=(point2 const& rhs) { reverse(rhs); return *this; }
 		point2 & operator*=(point2 const& rhs) { multiply(rhs); return *this; }
@@ -34,18 +30,6 @@ namespace px {
 
 		point2 & operator*=(component c) { multiply(c); return *this; };
 		point2 & operator/=(component c) { divide(c); return *this; };
-
-		point2 clamped(point2 const& min, point2 const& max) const
-		{
-			point2 result;
-			for (size_t i = 0; i != depth; ++i) {
-				result[i] = (std::min)((std::max)(min[i], m_array[i]), max[i]);
-			}
-			return result;
-		}
-
-		template <size_t Axis>
-		point2 moved_axis(component s) const { point2 result = *this; result.move_axis<Axis>(s); return result; }
 
 	public:
 		// default constructor is for uninitialized state

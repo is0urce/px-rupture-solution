@@ -5,11 +5,12 @@
 #pragma once
 
 #include <px/common/coordinate.hpp>
+#include <px/common/coordinate_transform.hpp>
 #include <px/common/point.hpp>
 
 namespace px {
 
-	struct vector2;
+	class vector2;
 
 	template <typename T>
 	vector2 operator+(vector2 lhs, coordinate<T, 2> const& rhs);
@@ -20,7 +21,9 @@ namespace px {
 	template <typename T>
 	vector2 operator/(vector2 lhs, coordinate<T, 2> const& rhs);
 
-	struct vector2 : public coordinate<double, 2>
+	class vector2
+		: public coordinate<double, 2>
+		, public coordinate_transform<vector2>
 	{
 	public:
 		constexpr component x() const noexcept
@@ -68,13 +71,6 @@ namespace px {
 
 		// mutations
 
-		vector2 moved(vector2 move) const { move.move(*this); return move; }
-		vector2 multiplied(vector2 stretch) const { stretch.multiply(*this); return stretch; }
-		vector2 multiplied(component u, component v) const { vector2 result(*this); result.multiply(vector2{ u, v }); return result; }
-		vector2 multiplied(component stretch) const { vector2 result(*this); result.multiply(stretch); return result; }
-
-		vector2 operator-() const { vector2 negated = *this; negated.negate(); return negated; }
-
 		template <typename T>
 		vector2 & operator+=(coordinate<T, depth> const& rhs) { move(rhs); return *this; }
 		template <typename T>
@@ -95,18 +91,10 @@ namespace px {
 			}
 		}
 		vector2 normalized() { vector2 result(*this); result.normalize(); return result; }
-		vector2 clamped(vector2 const& min, vector2 const& max) const
-		{
-			vector2 result;
-			for (size_t i = 0; i != depth; ++i) {
-				result[i] = (std::min)((std::max)(min[i], m_array[i]), max[i]);
-			}
-			return result;
-		}
 		vector2 lerp(vector2 b, component t) const
 		{
 			b.multiply(t);
-			b.move(multiplied(1.0 - t));
+			b.move(multiplied(vector2{ 1 - t, 1 - t }));
 			return b;
 		}
 
@@ -116,7 +104,7 @@ namespace px {
 		vector2() noexcept
 		{
 		}
-		constexpr vector2(component x, component y)
+		constexpr vector2(component x, component y) noexcept
 			: coordinate(x, y)
 		{
 		}
@@ -124,7 +112,6 @@ namespace px {
 			: coordinate(static_cast<component>(p.x()), static_cast<component>(p.y()))
 		{
 		}
-		constexpr vector2(vector2 const&) noexcept = default;
 	};
 
 	template <typename T>

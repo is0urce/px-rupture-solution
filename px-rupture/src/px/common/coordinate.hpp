@@ -12,7 +12,7 @@
 namespace px {
 
 	template <typename Component, size_t Dim>
-	struct coordinate
+	class coordinate
 	{
 	public:
 		static const size_t depth = Dim;
@@ -91,6 +91,12 @@ namespace px {
 			static_assert(Axis < Dim, "Axis < Dim");
 			m_array[Axis] += 1;
 		}
+		void clamp(coordinate const& min, coordinate const& max)
+		{
+			for (size_t i = 0; i != Dim; ++i) {
+				m_array[i] = (std::min)((std::max)(min.m_array[i], m_array[i]), max.m_array[i]);
+			}
+		}
 
 		// vector transforms
 
@@ -104,8 +110,7 @@ namespace px {
 		template<typename ConvertElement>
 		void reverse(coordinate<ConvertElement, depth> const& move)
 		{
-			for (size_t i = 0; i != Dim; ++i)
-			{
+			for (size_t i = 0; i != Dim; ++i) {
 				m_array[i] -= move[i];
 			}
 		}
@@ -144,7 +149,7 @@ namespace px {
 		// chebyshev distance to specified coordinate
 		component king_distance(coordinate const& target) const
 		{
-			component distance{};
+			component distance = 0;
 			for (size_t i = 0; i != Dim; ++i) {
 				distance = (std::max)(distance, (std::abs)(m_array[i] - target.m_array[i]));
 			}
@@ -152,7 +157,7 @@ namespace px {
 		}
 		static component king_distance(coordinate const& from, coordinate const& target)
 		{
-			component distance{};
+			component distance = 0;
 			for (size_t i = 0; i != Dim; ++i) {
 				distance = (std::max)(distance, (std::abs)(from.m_array[i] - target.m_array[i]));
 			}
@@ -162,7 +167,7 @@ namespace px {
 		// manhattan distance to specified coordinate
 		component block_distance(coordinate const& target) const noexcept
 		{
-			component distance{};
+			component distance = 0;
 			for (size_t i = 0; i != Dim; ++i) {
 				distance += (std::abs)(m_array[i] - target.m_array[i]);
 			}
@@ -172,7 +177,7 @@ namespace px {
 		// distance to to specified coordinate, squared for performance reasons
 		component distance2(coordinate const& target) const noexcept
 		{
-			component distance{};
+			component distance = 0;
 			for (size_t i = 0; i != Dim; ++i) {
 				component delta = m_array[i] - target.m_array[i];
 				distance += delta * delta;
@@ -182,7 +187,7 @@ namespace px {
 
 		component magnitude2() const noexcept
 		{
-			component distance{};
+			component distance = 0;
 			for (size_t i = 0; i != Dim; ++i) {
 				distance += m_array[i] * m_array[i];
 			}
@@ -237,7 +242,7 @@ namespace px {
 		{
 		}
 		template <typename... Args>
-		constexpr coordinate(Args&&... args) noexcept
+		constexpr coordinate(Args &&... args) noexcept
 			: m_array{ std::forward<Args>(args)... }
 		{
 		}
@@ -246,7 +251,7 @@ namespace px {
 		std::array<component, depth> m_array;
 	};
 
-	template <typename Component, unsigned int Dim>
+	template <typename Component, size_t Dim>
 	bool operator==(coordinate<Component, Dim> const& a, coordinate<Component, Dim> const& b)
 	{
 		for (size_t i = 0; i != Dim; ++i) {
@@ -254,7 +259,7 @@ namespace px {
 		}
 		return true;
 	}
-	template <typename Component, unsigned int Dim>
+	template <typename Component, size_t Dim>
 	bool operator!=(coordinate<Component, Dim> const& a, coordinate<Component, Dim> const& b)
 	{
 		return !operator==(a, b);

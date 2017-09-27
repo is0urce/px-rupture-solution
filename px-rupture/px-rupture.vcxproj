@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\coordinate.hpp" />
+    <ClInclude Include="src\px\common\coordinate_transform.hpp" />
     <ClInclude Include="src\px\common\point.hpp" />
     <ClInclude Include="src\px\common\pool.hpp" />
     <ClInclude Include="src\px\common\pool_chain.hpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\settings.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
+    <ClInclude Include="src\tests\case\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\pool_test.hpp" />
   </ItemGroup>
   <ItemGroup>
