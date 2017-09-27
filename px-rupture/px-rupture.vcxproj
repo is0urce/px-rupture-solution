@@ -157,12 +157,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp" />
+    <ClCompile Include="tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\px\common\bindings.hpp" />
+    <ClInclude Include="src\px\common\pool.hpp" />
     <ClInclude Include="src\px\common\timer.hpp" />
     <ClInclude Include="src\px\dev\poly_logger.hpp" />
     <ClInclude Include="src\px\dev\logger.hpp" />
+    <ClInclude Include="src\px\dev\test.hpp" />
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
     <ClInclude Include="src\px\es\composite_component.hpp" />
@@ -170,6 +173,7 @@
     <ClInclude Include="src\px\es\engine.hpp" />
     <ClInclude Include="src\px\es\persistency.hpp" />
     <ClInclude Include="src\px\es\system.hpp" />
+    <ClInclude Include="src\px\memory\op_release_block.hpp" />
     <ClInclude Include="src\px\memory\delete_release_block.hpp" />
     <ClInclude Include="src\px\memory\memory.hpp" />
     <ClInclude Include="src\px\memory\abstract_release_block.hpp" />
@@ -181,9 +185,11 @@
     <ClInclude Include="src\px\rglfw\rglfw.hpp" />
     <ClInclude Include="src\rupture\configuration.hpp" />
     <ClInclude Include="src\rupture\depot.hpp" />
+    <ClInclude Include="src\rupture\es\sprite_system.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\settings.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
+    <ClInclude Include="tests\case\pool_test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />

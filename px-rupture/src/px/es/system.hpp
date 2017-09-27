@@ -16,17 +16,17 @@ namespace px {
 		typedef Delta delta_type;
 
 	public:
-		void update(delta_type delta)
+		void update(delta_type const& delta)
 		{
 			update_system(delta);
 		}
 
-		void fixed_update(delta_type delta)
+		void fixed_update(delta_type const& delta)
 		{
 			fixed_update_system(delta);
 		}
 
-		void tick_update(delta_type delta)
+		void tick_update(delta_type const& delta)
 		{
 			tick_update_system(delta);
 		}
@@ -37,13 +37,13 @@ namespace px {
 		}
 
 	protected:
-		virtual void update_system(delta_type /* delta */)
+		virtual void update_system(delta_type const& /* delta */)
 		{
 		}
-		virtual void fixed_update_system(delta_type /* delta */)
+		virtual void fixed_update_system(delta_type const& /* delta */)
 		{
 		}
-		virtual void tick_update_system(delta_type /* delta */)
+		virtual void tick_update_system(delta_type const& /* delta */)
 		{
 		}
 	};

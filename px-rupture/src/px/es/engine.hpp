@@ -29,15 +29,15 @@ namespace px {
 		{
 			systems.clear();
 		}
-		void update(delta_type delta)
+		void update(delta_type const& delta)
 		{
 			for (system_type * system : systems) system->update(delta);
 		}
-		void fixed_update(delta_type delta)
+		void fixed_update(delta_type const& delta)
 		{
 			for (system_type * system : systems) system->fixed_update(delta);
 		}
-		void tick_update(delta_type delta)
+		void tick_update(delta_type const& delta)
 		{
 			for (system_type * system : systems) system->tick_update(delta);
 		}

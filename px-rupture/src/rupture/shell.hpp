@@ -1,3 +1,5 @@
+// name: shell.hpp
+
 #pragma once
 
 #include "key.hpp"
@@ -5,7 +7,10 @@
 #include <px/es/engine.hpp>
 #include <px/es/delta.hpp>
 
+#include "es/sprite_system.hpp"
+
 namespace px {
+
 	class shell
 	{
 	public:
@@ -52,6 +57,7 @@ namespace px {
 			, height(start_height)
 		{
 			delta_time.restart();
+			engine.add(&sprites);
 		}
 
 	private:
@@ -59,5 +65,6 @@ namespace px {
 		int				height;
 		engine<delta>	engine;
 		delta			delta_time;
+		sprite_sytem	sprites;
 	};
 }

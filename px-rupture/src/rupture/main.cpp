@@ -12,6 +12,7 @@
 #include <px/common/bindings.hpp>
 #include <px/common/timer.hpp>
 #include <px/dev/logger.hpp>
+#include <px/dev/test.hpp>
 #include <px/rglfw/rglfw.hpp>
 
 #include <stdexcept>
@@ -114,7 +115,10 @@ namespace px {
 	}
 }
 
+void run_tests();
+
 int main()
 {
+	run_tests();
 	return px::run_application();
 }
