@@ -181,8 +181,11 @@
     <ClInclude Include="src\px\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />
     <ClInclude Include="src\px\es\engine.hpp" />
+    <ClInclude Include="src\px\es\link.hpp" />
+    <ClInclude Include="src\px\es\link_dispatcher.hpp" />
     <ClInclude Include="src\px\es\persistency.hpp" />
     <ClInclude Include="src\px\es\system.hpp" />
+    <ClInclude Include="src\px\es\transform.hpp" />
     <ClInclude Include="src\px\memory\op_release_block.hpp" />
     <ClInclude Include="src\px\memory\delete_release_block.hpp" />
     <ClInclude Include="src\px\memory\memory.hpp" />
@@ -196,10 +199,13 @@
     <ClInclude Include="src\rupture\configuration.hpp" />
     <ClInclude Include="src\rupture\depot.hpp" />
     <ClInclude Include="src\rupture\es\sprite_system.hpp" />
+    <ClInclude Include="src\rupture\es\transform_component.hpp" />
+    <ClInclude Include="src\rupture\es\transform_system.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\settings.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
     <ClInclude Include="src\tests\case\coordinate_test.hpp" />
+    <ClInclude Include="src\tests\case\link_test.hpp" />
     <ClInclude Include="src\tests\case\pool_test.hpp" />
     <ClInclude Include="src\tests\case\qtree_test.hpp" />
   </ItemGroup>

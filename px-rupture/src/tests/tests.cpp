@@ -9,6 +9,7 @@
 #include "case/pool_test.hpp"
 #include "case/coordinate_test.hpp"
 #include "case/qtree_test.hpp"
+#include "case/link_test.hpp"
 
 unsigned int px::test::total = 0;
 unsigned int px::test::fails = 0;
@@ -19,6 +20,7 @@ void run_tests()
 	test_coordinate();
 	test_pool();
 	test_qtree();
+	test_link();
 	px::test::print();
 }
 

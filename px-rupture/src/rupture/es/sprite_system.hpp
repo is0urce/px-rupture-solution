@@ -1,3 +1,5 @@
+// name: sprite_system.hpp
+
 #pragma once
 
 #include <px/es/system.hpp>

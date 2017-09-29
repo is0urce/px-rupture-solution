@@ -29,6 +29,10 @@ void test_qtree()
 		qt.find(point2{ 0, 0 }, 10000, [&](int x, int y, auto element) { if (element == 3 && x == 1 && y == 2) found = true; });
 		test::require(found);
 
+		found = false;
+		qt.find(point2(1, 2), [&](auto element) { if (element == 3) found = true; });
+		test::require(found);
+
 		qt.move(point2{ 1, 2 }, 3, point2{ 2, 1 });
 		test::require(!qt.exists(point2{ 1, 2 }));
 		test::require(qt.exists(point2{ 2, 1 }));

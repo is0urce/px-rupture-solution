@@ -87,7 +87,7 @@ namespace px {
 		{
 			if (m_bucket) {
 				if (std::abs(x - m_bucket->x()) <= static_cast<int>(radius) && std::abs(y - m_bucket->y()) <= static_cast<int>(radius)) {
-					m_bucket->enumerate(fn);
+					m_bucket->enumerate_index(fn);
 				}
 			}
 			else {
@@ -352,10 +352,7 @@ namespace px {
 			{
 				ptr &branch = select(sx, sy);
 
-				if (!branch)
-				{
-					throw std::runtime_error("px::qtree::move_hint - no branch");
-				}
+				if (!branch) throw std::runtime_error("px::qtree::move_hint - no branch");
 
 				if (branch->covers(dx, dy))
 				{
@@ -380,19 +377,34 @@ namespace px {
 		{
 		public:
 			template <typename CallbackOperator>
-			void enumerate(CallbackOperator && fn)
+			void enumerate_index(CallbackOperator && fn)
 			{
 				for (auto & e : m_elements) {
 					fn(m_x, m_y, e);
 				}
 			}
 			template <typename CallbackOperator>
-			void enumerate(CallbackOperator && fn) const
+			void enumerate_index(CallbackOperator && fn) const
 			{
 				for (auto const& e : m_elements) {
 					fn(m_x, m_y, e);
 				}
 			}
+			template <typename CallbackOperator>
+			void enumerate(CallbackOperator && fn)
+			{
+				for (auto & e : m_elements) {
+					fn(e);
+				}
+			}
+			template <typename CallbackOperator>
+			void enumerate(CallbackOperator && fn) const
+			{
+				for (auto const& e : m_elements) {
+					fn(e);
+				}
+			}
+
 			template <typename CallbackOperator>
 			void enumerate_while(CallbackOperator && fn)
 			{
