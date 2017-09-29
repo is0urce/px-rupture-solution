@@ -69,7 +69,7 @@ namespace px {
 		int				height;
 		engine<delta>	engine;
 		delta			delta_time;
-		sprite_sytem	sprites;
+		sprite_system	sprites;
 		transform_system transforms;
 	};
 }

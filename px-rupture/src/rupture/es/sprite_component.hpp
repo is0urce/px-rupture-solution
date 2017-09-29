@@ -17,5 +17,9 @@ namespace px {
 		, link<transform_component>
 		, link_dispatcher<sprite_component>
 	{
+	public:
+		virtual ~sprite_component()
+		{
+		}
 	};
 }
