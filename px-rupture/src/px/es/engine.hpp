@@ -31,15 +31,21 @@ namespace px {
 		}
 		void update(delta_type const& delta)
 		{
-			for (system_type * system : systems) system->update(delta);
+			for (system_type * system : systems) {
+				system->update(delta);
+			}
 		}
 		void fixed_update(delta_type const& delta)
 		{
-			for (system_type * system : systems) system->fixed_update(delta);
+			for (system_type * system : systems) {
+				system->fixed_update(delta);
+			}
 		}
 		void tick_update(delta_type const& delta)
 		{
-			for (system_type * system : systems) system->tick_update(delta);
+			for (system_type * system : systems) {
+				system->tick_update(delta);
+			}
 		}
 
 	private:

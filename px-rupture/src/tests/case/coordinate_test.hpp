@@ -49,30 +49,33 @@ void test_coordinate()
 		point2 c = a + b;
 		test::require(c == point2(4, 6));
 		c = a - b;
-//		test::require(c == point2(-2, -2));
+		test::require(c == point2(-2, -2));
 		c = a * b;
-//		test::require(c == point2(3, 8));
+		test::require(c == point2(3, 8));
 		c = a / b;
-//		test::require(c == point2(0, 0));
+		test::require(c == point2(0, 0)); // integral division
+
 		a += b;
-//		test::require(a == point2(4, 6));
+		test::require(a == point2(4, 6));
 		a -= b;
 		a *= b;
 		a /= b;
 
 		a *= 2;
+		test::require(a == point2(2, 4));
 		a /= 2;
 	}
 
 	test::section("coordinate - vector2 operators");
 	{
-		vector2 a(1, 2);
+		vector2 a(1.0f, 2.0f);
 		vector2 b(3, 4);
 
 		auto c = a + b;
 		c = a - b;
 		c = a * b;
 		c = a / b;
+		test::require(c == vector2(1.0 / 3.0f, 2.0f / 4.0f));
 		a += b;
 		a -= b;
 		a *= b;

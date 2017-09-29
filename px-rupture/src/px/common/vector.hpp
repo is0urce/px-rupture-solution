@@ -95,7 +95,7 @@ namespace px {
 		{
 		}
 		constexpr vector2(point2 const& that) noexcept
-			: coordinate(static_cast<component>(that.get<0>()), static_cast<component>(that.get<1>()))
+			: coordinate(static_cast<component>(that.x()), static_cast<component>(that.y()))
 		{
 		}
 		constexpr vector2(vector2 const&) noexcept = default;

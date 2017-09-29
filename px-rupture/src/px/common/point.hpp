@@ -1,6 +1,7 @@
 // name: coordinate.hpp
 // type: c++ header
 // desc: class for 2d point with integer components
+// auth: is0urce
 
 #pragma once
 

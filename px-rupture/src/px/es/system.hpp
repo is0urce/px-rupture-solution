@@ -32,7 +32,7 @@ namespace px {
 		}
 
 	public:
-		virtual ~system()
+		virtual ~system() noexcept
 		{
 		}
 

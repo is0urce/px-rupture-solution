@@ -1,3 +1,8 @@
+// name: coordinate_operation.hpp
+// type: c++ template class
+// desc: operators traits for coordinates
+// auth: is0urce
+
 #pragma once
 
 namespace px {
@@ -42,6 +47,7 @@ namespace px {
 			return result;
 		}
 
+		// unary minus
 		I operator-() const
 		{
 			I result(*static_cast<I const*>(this));
@@ -70,5 +76,4 @@ namespace px {
 			return *static_cast<I*>(this);
 		}
 	};
-
 }

@@ -3,15 +3,18 @@
 #pragma once
 
 #include "key.hpp"
+#include "environment.hpp"
 
 #include <px/es/engine.hpp>
 #include <px/es/delta.hpp>
 
 #include "es/sprite_system.hpp"
+#include "es/transform_system.hpp"
 
 namespace px {
 
-	class shell
+	class shell final
+		: public environment
 	{
 	public:
 		void frame(double timer)
@@ -58,6 +61,7 @@ namespace px {
 		{
 			delta_time.restart();
 			engine.add(&sprites);
+			engine.add(&transforms);
 		}
 
 	private:
@@ -66,5 +70,6 @@ namespace px {
 		engine<delta>	engine;
 		delta			delta_time;
 		sprite_sytem	sprites;
+		transform_system transforms;
 	};
 }

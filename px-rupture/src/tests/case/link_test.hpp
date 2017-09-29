@@ -24,7 +24,6 @@ class component_b
 
 void test_link()
 {
-
 	test::section("link_test");
 	{
 		component_a a;
@@ -36,5 +35,4 @@ void test_link()
 		test::require(a.linked<component_b>() == &b);
 		test::require(a.linked<component_b>()->linked<component_a>() == &a);
 	}
-
 }
