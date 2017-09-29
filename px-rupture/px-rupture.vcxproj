@@ -166,7 +166,7 @@
   <ItemGroup>
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\coordinate.hpp" />
-    <ClInclude Include="src\px\common\coordinate_transform.hpp" />
+    <ClInclude Include="src\px\common\coordinate_operation.hpp" />
     <ClInclude Include="src\px\common\point.hpp" />
     <ClInclude Include="src\px\common\pool.hpp" />
     <ClInclude Include="src\px\common\pool_chain.hpp" />

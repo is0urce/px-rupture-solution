@@ -21,6 +21,7 @@ namespace px {
 			link<T> * l = static_cast<C*>(this);
 			l->set_link(x);
 		}
+
 		template <typename T>
 		void disconnect() noexcept
 		{

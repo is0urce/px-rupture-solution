@@ -18,14 +18,50 @@ void test_coordinate()
 		test::require(point2(1, 1) == point2(1, 1));
 		test::require(point2(1, 2) != point2(2, 1)); // require_compile
 
-		test::require(point2(1, 2).moved(point2(3, 6)) == point2{ 4, 8 });
-		test::require(point2(1, 2).moved_axis<0>(3) == point2{ 4, 2 });
+		test::require(point2(1, 2).moved({ 3, 6 }) == point2(4, 8));
+		test::require(point2(1, 2).moved_axis<0>(3) == point2(4, 2));
 		test::require(point2(1, 2).negated() == point2(-1, -2));
-		test::require(point2(-3, 15).clamped(point2(0, 0), point2(10, 10)) == point2(0, 10));
+		test::require(point2(-3, 15).clamped({ 0, 0 }, { 10, 10 }) == point2(0, 10));
 	}
 
 	test::section("coordinate - vector2");
 	{
-		test::require(vector2(0.0, 2.0).divided(vector2(1.0, 2.0)).y() == 1.0);
+		test::require(vector2(0.0, 2.0).divided({ 1.0, 2.0 }).y() == 1.0);
+	}
+
+	test::section("coordinate - point2 operators");
+	{
+		point2 a(1, 2);
+		point2 b(3, 4);
+
+		auto c = a + b;
+		c = a - b;
+		c = a * b;
+		c = a / b;
+		a += b;
+		a -= b;
+		a *= b;
+		a /= b;
+
+		a *= 2;
+		a /= 2;
+	}
+
+	test::section("coordinate - vector2 operators");
+	{
+		vector2 a(1, 2);
+		vector2 b(3, 4);
+
+		auto c = a + b;
+		c = a - b;
+		c = a * b;
+		c = a / b;
+		a += b;
+		a -= b;
+		a *= b;
+		a /= b;
+
+		a *= 2.0f;
+		a /= 2.0f;
 	}
 }

@@ -5,25 +5,14 @@
 #pragma once
 
 #include <px/common/coordinate.hpp>
-#include <px/common/coordinate_transform.hpp>
+#include <px/common/coordinate_operation.hpp>
 #include <px/common/point.hpp>
 
 namespace px {
 
-	class vector2;
-
-	template <typename T>
-	vector2 operator+(vector2 lhs, coordinate<T, 2> const& rhs);
-	template <typename T>
-	vector2 operator-(vector2 lhs, coordinate<T, 2> const& rhs);
-	template <typename T>
-	vector2 operator*(vector2 lhs, coordinate<T, 2> const& rhs);
-	template <typename T>
-	vector2 operator/(vector2 lhs, coordinate<T, 2> const& rhs);
-
 	class vector2
 		: public coordinate<double, 2>
-		, public coordinate_transform<vector2>
+		, public coordinate_operation<vector2>
 	{
 	public:
 		constexpr component x() const noexcept
@@ -59,7 +48,7 @@ namespace px {
 			}
 			return result;
 		}
-		template<typename TargetType, typename Converter>
+		template <typename TargetType, typename Converter>
 		TargetType convert(Converter convert_fn) const
 		{
 			TargetType result;
@@ -71,18 +60,6 @@ namespace px {
 
 		// mutations
 
-		template <typename T>
-		vector2 & operator+=(coordinate<T, depth> const& rhs) { move(rhs); return *this; }
-		template <typename T>
-		vector2 & operator-=(coordinate<T, depth> const& rhs) { reverse(rhs); return *this; }
-		template <typename T>
-		vector2 & operator*=(coordinate<T, depth> const& rhs) { multiply(rhs); return *this; }
-		template <typename T>
-		vector2 & operator/=(coordinate<T, depth> const& rhs) { divide(rhs); return *this; }
-
-		vector2 & operator*=(component c) { multiply(c); return *this; };
-		vector2 & operator/=(component c) { divide(c); return *this; };
-
 		void normalize()
 		{
 			auto len = magnitude();
@@ -90,7 +67,12 @@ namespace px {
 				divide(len);
 			}
 		}
-		vector2 normalized() { vector2 result(*this); result.normalize(); return result; }
+		vector2 normalized()
+		{
+			vector2 result(*this);
+			result.normalize();
+			return result;
+		}
 		vector2 lerp(vector2 b, component t) const
 		{
 			b.multiply(t);
@@ -108,25 +90,14 @@ namespace px {
 			: coordinate(x, y)
 		{
 		}
-		constexpr vector2(point2 const& p) noexcept
-			: coordinate(static_cast<component>(p.x()), static_cast<component>(p.y()))
+		constexpr vector2(component i) noexcept
+			: coordinate(i, i)
+		{
+		}
+		constexpr vector2(point2 const& that) noexcept
+			: coordinate(static_cast<component>(that.get<0>()), static_cast<component>(that.get<1>()))
 		{
 		}
 		constexpr vector2(vector2 const&) noexcept = default;
 	};
-
-	template <typename T>
-	vector2 operator+(vector2 lhs, coordinate<T, 2> const& rhs) { lhs += rhs; return lhs; }
-	template <typename T>
-	vector2 operator-(vector2 lhs, coordinate<T, 2> const& rhs) { lhs -= rhs; return lhs; }
-	template <typename T>
-	vector2 operator*(vector2 lhs, coordinate<T, 2> const& rhs) { lhs *= rhs; return lhs; }
-	template <typename T>
-	vector2 operator/(vector2 lhs, coordinate<T, 2> const& rhs) { lhs /= rhs; return lhs; }
-
-	namespace
-	{
-		vector2 operator*(vector2 lhs, vector2::component c) { lhs *= c; return lhs; }
-		vector2 operator/(vector2 lhs, vector2::component c) { lhs /= c; return lhs; }
-	}
 }
