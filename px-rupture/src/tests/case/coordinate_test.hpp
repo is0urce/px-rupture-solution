@@ -29,16 +29,33 @@ void test_coordinate()
 		test::require(vector2(0.0, 2.0).divided({ 1.0, 2.0 }).y() == 1.0);
 	}
 
+	test::section("coordinate - i/o");
+	{
+		std::array<int, 2> mem{ 1, 2 };
+		point2 a;
+
+		a.read(mem.data());
+		test::require(a == point2{ 1, 2 });
+
+		point2(3, 4).write(mem.data());
+		test::require(mem[0] == 3 && mem[1] == 4);
+	} 
+
 	test::section("coordinate - point2 operators");
 	{
 		point2 a(1, 2);
 		point2 b(3, 4);
 
-		auto c = a + b;
+		point2 c = a + b;
+		test::require(c == point2(4, 6));
 		c = a - b;
+//		test::require(c == point2(-2, -2));
 		c = a * b;
+//		test::require(c == point2(3, 8));
 		c = a / b;
+//		test::require(c == point2(0, 0));
 		a += b;
+//		test::require(a == point2(4, 6));
 		a -= b;
 		a *= b;
 		a /= b;

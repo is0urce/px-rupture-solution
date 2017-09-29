@@ -39,4 +39,28 @@ namespace px {
 		}
 		constexpr point2(point2 const&) noexcept = default;
 	};
+
+	namespace {
+
+		point2 operator+(point2 lhs, point2 const& rhs)
+		{
+			lhs += rhs;
+			return lhs;
+		}
+		point2 operator-(point2 lhs, point2 const& rhs)
+		{
+			lhs -= rhs;
+			return lhs;
+		}
+		point2 operator*(point2 lhs, point2 const& rhs)
+		{
+			lhs *= rhs;
+			return lhs;
+		}
+		point2 operator/(point2 lhs, point2 const& rhs)
+		{
+			lhs /= rhs;
+			return lhs;
+		}
+	}
 }

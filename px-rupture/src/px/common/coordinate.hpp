@@ -212,7 +212,7 @@ namespace px {
 		void read(Memory const* memory)
 		{
 			for (size_t i = 0; i != Dim; ++i) {
-				m_array[i] = static_cast<Memory>(memory[i]);
+				m_array[i] = static_cast<component>(memory[i]);
 			}
 		}
 		template <typename Memory>
@@ -222,17 +222,18 @@ namespace px {
 				memory[i] = static_cast<Memory>(m_array[i]);
 			}
 		}
+
+		bool lex_less(coordinate const& cmp) const
+		{
+			return std::lexicographical_compare(m_array.cbegin(), m_array.cend(), cmp.m_array.cbegin(), cmp.m_array.cend());
+		}
+
 		template <typename Archive>
 		void serialize(Archive & archive)
 		{
 			for (size_t i = 0; i != Dim; ++i) {
 				archive(m_array[i]);
 			}
-		}
-
-		bool lex_less(coordinate const& cmp) const
-		{
-			return std::lexicographical_compare(m_array.cbegin(), m_array.cend(), cmp.m_array.cbegin(), cmp.m_array.cend());
 		}
 
 	public:
@@ -249,19 +250,19 @@ namespace px {
 
 	protected:
 		std::array<component, depth> m_array;
+
+		template <typename C, size_t D>
+		friend bool operator==(coordinate<C, D> const& a, coordinate<C, D> const& b);
 	};
 
-	template <typename Component, size_t Dim>
-	bool operator==(coordinate<Component, Dim> const& a, coordinate<Component, Dim> const& b)
+	template <typename C, size_t D>
+	bool operator==(coordinate<C, D> const& lh, coordinate<C, D> const& rh)
 	{
-		for (size_t i = 0; i != Dim; ++i) {
-			if (a[i] != b[i]) return false;
-		}
-		return true;
+		return lh.m_array == rh.m_array;
 	}
-	template <typename Component, size_t Dim>
-	bool operator!=(coordinate<Component, Dim> const& a, coordinate<Component, Dim> const& b)
+	template <typename C, size_t D>
+	bool operator!=(coordinate<C, D> const& lh, coordinate<C, D> const& rh)
 	{
-		return !operator==(a, b);
+		return !operator==(lh, rh);
 	}
 }

@@ -71,28 +71,4 @@ namespace px {
 		}
 	};
 
-	template <typename I>
-	I operator+(coordinate_operation<I> lhs, I const& rhs)
-	{
-		lhs += rhs;
-		return static_cast<I&>(lhs);
-	}
-	template <typename I>
-	I operator-(coordinate_operation<I> lhs, I const& rhs)
-	{
-		lhs -= rhs;
-		return static_cast<I&>(lhs);
-	}
-	template <typename I>
-	I operator*(coordinate_operation<I> lhs, I const& rhs)
-	{
-		lhs *= rhs;
-		return static_cast<I&>(lhs);
-	}
-	template <typename I>
-	I operator/(coordinate_operation<I> lhs, I const& rhs)
-	{
-		lhs /= rhs;
-		return static_cast<I&>(lhs);
-	}
 }

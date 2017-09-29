@@ -100,4 +100,28 @@ namespace px {
 		}
 		constexpr vector2(vector2 const&) noexcept = default;
 	};
+
+	namespace {
+
+		vector2 operator+(vector2 lhs, vector2 const& rhs)
+		{
+			lhs += rhs;
+			return lhs;
+		}
+		vector2 operator-(vector2 lhs, vector2 const& rhs)
+		{
+			lhs -= rhs;
+			return lhs;
+		}
+		vector2 operator*(vector2 lhs, vector2 const& rhs)
+		{
+			lhs *= rhs;
+			return lhs;
+		}
+		vector2 operator/(vector2 lhs, vector2 const& rhs)
+		{
+			lhs /= rhs;
+			return lhs;
+		}
+	}
 }
