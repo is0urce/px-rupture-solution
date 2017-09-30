@@ -4,6 +4,7 @@
 
 #include "key.hpp"
 #include "environment.hpp"
+#include "draw/renderer.hpp"
 
 #include <px/es/engine.hpp>
 #include <px/es/delta.hpp>
@@ -24,11 +25,13 @@ namespace px {
 
 			++delta_time.tick_index;
 			engine.tick_update(delta_time);
+			render.run();
 		}
 		void resize(int screen_width, int screen_height)
 		{
 			width = screen_width;
 			height = screen_height;
+			render.resize(width, height);
 		}
 		void text(unsigned int /*codepoint*/)
 		{
@@ -58,6 +61,7 @@ namespace px {
 		shell(int start_widht, int start_height)
 			: width(start_widht)
 			, height(start_height)
+			, render(start_widht, start_height)
 		{
 			delta_time.restart();
 			engine.add(&sprites);
@@ -65,11 +69,12 @@ namespace px {
 		}
 
 	private:
-		int				width;
-		int				height;
-		engine<delta>	engine;
-		delta			delta_time;
-		sprite_system	sprites;
-		transform_system transforms;
+		int					width;
+		int					height;
+		engine<delta>		engine;
+		delta				delta_time;
+		renderer			render;
+		sprite_system		sprites;
+		transform_system	transforms;
 	};
 }

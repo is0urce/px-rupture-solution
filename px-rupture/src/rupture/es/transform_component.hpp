@@ -3,7 +3,7 @@
 #include <px/es/component.hpp>
 #include <px/es/link_dispatcher.hpp>
 
-#include <px/common/point.hpp>
+#include <px/es/transform.hpp>
 
 #pragma once
 
@@ -15,24 +15,13 @@ namespace px {
 	class transform_component
 		: public component
 		, public link_dispatcher<transform_component>
+		, public transform
 	{
 	public:
-		point2 const& position() const noexcept;
-		point2 const& last() const noexcept;
-		void store();
-
-		void incarnate(qtree<transform_component*> * world);
-		qtree<transform_component*> * world() const noexcept;
-
-		void move(point2 const& direction);	// move by offset
-		void place(point2 destination);		// place into specified location
-
-		// space is not serizlized
-		template <typename Archive>
-		void serialize(Archive & archive)
-		{
-			archive(current, prev);
-		}
+		void incarnate(qtree<transform_component*> * world);	// set space
+		qtree<transform_component*> * world() const noexcept;	// get current space
+		void move(point2 const& direction);						// move by offset
+		void place(point2 destination);							// place into specified location
 
 	public:
 		virtual ~transform_component();
@@ -47,8 +36,6 @@ namespace px {
 		void retract();
 
 	private:
-		qtree<transform_component*> *	space;
-		point2							current;
-		point2							prev;
+		qtree<transform_component*> * space;
 	};
 }

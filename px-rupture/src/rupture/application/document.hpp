@@ -1,4 +1,4 @@
-// name: depot.hpp
+// name: document.hpp
 // type: c++
 // auth: is0urce
 // desc: load documents
@@ -13,7 +13,7 @@
 
 namespace px {
 
-	class depot final
+	class document final
 	{
 	public:
 		static auto load_document(std::string const& document_name)

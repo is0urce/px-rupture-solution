@@ -3,10 +3,10 @@
 #define GLEW_STATIC
 #include <gl/glew.h>
 
-#include "configuration.hpp"
-#include "depot.hpp"
+#include "application/configuration.hpp"
+#include "application/document.hpp"
+#include "application/settings.hpp"
 #include "key.hpp"
-#include "settings.hpp"
 #include "shell.hpp"
 
 #include <px/common/bindings.hpp>
@@ -46,8 +46,8 @@ namespace px {
 
 		// load settings
 
-		auto config = configuration::from_document(depot::load_document(settings::configuration_path));
-		auto binds = bindings<int, key>::from_document(depot::load_document(settings::bindings_path));
+		auto config = configuration::from_document(document::load_document(settings::configuration_path));
+		auto binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
 
 		auto monitor = glfwGetPrimaryMonitor();
 		auto *const mode = glfwGetVideoMode(monitor);

@@ -29,19 +29,6 @@ namespace px {
 
 	// static methods
 
-	point2 const& transform_component::position() const noexcept
-	{
-		return current;
-	}
-	point2 const& transform_component::last() const noexcept
-	{
-		return prev;
-	}
-	void transform_component::store()
-	{
-		current = prev;
-	}
-
 	void transform_component::move(point2 const& direction)
 	{
 		place(current + direction);
