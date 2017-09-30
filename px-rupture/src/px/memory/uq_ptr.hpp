@@ -16,7 +16,11 @@ namespace px {
 		typedef T element_type;
 
 	public:
-		void release() noexcept
+		void release()
+		{
+			ptr = nullptr;
+		}
+		void reset() noexcept
 		{
 			uq_ptr().swap(*this);
 		}

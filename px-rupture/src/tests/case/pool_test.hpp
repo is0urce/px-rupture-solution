@@ -24,7 +24,7 @@ void test_pool()
 		test::require(p.contains(raw));
 		test::require(*raw == 3);
 
-		ip.release();
+		ip.reset();
 
 		test::require(p.empty());
 		test::require(p.size() == 0);
@@ -43,8 +43,8 @@ void test_pool()
 		test::require(system.size() == 2);
 		test::require(summ == 6 + 5);
 
-		x1.release();
-		x2.release();
+		x1.reset();
+		x2.reset();
 
 		test::require(system.size() == 0);
 		test::require(system.empty());
