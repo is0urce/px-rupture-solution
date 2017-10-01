@@ -23,4 +23,15 @@ namespace px {
 		works->batch(delta_time.real_delta);
 	}
 
+	// methods
+
+	uq_ptr<sprite_component> sprite_system::make()
+	{
+		return works->make();
+	}
+
+	std::vector<vertex> const* sprite_system::data() const noexcept
+	{
+		return works->data();
+	}
 }

@@ -14,6 +14,10 @@
 #include <px/rgl/rgl.hpp>
 #include <px/rgl/compilation.hpp>
 
+#include "vertex.hpp"
+
+#include <vector>
+
 namespace px {
 
 	class renderer
@@ -34,6 +38,10 @@ namespace px {
 			height = size_height;
 
 			reset_framebuffers();
+		}
+		void assign_batch_data(std::vector<vertex> const* data) noexcept
+		{
+			vertices = data;
 		}
 
 	public:
@@ -62,5 +70,6 @@ namespace px {
 	private:
 		int	width;
 		int	height;
+		std::vector<vertex> const* vertices;
 	};
 }

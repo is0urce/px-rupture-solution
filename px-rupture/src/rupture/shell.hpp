@@ -20,11 +20,11 @@ namespace px {
 	public:
 		void frame(double timer)
 		{
-			delta_time.advance(timer);
-			engine.update(delta_time);
+			time.advance(timer);
+			engine.update(time);
 
-			++delta_time.tick_index;
-			engine.tick_update(delta_time);
+			++time.tick_index;
+			engine.tick_update(time);
 			render.run();
 		}
 		void resize(int screen_width, int screen_height)
@@ -63,18 +63,20 @@ namespace px {
 			, height(start_height)
 			, render(start_widht, start_height)
 		{
-			delta_time.restart();
+			time.restart();
 			engine.add(&sprites);
 			engine.add(&transforms);
+
+			render.assign_batch_data(sprites.data());
 		}
 
 	private:
 		int					width;
 		int					height;
+		delta				time;
 		engine<delta>		engine;
-		delta				delta_time;
-		renderer			render;
 		sprite_system		sprites;
 		transform_system	transforms;
+		renderer			render;
 	};
 }
