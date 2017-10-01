@@ -160,7 +160,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\rupture\es\sprite_system.cpp" />
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
+    <ClCompile Include="src\rupture\es\transform_system.cpp" />
     <ClCompile Include="src\rupture\main.cpp" />
     <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
@@ -211,18 +213,21 @@
     <ClInclude Include="src\px\rgl\compilation.hpp" />
     <ClInclude Include="src\px\rglfw\rglfw.hpp" />
     <ClInclude Include="src\px\rgl\rgl.hpp" />
-    <ClInclude Include="src\rupture\application\configuration.hpp" />
-    <ClInclude Include="src\rupture\application\document.hpp" />
+    <ClInclude Include="src\rupture\app\configuration.hpp" />
+    <ClInclude Include="src\rupture\app\document.hpp" />
     <ClInclude Include="src\rupture\draw\renderer.hpp" />
+    <ClInclude Include="src\rupture\draw\sprite.hpp" />
     <ClInclude Include="src\rupture\draw\vertex.hpp" />
     <ClInclude Include="src\rupture\environment.hpp" />
     <ClInclude Include="src\rupture\es\sprite_component.hpp" />
     <ClInclude Include="src\rupture\es\sprite_system.hpp" />
+    <ClInclude Include="src\rupture\es\sprite_works.hpp" />
     <ClInclude Include="src\rupture\es\transform_component.hpp" />
     <ClInclude Include="src\rupture\es\transform_system.hpp" />
     <ClInclude Include="src\rupture\draw\image.hpp" />
+    <ClInclude Include="src\rupture\es\transform_works.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
-    <ClInclude Include="src\rupture\application\settings.hpp" />
+    <ClInclude Include="src\rupture\app\settings.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
     <ClInclude Include="src\tests\case\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />

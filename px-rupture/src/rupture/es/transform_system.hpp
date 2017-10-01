@@ -5,34 +5,24 @@
 #include <px/es/system.hpp>
 #include <px/es/delta.hpp>
 
-#include "transform_component.hpp"
-
-#include <px/common/qtree.hpp>
-#include <px/memory/memory.hpp>
+#include <px/memory/uq_ptr.hpp>
 
 namespace px {
 	
-	class transform_system
+	class transform_component;
+	class transform_works;
+
+	class transform_system final
 		: public system<delta>
 	{
 	public:
-		uq_ptr<transform_component> make()
-		{
-			auto result = make_uq<transform_component>();
-			result->incarnate(&space);
-			return result;
-		}
+		uq_ptr<transform_component> make();
 
 	public:
-		virtual ~transform_system()
-		{
-		}
-		transform_system()
-			: space(64)
-		{
-		}
+		virtual ~transform_system();
+		transform_system();
 
 	private:
-		qtree<transform_component*> space;
+		uq_ptr<transform_works> works;
 	};
 }

@@ -12,7 +12,7 @@ namespace px {
 	// forward declarations
 	template <typename T> class qtree;
 
-	class transform_component
+	class transform_component final
 		: public component
 		, public link_dispatcher<transform_component>
 		, public transform

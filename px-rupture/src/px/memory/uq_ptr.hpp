@@ -16,10 +16,6 @@ namespace px {
 		typedef T element_type;
 
 	public:
-		void release()
-		{
-			ptr = nullptr;
-		}
 		void reset() noexcept
 		{
 			uq_ptr().swap(*this);
@@ -33,7 +29,11 @@ namespace px {
 			std::swap(ptr, other.ptr);
 			std::swap(ctrl, other.ctrl);
 		}
-
+		// instant memory leak
+		void release()
+		{
+			ptr = nullptr;
+		}
 		element_type * get() const noexcept
 		{
 			return ptr;
@@ -50,7 +50,7 @@ namespace px {
 		{
 			return ptr;
 		}
-		typename std::add_lvalue_reference<T>::type operator*() const
+		T & operator*() const
 		{
 			return *ptr;
 		}

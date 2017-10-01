@@ -3,9 +3,9 @@
 #define GLEW_STATIC
 #include <gl/glew.h>
 
-#include "application/configuration.hpp"
-#include "application/document.hpp"
-#include "application/settings.hpp"
+#include "app/configuration.hpp"
+#include "app/document.hpp"
+#include "app/settings.hpp"
 #include "key.hpp"
 #include "shell.hpp"
 
