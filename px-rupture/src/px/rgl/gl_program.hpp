@@ -86,8 +86,7 @@ namespace px
 		gl_program& operator=(gl_program const&) = delete;
 		~gl_program()
 		{
-			if (m_init)
-			{
+			if (m_init) {
 				glDeleteProgram(m_program);
 			}
 		}

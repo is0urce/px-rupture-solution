@@ -1,4 +1,5 @@
-// name: vertex.hpp
+// name: sprite_vertex.hpp
+// type: c++ struct
 
 #pragma once
 
@@ -10,7 +11,7 @@
 
 namespace px {
 
-	struct vertex
+	struct sprite_vertex
 	{
 		glm::vec2 position;
 		glm::vec2 texture;

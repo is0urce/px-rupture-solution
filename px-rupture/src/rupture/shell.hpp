@@ -12,6 +12,11 @@
 #include "es/sprite_system.hpp"
 #include "es/transform_system.hpp"
 
+#include "es/sprite_component.hpp"
+#include "es/transform_component.hpp"
+
+#include <lodepng.h>
+
 namespace px {
 
 	class shell final
@@ -63,11 +68,27 @@ namespace px {
 			, height(start_height)
 			, render(start_widht, start_height)
 		{
-			time.restart();
 			engine.add(&sprites);
 			engine.add(&transforms);
 
+			std::vector<unsigned char> texture_data;
+			unsigned int texture_width;
+			unsigned int texture_height;
+			auto error = lodepng::decode(texture_data, texture_width, texture_height, "data/img/monsters.png");
+			if (error) throw std::runtime_error("error while loading image");
+			render.add_texture(texture_width, texture_height, texture_data.data());
 			render.assign_batch_data(sprites.data());
+
+			sprites.target(nullptr);
+
+			tr.place({ 0, 0 });
+			tr.store();
+
+			sprite = sprites.make("rat");
+			sprite->activate();
+			sprite->connect<transform_component>(&tr);
+
+			time.restart();
 		}
 
 	private:
@@ -78,5 +99,8 @@ namespace px {
 		sprite_system		sprites;
 		transform_system	transforms;
 		renderer			render;
+
+		uq_ptr<sprite_component> sprite;
+		transform_component tr;
 	};
 }

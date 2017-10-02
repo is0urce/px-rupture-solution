@@ -164,6 +164,7 @@
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
     <ClCompile Include="src\rupture\es\transform_system.cpp" />
     <ClCompile Include="src\rupture\main.cpp" />
+    <ClCompile Include="src\rupture\main_extras.cpp" />
     <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -215,9 +216,11 @@
     <ClInclude Include="src\px\rgl\rgl.hpp" />
     <ClInclude Include="src\rupture\app\configuration.hpp" />
     <ClInclude Include="src\rupture\app\document.hpp" />
+    <ClInclude Include="src\rupture\draw\camera_uniform.hpp" />
     <ClInclude Include="src\rupture\draw\renderer.hpp" />
     <ClInclude Include="src\rupture\draw\sprite.hpp" />
-    <ClInclude Include="src\rupture\draw\vertex.hpp" />
+    <ClInclude Include="src\rupture\draw\sprite_batch.hpp" />
+    <ClInclude Include="src\rupture\draw\sprite_vertex.hpp" />
     <ClInclude Include="src\rupture\environment.hpp" />
     <ClInclude Include="src\rupture\es\sprite_component.hpp" />
     <ClInclude Include="src\rupture\es\sprite_system.hpp" />
@@ -237,6 +240,8 @@
   <ItemGroup>
     <None Include="data\config.json" />
     <None Include="data\controls.json" />
+    <None Include="data\shaders\sprite.frag" />
+    <None Include="data\shaders\sprite.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

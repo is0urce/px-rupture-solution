@@ -14,6 +14,7 @@ namespace px {
 	sprite_system::sprite_system()
 		: works(make_uq<sprite_works>())
 	{
+		load();
 	}
 
 	// override
@@ -25,13 +26,23 @@ namespace px {
 
 	// methods
 
-	uq_ptr<sprite_component> sprite_system::make()
+	uq_ptr<sprite_component> sprite_system::make(std::string const& name)
 	{
-		return works->make();
+		return works->make(name);
 	}
 
-	std::vector<vertex> const* sprite_system::data() const noexcept
+	std::vector<sprite_vertex> const* sprite_system::data() const noexcept
 	{
 		return works->data();
+	}
+
+	void sprite_system::target(transform_component const* camera) noexcept
+	{
+		works->target(camera);
+	}
+
+	void sprite_system::load()
+	{
+		works->add_image("rat", 0, 0, 1, 1, 0);
 	}
 }

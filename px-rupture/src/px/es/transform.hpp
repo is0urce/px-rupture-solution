@@ -19,7 +19,7 @@ namespace px {
 		}
 		void store()
 		{
-			current = prev;
+			prev = current;
 		}
 
 		// space is not serizlized

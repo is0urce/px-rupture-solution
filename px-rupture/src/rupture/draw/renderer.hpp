@@ -14,40 +14,65 @@
 #include <px/rgl/rgl.hpp>
 #include <px/rgl/compilation.hpp>
 
-#include "vertex.hpp"
+#include "sprite_vertex.hpp"
+#include "sprite_batch.hpp"
+#include "camera_uniform.hpp"
 
 #include <vector>
+#include <stdexcept>
 
 namespace px {
 
 	class renderer
 	{
 	public:
+		struct camera_data;
+
+	public:
 		void run()
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			camera.load<camera_uniform>(GL_STREAM_DRAW, { { 1.0f, 1.0f * screen_aspect },{ 0.0, 0.0 } });
 
-			glClearColor(1, 1, 0, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glUseProgram(sprite_program);
+			if (vertices && vertices->size() > 0) {
+				sprites.draw_arrays(GL_QUADS, GL_STREAM_DRAW, vertices->size(), vertices->data());
+			}
 
 			gl_assert();
 		}
-		void resize(int size_width, int size_height)
+		void resize(int width, int height)
 		{
-			width = size_width;
-			height = size_height;
+			screen_width = width;
+			screen_height = height;
+			screen_aspect = static_cast<float>(screen_width) / static_cast<float>(screen_height);
 
 			reset_framebuffers();
 		}
-		void assign_batch_data(std::vector<vertex> const* data) noexcept
+		void assign_batch_data(std::vector<sprite_vertex> const* data) noexcept
 		{
 			vertices = data;
+		}
+		void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data)
+		{
+			if (!data) throw std::runtime_error("px::renderer::load_texture(...) - data is null");
+
+			auto & batch = sprites;
+
+			batch.texture.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(texture_width), static_cast<GLsizei>(texture_height), 0, GL_UNSIGNED_BYTE, data);
+			batch.texture.filters(GL_NEAREST, GL_NEAREST); // required
+
+			batch.vertices = GL_ARRAY_BUFFER;
+			batch.geometry.swizzle(batch.vertices, sizeof(sprite_vertex), { GL_FLOAT, GL_FLOAT }, { 2, 2 }, { offsetof(sprite_vertex, position), offsetof(sprite_vertex, texture) });
+
+			batch.pass = { 0, batch.geometry, screen_width, screen_height };
+			batch.pass.bind_texture(batch.texture);
+			batch.pass.bind_uniform(camera);
 		}
 
 	public:
 		renderer(int width, int height)
-			: width(width)
-			, height(height)
+			: screen_width(width)
+			, screen_height(height)
 		{
 			// setup rendering
 
@@ -62,14 +87,28 @@ namespace px {
 
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_BLEND);
+
+			// compile shaders
+
+			sprite_program = compile_program("data/shaders/sprite", { "Camera" }, { "img" });
 		}
 		void reset_framebuffers()
 		{
+			auto & batch = sprites;
+
+			batch.pass = { 0, batch.geometry, screen_width, screen_height };
+			batch.pass.bind_texture(batch.texture);
+			batch.pass.bind_uniform(camera);
 		}
 
 	private:
-		int	width;
-		int	height;
-		std::vector<vertex> const* vertices;
+		std::vector<sprite_vertex> const* vertices;
+
+		int				screen_width;
+		int				screen_height;
+		float			screen_aspect;
+		gl_program		sprite_program;
+		sprite_batch	sprites;
+		gl_uniform		camera;
 	};
 }

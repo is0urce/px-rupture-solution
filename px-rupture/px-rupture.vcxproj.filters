@@ -192,9 +192,6 @@
     <ClInclude Include="src\rupture\draw\image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\draw\vertex.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\app\configuration.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -211,6 +208,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\draw\sprite.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\sprite_batch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\sprite_vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\camera_uniform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -230,9 +236,14 @@
     <ClCompile Include="src\rupture\es\sprite_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\rupture\main_extras.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />
     <None Include="data\controls.json" />
+    <None Include="data\shaders\sprite.frag" />
+    <None Include="data\shaders\sprite.vert" />
   </ItemGroup>
 </Project>
