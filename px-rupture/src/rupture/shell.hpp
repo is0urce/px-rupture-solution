@@ -14,6 +14,7 @@
 
 #include "es/sprite_component.hpp"
 #include "es/transform_component.hpp"
+#include "es/composite_component.hpp"
 
 #include <lodepng.h>
 
@@ -63,7 +64,7 @@ namespace px {
 		{
 
 		}
-		shell(int start_widht, int start_height)
+		shell(unsigned int start_widht, unsigned int start_height)
 			: width(start_widht)
 			, height(start_height)
 			, render(start_widht, start_height)
@@ -71,36 +72,43 @@ namespace px {
 			engine.add(&sprites);
 			engine.add(&transforms);
 
-			std::vector<unsigned char> texture_data;
-			unsigned int texture_width;
-			unsigned int texture_height;
-			auto error = lodepng::decode(texture_data, texture_width, texture_height, "data/img/monsters.png");
-			if (error) throw std::runtime_error("error while loading image");
-			render.add_texture(texture_width, texture_height, texture_data.data());
+			add_texture("data/img/monsters.png");
 			render.assign_batch_data(sprites.data());
 
 			sprites.target(nullptr);
 
-			tr.place({ 0, 0 });
-			tr.store();
-
-			sprite = sprites.make("rat");
-			sprite->activate();
-			sprite->connect<transform_component>(&tr);
-
 			time.restart();
+
+			auto tr = transforms.make();
+			tr->place({ 0, 0 });
+			tr->store();
+			auto spr = sprites.make("rat");
+			spr->connect<transform_component>(tr.get());
+			unit = make_uq<composite_component>();
+			unit->add(std::move(tr));
+			unit->add(std::move(spr));
+			unit->enable();
+		}
+	private:
+		void add_texture(std::string const& name)
+		{
+			std::vector<unsigned char> bits;
+			unsigned int texture_width;
+			unsigned int texture_height;
+			auto error = lodepng::decode(bits, texture_width, texture_height, name);
+			if (error) throw std::runtime_error("add_texture error while loading image, path=" + name);
+			render.add_texture(texture_width, texture_height, bits.data());
 		}
 
 	private:
-		int					width;
-		int					height;
+		unsigned int		width;
+		unsigned int		height;
 		delta				time;
 		engine<delta>		engine;
 		sprite_system		sprites;
 		transform_system	transforms;
 		renderer			render;
 
-		uq_ptr<sprite_component> sprite;
-		transform_component tr;
+		uq_ptr<composite_component> unit;
 	};
 }

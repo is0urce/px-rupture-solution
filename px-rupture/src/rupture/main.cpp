@@ -20,8 +20,7 @@
 namespace px {
 
 	// create main window from configuration
-	glfw_window create_window(configuration const& config, char const* name, GLFWmonitor * monitor)
-	{
+	glfw_window create_window(configuration const& config, char const* name, GLFWmonitor * monitor) {
 		if (monitor && config.fullscreen) {
 			auto *const mode = glfwGetVideoMode(monitor);
 			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -33,15 +32,14 @@ namespace px {
 	}
 
 	// enable context and load opengl extensions
-	void create_context(glfw_window const& win, int swap_interval)
-	{
+	void create_context(glfw_window const& win, int swap_interval) {
 		glfwMakeContextCurrent(win); // context
 		glfwSwapInterval(swap_interval);
 		glewInit();	// OpenGL extensions, after context
 	}
 
-	void process()
-	{
+	// main loop
+	void process() {
 		glfw_instance glfw;
 
 		// load settings
@@ -62,41 +60,41 @@ namespace px {
 		create_context(win, config.vsync);
 		shell game(config.width, config.height);
 
-		// events
+		// register events
 
-		glfw_callback event_callback(win);
-		event_callback.on_resize([&](int widht, int height) {
+		glfw_callback evt(win);
+		evt.on_resize([&](int widht, int height) {
 			game.resize(widht, height);
 		});
-		event_callback.on_click([&](int mouse_button, int action, int /* mods */) {
+		evt.on_click([&](int mouse_button, int action, int /* mods */) {
 			if (action == GLFW_PRESS) {
 				game.click(mouse_button);
 			}
 		});
-		event_callback.on_hover([&](double x, double y) {
+		evt.on_hover([&](double x, double y) {
 			game.hover(static_cast<int>(x), static_cast<int>(y));
 		});
-		event_callback.on_scroll([&](double horisontal, double vertical) {
+		evt.on_scroll([&](double horisontal, double vertical) {
 			game.scroll(horisontal, vertical);
 		});
-		event_callback.on_text([&](unsigned int codepoint) {
+		evt.on_text([&](unsigned int codepoint) {
 			game.text(codepoint);
 		});
-		event_callback.on_key([&](int os_code, int /* scancode */, int action, int /* mods */) {
+		evt.on_key([&](int os_code, int /* scancode */, int action, int /* mods */) {
 			if (action == GLFW_PRESS || action == GLFW_REPEAT) {
 				game.press(binds.get_or(os_code, key::not_valid));
 			}
 		});
 
 		// main loop
+
 		timer<glfw_time> time;
 		while (win.process()) {
 			game.frame(time);
 		}
 	}
 
-	int run_application()
-	{
+	int run_application() {
 		logger log(settings::log_path);
 
 		try {
@@ -117,8 +115,7 @@ namespace px {
 
 void run_tests();
 
-int main()
-{
+int main() {
 	run_tests();
 	return px::run_application();
 }

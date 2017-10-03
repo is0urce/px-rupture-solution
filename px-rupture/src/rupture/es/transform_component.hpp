@@ -26,6 +26,9 @@ namespace px {
 	public:
 		virtual ~transform_component();
 		transform_component();
+		transform_component(point2 position);
+		transform_component(transform_component const&) = delete;
+		transform_component & operator=(transform_component const&) = delete;
 
 	protected:
 		virtual void activate_component() override;

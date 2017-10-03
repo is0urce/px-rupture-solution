@@ -15,6 +15,11 @@ namespace px {
 		: space(nullptr)
 	{
 	}
+	transform_component::transform_component(point2 position)
+		: transform(position)
+		, space(nullptr)
+	{
+	}
 
 	// virtual overloads
 

@@ -64,13 +64,13 @@ namespace px {
 			batch.vertices = GL_ARRAY_BUFFER;
 			batch.geometry.swizzle(batch.vertices, sizeof(sprite_vertex), { GL_FLOAT, GL_FLOAT }, { 2, 2 }, { offsetof(sprite_vertex, position), offsetof(sprite_vertex, texture) });
 
-			batch.pass = { 0, batch.geometry, screen_width, screen_height };
+			batch.pass = { 0, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
 			batch.pass.bind_texture(batch.texture);
 			batch.pass.bind_uniform(camera);
 		}
 
 	public:
-		renderer(int width, int height)
+		renderer(unsigned int width, unsigned int height)
 			: screen_width(width)
 			, screen_height(height)
 		{
@@ -96,19 +96,18 @@ namespace px {
 		{
 			auto & batch = sprites;
 
-			batch.pass = { 0, batch.geometry, screen_width, screen_height };
+			batch.pass = { 0, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
 			batch.pass.bind_texture(batch.texture);
 			batch.pass.bind_uniform(camera);
 		}
 
 	private:
-		std::vector<sprite_vertex> const* vertices;
-
-		int				screen_width;
-		int				screen_height;
+		unsigned int	screen_width;
+		unsigned int	screen_height;
 		float			screen_aspect;
+		gl_uniform		camera;
 		gl_program		sprite_program;
 		sprite_batch	sprites;
-		gl_uniform		camera;
+		std::vector<sprite_vertex> const* vertices;
 	};
 }

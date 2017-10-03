@@ -182,7 +182,7 @@
     <ClInclude Include="src\px\dev\test.hpp" />
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
-    <ClInclude Include="src\px\es\composite_component.hpp" />
+    <ClInclude Include="src\rupture\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />
     <ClInclude Include="src\px\es\engine.hpp" />
     <ClInclude Include="src\px\es\link.hpp" />
