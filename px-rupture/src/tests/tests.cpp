@@ -6,12 +6,14 @@
 
 #include <px/dev/test.hpp>
 
-#include "case/pool_test.hpp"
-#include "case/coordinate_test.hpp"
-#include "case/qtree_test.hpp"
-#include "case/link_test.hpp"
+#include "case/common/pool_test.hpp"
+#include "case/common/coordinate_test.hpp"
+#include "case/common/qtree_test.hpp"
+#include "case/common/matrix_test.hpp"
 
 #include "case/rl/traverse_test.hpp"
+
+#include "case/link_test.hpp"
 
 unsigned int px::test::total = 0;
 unsigned int px::test::fails = 0;
@@ -23,6 +25,7 @@ void run_tests()
 	test_pool();
 	test_qtree();
 	test_link();
+	test_matrix();
 
 	test_traverse();
 	px::test::print();

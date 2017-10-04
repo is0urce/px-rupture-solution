@@ -68,6 +68,14 @@ namespace px::rl
 		{
 			bits |= layers;
 		}
+		void set_traversable(traverse_options const& opts)
+		{
+			bits = opts.bits;
+		}
+		void set_traversable(bitset_type const& layers)
+		{
+			bits = layers;
+		}
 
 		// templates
 

@@ -61,9 +61,6 @@ void test_traverse()
 
 			tile = opts::bitset_type{ "011111" };
 			test::require(!tile.is_traversable(unit));
-
-			test::require(!tile.is_traversable(unit));
-			test::require(!tile.is_traversable(unit));
 		}
 	}
 }

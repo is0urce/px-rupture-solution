@@ -165,12 +165,17 @@
     <ClCompile Include="src\rupture\es\transform_system.cpp" />
     <ClCompile Include="src\rupture\main.cpp" />
     <ClCompile Include="src\rupture\main_extras.cpp" />
+    <ClCompile Include="src\rupture\rl\terrain.cpp" />
     <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\coordinate.hpp" />
     <ClInclude Include="src\px\common\coordinate_operation.hpp" />
+    <ClInclude Include="src\px\common\matrix.hpp" />
+    <ClInclude Include="src\px\common\matrix_base.hpp" />
+    <ClInclude Include="src\px\common\matrix_dynamic.hpp" />
+    <ClInclude Include="src\px\common\matrix_static.hpp" />
     <ClInclude Include="src\px\common\point.hpp" />
     <ClInclude Include="src\px\common\pool.hpp" />
     <ClInclude Include="src\px\common\pool_chain.hpp" />
@@ -234,12 +239,15 @@
     <ClInclude Include="src\rupture\es\transform_works.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
+    <ClInclude Include="src\rupture\rl\terrain.hpp" />
+    <ClInclude Include="src\rupture\rl\terrain_internal.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
-    <ClInclude Include="src\tests\case\coordinate_test.hpp" />
+    <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />
-    <ClInclude Include="src\tests\case\pool_test.hpp" />
-    <ClInclude Include="src\tests\case\qtree_test.hpp" />
+    <ClInclude Include="src\tests\case\common\pool_test.hpp" />
+    <ClInclude Include="src\tests\case\common\qtree_test.hpp" />
     <ClInclude Include="src\tests\case\rl\traverse_test.hpp" />
+    <ClInclude Include="src\tests\case\common\matrix_test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />
