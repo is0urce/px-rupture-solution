@@ -48,7 +48,7 @@ namespace px {
 
 			reset_framebuffers();
 		}
-		void assign_batch_data(std::vector<sprite_vertex> const* data) noexcept
+		void assign_sprite_data(std::vector<sprite_vertex> const* data) noexcept
 		{
 			vertices = data;
 		}

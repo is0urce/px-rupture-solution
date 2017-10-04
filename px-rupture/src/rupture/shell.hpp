@@ -73,7 +73,7 @@ namespace px {
 			engine.add(&transforms);
 
 			add_texture("data/img/monsters.png");
-			render.assign_batch_data(sprites.data());
+			render.assign_sprite_data(sprites.data());
 
 			sprites.target(nullptr);
 

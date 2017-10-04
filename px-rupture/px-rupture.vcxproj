@@ -182,6 +182,9 @@
     <ClInclude Include="src\px\dev\test.hpp" />
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
+    <ClInclude Include="src\px\rl\mass.hpp" />
+    <ClInclude Include="src\px\rl\traverse.hpp" />
+    <ClInclude Include="src\px\rl\traverse_options.hpp" />
     <ClInclude Include="src\rupture\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />
     <ClInclude Include="src\px\es\engine.hpp" />
@@ -236,6 +239,7 @@
     <ClInclude Include="src\tests\case\link_test.hpp" />
     <ClInclude Include="src\tests\case\pool_test.hpp" />
     <ClInclude Include="src\tests\case\qtree_test.hpp" />
+    <ClInclude Include="src\tests\case\rl\traverse_test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />
