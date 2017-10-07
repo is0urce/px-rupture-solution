@@ -27,6 +27,7 @@ void run_tests()
 	test_qtree();
 	test_link();
 	test_matrix();
+	test_memory();
 
 	test_traverse();
 	px::test::print();

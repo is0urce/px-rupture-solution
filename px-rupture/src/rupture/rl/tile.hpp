@@ -9,6 +9,8 @@
 #include <px/rl/mass.hpp>
 #include <px/rl/traverse.hpp>
 
+#include <cstdint>
+
 namespace px {
 
 	class sprite_component;
@@ -19,7 +21,7 @@ namespace px {
 		transform_component transform;
 		uq_ptr<sprite_component> sprite;
 		rl::mass<rl::traverse> mass;
-		unsigned char id;
+		uint32_t block_id;
 
 	public:
 		tile() noexcept = default;
@@ -28,7 +30,7 @@ namespace px {
 			: sprite(std::move(that.sprite))
 			, transform(std::move(that.transform))
 			, mass(std::move(that.mass))
-			, id(std::move(that.id))
+			, block_id(std::move(that.block_id))
 		{
 		}
 	};

@@ -95,7 +95,7 @@ namespace px {
 		void generate(Generator && op, size_t w, size_t h)
 		{
 			m_data.clear();
-			m_data.reserve(w, h);
+			m_data.reserve(w * h);
 			for (size_t j = 0; j != m_height; ++j) {
 				for (size_t i = 0; i != m_width; ++i) {
 					m_data.push_back(op(i, j));
@@ -240,8 +240,8 @@ namespace px {
 		}
 		matrix2(matrix2 const&) = delete;
 		matrix2 & operator=(matrix2 const&) = delete;
-		matrix2(matrix2 && that) = default;
-		matrix2 & operator=(matrix2 && that) = default;
+		//matrix2(matrix2 && that) = default;
+		//matrix2 & operator=(matrix2 && that) = default;
 
 	private:
 		std::vector<element_type>	m_data;

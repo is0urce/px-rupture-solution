@@ -14,7 +14,6 @@ namespace px {
 	sprite_system::sprite_system()
 		: works(make_uq<sprite_works>())
 	{
-		load();
 	}
 
 	// override
@@ -41,8 +40,8 @@ namespace px {
 		works->target(camera);
 	}
 
-	void sprite_system::load()
+	void sprite_system::add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture_id)
 	{
-		works->add_image("rat", 0, 0, 1, 1, 0);
+		works->add_sprite(name, sx, sy, dx, dy, texture_id);
 	}
 }

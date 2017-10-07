@@ -192,8 +192,8 @@ namespace px {
 		}
 		matrix2(matrix2 const&) = delete;
 		matrix2 & operator=(matrix2 const&) = delete;
-		matrix2(matrix2 &&) = default;
-		matrix2 & operator=(matrix2 &&) = default;
+		//matrix2(matrix2 &&) = default;
+		//matrix2 & operator=(matrix2 &&) = default;
 
 	private:
 		std::array<element_type, W * H> m_data;

@@ -56,7 +56,7 @@ namespace px {
 
 		// create windows
 
-		glfw_window win = create_window(config, settings::application_name.c_str(), config.fullscreen ? monitor : nullptr);
+		glfw_window win = create_window(config, settings::application_name, config.fullscreen ? monitor : nullptr);
 		create_context(win, config.vsync);
 		shell game(config.width, config.height);
 

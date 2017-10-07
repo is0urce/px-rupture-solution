@@ -71,7 +71,7 @@ namespace px {
 				}
 			});
 		}
-		void add_image(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture)
+		void add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture)
 		{
 			sprite & img = lib[name];
 
@@ -85,7 +85,7 @@ namespace px {
 			img.y_multiple = 1;
 			img.texture_index = texture;
 		}
-		void add_image(std::string const& name, sprite && element)
+		void add_sprite(std::string const& name, sprite && element)
 		{
 			lib[name] = element;
 		}

@@ -29,14 +29,20 @@ namespace px {
 		{
 			return tiles[location].mass.is_traversable(opt);
 		}
+		void pset(uint32_t block_id, point2 const& location)
+		{
+			tiles.at(location).mass.set_traversable(block_id == 0);
+		}
 
 	public:
 		terrain_internal()
 			: sprites(nullptr)
 		{
-			//tiles.generate([&] { tile t; return std::move(t); }, 10, 10);
-			//tiles.resize_default(10, 10);
 			tiles.resize(10, 10);
+			tiles.enumerate([&](size_t x, size_t y, tile & t) {
+				t.mass.make_empty();
+				t.transform.place({ static_cast<int>(x), static_cast<int>(y) });
+			});
 		}
 
 	private:

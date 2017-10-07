@@ -5,6 +5,9 @@
 
 #pragma once
 
+#define GLEW_STATIC
+#include <gl/glew.h>
+
 #define GLM_FORCE_RADIANS
 #pragma warning(push)
 #pragma warning(disable:4201) // warning C4201: nonstandard extension used: nameless struct/union

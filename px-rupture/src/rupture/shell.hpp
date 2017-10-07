@@ -4,19 +4,13 @@
 
 #include "key.hpp"
 #include "environment.hpp"
-#include "draw/renderer.hpp"
 
 #include <px/es/engine.hpp>
 #include <px/es/delta.hpp>
 
-#include "es/sprite_system.hpp"
-#include "es/transform_system.hpp"
-
 #include "es/sprite_component.hpp"
 #include "es/transform_component.hpp"
 #include "es/composite_component.hpp"
-
-#include <lodepng.h>
 
 namespace px {
 
@@ -26,18 +20,14 @@ namespace px {
 	public:
 		void frame(double timer)
 		{
-			time.advance(timer);
-			engine.update(time);
+			if (run) {
+				time.advance(timer);
+				engine.update(time);
 
-			++time.tick_index;
-			engine.tick_update(time);
-			render.run();
-		}
-		void resize(int screen_width, int screen_height)
-		{
-			width = screen_width;
-			height = screen_height;
-			render.resize(width, height);
+				++time.tick_index;
+				engine.tick_update(time);
+				render.run();
+			}
 		}
 		void text(unsigned int /*codepoint*/)
 		{
@@ -65,49 +55,41 @@ namespace px {
 
 		}
 		shell(unsigned int start_widht, unsigned int start_height)
-			: width(start_widht)
-			, height(start_height)
-			, render(start_widht, start_height)
+			: environment(start_widht, start_height)
+			, run(true)
 		{
-			engine.add(&sprites);
-			engine.add(&transforms);
-
-			add_texture("data/img/monsters.png");
-			render.assign_sprite_data(sprites.data());
-
-			sprites.target(nullptr);
-
-			time.restart();
+			register_systems();
 
 			auto tr = transforms.make();
 			tr->place({ 0, 0 });
 			tr->store();
-			auto spr = sprites.make("rat");
+			auto spr = sprites.make("m_goblin");
 			spr->connect<transform_component>(tr.get());
 			unit = make_uq<composite_component>();
 			unit->add(std::move(tr));
 			unit->add(std::move(spr));
 			unit->enable();
-		}
-	private:
-		void add_texture(std::string const& name)
-		{
-			std::vector<unsigned char> bits;
-			unsigned int texture_width;
-			unsigned int texture_height;
-			auto error = lodepng::decode(bits, texture_width, texture_height, name);
-			if (error) throw std::runtime_error("add_texture error while loading image, path=" + name);
-			render.add_texture(texture_width, texture_height, bits.data());
+
+			start();
 		}
 
 	private:
-		unsigned int		width;
-		unsigned int		height;
+		void register_systems()
+		{
+			engine.add(&sprites);
+			engine.add(&transforms);
+		}
+		void start()
+		{
+			run = true;
+			sprites.target(nullptr);
+			time.restart();
+		}
+
+	private:
+		bool				run;
 		delta				time;
 		engine<delta>		engine;
-		sprite_system		sprites;
-		transform_system	transforms;
-		renderer			render;
 
 		uq_ptr<composite_component> unit;
 	};

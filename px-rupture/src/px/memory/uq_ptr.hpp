@@ -92,18 +92,15 @@ namespace px {
 			: ptr(nullptr)
 		{
 		}
-		//uq_ptr(std::nullptr_t /* nullptr */) noexcept
-		//	: ptr(nullptr)
-		//{
-		//}
+		uq_ptr(std::nullptr_t /* null */) noexcept
+			: ptr(nullptr)
+		{
+		}
 
 		// copy, move
 
 		uq_ptr(uq_ptr const& other) = delete;
 		uq_ptr & operator=(uq_ptr const& other) = delete;
-
-		//uq_ptr(uq_ptr && other) noexcept = default;
-		//uq_ptr & operator=(uq_ptr && other) noexcept = default;
 		uq_ptr(uq_ptr && other) noexcept
 			: uq_ptr()
 		{

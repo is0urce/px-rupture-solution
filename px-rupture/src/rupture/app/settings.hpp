@@ -5,16 +5,20 @@
 #include <string>
 
 namespace px {
+	namespace {
 
-	struct settings {
-		static std::string const application_name;
-		static std::string const bindings_path;
-		static std::string const configuration_path;
-		static std::string const log_path;
-	};
+		struct settings {
+			static char *const application_name;
+			static char *const bindings_path;
+			static char *const configuration_path;
+			static char *const texture_path;
+			static char *const log_path;
+		};
 
-	std::string const settings::application_name = "px-rupture";
-	std::string const settings::bindings_path = "data/controls.json";
-	std::string const settings::configuration_path = "data/config.json";
-	std::string const settings::log_path = "log.txt";
+		char *const settings::application_name = "px-rupture";
+		char *const settings::bindings_path = "data/controls.json";
+		char *const settings::configuration_path = "data/config.json";
+		char *const settings::texture_path = "data/textures.json";
+		char *const settings::log_path = "log.txt";
+	}
 }

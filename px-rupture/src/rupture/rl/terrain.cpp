@@ -16,6 +16,14 @@ namespace px {
 	{
 	}
 
+	void terrain::assign_sprites(sprite_system * system)
+	{
+		impl->assign_sprites(system);
+	}
+	void terrain::pset(uint32_t block_id, point2 const& location)
+	{
+		impl->pset(block_id, location);
+	}
 	bool terrain::is_transparent(point2 const& location) const
 	{
 		return impl->is_transparent(location);

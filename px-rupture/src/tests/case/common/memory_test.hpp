@@ -21,5 +21,6 @@ void test_memory()
 		auto p2 = std::move(p1);
 		test::require(p1.get() == nullptr);
 		test::require(p2.get() != nullptr);
+		test::require(*p2 == 3);
 	}
 }
