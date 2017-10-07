@@ -3,14 +3,20 @@
 #pragma once
 
 #include "tile.hpp"
+#include "tile_prototype.hpp"
 
+#include "rupture/app/document.hpp"
 #include "rupture/es/sprite_system.hpp"
+
+#include "rupture/es/sprite_component.hpp"
 
 #include <px/common/matrix.hpp>
 #include <px/common/point.hpp>
 
 #include <px/rl/mass.hpp>
 #include <px/rl/traverse.hpp>
+
+#include <map>
 
 namespace px {
 	
@@ -31,7 +37,13 @@ namespace px {
 		}
 		void pset(uint32_t block_id, point2 const& location)
 		{
-			tiles.at(location).mass.set_traversable(block_id == 0);
+			tile & target = tiles.at(location);
+			tile_prototype const& prototype = lib[block_id];
+
+			target.block_id = block_id;
+			target.mass = prototype.mass;
+			target.sprite = sprites->make(prototype.name);
+			target.sprite->connect(&target.transform);
 		}
 
 	public:
@@ -40,13 +52,14 @@ namespace px {
 		{
 			tiles.resize(10, 10);
 			tiles.enumerate([&](size_t x, size_t y, tile & t) {
-				t.mass.make_empty();
+				t.block_id = 0;
 				t.transform.place({ static_cast<int>(x), static_cast<int>(y) });
 			});
 		}
 
 	private:
-		matrix2<tile> tiles;
-		sprite_system * sprites;
+		matrix2<tile>						tiles;
+		sprite_system *						sprites;
+		std::map<uint32_t, tile_prototype>	lib;
 	};
 }
