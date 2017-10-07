@@ -5,6 +5,7 @@
 
 // unique_ptr but with erased deleter
 
+#include <cstddef> // for std::nullptr_t
 #include <px/memory/abstract_release_block.hpp>
 
 namespace px {
@@ -88,15 +89,21 @@ namespace px {
 		{
 		}
 		uq_ptr() noexcept
-			: uq_ptr(nullptr, nullptr)
+			: ptr(nullptr)
 		{
 		}
+		//uq_ptr(std::nullptr_t /* nullptr */) noexcept
+		//	: ptr(nullptr)
+		//{
+		//}
 
 		// copy, move
 
 		uq_ptr(uq_ptr const& other) = delete;
 		uq_ptr & operator=(uq_ptr const& other) = delete;
 
+		//uq_ptr(uq_ptr && other) noexcept = default;
+		//uq_ptr & operator=(uq_ptr && other) noexcept = default;
 		uq_ptr(uq_ptr && other) noexcept
 			: uq_ptr()
 		{

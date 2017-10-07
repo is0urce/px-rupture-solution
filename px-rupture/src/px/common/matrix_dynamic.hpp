@@ -44,6 +44,15 @@ namespace px {
 		{
 			resize(range.get<0>(), range.get<1>());
 		}
+		//void resize_default(size_t /*w*/, size_t /*h*/)
+		//{
+		//	//m_data.clear();
+		//	//m_data.reserve(w * h);
+		//	//for (size_t i = 0, len = w * h; i != len; ++i) {
+		//	element_type e;
+		//		m_data.push_back(std::move(e));
+		//	//}
+		//}
 
 		void swap(matrix2 & that)
 		{
@@ -79,6 +88,17 @@ namespace px {
 				for (size_t i = 0; i != m_width; ++i) {
 					m_data[index] = op(i, j);
 					++index;
+				}
+			}
+		}
+		template <typename Generator>
+		void generate(Generator && op, size_t w, size_t h)
+		{
+			m_data.clear();
+			m_data.reserve(w, h);
+			for (size_t j = 0; j != m_height; ++j) {
+				for (size_t i = 0; i != m_width; ++i) {
+					m_data.push_back(op(i, j));
 				}
 			}
 		}

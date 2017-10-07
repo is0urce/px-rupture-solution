@@ -241,8 +241,10 @@
     <ClInclude Include="src\rupture\app\settings.hpp" />
     <ClInclude Include="src\rupture\rl\terrain.hpp" />
     <ClInclude Include="src\rupture\rl\terrain_internal.hpp" />
+    <ClInclude Include="src\rupture\rl\tile.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
+    <ClInclude Include="src\tests\case\common\memory_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />
     <ClInclude Include="src\tests\case\common\pool_test.hpp" />
     <ClInclude Include="src\tests\case\common\qtree_test.hpp" />

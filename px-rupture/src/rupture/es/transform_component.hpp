@@ -22,13 +22,16 @@ namespace px {
 		qtree<transform_component*> * world() const noexcept;	// get current space
 		void move(point2 const& direction);						// move by offset
 		void place(point2 destination);							// place into specified location
+		void swap(transform_component & that);
 
 	public:
 		virtual ~transform_component();
-		transform_component();
-		transform_component(point2 position);
-		transform_component(transform_component const&) = delete;
-		transform_component & operator=(transform_component const&) = delete;
+		transform_component() noexcept;
+		transform_component(point2 position) noexcept;
+		transform_component(transform_component const&) noexcept = delete;
+		transform_component & operator=(transform_component const&) noexcept = delete;
+		transform_component (transform_component && that) noexcept;
+		transform_component & operator=(transform_component && that) noexcept;
 
 	protected:
 		virtual void activate_component() override;

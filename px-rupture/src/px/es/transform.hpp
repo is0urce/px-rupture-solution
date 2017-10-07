@@ -31,11 +31,13 @@ namespace px {
 
 	public:
 		transform() noexcept = default;
-		transform(point2 position)
+		transform(point2 position) noexcept
 			: current(position)
 			, prev(position)
 		{
 		}
+		transform(transform const& position) noexcept = default;
+		transform & operator=(transform const& position) noexcept = default;
 
 	protected:
 		point2			current;

@@ -11,14 +11,26 @@ namespace px {
 	transform_component::~transform_component()
 	{
 	}
-	transform_component::transform_component()
+	transform_component::transform_component() noexcept
 		: space(nullptr)
 	{
 	}
-	transform_component::transform_component(point2 position)
+	transform_component::transform_component(point2 position) noexcept
 		: transform(position)
 		, space(nullptr)
 	{
+	}
+	transform_component::transform_component(transform_component && that) noexcept
+		: transform_component()
+	{
+		*static_cast<transform*>(this) = std::move(static_cast<transform>(that));
+		std::swap(space, that.space);
+	}
+	transform_component & transform_component::operator=(transform_component && that) noexcept
+	{
+		*static_cast<transform*>(this) = std::move(static_cast<transform>(that));
+		std::swap(space, that.space);
+		return *this;
 	}
 
 	// virtual overloads
@@ -72,5 +84,10 @@ namespace px {
 	qtree<transform_component*> * transform_component::world() const noexcept
 	{
 		return space;
+	}
+
+	void transform_component::swap(transform_component & that)
+	{
+		std::swap(space, that.space);
 	}
 }

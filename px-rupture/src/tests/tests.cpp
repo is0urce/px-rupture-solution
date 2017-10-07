@@ -10,6 +10,7 @@
 #include "case/common/coordinate_test.hpp"
 #include "case/common/qtree_test.hpp"
 #include "case/common/matrix_test.hpp"
+#include "case/common/memory_test.hpp"
 
 #include "case/rl/traverse_test.hpp"
 
