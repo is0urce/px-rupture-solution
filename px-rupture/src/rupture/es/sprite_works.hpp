@@ -44,7 +44,10 @@ namespace px {
 		void batch(double interpolation)
 		{
 			vector2 focus = camera ? lerp(*camera, interpolation) : vector2(0, 0);
-			vertices.clear();
+
+			for (auto & cluster : vertices) {
+				cluster.clear();
+			}
 
 			pool.enumerate([&](sprite_component & sprite) {
 
@@ -63,16 +66,24 @@ namespace px {
 						float mx = static_cast<float>(sprite.x_multiple);
 						float my = static_cast<float>(sprite.y_multiple);
 
-						vertices.push_back({ { x + 0, y + 0 }, { sx, sy } });
-						vertices.push_back({ { x + 0, y + my }, { sx, dy } });
-						vertices.push_back({ { x + mx, y + my }, { dx, dy } });
-						vertices.push_back({ { x + mx, y + 0 }, { dx, sy } });
+						unsigned int texture_id = sprite.texture_index;
+						auto & cluster = vertices[texture_id];
+
+						cluster.push_back({ { x + 0, y + 0 }, { sx, sy } });
+						cluster.push_back({ { x + 0, y + my }, { sx, dy } });
+						cluster.push_back({ { x + mx, y + my }, { dx, dy } });
+						cluster.push_back({ { x + mx, y + 0 }, { dx, sy } });
 					}
 				}
 			});
 		}
-		void add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture)
+		void add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture_index)
 		{
+			// ensure sprite data
+			while (vertices.size() <= texture_index) {
+				vertices.emplace_back();
+			}
+
 			sprite & img = lib[name];
 
 			img.sx_texture = sx;
@@ -83,13 +94,9 @@ namespace px {
 			img.y_transpose = 0;
 			img.x_multiple = 1;
 			img.y_multiple = 1;
-			img.texture_index = texture;
+			img.texture_index = texture_index;
 		}
-		void add_sprite(std::string const& name, sprite && element)
-		{
-			lib[name] = element;
-		}
-		std::vector<sprite_vertex> const* data() const noexcept
+		std::vector<std::vector<sprite_vertex>> const* data() const noexcept
 		{
 			return &vertices;
 		}
@@ -107,9 +114,9 @@ namespace px {
 		}
 
 	private:
-		pool_chain<sprite_component, 10000>	pool;		// sprite pool
-		transform_component const*			camera;		// focus camera transform
-		std::vector<sprite_vertex>			vertices;	// batch vertices data
-		std::map<std::string, sprite>		lib;
+		pool_chain<sprite_component, 10000>		pool;		// sprite pool
+		transform_component const*				camera;		// focus camera transform
+		std::map<std::string, sprite>			lib;		// name to sprite mapping
+		std::vector<std::vector<sprite_vertex>>	vertices;	// batch vertices data
 	};
 }

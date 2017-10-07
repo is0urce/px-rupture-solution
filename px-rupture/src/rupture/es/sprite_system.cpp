@@ -30,7 +30,7 @@ namespace px {
 		return works->make(name);
 	}
 
-	std::vector<sprite_vertex> const* sprite_system::data() const noexcept
+	std::vector<std::vector<sprite_vertex>> const* sprite_system::data() const noexcept
 	{
 		return works->data();
 	}

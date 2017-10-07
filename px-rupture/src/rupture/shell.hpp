@@ -63,7 +63,7 @@ namespace px {
 			auto tr = transforms.make();
 			tr->place({ 0, 0 });
 			tr->store();
-			auto spr = sprites.make("m_goblin");
+			auto spr = sprites.make("m_imp");
 			spr->connect<transform_component>(tr.get());
 			unit = make_uq<composite_component>();
 			unit->add(std::move(tr));

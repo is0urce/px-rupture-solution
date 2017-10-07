@@ -21,10 +21,10 @@ namespace px {
 		load_data();
 	}
 
-	void core::resize(int screen_width, int screen_height)
+	void core::resize(int new_width, int new_height)
 	{
-		width = screen_width;
-		height = screen_height;
+		width = new_width;
+		height = new_height;
 		render.resize(width, height);
 	}
 
@@ -35,8 +35,20 @@ namespace px {
 	}
 	void core::load_data()
 	{
-		add_texture("data/img/monsters.png");
-		add_atlas("data/img/monsters.json", 0);
+		//add_texture("data/img/monsters.png");
+		//add_atlas("data/img/monsters.json", 0);
+
+		auto document = document::load_document(settings::texture_path);
+		auto textures = document["textures"];
+		unsigned int texture_id = 0;
+		for (auto const& texture : textures) {
+			std::string atlas = texture["atlas"];
+			std::string bitmap = texture["texture"];
+
+			add_texture(bitmap);
+			add_atlas(atlas, texture_id);
+			++texture_id;
+		}
 	}
 
 	void core::add_texture(std::string const& name)

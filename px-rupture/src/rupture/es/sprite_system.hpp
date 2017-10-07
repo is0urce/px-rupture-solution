@@ -22,7 +22,7 @@ namespace px {
 	{
 	public:
 		uq_ptr<sprite_component> make(std::string const& name);
-		std::vector<sprite_vertex> const* data() const noexcept;
+		std::vector<std::vector<sprite_vertex>> const* data() const noexcept;
 		void target(transform_component const*) noexcept;
 		void add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture);
 

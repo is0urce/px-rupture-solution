@@ -36,9 +36,17 @@ namespace px {
 		{
 			camera.load<camera_uniform>(GL_STREAM_DRAW, { { 1.0f, 1.0f * screen_aspect },{ 0.0, 0.0 } });
 
+			glClear(GL_COLOR_BUFFER_BIT);
+
 			glUseProgram(sprite_program);
-			if (vertices && vertices->size() > 0) {
-				sprites.draw_arrays(GL_QUADS, GL_STREAM_DRAW, vertices->size(), vertices->data());
+			if (sprite_data) {
+				size_t size = sprite_data->size();
+				for (size_t i = 0; i != size; ++i) {
+					std::vector<sprite_vertex> const& vertices = sprite_data->at(i);
+					if (vertices.size() > 0) {
+						sprites[i].draw_arrays(GL_QUADS, GL_STREAM_DRAW, vertices.size(), vertices.data());
+					}
+				}
 			}
 
 			gl_assert();
@@ -51,15 +59,16 @@ namespace px {
 
 			reset_framebuffers();
 		}
-		void assign_sprite_data(std::vector<sprite_vertex> const* data) noexcept
+		void assign_sprite_data(std::vector<std::vector<sprite_vertex>> const* data) noexcept
 		{
-			vertices = data;
+			sprite_data = data;
 		}
 		void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data)
 		{
 			if (!data) throw std::runtime_error("px::renderer::load_texture(...) - data is null");
 
-			auto & batch = sprites;
+			sprites.emplace_back();
+			auto & batch = sprites.back();
 
 			batch.texture.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(texture_width), static_cast<GLsizei>(texture_height), 0, GL_UNSIGNED_BYTE, data);
 			batch.texture.filters(GL_NEAREST, GL_NEAREST); // required
@@ -76,6 +85,7 @@ namespace px {
 		renderer(unsigned int width, unsigned int height)
 			: screen_width(width)
 			, screen_height(height)
+			, sprite_data(nullptr)
 		{
 			// setup rendering
 
@@ -88,6 +98,7 @@ namespace px {
 		{
 			// set states
 
+			glClearColor(1, 1, 0, 1);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_BLEND);
 
@@ -97,20 +108,21 @@ namespace px {
 		}
 		void reset_framebuffers()
 		{
-			auto & batch = sprites;
-
-			batch.pass = { 0, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
-			batch.pass.bind_texture(batch.texture);
-			batch.pass.bind_uniform(camera);
+			for (auto & batch : sprites) {
+				batch.pass = { 0, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
+				batch.pass.bind_texture(batch.texture);
+				batch.pass.bind_uniform(camera);
+			}
 		}
 
 	private:
-		unsigned int	screen_width;
-		unsigned int	screen_height;
-		float			screen_aspect;
-		gl_uniform		camera;
-		gl_program		sprite_program;
-		sprite_batch	sprites;
-		std::vector<sprite_vertex> const* vertices;
+		unsigned int					screen_width;
+		unsigned int					screen_height;
+		float							screen_aspect;
+		gl_uniform						camera;
+		gl_program						sprite_program;
+		std::vector<sprite_batch>		sprites;
+
+		std::vector<std::vector<sprite_vertex>> const* sprite_data;
 	};
 }
