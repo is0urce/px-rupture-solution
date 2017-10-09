@@ -227,11 +227,6 @@ namespace px {
 		{
 			m_data.assign(w * h, initial);
 		}
-		template <typename Pair>
-		matrix2(Pair && range)
-			: matrix2(range.get<0>(), range.get<1>())
-		{
-		}
 		template <typename Generator>
 		matrix2(size_t w, size_t h, Generator && op, int /*execution_option*/)
 			: matrix2(w, h)
@@ -240,8 +235,15 @@ namespace px {
 		}
 		matrix2(matrix2 const&) = delete;
 		matrix2 & operator=(matrix2 const&) = delete;
-		//matrix2(matrix2 && that) = default;
-		//matrix2 & operator=(matrix2 && that) = default;
+		matrix2(matrix2 && that)
+			: matrix2()
+		{
+			swap(that);
+		}
+		matrix2 & operator=(matrix2 && that)
+		{
+			swap(that);
+		}
 
 	private:
 		std::vector<element_type>	m_data;

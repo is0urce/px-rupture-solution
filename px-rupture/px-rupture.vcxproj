@@ -189,10 +189,12 @@
     <ClInclude Include="src\px\dev\test.hpp" />
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
+    <ClInclude Include="src\px\fn\ant_generator.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
     <ClInclude Include="src\rupture\core.hpp" />
+    <ClInclude Include="src\rupture\draw\lightmap.hpp" />
     <ClInclude Include="src\rupture\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />
     <ClInclude Include="src\px\es\engine.hpp" />

@@ -35,9 +35,6 @@ namespace px {
 	}
 	void core::load_data()
 	{
-		//add_texture("data/img/monsters.png");
-		//add_atlas("data/img/monsters.json", 0);
-
 		auto document = document::load_document(settings::texture_path);
 		auto textures = document["textures"];
 		unsigned int texture_id = 0;

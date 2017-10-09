@@ -56,6 +56,7 @@ namespace px {
 			tiles.enumerate([&](size_t x, size_t y, tile & t) {
 				t.block_id = 0;
 				t.transform.place({ static_cast<int>(x), static_cast<int>(y) });
+				t.transform.store();
 			});
 
 			auto doc = document::load_document(settings::tiles_path);

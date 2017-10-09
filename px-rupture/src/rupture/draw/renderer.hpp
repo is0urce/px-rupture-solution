@@ -108,7 +108,7 @@ namespace px {
 		{
 			// set states
 
-			glClearColor(1, 1, 0, 1);
+			glClearColor(0, 0, 0, 1);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_BLEND);
 

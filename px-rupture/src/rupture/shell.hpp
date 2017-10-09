@@ -12,6 +12,9 @@
 #include "es/transform_component.hpp"
 #include "es/composite_component.hpp"
 
+#include <px/fn/ant_generator.hpp>
+#include <random>
+
 #include <vector>
 
 namespace px {
@@ -48,14 +51,18 @@ namespace px {
 			double total = horisontal + vertical;
 			render.zoom(total > 0);
 		}
-		void press(key /*action_index*/)
+		void press(key action_index)
 		{
-
+			switch (action_index) {
+			case key::move_east: step({ 1, 0 }); break;
+			case key::move_west: step({ -1, 0 }); break;
+			case key::move_north: step({ 0, 1 }); break;
+			case key::move_south: step({ 0, -1 }); break;
+			}
 		}
 	public:
 		~shell()
 		{
-
 		}
 		shell(unsigned int start_widht, unsigned int start_height)
 			: environment(start_widht, start_height)
@@ -74,7 +81,7 @@ namespace px {
 		void start()
 		{
 			auto tr = transforms.make();
-			tr->place({ 1, 1 });
+			tr->place({ 4, 5 });
 			tr->store();
 			auto spr = sprites.make("m_imp");
 			spr->connect<transform_component>(tr.get());
@@ -85,7 +92,19 @@ namespace px {
 			units.emplace_back(std::move(unit));
 
 			tr = transforms.make();
-			tr->place({ 2, 1 });
+			incarnate(tr.get());
+			tr->place({ 5, 5 });
+			tr->store();
+			spr = sprites.make("m_darkness");
+			spr->connect<transform_component>(tr.get());
+			unit = make_uq<composite_component>();
+			unit->add(std::move(tr));
+			unit->add(std::move(spr));
+			unit->enable();
+			units.emplace_back(std::move(unit));
+
+			tr = transforms.make();
+			tr->place({ 6, 5 });
 			tr->store();
 			spr = sprites.make("m_succubus");
 			spr->connect<transform_component>(tr.get());
@@ -95,9 +114,10 @@ namespace px {
 			unit->enable();
 			units.emplace_back(std::move(unit));
 
-			terrain.pset(1, { 0 ,0 });
-
-			sprites.target(tr.get());
+			auto map = fn::ant_generator::generate(std::mt19937{}, 10, 10, 10 * 10 * 100 / 61);
+			map.enumerate([this] (size_t x, size_t y, unsigned char tile) {
+				this->terrain.pset(tile == 0 ? 1 : 3, point2(static_cast<int>(x), static_cast<int>(y)));
+			});
 
 			run = true;
 			time.restart();

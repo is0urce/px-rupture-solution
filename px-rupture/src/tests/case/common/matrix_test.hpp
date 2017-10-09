@@ -71,12 +71,12 @@ void test_matrix()
 				matrix2<int> m_zero;
 				matrix2<int> ma(2, 3);
 				matrix2<int> mb(4, 5, init);
-				matrix2<int> m_range(point2(6, 7));
+				//matrix2<int> m_range(point2(6, 7)); // interferes with copy constructor
 				matrix2<int> m_lambda(8, 9, lambda, 0);
 
 				test::require(ma.width() == 2);
 				test::require(mb.height() == 5);
-				test::require(m_range.size() == 6 * 7);
+				//test::require(m_range.size() == 6 * 7);
 
 				test::require(mb[point2(0, 0)] == init);
 				test::require(m_lambda.at(2, 3) == 2 + 3);
