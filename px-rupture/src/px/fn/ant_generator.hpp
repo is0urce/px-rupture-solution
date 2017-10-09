@@ -13,8 +13,7 @@ namespace px::fn {
 	public:
 		template <typename Random>
 		static matrix2<block_type> generate(Random && rng, size_t w, size_t h, unsigned int steps) {
-			matrix2<block_type> map(w, h);
-			map.fill(0);
+			matrix2<block_type> map(w, h, 0);
 
 			int x = static_cast<int>(w / 2);
 			int y = static_cast<int>(h / 2);
