@@ -264,6 +264,9 @@
     <ClInclude Include="src\rupture\rl\tile_prototype.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\px\common\color.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -296,5 +299,7 @@
     <None Include="data\controls.json" />
     <None Include="data\shaders\sprite.frag" />
     <None Include="data\shaders\sprite.vert" />
+    <None Include="data\textures.json" />
+    <None Include="data\tiles.json" />
   </ItemGroup>
 </Project>

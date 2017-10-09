@@ -5,6 +5,7 @@
 #include "tile.hpp"
 #include "tile_prototype.hpp"
 
+#include "rupture/app/settings.hpp"
 #include "rupture/app/document.hpp"
 #include "rupture/es/sprite_system.hpp"
 
@@ -44,6 +45,7 @@ namespace px {
 			target.mass = prototype.mass;
 			target.sprite = sprites->make(prototype.name);
 			target.sprite->connect(&target.transform);
+			target.sprite->activate();
 		}
 
 	public:
@@ -55,6 +57,25 @@ namespace px {
 				t.block_id = 0;
 				t.transform.place({ static_cast<int>(x), static_cast<int>(y) });
 			});
+
+			auto doc = document::load_document(settings::tiles_path);
+			auto tile_list = doc["tiles"];
+			for (auto const& tile_node : tile_list) {
+				unsigned int block_id = tile_node["block_id"];
+				std::string name = tile_node["name"];
+				bool transparent = tile_node["transparent"];
+				unsigned int traverse_mask = tile_node["traversable"];
+
+				rl::mass<rl::traverse>::bitset_type blocking_bits{ traverse_mask };
+
+				add_prototype(block_id, name, { transparent, ~blocking_bits });
+			}
+		}
+
+	private:
+		void add_prototype(uint32_t block_id, std::string const& name, rl::mass<rl::traverse> const& mass)
+		{
+			lib[block_id] = { block_id, name, mass };
 		}
 
 	private:

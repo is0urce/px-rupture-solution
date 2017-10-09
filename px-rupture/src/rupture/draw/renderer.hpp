@@ -34,7 +34,7 @@ namespace px {
 	public:
 		void run()
 		{
-			camera.load<camera_uniform>(GL_STREAM_DRAW, { { 1.0f, 1.0f * screen_aspect },{ 0.0, 0.0 } });
+			camera.load<camera_uniform>(GL_STREAM_DRAW, { { scale, scale * screen_aspect },{ 0.0, 0.0 } });
 
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -53,10 +53,7 @@ namespace px {
 		}
 		void resize(int width, int height)
 		{
-			screen_width = width;
-			screen_height = height;
-			screen_aspect = static_cast<float>(screen_width) / static_cast<float>(screen_height);
-
+			assign_size(width, height);
 			reset_framebuffers();
 		}
 		void assign_sprite_data(std::vector<std::vector<sprite_vertex>> const* data) noexcept
@@ -80,13 +77,26 @@ namespace px {
 			batch.pass.bind_texture(batch.texture);
 			batch.pass.bind_uniform(camera);
 		}
+		void zoom(bool up)
+		{
+			scale *= up ? 1.1f : 0.9f;
+		}
+		float get_scale()
+		{
+			return scale;
+		}
+		void set_scale(float pan)
+		{
+			scale = pan;
+		}
 
 	public:
 		renderer(unsigned int width, unsigned int height)
-			: screen_width(width)
-			, screen_height(height)
-			, sprite_data(nullptr)
+			: sprite_data(nullptr)
+			, scale(1.0f)
 		{
+			assign_size(width, height);
+
 			// setup rendering
 
 			create_pipeline();
@@ -114,6 +124,12 @@ namespace px {
 				batch.pass.bind_uniform(camera);
 			}
 		}
+		void assign_size(unsigned int new_width, unsigned int new_height)
+		{
+			screen_width = new_width;
+			screen_height = new_height;
+			screen_aspect = static_cast<float>(screen_width) / static_cast<float>(screen_height);
+		}
 
 	private:
 		unsigned int					screen_width;
@@ -122,6 +138,7 @@ namespace px {
 		gl_uniform						camera;
 		gl_program						sprite_program;
 		std::vector<sprite_batch>		sprites;
+		float							scale;
 
 		std::vector<std::vector<sprite_vertex>> const* sprite_data;
 	};

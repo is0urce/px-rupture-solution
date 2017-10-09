@@ -77,12 +77,12 @@ namespace px::rl
 		{
 		}
 		constexpr mass(bool transparency, bool can_traverse)
-			: mass(transparency)
+			: transparent(transparency)
 		{
 			make_traversable(can_traverse);
 		}
 		constexpr mass(bool transparency, traverse_options const& opts)
-			: mass(transparency)
+			: traverse_options(opts)
 			, transparent(transparency)
 		{
 		}

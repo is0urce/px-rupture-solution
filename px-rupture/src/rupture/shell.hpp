@@ -12,6 +12,8 @@
 #include "es/transform_component.hpp"
 #include "es/composite_component.hpp"
 
+#include <vector>
+
 namespace px {
 
 	class shell final
@@ -41,9 +43,10 @@ namespace px {
 		{
 
 		}
-		void scroll(double /*horisontal*/, double /*vertical*/)
+		void scroll(double horisontal, double vertical)
 		{
-
+			double total = horisontal + vertical;
+			render.zoom(total > 0);
 		}
 		void press(key /*action_index*/)
 		{
@@ -59,17 +62,6 @@ namespace px {
 			, run(true)
 		{
 			register_systems();
-
-			auto tr = transforms.make();
-			tr->place({ 0, 0 });
-			tr->store();
-			auto spr = sprites.make("m_imp");
-			spr->connect<transform_component>(tr.get());
-			unit = make_uq<composite_component>();
-			unit->add(std::move(tr));
-			unit->add(std::move(spr));
-			unit->enable();
-
 			start();
 		}
 
@@ -81,8 +73,33 @@ namespace px {
 		}
 		void start()
 		{
+			auto tr = transforms.make();
+			tr->place({ 1, 1 });
+			tr->store();
+			auto spr = sprites.make("m_imp");
+			spr->connect<transform_component>(tr.get());
+			auto unit = make_uq<composite_component>();
+			unit->add(std::move(tr));
+			unit->add(std::move(spr));
+			unit->enable();
+			units.emplace_back(std::move(unit));
+
+			tr = transforms.make();
+			tr->place({ 2, 1 });
+			tr->store();
+			spr = sprites.make("m_succubus");
+			spr->connect<transform_component>(tr.get());
+			unit = make_uq<composite_component>();
+			unit->add(std::move(tr));
+			unit->add(std::move(spr));
+			unit->enable();
+			units.emplace_back(std::move(unit));
+
+			terrain.pset(1, { 0 ,0 });
+
+			sprites.target(tr.get());
+
 			run = true;
-			sprites.target(nullptr);
 			time.restart();
 		}
 
@@ -91,6 +108,6 @@ namespace px {
 		delta				time;
 		engine<delta>		engine;
 
-		uq_ptr<composite_component> unit;
+		std::vector<uq_ptr<composite_component>> units;
 	};
 }

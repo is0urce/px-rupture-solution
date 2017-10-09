@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\px\common\bindings.hpp" />
+    <ClInclude Include="src\px\common\color.hpp" />
     <ClInclude Include="src\px\common\coordinate.hpp" />
     <ClInclude Include="src\px\common\coordinate_operation.hpp" />
     <ClInclude Include="src\px\common\matrix.hpp" />
@@ -259,6 +260,8 @@
     <None Include="data\controls.json" />
     <None Include="data\shaders\sprite.frag" />
     <None Include="data\shaders\sprite.vert" />
+    <None Include="data\textures.json" />
+    <None Include="data\tiles.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
