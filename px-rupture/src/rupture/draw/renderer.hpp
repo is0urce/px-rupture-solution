@@ -32,7 +32,7 @@ namespace px {
 		struct camera_data;
 
 	public:
-		void run()
+		void run(float /*time*/)
 		{
 			camera.load<camera_uniform>(GL_STREAM_DRAW, { { scale, scale * screen_aspect },{ 0.0, 0.0 } });
 

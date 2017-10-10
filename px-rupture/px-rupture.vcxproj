@@ -162,9 +162,11 @@
   <ItemGroup>
     <ClCompile Include="src\rupture\core.cpp" />
     <ClCompile Include="src\rupture\environment.cpp" />
+    <ClCompile Include="src\rupture\es\render_system.cpp" />
     <ClCompile Include="src\rupture\es\sprite_system.cpp" />
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
     <ClCompile Include="src\rupture\es\transform_system.cpp" />
+    <ClCompile Include="src\rupture\es\ui_system.cpp" />
     <ClCompile Include="src\rupture\main.cpp" />
     <ClCompile Include="src\rupture\main_extras.cpp" />
     <ClCompile Include="src\rupture\rl\terrain.cpp" />
@@ -237,6 +239,7 @@
     <ClInclude Include="src\rupture\draw\sprite_batch.hpp" />
     <ClInclude Include="src\rupture\draw\sprite_vertex.hpp" />
     <ClInclude Include="src\rupture\environment.hpp" />
+    <ClInclude Include="src\rupture\es\render_system.hpp" />
     <ClInclude Include="src\rupture\es\sprite_component.hpp" />
     <ClInclude Include="src\rupture\es\sprite_system.hpp" />
     <ClInclude Include="src\rupture\es\sprite_works.hpp" />
@@ -244,8 +247,10 @@
     <ClInclude Include="src\rupture\es\transform_system.hpp" />
     <ClInclude Include="src\rupture\draw\image.hpp" />
     <ClInclude Include="src\rupture\es\transform_works.hpp" />
+    <ClInclude Include="src\rupture\es\ui_system.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
+    <ClInclude Include="src\rupture\menu.hpp" />
     <ClInclude Include="src\rupture\rl\terrain.hpp" />
     <ClInclude Include="src\rupture\rl\terrain_internal.hpp" />
     <ClInclude Include="src\rupture\rl\tile.hpp" />

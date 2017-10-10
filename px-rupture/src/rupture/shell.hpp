@@ -2,13 +2,14 @@
 
 #pragma once
 
-#include "key.hpp"
 #include "environment.hpp"
+#include "key.hpp"
+
+#include "es/render_system.hpp"
+#include "es/ui_system.hpp"
 
 #include <px/es/engine.hpp>
 #include <px/es/delta.hpp>
-
-#include <px/memory/uq_ptr.hpp>
 
 namespace px {
 
@@ -41,6 +42,7 @@ namespace px {
 		delta				time;
 		engine<delta>		engine;
 
-		uq_ptr<renderer>	render;
+		render_system		renderer;
+		ui_system			ui;
 	};
 }
