@@ -21,7 +21,7 @@ namespace px {
 	public:
 		void frame(double timer);
 		void text(unsigned int codepoint);
-		void click(int mouse_button);
+		void click(int mouse_button, bool is_down);
 		void hover(int x, int y);
 		void scroll(double horisontal, double vertical);
 		void press(key action_index);

@@ -15,7 +15,12 @@ namespace px {
 		: public system<delta>
 	{
 	public:
-		void toggle(bool up);
+		bool click(unsigned int mouse_button, bool is_down);
+		bool text(unsigned int codepoint);
+		bool hover(unsigned int x, unsigned int y);
+		bool scroll(double horisontal, double vertical);
+		void resize(unsigned int x, unsigned int y);
+		bool takes_input();
 
 	public:
 		virtual ~ui_system();

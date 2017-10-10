@@ -21,6 +21,7 @@ namespace px {
 		connect_managers();
 		load_data();
 		register_systems();
+		time.restart();
 		start();
 	}
 
@@ -29,6 +30,7 @@ namespace px {
 	void shell::resize(int width, int height)
 	{
 		renderer.resize(width, height);
+		ui.resize(width, height);
 	}
 
 	void shell::connect_managers()
@@ -69,25 +71,27 @@ namespace px {
 			engine.tick_update(time);
 		}
 	}
-	void shell::text(unsigned int /*codepoint*/)
+	void shell::text(unsigned int codepoint)
 	{
-
+		ui.text(codepoint);
 	}
-	void shell::click(int /*mouse_button*/)
+	void shell::click(int mouse_button, bool is_down)
 	{
-
+		ui.click(mouse_button, is_down);
 	}
-	void shell::hover(int /*x*/, int /*y*/)
+	void shell::hover(int x, int y)
 	{
-
+		ui.hover(x, y);
 	}
 	void shell::scroll(double horisontal, double vertical)
 	{
-		double total = horisontal + vertical;
-		renderer.zoom(total > 0);
+		if (ui.scroll(horisontal, vertical)) return;
+		renderer.zoom(horisontal + vertical > 0);
 	}
 	void shell::press(key action_index)
 	{
+		if (ui.takes_input()) return;
+
 		switch (action_index) {
 		case key::move_east: step({ 1, 0 }); break;
 		case key::move_west: step({ -1, 0 }); break;

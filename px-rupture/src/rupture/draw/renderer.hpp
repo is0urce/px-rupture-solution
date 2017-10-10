@@ -36,6 +36,15 @@ namespace px {
 		{
 			camera.load<camera_uniform>(GL_STREAM_DRAW, { { scale, scale * screen_aspect },{ 0.0, 0.0 } });
 
+			glEnable(GL_BLEND);
+			glBlendEquation(GL_FUNC_ADD);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glDisable(GL_CULL_FACE);
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_SCISSOR_TEST);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			glUseProgram(sprite_program);

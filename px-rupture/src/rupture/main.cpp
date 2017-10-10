@@ -67,9 +67,7 @@ namespace px {
 			game.resize(widht, height);
 		});
 		evt.on_click([&](int mouse_button, int action, int /* mods */) {
-			if (action == GLFW_PRESS) {
-				game.click(mouse_button);
-			}
+			game.click(mouse_button, action == GLFW_PRESS);
 		});
 		evt.on_hover([&](double x, double y) {
 			game.hover(static_cast<int>(x), static_cast<int>(y));

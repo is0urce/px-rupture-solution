@@ -16,14 +16,34 @@ namespace px {
 	{
 	}
 
-	void ui_system::update_system(delta_type const& /*delta_time*/)
+	void ui_system::update_system(delta_type const& delta_time)
 	{
-		works->draw();
+		works->draw(static_cast<float>(delta_time.real_delta));
 	}
 
-	void ui_system::toggle(bool visible)
+	void ui_system::resize(unsigned int w, unsigned int h)
 	{
-		works->toggle(visible);
+		works->resize(w, h);
 	}
 
+	bool ui_system::click(unsigned int mouse_button, bool is_down)
+	{
+		return works->click(mouse_button, is_down);
+	}
+	bool ui_system::text(unsigned int codepoint)
+	{
+		return works->text(codepoint);
+	}
+	bool ui_system::hover(unsigned int x, unsigned int y)
+	{
+		return works->hover(x, y);
+	}
+	bool ui_system::scroll(double horisontal, double vertical)
+	{
+		return works->scroll(horisontal, vertical);
+	}
+	bool ui_system::takes_input()
+	{
+		return works->takes_input();
+	}
 }

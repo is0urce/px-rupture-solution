@@ -1,4 +1,4 @@
-// name: component_collection.hpp
+// name: composite_component.hpp
 // type: c++ header
 // desc: class definition
 // auth: is0urce
