@@ -15,10 +15,6 @@ namespace px {
 	class menu final
 	{
 	public:
-		void toggle(bool /*visible*/)
-		{
-
-		}
 		void resize(unsigned int w, unsigned int h)
 		{
 			width = w;
@@ -58,10 +54,8 @@ namespace px {
 		}
 		bool scroll(double horisontal, double vertical)
 		{
-			if (!ImGui::IsAnyWindowHovered()) return false;
-
 			ImGui::GetIO().MouseWheel = static_cast<float>(horisontal + vertical);
-			return true;
+			return ImGui::IsAnyWindowHovered();
 		}
 		bool takes_input()
 		{
@@ -75,7 +69,6 @@ namespace px {
 			release_pipeline();
 		}
 		menu(unsigned int w, unsigned int h)
-			: texture_id(0)
 		{
 			resize(w, h);
 			create_pipeline();
@@ -206,7 +199,6 @@ namespace px {
 	private:
 		unsigned int width;
 		unsigned int height;
-		GLuint texture_id;
 		gl_texture font;
 		gl_program shader;
 

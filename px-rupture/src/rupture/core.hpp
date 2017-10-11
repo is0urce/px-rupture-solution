@@ -13,7 +13,7 @@ namespace px {
 		virtual ~core();
 		core();
 
-	protected:
+	public:
 		sprite_system		sprites;
 		transform_system	transforms;
 	};

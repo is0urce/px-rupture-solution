@@ -9,7 +9,7 @@
 // has ownership of component collection
 
 #include <px/es/component.hpp>
-#include <px/memory/memory.hpp>
+#include <px/memory/uq_ptr.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -22,15 +22,16 @@ namespace px {
 		typedef uq_ptr<component> component_ptr;
 
 	public:
-		void add(component_ptr && component)
+		component_ptr & add(component_ptr && component)
 		{
 			m_components.push_back(std::forward<component_ptr>(component));
+			return m_components.back();
 		}
 
 		// remove specified component (O=n)
-		void remove(component_ptr component)
+		void remove(component * element)
 		{
-			m_components.erase(std::remove(std::begin(m_components), std::end(m_components), component));
+			m_components.erase(std::remove_if(std::begin(m_components), std::end(m_components), [&](component_ptr const& ptr) { return ptr.get() == element; }));
 		}
 
 		// remove component by type (O=n)
@@ -75,7 +76,7 @@ namespace px {
 
 		// querry component by type
 		template <typename U>
-		U * component() const
+		U * query() const
 		{
 			U * result = nullptr;
 

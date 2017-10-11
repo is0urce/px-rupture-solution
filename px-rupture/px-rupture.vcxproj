@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="src\rupture\core.cpp" />
     <ClCompile Include="src\rupture\environment.cpp" />
+    <ClCompile Include="src\rupture\es\builder.cpp" />
     <ClCompile Include="src\rupture\es\render_system.cpp" />
     <ClCompile Include="src\rupture\es\sprite_system.cpp" />
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
     <ClInclude Include="src\rupture\core.hpp" />
     <ClInclude Include="src\rupture\draw\lightmap.hpp" />
+    <ClInclude Include="src\rupture\es\builder.hpp" />
     <ClInclude Include="src\rupture\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />
     <ClInclude Include="src\px\es\engine.hpp" />

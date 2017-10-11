@@ -3,8 +3,8 @@
 #include "environment.hpp"
 
 #include "es/transform_component.hpp"
-#include "es/sprite_component.hpp"
 #include "es/composite_component.hpp"
+#include "es/builder.hpp"
 
 #include <px/fn/ant_generator.hpp>
 #include <px/memory/memory.hpp>
@@ -43,37 +43,23 @@ namespace px {
 
 	void environment::start()
 	{
-		auto tr = transforms.make();
-		tr->place({ 4, 5 });
-		tr->store();
-		auto spr = sprites.make("m_imp");
-		spr->connect<transform_component>(tr.get());
-		auto unit = make_uq<composite_component>();
-		unit->add(std::move(tr));
-		unit->add(std::move(spr));
+		builder b(this);
+
+		b.add_sprite("m_imp");
+		b.add_transform({ 4, 5 });
+		auto unit = b.request();
 		unit->enable();
 		units.emplace_back(std::move(unit));
 
-		tr = transforms.make();
-		incarnate(tr.get());
-		tr->place({ 5, 5 });
-		tr->store();
-		spr = sprites.make("m_darkness");
-		spr->connect<transform_component>(tr.get());
-		unit = make_uq<composite_component>();
-		unit->add(std::move(tr));
-		unit->add(std::move(spr));
+		b.add_sprite("m_darkness");
+		incarnate(b.add_transform({ 5, 5 }));
+		unit = b.request();
 		unit->enable();
 		units.emplace_back(std::move(unit));
 
-		tr = transforms.make();
-		tr->place({ 6, 5 });
-		tr->store();
-		spr = sprites.make("m_succubus");
-		spr->connect<transform_component>(tr.get());
-		unit = make_uq<composite_component>();
-		unit->add(std::move(tr));
-		unit->add(std::move(spr));
+		b.add_sprite("m_succubus");
+		b.add_transform({ 6, 5 });
+		unit = b.request();
 		unit->enable();
 		units.emplace_back(std::move(unit));
 
