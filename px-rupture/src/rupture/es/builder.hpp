@@ -11,6 +11,7 @@ namespace px {
 	class composite_component;
 	class sprite_component;
 	class transform_component;
+	class light_component;
 
 	class builder
 	{
@@ -19,6 +20,7 @@ namespace px {
 		uq_ptr<composite_component> request();
 		sprite_component * add_sprite(char const* name);
 		transform_component * add_transform(point2 const& location);
+		light_component * add_light();
 
 	public:
 		~builder();
@@ -32,5 +34,6 @@ namespace px {
 		uq_ptr<composite_component>	unit;
 		sprite_component *			sprite;
 		transform_component *		transform;
+		light_component *			light;
 	};
 }

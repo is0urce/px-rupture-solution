@@ -141,9 +141,6 @@
     <ClInclude Include="src\px\rgl\gl_framebuffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\px\rgl\gl_pass.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\px\rgl\gl_program.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -300,6 +297,12 @@
     <ClInclude Include="src\rupture\es\light_works.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\px\rgl\offscreen.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\rgl\pass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -352,5 +355,9 @@
     <None Include="data\shaders\sprite.vert" />
     <None Include="data\textures.json" />
     <None Include="data\tiles.json" />
+    <None Include="data\shaders\process.vert" />
+    <None Include="data\shaders\process.frag" />
+    <None Include="data\shaders\ui.vert" />
+    <None Include="data\shaders\ui.frag" />
   </ItemGroup>
 </Project>

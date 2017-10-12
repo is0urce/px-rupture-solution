@@ -7,14 +7,14 @@
 
 namespace px {
 
-	class recursive_shadowcasting
+	class recursive_shadowcasting final
 	{
 	public:
 		template <typename Predicate, typename Light>
 		static void light(int center_x, int center_y, unsigned int radius_size, Predicate && predicate_fn, Light && light_op)
 		{
 			// octants
-			static int multipliers[4][8] = {
+			static const int multipliers[4][8] = {
 				{ 1, 0, 0, -1, -1, 0, 0, 1 },
 				{ 0, 1, -1, 0, 0, -1, 1, 0 },
 				{ 0, 1, 1, 0, 0, -1, -1, 0 },

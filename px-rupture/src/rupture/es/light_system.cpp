@@ -12,7 +12,7 @@ namespace px {
 
 	}
 	light_system::light_system()
-		: works(make_uq<light_works>())
+		: works(make_uq<light_works>(20))
 	{
 	}
 

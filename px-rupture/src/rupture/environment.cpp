@@ -4,6 +4,7 @@
 
 #include "es/transform_component.hpp"
 #include "es/composite_component.hpp"
+#include "es/light_component.hpp"
 #include "es/builder.hpp"
 
 #include <px/fn/ant_generator.hpp>
@@ -48,6 +49,10 @@ namespace px {
 
 		b.add_sprite("m_imp");
 		b.add_transform({ 4, 5 });
+		auto light = b.add_light();
+		light->tint = 0xff0000;
+		light->elevation = 0;
+
 		auto unit = b.request();
 		unit->enable();
 		units.emplace_back(std::move(unit));

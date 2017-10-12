@@ -7,10 +7,11 @@ namespace px {
 
 	struct lightmap
 	{
-		int x_offset;
-		int y_offset;
+		int ox;
+		int oy;
 		size_t width;
 		size_t height;
 		double * data;
+		unsigned int version;
 	};
 }

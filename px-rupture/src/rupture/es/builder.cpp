@@ -5,6 +5,7 @@
 #include "composite_component.hpp"
 #include "sprite_component.hpp"
 #include "transform_component.hpp"
+#include "light_component.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -36,10 +37,19 @@ namespace px {
 		unit->add(std::move(t));
 		return transform;
 	}
+	light_component * builder::add_light()
+	{
+		auto l = factory->lights.make();
+		light = l.get();
+		unit->add(std::move(l));
+
+		return light;
+	}
 
 	void builder::link_components()
 	{
 		if (transform && sprite) sprite->connect(transform);
+		if (transform && light) light->connect(transform);
 	}
 
 	uq_ptr<composite_component> builder::request()

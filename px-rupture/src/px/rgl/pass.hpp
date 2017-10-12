@@ -1,4 +1,4 @@
-// name: gl_pass
+// name: pass.hpp
 // type: c++ header
 // auth: is0urce
 // desc: renderpass state mashine abstraction
@@ -7,11 +7,12 @@
 
 #include <GL/GL.h>
 
+#include <initializer_list>
 #include <vector>
 
 namespace px {
 
-	class gl_pass
+	class pass
 	{
 	public:
 		struct attachment
@@ -21,7 +22,7 @@ namespace px {
 		};
 
 	public:
-		void swap(gl_pass & that) noexcept
+		void swap(pass & that) noexcept
 		{
 			std::swap(m_init, that.m_init);
 			std::swap(m_framebuffer, that.m_framebuffer);
@@ -30,6 +31,11 @@ namespace px {
 			std::swap(m_height, that.m_height);
 			std::swap(m_textures, that.m_textures);
 			std::swap(m_uniforms, that.m_uniforms);
+		}
+		void output(GLuint framebuffer, GLsizei width, GLsizei height)
+		{
+			m_framebuffer = framebuffer;
+			viewport(width, height);
 		}
 		void viewport(GLsizei width, GLsizei height) noexcept
 		{
@@ -43,7 +49,7 @@ namespace px {
 		}
 		void bind_texture(GLuint texture)
 		{
-			m_textures.push_back({ 0, texture });
+			bind_texture(texture, 0);
 		}
 		void bind_uniform(GLuint ubo, GLuint index)
 		{
@@ -53,12 +59,21 @@ namespace px {
 		{
 			m_uniforms.push_back({ 0, ubo });
 		}
+		void bind_textures(std::initializer_list<GLuint> && container)
+		{
+			GLuint index = 0;
+			for (GLuint texture : container) {
+				bind_texture(texture, index);
+				++index;
+			}
+		}
 
 	public:
 		void bind()
 		{
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer);
 			glViewport(0, 0, m_width, m_height);
+			glScissor(0, 0, m_width, m_height);
 			if (m_vao != 0) {
 				glBindVertexArray(m_vao);
 			}
@@ -81,7 +96,10 @@ namespace px {
 		}
 
 	public:
-		gl_pass() noexcept
+		~pass()
+		{
+		}
+		pass() noexcept
 			: m_framebuffer(0)
 			, m_vao(0)
 			, m_init(false)
@@ -89,37 +107,34 @@ namespace px {
 			, m_height(0)
 		{
 		}
-		gl_pass(GLuint framebuffer, GLuint vao, GLsizei width, GLsizei height) noexcept
-			: gl_pass()
+		pass(GLuint framebuffer, GLuint vao, GLsizei width, GLsizei height) noexcept
+			: pass()
 		{
 			m_framebuffer = framebuffer;
 			m_vao = vao;
 			m_init = true;
 			viewport(width, height);
 		}
-		gl_pass(gl_pass const&) = delete;
-		gl_pass& operator=(gl_pass const&) = delete;
-		gl_pass(gl_pass && that) noexcept
-			: gl_pass()
+		pass(pass const&) = delete;
+		pass & operator=(pass const&) = delete;
+		pass(pass && that) noexcept
+			: pass()
 		{
 			swap(that);
 		}
-		gl_pass& operator=(gl_pass && that) noexcept
+		pass & operator=(pass && that) noexcept
 		{
 			swap(that);
 			return *this;
 		}
-		~gl_pass()
-		{
-		}
 
 	private:
-		bool m_init;
-		GLuint m_framebuffer;
-		GLuint m_vao;
-		GLsizei m_width;
-		GLsizei m_height;
-		std::vector<attachment> m_textures;
-		std::vector<attachment> m_uniforms;
+		bool					m_init;
+		GLuint					m_framebuffer;
+		GLuint					m_vao;
+		GLsizei					m_width;
+		GLsizei					m_height;
+		std::vector<attachment>	m_textures;
+		std::vector<attachment>	m_uniforms;
 	};
 }

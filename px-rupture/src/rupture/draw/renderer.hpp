@@ -16,6 +16,7 @@
 
 #include <px/rgl/rgl.hpp>
 #include <px/rgl/compilation.hpp>
+#include <px/rgl/offscreen.hpp>
 
 #include "sprite_vertex.hpp"
 #include "sprite_batch.hpp"
@@ -36,27 +37,19 @@ namespace px {
 		{
 			camera.load<camera_uniform>(GL_STREAM_DRAW, { { scale, scale * screen_aspect },{ 0.0, 0.0 } });
 
-			glEnable(GL_BLEND);
-			glBlendEquation(GL_FUNC_ADD);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			glDisable(GL_CULL_FACE);
-			glDisable(GL_DEPTH_TEST);
-			glDisable(GL_SCISSOR_TEST);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-			glClear(GL_COLOR_BUFFER_BIT);
-
 			glUseProgram(sprite_program);
 			if (sprite_data) {
 				size_t size = sprite_data->size();
 				for (size_t i = 0; i != size; ++i) {
-					std::vector<sprite_vertex> const& vertices = sprite_data->at(i);
+					std::vector<sprite_vertex> const& vertices = (*sprite_data)[i];
 					if (vertices.size() > 0) {
 						sprites[i].draw_arrays(GL_QUADS, GL_STREAM_DRAW, vertices.size(), vertices.data());
 					}
 				}
 			}
+
+			glUseProgram(postprocess_program);
+			postprocess.draw_arrays(GL_QUADS, 4);
 
 			gl_assert();
 		}
@@ -82,9 +75,7 @@ namespace px {
 			batch.vertices = GL_ARRAY_BUFFER;
 			batch.geometry.swizzle(batch.vertices, sizeof(sprite_vertex), { GL_FLOAT, GL_FLOAT }, { 2, 2 }, { offsetof(sprite_vertex, position), offsetof(sprite_vertex, texture) });
 
-			batch.pass = { 0, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
-			batch.pass.bind_texture(batch.texture);
-			batch.pass.bind_uniform(camera);
+			setup_batch(batch);
 		}
 		void zoom(bool up)
 		{
@@ -118,19 +109,25 @@ namespace px {
 			// set states
 
 			glClearColor(0, 0, 0, 1);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// compile shaders
 
 			sprite_program = compile_program("data/shaders/sprite", { "Camera" }, { "img" });
+			postprocess_program = compile_program("data/shaders/process", {}, { "diffuse", "light" });
 		}
 		void reset_framebuffers()
 		{
+			diffuse.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
+			light.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
+
+			postprocess.output(0, screen_width, screen_height);
+			postprocess.bind_textures({ diffuse.texture, light.texture });
+
 			for (auto & batch : sprites) {
-				batch.pass = { 0, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
-				batch.pass.bind_texture(batch.texture);
-				batch.pass.bind_uniform(camera);
+				setup_batch(batch);
 			}
 		}
 		void assign_size(unsigned int new_width, unsigned int new_height)
@@ -139,6 +136,12 @@ namespace px {
 			screen_height = new_height;
 			screen_aspect = static_cast<float>(screen_width) / static_cast<float>(screen_height);
 		}
+		void setup_batch(sprite_batch & batch) const
+		{
+			batch.pass = { diffuse.framebuffer, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
+			batch.pass.bind_texture(batch.texture);
+			batch.pass.bind_uniform(camera);
+		}
 
 	private:
 		unsigned int					screen_width;
@@ -146,9 +149,14 @@ namespace px {
 		float							screen_aspect;
 		gl_uniform						camera;
 		gl_program						sprite_program;
+		gl_program						postprocess_program;
 		std::vector<sprite_batch>		sprites;
 		float							scale;
 
 		std::vector<std::vector<sprite_vertex>> const* sprite_data;
+
+		offscreen						diffuse;
+		offscreen						light;
+		pass							postprocess;
 	};
 }

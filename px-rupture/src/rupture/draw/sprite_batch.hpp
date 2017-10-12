@@ -6,6 +6,7 @@
 #pragma once
 
 #include <px/rgl/rgl.hpp>
+#include <px/rgl/pass.hpp>
 
 namespace px {
 
@@ -14,7 +15,7 @@ namespace px {
 		gl_buffer	vertices;
 		gl_vao		geometry;
 		gl_texture	texture;
-		gl_pass		pass;
+		pass		pass;
 
 	public:
 		template <typename T>
@@ -24,5 +25,4 @@ namespace px {
 			pass.draw_arrays(mode, static_cast<GLsizei>(size));
 		}
 	};
-
 }

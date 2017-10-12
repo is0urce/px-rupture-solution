@@ -198,6 +198,7 @@
     <ClInclude Include="src\px\es\component.hpp" />
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
     <ClInclude Include="src\px\es\light.hpp" />
+    <ClInclude Include="src\px\rgl\offscreen.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
@@ -227,7 +228,7 @@
     <ClInclude Include="src\px\rgl\gl_assert.hpp" />
     <ClInclude Include="src\px\rgl\gl_buffer.hpp" />
     <ClInclude Include="src\px\rgl\gl_framebuffer.hpp" />
-    <ClInclude Include="src\px\rgl\gl_pass.hpp" />
+    <ClInclude Include="src\px\rgl\pass.hpp" />
     <ClInclude Include="src\px\rgl\gl_program.hpp" />
     <ClInclude Include="src\px\rgl\gl_shader.hpp" />
     <ClInclude Include="src\px\rgl\gl_texture.hpp" />
@@ -275,8 +276,12 @@
   <ItemGroup>
     <None Include="data\config.json" />
     <None Include="data\controls.json" />
+    <None Include="data\shaders\process.frag" />
+    <None Include="data\shaders\process.vert" />
     <None Include="data\shaders\sprite.frag" />
     <None Include="data\shaders\sprite.vert" />
+    <None Include="data\shaders\ui.frag" />
+    <None Include="data\shaders\ui.vert" />
     <None Include="data\textures.json" />
     <None Include="data\tiles.json" />
   </ItemGroup>
