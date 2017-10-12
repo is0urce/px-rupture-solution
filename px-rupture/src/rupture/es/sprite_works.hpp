@@ -50,30 +50,28 @@ namespace px {
 			}
 
 			pool.enumerate([&](sprite_component & sprite) {
+				if (!sprite.is_active()) return;
 
-				if (sprite.is_active()) {
+				if (transform_component * location = sprite.linked<transform_component>()) {
 
-					if (transform_component * location = sprite.linked<transform_component>()) {
+					vector2 pos = lerp(*location, interpolation) - focus;
 
-						vector2 pos = lerp(*location, interpolation) - focus;
+					float x = static_cast<float>(pos.x() + sprite.x_transpose);
+					float y = static_cast<float>(pos.y() + sprite.y_transpose);
+					float sx = static_cast<float>(sprite.sx_texture);
+					float sy = static_cast<float>(sprite.sy_texture);
+					float dx = static_cast<float>(sprite.dx_texture);
+					float dy = static_cast<float>(sprite.dy_texture);
+					float mx = static_cast<float>(sprite.x_multiple);
+					float my = static_cast<float>(sprite.y_multiple);
 
-						float x = static_cast<float>(pos.x() + sprite.x_transpose);
-						float y = static_cast<float>(pos.y() + sprite.y_transpose);
-						float sx = static_cast<float>(sprite.sx_texture);
-						float sy = static_cast<float>(sprite.sy_texture);
-						float dx = static_cast<float>(sprite.dx_texture);
-						float dy = static_cast<float>(sprite.dy_texture);
-						float mx = static_cast<float>(sprite.x_multiple);
-						float my = static_cast<float>(sprite.y_multiple);
+					unsigned int texture_id = sprite.texture_index;
+					auto & cluster = vertices[texture_id];
 
-						unsigned int texture_id = sprite.texture_index;
-						auto & cluster = vertices[texture_id];
-
-						cluster.push_back({ { x + 0, y + 0 }, { sx, sy } });
-						cluster.push_back({ { x + 0, y + my }, { sx, dy } });
-						cluster.push_back({ { x + mx, y + my }, { dx, dy } });
-						cluster.push_back({ { x + mx, y + 0 }, { dx, sy } });
-					}
+					cluster.push_back({ { x + 0, y + 0 }, { sx, sy } });
+					cluster.push_back({ { x + 0, y + my }, { sx, dy } });
+					cluster.push_back({ { x + mx, y + my }, { dx, dy } });
+					cluster.push_back({ { x + mx, y + 0 }, { dx, sy } });
 				}
 			});
 		}

@@ -4,6 +4,7 @@
 
 #include "es/sprite_system.hpp"
 #include "es/transform_system.hpp"
+#include "es/light_system.hpp"
 
 namespace px {
 
@@ -16,5 +17,6 @@ namespace px {
 	public:
 		sprite_system		sprites;
 		transform_system	transforms;
+		light_system		lights;
 	};
 }

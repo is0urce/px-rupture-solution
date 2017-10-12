@@ -163,6 +163,7 @@
     <ClCompile Include="src\rupture\core.cpp" />
     <ClCompile Include="src\rupture\environment.cpp" />
     <ClCompile Include="src\rupture\es\builder.cpp" />
+    <ClCompile Include="src\rupture\es\light_system.cpp" />
     <ClCompile Include="src\rupture\es\render_system.cpp" />
     <ClCompile Include="src\rupture\es\sprite_system.cpp" />
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\px\algorithm\recursive_shadowcasting.hpp" />
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\color.hpp" />
     <ClInclude Include="src\px\common\coordinate.hpp" />
@@ -243,6 +245,8 @@
     <ClInclude Include="src\rupture\draw\sprite_vertex.hpp" />
     <ClInclude Include="src\rupture\environment.hpp" />
     <ClInclude Include="src\rupture\es\light_component.hpp" />
+    <ClInclude Include="src\rupture\es\light_system.hpp" />
+    <ClInclude Include="src\rupture\es\light_works.hpp" />
     <ClInclude Include="src\rupture\es\render_system.hpp" />
     <ClInclude Include="src\rupture\es\sprite_component.hpp" />
     <ClInclude Include="src\rupture\es\sprite_system.hpp" />

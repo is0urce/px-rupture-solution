@@ -55,8 +55,9 @@ namespace px {
 
 	void shell::register_systems()
 	{
-		engine.add(&sprites);
 		engine.add(&transforms);
+		engine.add(&sprites);
+		engine.add(&lights);
 		engine.add(&renderer);
 		engine.add(&ui);
 	}

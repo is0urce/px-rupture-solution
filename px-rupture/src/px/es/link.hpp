@@ -31,11 +31,11 @@ namespace px {
 		}
 
 	public:
-		link()
+		link() noexcept
 			: m_link(nullptr)
 		{
 		}
-		link(T * element)
+		link(T * element) noexcept
 			: m_link(element)
 		{
 		}

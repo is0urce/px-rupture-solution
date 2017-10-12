@@ -23,10 +23,11 @@ namespace px {
 	{
 	}
 
-	void environment::incarnate(transform_component * target)
+	void environment::incarnate(transform_component * focus)
 	{
-		player = target;
-		sprites.target(target);
+		player = focus;
+		sprites.target(focus);
+		lights.target(focus);
 	}
 	void environment::step(point2 const& movement)
 	{
