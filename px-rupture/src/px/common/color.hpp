@@ -127,7 +127,7 @@ namespace px {
 
 		// i-o, we have dedicated repeat function arguments to compliment structures like solid-tinted polygons
 		template <typename Memory>
-		void write(Memory *memory) const
+		void write(Memory * memory) const
 		{
 			memory[0] = static_cast<Memory>(R);
 			memory[1] = static_cast<Memory>(G);

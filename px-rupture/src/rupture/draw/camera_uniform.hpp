@@ -15,6 +15,8 @@ namespace px {
 	{
 		glm::vec2 scale;
 		glm::vec2 translate;
+		glm::vec2 screen;
+		glm::vec2 shadow;
 	};
 
 }

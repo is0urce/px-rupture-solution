@@ -14,7 +14,7 @@ namespace px {
 		static void light(int center_x, int center_y, unsigned int radius_size, Predicate && predicate_fn, Light && light_op)
 		{
 			// octants
-			static const int multipliers[4][8] = {
+			static const int oct[4][8] = {
 				{ 1, 0, 0, -1, -1, 0, 0, 1 },
 				{ 0, 1, -1, 0, 0, -1, 1, 0 },
 				{ 0, 1, 1, 0, 0, -1, -1, 0 },
@@ -23,7 +23,7 @@ namespace px {
 
 			light_op(center_x, center_y);
 			for (unsigned int i = 0; i != 8; ++i) {
-				octant(center_x, center_y, radius_size, 1, 1.0, 0.0, multipliers[0][i], multipliers[1][i], multipliers[2][i], multipliers[3][i], predicate_fn, light_op); // calculate every octant
+				octant(center_x, center_y, radius_size, 1, 1.0, 0.0, oct[0][i], oct[1][i], oct[2][i], oct[3][i], predicate_fn, light_op); // calculate every octant
 			}
 		}
 
@@ -32,7 +32,6 @@ namespace px {
 		static void octant(int start_x, int start_y, unsigned int radius_size, unsigned int row, float start, float end, int xx, int xy, int yx, int yy, Predicate && predicate, Light && light_op)
 		{
 			if (start < end) return;
-			int radius2 = static_cast<int>(radius_size * radius_size);
 
 			float next_start_slope = start;
 			for (unsigned int i = row; i != radius_size; ++i) {
@@ -58,7 +57,8 @@ namespace px {
 						// to avoid behind-collumn peek you have to see center of a tile to actualy see it (or it shoult be wall)
 						bool wall = !predicate(current_x, current_y);
 						bool center = start >= slope && slope >= end;
-						if ((center || wall) && (dx * dx + dy * dy < radius2)) {
+
+						if (center || wall) {
 							light_op(current_x, current_y);
 						}
 

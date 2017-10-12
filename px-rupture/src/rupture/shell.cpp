@@ -36,6 +36,7 @@ namespace px {
 	void shell::connect_managers()
 	{
 		renderer.assign_sprite_data(sprites.data());
+		renderer.assign_lightmap_data(lights.current_data());
 		terrain.assign_sprites(&sprites);
 	}
 	void shell::load_data()

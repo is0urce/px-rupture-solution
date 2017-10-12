@@ -122,6 +122,7 @@ namespace px {
 			};
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glActiveTexture(GL_TEXTURE0);
 			glUseProgram(shader);
 			glUniform1i(locationTex, 0);
 			glUniformMatrix4fv(locationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
@@ -146,7 +147,6 @@ namespace px {
 						pcmd->UserCallback(cmd_list, pcmd);
 					}
 					else {
-						glActiveTexture(GL_TEXTURE0);
 						glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
 						glScissor(static_cast<GLint>(pcmd->ClipRect.x), static_cast<GLint>(framebuffer_height - pcmd->ClipRect.w), static_cast<GLsizei>(pcmd->ClipRect.z - pcmd->ClipRect.x), static_cast<GLsizei>(pcmd->ClipRect.w - pcmd->ClipRect.y));
 						glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(pcmd->ElemCount), sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, idx_buffer_offset);

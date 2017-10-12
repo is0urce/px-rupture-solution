@@ -264,9 +264,6 @@
     <ClInclude Include="src\px\common\color.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\draw\lightmap.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\px\fn\ant_generator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -301,6 +298,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\px\rgl\pass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\lightmap_data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\lightmap_control.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -359,5 +362,7 @@
     <None Include="data\shaders\process.frag" />
     <None Include="data\shaders\ui.vert" />
     <None Include="data\shaders\ui.frag" />
+    <None Include="data\shaders\light.vert" />
+    <None Include="data\shaders\light.frag" />
   </ItemGroup>
 </Project>

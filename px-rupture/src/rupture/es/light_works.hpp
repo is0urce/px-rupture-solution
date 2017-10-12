@@ -6,7 +6,7 @@
 
 #include "light_component.hpp"
 
-#include "rupture/draw/lightmap.hpp"
+#include "rupture/draw/lightmap_data.hpp"
 
 #include <px/algorithm/recursive_shadowcasting.hpp>
 #include <px/common/matrix.hpp>
@@ -53,26 +53,48 @@ namespace px {
 			});
 
 			// update export data structure
-			draw_data.ox = ox;
-			draw_data.oy = oy;
-			++draw_data.version;
+			last_data = current_data;
+			current_data.ox = ox;
+			current_data.oy = oy;
+			++current_data.version;
+			
+			float * pen = current_texels.data();
+			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & c) {
+				pen[0] = static_cast<float>(c.R);
+				pen[1] = static_cast<float>(c.G);
+				pen[2] = static_cast<float>(c.B);
+				pen[3] = static_cast<float>(c.A);
+				//pen += 4;
+				//c.write(pen);
+				pen += 4;
+			});
 		}
 		void set_radius(unsigned int new_radius)
 		{
 			radius = new_radius;
-			map.resize(radius * 2 + 1, radius * 2 + 1);
-			draw_data.width = radius * 2 + 1;
-			draw_data.height = radius * 2 + 1;
-			draw_data.data = &(map.get(0, 0).R);
-			draw_data.version = 0;
+
+			unsigned int w = radius * 2 + 1;
+			map.resize(w, w);
+			current_texels.resize(w * w * 4, 0);
+			last_texels.resize(w * w * 4, 0);
+
+			current_data.width = w;
+			current_data.height = w;
+			current_data.raw = current_texels.data();
+			current_data.version = 1;
+
+			last_data.width = w;
+			last_data.height = w;
+			last_data.raw = last_texels.data();
+			last_data.version = 0;
 		}
-		lightmap const* current() noexcept
+		lightmap_data const* current() noexcept
 		{
-			return &draw_data;
+			return &current_data;
 		}
-		lightmap const* last() noexcept
+		lightmap_data const* last() noexcept
 		{
-			return &draw_data;
+			return &last_data;
 		}
 
 
@@ -109,6 +131,11 @@ namespace px {
 		matrix2<color>						map;
 		pool_chain<light_component, 1000>	lights;
 		unsigned int						radius;
-		lightmap							draw_data;
+
+		lightmap_data						current_data;
+		lightmap_data						last_data;
+
+		std::vector<float>					current_texels;
+		std::vector<float>					last_texels;
 	};
 }

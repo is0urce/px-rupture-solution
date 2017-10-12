@@ -21,6 +21,7 @@
 #include "sprite_vertex.hpp"
 #include "sprite_batch.hpp"
 #include "camera_uniform.hpp"
+#include "lightmap_control.hpp"
 
 #include <vector>
 #include <stdexcept>
@@ -35,7 +36,21 @@ namespace px {
 	public:
 		void run(float /*time*/)
 		{
-			camera.load<camera_uniform>(GL_STREAM_DRAW, { { scale, scale * screen_aspect },{ 0.0, 0.0 } });
+			glDisable(GL_SCISSOR_TEST);
+
+			camera.load<camera_uniform>(GL_STREAM_DRAW, {
+				{ scale, scale * screen_aspect },
+				{ 0.0f, 0.0f },
+				{ static_cast<float>(screen_width), static_cast<float>(screen_height) },
+//				{ 0.0f, 0.0f }
+				{ static_cast<float>(light_control.width()), static_cast<float>(light_control.height()) }
+			});
+
+			if (light_control.is_dirty()) {
+				light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.current->raw);
+				//light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
+				light_control.cashed();
+			}
 
 			glUseProgram(sprite_program);
 			if (sprite_data) {
@@ -47,6 +62,9 @@ namespace px {
 					}
 				}
 			}
+
+			glUseProgram(light_program);
+			light_pass.draw_arrays(GL_QUADS, 4);
 
 			glUseProgram(postprocess_program);
 			postprocess.draw_arrays(GL_QUADS, 4);
@@ -61,6 +79,10 @@ namespace px {
 		void assign_sprite_data(std::vector<std::vector<sprite_vertex>> const* data) noexcept
 		{
 			sprite_data = data;
+		}
+		void assign_lightmap_data(lightmap_data const* data) noexcept
+		{
+			light_control.current = data;
 		}
 		void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data)
 		{
@@ -99,12 +121,12 @@ namespace px {
 
 			// setup rendering
 
-			create_pipeline();
+			create_resources();
 			reset_framebuffers();
 		}
 
 	private:
-		void create_pipeline()
+		void create_resources()
 		{
 			// set states
 
@@ -116,7 +138,16 @@ namespace px {
 			// compile shaders
 
 			sprite_program = compile_program("data/shaders/sprite", { "Camera" }, { "img" });
-			postprocess_program = compile_program("data/shaders/process", {}, { "diffuse", "light" });
+			postprocess_program = compile_program("data/shaders/process", {}, { "diffuse", "lightmap" });
+			//light_program = compile_program("data/shaders/light", { "Camera" }, { "current", "last" });
+			light_program = compile_program("data/shaders/light", { "Camera" }, { "current" });
+
+			// setup textures
+
+			light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
+			light_current.filters(GL_NEAREST, GL_NEAREST); // required
+			light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
+			light_last.filters(GL_NEAREST, GL_NEAREST); // required
 		}
 		void reset_framebuffers()
 		{
@@ -125,6 +156,10 @@ namespace px {
 
 			postprocess.output(0, screen_width, screen_height);
 			postprocess.bind_textures({ diffuse.texture, light.texture });
+
+			light_pass.output(light.framebuffer, screen_width, screen_height);
+			light_pass.bind_textures({ light_current /*, light_last*/ });
+			light_pass.bind_uniform(camera);
 
 			for (auto & batch : sprites) {
 				setup_batch(batch);
@@ -150,13 +185,21 @@ namespace px {
 		gl_uniform						camera;
 		gl_program						sprite_program;
 		gl_program						postprocess_program;
+		gl_program						light_program;
+
+		gl_texture						light_current;
+		gl_texture						light_last;
+
+		offscreen						diffuse;
+		offscreen						light;
+
+		pass							postprocess;
+		pass							light_pass;
+
 		std::vector<sprite_batch>		sprites;
 		float							scale;
 
 		std::vector<std::vector<sprite_vertex>> const* sprite_data;
-
-		offscreen						diffuse;
-		offscreen						light;
-		pass							postprocess;
+		lightmap_control				light_control;
 	};
 }

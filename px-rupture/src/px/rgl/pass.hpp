@@ -24,7 +24,6 @@ namespace px {
 	public:
 		void swap(pass & that) noexcept
 		{
-			std::swap(m_init, that.m_init);
 			std::swap(m_framebuffer, that.m_framebuffer);
 			std::swap(m_vao, that.m_vao);
 			std::swap(m_width, that.m_width);
@@ -74,9 +73,7 @@ namespace px {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer);
 			glViewport(0, 0, m_width, m_height);
 			glScissor(0, 0, m_width, m_height);
-			if (m_vao != 0) {
-				glBindVertexArray(m_vao);
-			}
+			glBindVertexArray(m_vao);
 			for (auto const& uniform : m_uniforms) {
 				glBindBufferBase(GL_UNIFORM_BUFFER, uniform.binding, uniform.element);
 			}
@@ -102,7 +99,6 @@ namespace px {
 		pass() noexcept
 			: m_framebuffer(0)
 			, m_vao(0)
-			, m_init(false)
 			, m_width(0)
 			, m_height(0)
 		{
@@ -112,7 +108,6 @@ namespace px {
 		{
 			m_framebuffer = framebuffer;
 			m_vao = vao;
-			m_init = true;
 			viewport(width, height);
 		}
 		pass(pass const&) = delete;
@@ -129,7 +124,6 @@ namespace px {
 		}
 
 	private:
-		bool					m_init;
 		GLuint					m_framebuffer;
 		GLuint					m_vao;
 		GLsizei					m_width;

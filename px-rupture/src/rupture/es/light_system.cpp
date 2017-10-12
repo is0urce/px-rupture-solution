@@ -30,4 +30,12 @@ namespace px {
 	{
 		works->target(camera);
 	}
+	lightmap_data const* light_system::current_data() noexcept
+	{
+		return works->current();
+	}
+	lightmap_data const* light_system::last_data() noexcept
+	{
+		return works->last();
+	}
 }

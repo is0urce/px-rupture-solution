@@ -203,7 +203,8 @@
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
     <ClInclude Include="src\rupture\core.hpp" />
-    <ClInclude Include="src\rupture\draw\lightmap.hpp" />
+    <ClInclude Include="src\rupture\draw\lightmap_control.hpp" />
+    <ClInclude Include="src\rupture\draw\lightmap_data.hpp" />
     <ClInclude Include="src\rupture\es\builder.hpp" />
     <ClInclude Include="src\rupture\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />
@@ -276,6 +277,8 @@
   <ItemGroup>
     <None Include="data\config.json" />
     <None Include="data\controls.json" />
+    <None Include="data\shaders\light.frag" />
+    <None Include="data\shaders\light.vert" />
     <None Include="data\shaders\process.frag" />
     <None Include="data\shaders\process.vert" />
     <None Include="data\shaders\sprite.frag" />
