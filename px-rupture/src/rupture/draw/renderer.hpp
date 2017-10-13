@@ -34,7 +34,7 @@ namespace px {
 		struct camera_data;
 
 	public:
-		void run(float /*time*/)
+		void run(double /*time*/)
 		{
 			glDisable(GL_SCISSOR_TEST);
 

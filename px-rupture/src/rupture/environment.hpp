@@ -18,10 +18,11 @@ namespace px {
 		: public core
 	{
 	public:
-
 		void step(point2 const& movement);
-		void turn();
 		void start();
+		unsigned int current_turn() const noexcept;
+		void pass_turn();
+		bool turn_passed() const noexcept;
 
 	public:
 		virtual ~environment();
@@ -34,7 +35,8 @@ namespace px {
 	protected:
 		transform_component *	player;
 		bool					run;
-		unsigned int			turn_number;
 		scene					stage;
+		unsigned int			turn_number;
+		bool					turn_pass;
 	};
 }

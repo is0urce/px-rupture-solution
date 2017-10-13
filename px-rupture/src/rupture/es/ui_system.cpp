@@ -18,7 +18,7 @@ namespace px {
 
 	void ui_system::update_system(delta_type const& delta_time)
 	{
-		works->draw(static_cast<float>(delta_time.real_delta));
+		works->draw(delta_time.real_delta);
 	}
 
 	void ui_system::resize(unsigned int w, unsigned int h)

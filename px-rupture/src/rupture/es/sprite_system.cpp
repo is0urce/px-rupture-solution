@@ -20,7 +20,7 @@ namespace px {
 
 	void sprite_system::update_system(delta_type const& delta_time)
 	{
-		works->batch(delta_time.real_delta);
+		works->batch(delta_time.turn_duration);
 	}
 
 	// methods

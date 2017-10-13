@@ -15,6 +15,15 @@ namespace px {
 	{
 	}
 
+	// virtual
+
+	void transform_system::turn_update_system(delta const& /*timers*/)
+	{
+		works->store();
+	}
+
+	// methods
+
 	uq_ptr<transform_component> transform_system::make()
 	{
 		return works->make();

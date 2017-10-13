@@ -26,9 +26,9 @@ namespace px {
 			fixed_update_system(delta);
 		}
 
-		void tick_update(delta_type const& delta)
+		void turn_update(delta_type const& delta)
 		{
-			tick_update_system(delta);
+			turn_update_system(delta);
 		}
 
 	public:
@@ -43,7 +43,7 @@ namespace px {
 		virtual void fixed_update_system(delta_type const& /* delta */)
 		{
 		}
-		virtual void tick_update_system(delta_type const& /* delta */)
+		virtual void turn_update_system(delta_type const& /* delta */)
 		{
 		}
 	};

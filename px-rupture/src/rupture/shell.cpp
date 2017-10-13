@@ -21,7 +21,6 @@ namespace px {
 		connect_managers();
 		load_data();
 		register_systems();
-		time.restart();
 		start();
 	}
 
@@ -67,11 +66,16 @@ namespace px {
 	void shell::frame(double timer)
 	{
 		if (run) {
+
 			time.advance(timer);
-			++time.tick_index;
+
+			if (turn_passed()) {
+				time.advance_turn(current_turn());
+				engine.turn_update(time);
+				pass_turn();
+			}
 
 			engine.update(time);
-			engine.tick_update(time);
 		}
 	}
 	void shell::text(unsigned int codepoint)

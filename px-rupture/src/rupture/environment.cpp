@@ -8,8 +8,6 @@
 #include "es/builder.hpp"
 
 #include <px/fn/ant_generator.hpp>
-#include <px/memory/memory.hpp>
-
 #include <random>
 
 namespace px {
@@ -19,10 +17,13 @@ namespace px {
 	}
 	environment::environment()
 		: turn_number(0)
+		, turn_pass(true)
 		, player(nullptr)
 		, run(true)
 	{
 	}
+
+	// methods
 
 	void environment::incarnate(transform_component * focus)
 	{
@@ -37,12 +38,22 @@ namespace px {
 			if (stage.is_traversable(destination, rl::traverse_options<rl::traverse>{ 1 })) {
 				player->place(destination);
 				player->store();
+				pass_turn();
 			}
 		}
 	}
-	void environment::turn()
+	void environment::pass_turn()
 	{
 		++turn_number;
+		turn_pass = !turn_pass;
+	}
+	unsigned int environment::current_turn() const noexcept
+	{
+		return turn_number;
+	}
+	bool environment::turn_passed() const noexcept
+	{
+		return turn_pass;
 	}
 
 	void environment::start()

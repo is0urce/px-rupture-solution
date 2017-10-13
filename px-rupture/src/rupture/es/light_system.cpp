@@ -7,6 +7,8 @@
 
 namespace px {
 
+	// ctors
+
 	light_system::~light_system()
 	{
 
@@ -16,9 +18,9 @@ namespace px {
 	{
 	}
 
-	// virtual
+	// virtual overload
 
-	void light_system::update_system(delta_type const& /*delta_time*/)
+	void light_system::turn_update_system(delta_type const& /*delta_time*/)
 	{
 		works->calculate_lights();
 	}

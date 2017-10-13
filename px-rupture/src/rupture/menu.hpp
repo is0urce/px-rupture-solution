@@ -25,9 +25,9 @@ namespace px {
 			io.DisplaySize = { static_cast<float>(width), static_cast<float>(height) };
 			io.DisplayFramebufferScale = { 1, 1 };
 		}
-		void draw(float delta_time)
+		void draw(double delta_time)
 		{
-			ImGui::GetIO().DeltaTime = delta_time;
+			ImGui::GetIO().DeltaTime = static_cast<float>(delta_time);
 			ImGui::NewFrame();
 			compile();
 			ImGui::Render();

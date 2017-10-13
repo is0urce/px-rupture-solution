@@ -22,6 +22,9 @@ namespace px {
 		virtual ~transform_system();
 		transform_system();
 
+	protected:
+		virtual void turn_update_system(delta_type const& delta_time);
+
 	private:
 		uq_ptr<transform_works> works;
 	};

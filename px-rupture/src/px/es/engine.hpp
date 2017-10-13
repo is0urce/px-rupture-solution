@@ -41,10 +41,10 @@ namespace px {
 				system->fixed_update(delta);
 			}
 		}
-		void tick_update(delta_type const& delta)
+		void turn_update(delta_type const& delta)
 		{
 			for (system_type * system : systems) {
-				system->tick_update(delta);
+				system->turn_update(delta);
 			}
 		}
 
