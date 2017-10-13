@@ -27,10 +27,25 @@ namespace px {
 
 			return true;
 		}
-		void add(uq_ptr<composite_component> && ptr)
+		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location)
 		{
-			units.push_back(std::move(ptr));
+			if (!transform) transform = ptr->query<transform_component>();
+			if (transform) {
+				transform->place(location);
+				transform->store();
+				transform->incarnate(&space);
+			}
+			insert(std::forward<uq_ptr<composite_component>>(ptr));
 		}
+		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform)
+		{
+			if (!transform) transform = ptr->query<transform_component>();
+			if (transform) {
+				transform->incarnate(&space);
+			}
+			insert(std::forward<uq_ptr<composite_component>>(ptr));
+		}
+
 		qtree<transform_component*> * get_space()
 		{
 			return &space;
@@ -48,6 +63,11 @@ namespace px {
 		scene_internal()
 			: space(64)
 		{
+		}
+		void insert(uq_ptr<composite_component> && ptr)
+		{
+			ptr->enable();
+			units.push_back(std::move(ptr));
 		}
 
 	private:

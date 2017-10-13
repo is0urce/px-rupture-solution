@@ -34,8 +34,10 @@ namespace px {
 	{
 		if (player) {
 			auto destination = player->position() + movement;
-			player->place(destination);
-			player->store();
+			if (stage.is_traversable(destination, rl::traverse_options<rl::traverse>{ 1 })) {
+				player->place(destination);
+				player->store();
+			}
 		}
 	}
 	void environment::turn()
@@ -52,28 +54,21 @@ namespace px {
 		auto light = b.add_light();
 		light->tint = color(1, 0, 0);
 		light->elevation = 0.5;
-
-		auto unit = b.request();
-		unit->enable();
-		stage.add(std::move(unit));
+		stage.spawn(b.request(), nullptr);
 
 		b.add_sprite("m_gnome");
 		incarnate(b.add_transform({ 25, 25 }));
 		light = b.add_light();
 		light->tint = color(1, 1, 1);
 		light->elevation = 0.5;
-		unit = b.request();
-		unit->enable();
-		stage.add(std::move(unit));
+		stage.spawn(b.request(), nullptr);
 
 		b.add_sprite("m_succubus");
 		b.add_transform({ 30, 25 });
 		light = b.add_light();
 		light->tint = color(0, 0, 1);
 		light->elevation = 0.5;
-		unit = b.request();
-		unit->enable();
-		stage.add(std::move(unit));
+		stage.spawn(b.request(), nullptr);
 
 		auto map = fn::ant_generator::generate(std::mt19937{}, 50, 50, 50 * 50 * 100 / 61);
 		map.enumerate([this](size_t x, size_t y, unsigned char tile) {
@@ -94,9 +89,7 @@ namespace px {
 		builder b(this);
 
 		b.add_sprite(name);
-		b.add_transform({ x, y });
-		auto unit = b.request();
-		unit->enable();
-		stage.add(std::move(unit));
+		auto transform = b.add_transform({ x, y });
+		stage.spawn(b.request(), transform);
 	}
 }

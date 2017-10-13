@@ -23,9 +23,13 @@ namespace px {
 		return works->is_traversable(location, opts);
 	}
 
-	void scene::add(uq_ptr<composite_component> && ptr)
+	void scene::spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location)
 	{
-		works->add(std::forward<uq_ptr<composite_component>>(ptr));
+		works->spawn(std::forward<uq_ptr<composite_component>>(ptr), transform, location);
+	}
+	void scene::spawn(uq_ptr<composite_component> && ptr, transform_component * transform)
+	{
+		works->spawn(std::forward<uq_ptr<composite_component>>(ptr), transform);
 	}
 
 	void scene::assign_sprites(sprite_system * system)
@@ -36,5 +40,10 @@ namespace px {
 	void scene::pset(uint32_t block_id, point2 const& location)
 	{
 		works->pset(block_id, location);
+	}
+
+	qtree<transform_component*> * scene::space() noexcept
+	{
+		return works->get_space();
 	}
 }

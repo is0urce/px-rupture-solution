@@ -14,8 +14,11 @@ namespace px {
 
 	class scene_internal;
 
+	class transform_component;
 	class composite_component;
 	class sprite_system;
+
+	template <typename T> class qtree;
 
 	class scene final
 	{
@@ -23,10 +26,12 @@ namespace px {
 		bool is_transparent(point2 const& location) const;
 		bool is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const;
 
-		void add(uq_ptr<composite_component> && ptr);
+		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location);
+		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform);
 
 		void assign_sprites(sprite_system * system);
 		void pset(uint32_t block_id, point2 const& location);
+		qtree<transform_component*> * space() noexcept;
 
 	public:
 		~scene();
