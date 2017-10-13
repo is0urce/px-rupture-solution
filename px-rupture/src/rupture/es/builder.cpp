@@ -17,6 +17,9 @@ namespace px {
 	}
 	builder::builder(core * production_factory)
 		: factory(production_factory)
+		, sprite(nullptr)
+		, transform(nullptr)
+		, light(nullptr)
 	{
 		begin();
 	}
@@ -63,6 +66,7 @@ namespace px {
 	{
 		transform = nullptr;
 		sprite = nullptr;
+		light = nullptr;
 		unit = make_uq<composite_component>();
 	}
 }

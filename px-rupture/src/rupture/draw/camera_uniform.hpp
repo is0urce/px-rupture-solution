@@ -16,7 +16,9 @@ namespace px {
 		glm::vec2 scale;
 		glm::vec2 translate;
 		glm::vec2 screen;
-		glm::vec2 shadow;
+		glm::vec2 lightmap_size;
+		glm::vec2 current_offset;
+		glm::vec2 last_offset;
 	};
 
 }

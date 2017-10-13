@@ -40,10 +40,13 @@ namespace px {
 
 			camera.load<camera_uniform>(GL_STREAM_DRAW, {
 				{ scale, scale * screen_aspect },
-				{ 0.0f, 0.0f },
+				//{ 0.0f, 0.0f },
+				{ 0.5f, 0.5f },
 				{ static_cast<float>(screen_width), static_cast<float>(screen_height) },
-//				{ 0.0f, 0.0f }
-				{ static_cast<float>(light_control.width()), static_cast<float>(light_control.height()) }
+
+				{ static_cast<float>(light_control.width()), static_cast<float>(light_control.height()) },
+				{ static_cast<float>(light_control.width() / 2), static_cast<float>(light_control.height() / 2) },
+				{ static_cast<float>(light_control.width() / 2), static_cast<float>(light_control.height() / 2) }
 			});
 
 			if (light_control.is_dirty()) {
@@ -52,6 +55,8 @@ namespace px {
 				light_control.cashed();
 			}
 
+			glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
+			glClear(GL_COLOR_BUFFER_BIT);
 			glUseProgram(sprite_program);
 			if (sprite_data) {
 				size_t size = sprite_data->size();
@@ -63,6 +68,8 @@ namespace px {
 				}
 			}
 
+			glBindFramebuffer(GL_FRAMEBUFFER, light.framebuffer);
+			glClear(GL_COLOR_BUFFER_BIT);
 			glUseProgram(light_program);
 			light_pass.draw_arrays(GL_QUADS, 4);
 
@@ -145,9 +152,9 @@ namespace px {
 			// setup textures
 
 			light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
-			light_current.filters(GL_NEAREST, GL_NEAREST); // required
+			light_current.filters(GL_LINEAR, GL_NEAREST); // required
 			light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
-			light_last.filters(GL_NEAREST, GL_NEAREST); // required
+			light_last.filters(GL_LINEAR, GL_NEAREST); // required
 		}
 		void reset_framebuffers()
 		{

@@ -171,6 +171,7 @@
     <ClCompile Include="src\rupture\es\ui_system.cpp" />
     <ClCompile Include="src\rupture\main.cpp" />
     <ClCompile Include="src\rupture\main_extras.cpp" />
+    <ClCompile Include="src\rupture\rl\scene.cpp" />
     <ClCompile Include="src\rupture\rl\terrain.cpp" />
     <ClCompile Include="src\rupture\shell.cpp" />
     <ClCompile Include="src\tests\tests.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="src\px\dev\test.hpp" />
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
+    <ClInclude Include="src\px\es\light_source.hpp" />
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
     <ClInclude Include="src\px\es\light.hpp" />
     <ClInclude Include="src\px\rgl\offscreen.hpp" />
@@ -261,6 +263,8 @@
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
     <ClInclude Include="src\rupture\menu.hpp" />
+    <ClInclude Include="src\rupture\rl\scene.hpp" />
+    <ClInclude Include="src\rupture\rl\scene_internal.hpp" />
     <ClInclude Include="src\rupture\rl\terrain.hpp" />
     <ClInclude Include="src\rupture\rl\terrain_internal.hpp" />
     <ClInclude Include="src\rupture\rl\tile.hpp" />

@@ -16,11 +16,20 @@ namespace px {
 	{
 	}
 
+	// virtual
 
 	void light_system::update_system(delta_type const& /*delta_time*/)
 	{
 		works->calculate_lights();
 	}
+
+	// methrods
+
+	void light_system::assign_scene(scene const* stage) noexcept
+	{
+		works->assign_scene(stage);
+	}
+
 
 	uq_ptr<light_component> light_system::make()
 	{

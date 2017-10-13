@@ -13,11 +13,13 @@ namespace px {
 	class light_component;
 	class transform_component;
 	class lightmap_data;
+	class scene;
 
 	class light_system final
 		: public system<delta>
 	{
 	public:
+		void assign_scene(scene const* stage) noexcept;
 		uq_ptr<light_component> make();
 		void target(transform_component const* camera) noexcept;
 		lightmap_data const* current_data() noexcept;

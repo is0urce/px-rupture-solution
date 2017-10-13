@@ -29,12 +29,12 @@ namespace px {
 
 	private:
 		template <typename Predicate, typename Light>
-		static void octant(int start_x, int start_y, unsigned int radius_size, unsigned int row, float start, float end, int xx, int xy, int yx, int yy, Predicate && predicate, Light && light_op)
+		static void octant(int start_x, int start_y, unsigned int radius, unsigned int row, float start, float end, int xx, int xy, int yx, int yy, Predicate && predicate, Light && light_op)
 		{
 			if (start < end) return;
 
 			float next_start_slope = start;
-			for (unsigned int i = row; i != radius_size; ++i) {
+			for (unsigned int i = row; i != radius; ++i) {
 				int dx = 0 - i - 1;
 				int dy = 0 - i;
 				bool blocked = false;
@@ -58,9 +58,7 @@ namespace px {
 						bool wall = !predicate(current_x, current_y);
 						bool center = start >= slope && slope >= end;
 
-						if (center || wall) {
-							light_op(current_x, current_y);
-						}
+						if (center || wall)	light_op(current_x, current_y);
 
 						if (blocked) {
 							if (wall) {
@@ -73,9 +71,9 @@ namespace px {
 							}
 						}
 						else {
-							if (wall && i < radius_size) {
+							if (wall && i < radius) {
 								blocked = true;
-								octant(start_x, start_y, radius_size, i + 1, start, l_slope, xx, xy, yx, yy, predicate, light_op); // call recursive
+								octant(start_x, start_y, radius, i + 1, start, l_slope, xx, xy, yx, yy, predicate, light_op); // call recursive
 								next_start_slope = r_slope;
 							}
 						}

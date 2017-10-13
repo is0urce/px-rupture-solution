@@ -18,13 +18,21 @@ namespace px {
 		{
 			prev_version = current ? current->version : ((unsigned int)-1);
 		}
-		size_t width()
+		size_t width() const noexcept
 		{
 			return current ? current->width : 0;
 		}
-		size_t height()
+		size_t height() const noexcept
 		{
 			return current ? current->height : 0;
+		}
+		int ox() const noexcept
+		{
+			return current ? current->ox : 0;
+		}
+		int oy() const noexcept
+		{
+			return current ? current->oy : 0;
 		}
 	public:
 		lightmap_data const* current;

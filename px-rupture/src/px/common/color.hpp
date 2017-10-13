@@ -159,6 +159,13 @@ namespace px {
 			}
 		}
 
+		// space is not serizlized
+		template <typename Archive>
+		void serialize(Archive & archive)
+		{
+			archive(R, G, B, A);
+		}
+
 		// aux
 		static color average(color const& a, color const& b) { return (a + b) / 2; }
 		static color average(color const& a, color const& b, color const& c) { return (a + b + c) / 3; }

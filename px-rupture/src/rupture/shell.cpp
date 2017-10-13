@@ -37,7 +37,8 @@ namespace px {
 	{
 		renderer.assign_sprite_data(sprites.data());
 		renderer.assign_lightmap_data(lights.current_data());
-		terrain.assign_sprites(&sprites);
+		lights.assign_scene(&stage);
+		stage.assign_sprites(&sprites);
 	}
 	void shell::load_data()
 	{
