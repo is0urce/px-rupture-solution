@@ -34,10 +34,10 @@ namespace px {
 	void environment::step(point2 const& movement)
 	{
 		if (player) {
-			auto destination = player->position() + movement;
+			last_step = player->position();
+			auto destination = last_step + movement;
 			if (stage.is_traversable(destination, rl::traverse_options<rl::traverse>{ 1 })) {
 				player->place(destination);
-				player->store();
 				pass_turn();
 			}
 		}
@@ -46,6 +46,9 @@ namespace px {
 	{
 		++turn_number;
 		turn_pass = !turn_pass;
+		if (player) {
+			player->store(last_step);
+		}
 	}
 	unsigned int environment::current_turn() const noexcept
 	{

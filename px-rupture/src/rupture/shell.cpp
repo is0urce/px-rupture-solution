@@ -35,7 +35,7 @@ namespace px {
 	void shell::connect_managers()
 	{
 		renderer.assign_sprite_data(sprites.data());
-		renderer.assign_lightmap_data(lights.current_data());
+		renderer.assign_lightmap_data(lights.current_data(), lights.last_data());
 		lights.assign_scene(&stage);
 		stage.assign_sprites(&sprites);
 	}
@@ -56,25 +56,23 @@ namespace px {
 
 	void shell::register_systems()
 	{
-		engine.add(&transforms);
 		engine.add(&sprites);
-		engine.add(&lights);
 		engine.add(&renderer);
 		engine.add(&ui);
+
+		engine.add(&transforms);
+		engine.add(&lights);
 	}
 
 	void shell::frame(double timer)
 	{
 		if (run) {
-
 			time.advance(timer);
-
 			if (turn_passed()) {
 				time.advance_turn(current_turn());
 				engine.turn_update(time);
 				pass_turn();
 			}
-
 			engine.update(time);
 		}
 	}

@@ -12,10 +12,11 @@ namespace px {
 	public:
 		bool is_dirty() const noexcept
 		{
-			return current && current->version != prev_version;
+			return current && last && (dirty || current->version != prev_version);
 		}
-		void cashed()
+		void notify_cashing()
 		{
+			dirty = false;
 			prev_version = current ? current->version : ((unsigned int)-1);
 		}
 		size_t width() const noexcept
@@ -26,22 +27,40 @@ namespace px {
 		{
 			return current ? current->height : 0;
 		}
-		int ox() const noexcept
+		int current_ox() const noexcept
 		{
 			return current ? current->ox : 0;
 		}
-		int oy() const noexcept
+		int current_oy() const noexcept
 		{
 			return current ? current->oy : 0;
+		}
+		int last_ox() const noexcept
+		{
+			return last ? last->ox : 0;
+		}
+		int last_oy() const noexcept
+		{
+			return last ? last->oy : 0;
+		}
+		int dx() const noexcept
+		{
+			return current_ox() - last_ox();
+		}
+		int dy() const noexcept
+		{
+			return current_oy() - last_oy();
 		}
 	public:
 		lightmap_data const* current;
 		lightmap_data const* last;
 		unsigned int prev_version;
+		bool dirty;
 
 	public:
 		lightmap_control()
 			: current(nullptr)
+			, dirty(true)
 			, last(0)
 			, prev_version((unsigned int)-1)
 		{

@@ -6,6 +6,7 @@
 
 #include "rl/scene.hpp"
 
+#include <px/common/point.hpp>
 #include <px/memory/uq_ptr.hpp>
 
 #include <vector>
@@ -38,5 +39,6 @@ namespace px {
 		scene					stage;
 		unsigned int			turn_number;
 		bool					turn_pass;
+		point2					last_step;
 	};
 }

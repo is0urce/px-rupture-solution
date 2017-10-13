@@ -23,6 +23,7 @@
 #include "camera_uniform.hpp"
 #include "lightmap_control.hpp"
 
+#include <algorithm>
 #include <vector>
 #include <stdexcept>
 
@@ -34,29 +35,29 @@ namespace px {
 		struct camera_data;
 
 	public:
-		void run(double /*time*/)
+		void run(double delta_time)
 		{
-			glDisable(GL_SCISSOR_TEST);
+			delta_time = std::min(1.0, delta_time * 5);
 
 			camera.load<camera_uniform>(GL_STREAM_DRAW, {
 				{ scale, scale * screen_aspect },
-				//{ 0.0f, 0.0f },
 				{ 0.5f, 0.5f },
 				{ static_cast<float>(screen_width), static_cast<float>(screen_height) },
-
 				{ static_cast<float>(light_control.width()), static_cast<float>(light_control.height()) },
 				{ static_cast<float>(light_control.width() / 2), static_cast<float>(light_control.height() / 2) },
-				{ static_cast<float>(light_control.width() / 2), static_cast<float>(light_control.height() / 2) }
+				{ static_cast<float>(light_control.dx()), static_cast<float>(light_control.dy()) },
+				{ static_cast<float>(delta_time), static_cast<float>(1.0 - delta_time) }
 			});
 
 			if (light_control.is_dirty()) {
 				light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.current->raw);
-				//light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
-				light_control.cashed();
+				light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.last->raw);
+				light_control.notify_cashing();
 			}
 
 			glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
 			glClear(GL_COLOR_BUFFER_BIT);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // alpha blending for sprites
 			glUseProgram(sprite_program);
 			if (sprite_data) {
 				size_t size = sprite_data->size();
@@ -70,10 +71,13 @@ namespace px {
 
 			glBindFramebuffer(GL_FRAMEBUFFER, light.framebuffer);
 			glClear(GL_COLOR_BUFFER_BIT);
+			glBlendFunc(GL_ONE, GL_ONE); // additive blending for lights
 			glUseProgram(light_program);
-			light_pass.draw_arrays(GL_QUADS, 4);
+			light_pass.draw_arrays(GL_QUADS, 8); // two quads for current and last lightmap overlays
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glUseProgram(postprocess_program);
+			glBlendFunc(GL_ONE, GL_ZERO); // overwrite blending
 			postprocess.draw_arrays(GL_QUADS, 4);
 
 			gl_assert();
@@ -87,9 +91,10 @@ namespace px {
 		{
 			sprite_data = data;
 		}
-		void assign_lightmap_data(lightmap_data const* data) noexcept
+		void assign_lightmap_data(lightmap_data const* current, lightmap_data const* last) noexcept
 		{
-			light_control.current = data;
+			light_control.current = current;
+			light_control.last = last;
 		}
 		void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data)
 		{
@@ -140,14 +145,12 @@ namespace px {
 			glClearColor(0, 0, 0, 1);
 
 			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// compile shaders
 
 			sprite_program = compile_program("data/shaders/sprite", { "Camera" }, { "img" });
 			postprocess_program = compile_program("data/shaders/process", {}, { "diffuse", "lightmap" });
-			//light_program = compile_program("data/shaders/light", { "Camera" }, { "current", "last" });
-			light_program = compile_program("data/shaders/light", { "Camera" }, { "current" });
+			light_program = compile_program("data/shaders/light", { "Camera" }, { "current", "last" });
 
 			// setup textures
 
@@ -165,7 +168,7 @@ namespace px {
 			postprocess.bind_textures({ diffuse.texture, light.texture });
 
 			light_pass.output(light.framebuffer, screen_width, screen_height);
-			light_pass.bind_textures({ light_current /*, light_last*/ });
+			light_pass.bind_textures({ light_current, light_last });
 			light_pass.bind_uniform(camera);
 
 			for (auto & batch : sprites) {

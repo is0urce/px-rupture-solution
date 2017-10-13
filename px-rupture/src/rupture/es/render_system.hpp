@@ -22,7 +22,7 @@ namespace px {
 	public:
 		void resize(int width, int height);
 		void assign_sprite_data(std::vector<std::vector<sprite_vertex>> const* data) noexcept;
-		void assign_lightmap_data(lightmap_data const* data) noexcept;
+		void assign_lightmap_data(lightmap_data const* current, lightmap_data const* last) noexcept;
 		void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data);
 		void zoom(bool up);
 

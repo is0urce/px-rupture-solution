@@ -81,11 +81,13 @@ namespace px {
 
 			// update export data structure
 			last_data = current_data;
+
 			current_data.ox = ox;
 			current_data.oy = oy;
-			++current_data.version;
+			current_data.version = current_data.version + 1;
+			current_data.raw = (last_data.raw == current_texels.data() ? last_texels : current_texels).data(); // alternate
 			
-			float * pen = current_texels.data();
+			float * pen = current_data.raw;
 			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & c) {
 				c.write(pen);
 				pen += 4;

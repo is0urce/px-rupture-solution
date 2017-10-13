@@ -30,9 +30,9 @@ namespace px {
 		works->assign_sprite_data(data);
 	}
 	
-	void render_system::assign_lightmap_data(lightmap_data const* data) noexcept
+	void render_system::assign_lightmap_data(lightmap_data const* current, lightmap_data const* last) noexcept
 	{
-		works->assign_lightmap_data(data);
+		works->assign_lightmap_data(current, last);
 	}
 	void render_system::add_texture(unsigned int texture_width, unsigned int texture_height, void const* data)
 	{

@@ -21,6 +21,10 @@ namespace px {
 		{
 			prev = current;
 		}
+		void store(point2 previous_step)
+		{
+			prev = previous_step;
+		}
 
 		// space is not serizlized
 		template <typename Archive>

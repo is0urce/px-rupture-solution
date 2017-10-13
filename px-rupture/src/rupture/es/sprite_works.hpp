@@ -43,6 +43,8 @@ namespace px {
 		}
 		void batch(double interpolation)
 		{
+			interpolation = std::min(1.0, interpolation * 5.0); // clamp
+
 			vector2 focus = camera ? lerp(*camera, interpolation) : vector2(0, 0);
 
 			for (auto & cluster : vertices) {
@@ -68,10 +70,10 @@ namespace px {
 					unsigned int texture_id = sprite.texture_index;
 					auto & cluster = vertices[texture_id];
 
-					cluster.push_back({ { x + 0, y + 0 }, { sx, sy } });
-					cluster.push_back({ { x + 0, y + my }, { sx, dy } });
+					cluster.push_back({ { x + 0.0f, y + 0.0f }, { sx, sy } });
+					cluster.push_back({ { x + 0.0f, y + my }, { sx, dy } });
 					cluster.push_back({ { x + mx, y + my }, { dx, dy } });
-					cluster.push_back({ { x + mx, y + 0 }, { dx, sy } });
+					cluster.push_back({ { x + mx, y + 0.0f }, { dx, sy } });
 				}
 			});
 		}
