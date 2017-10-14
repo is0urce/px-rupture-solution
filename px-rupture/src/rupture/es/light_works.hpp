@@ -114,7 +114,7 @@ namespace px {
 			last_data.raw = last_texels.data();
 			last_data.version = 0;
 		}
-		void clear()
+		void clear_lightmap()
 		{
 			std::fill(current_texels.begin(), current_texels.end(), 0.0f);
 			std::fill(last_texels.begin(), last_texels.end(), 0.0f);
@@ -127,7 +127,6 @@ namespace px {
 		{
 			return &last_data;
 		}
-
 
 	public:
 		~light_works()

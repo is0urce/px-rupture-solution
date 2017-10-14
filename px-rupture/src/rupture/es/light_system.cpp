@@ -32,10 +32,14 @@ namespace px {
 		works->assign_scene(stage);
 	}
 
-
 	uq_ptr<light_component> light_system::make()
 	{
 		return works->make();
+	}
+
+	void light_system::clear_lightmap()
+	{
+		works->clear_lightmap();
 	}
 	void light_system::target(transform_component const* camera) noexcept
 	{

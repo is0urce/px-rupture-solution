@@ -24,6 +24,7 @@ namespace px {
 		void target(transform_component const* camera) noexcept;
 		lightmap_data const* current_data() noexcept;
 		lightmap_data const* last_data() noexcept;
+		void clear_lightmap();
 
 	public:
 		virtual ~light_system();

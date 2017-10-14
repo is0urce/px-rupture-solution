@@ -1,4 +1,7 @@
 // name: environment.cpp
+// type: c++
+// auth: is0urce
+// desc: class methods implementation
 
 #include "environment.hpp"
 
@@ -11,6 +14,8 @@
 #include <random>
 
 namespace px {
+
+	// ctor & dtor
 
 	environment::~environment()
 	{
@@ -84,11 +89,6 @@ namespace px {
 		light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
 
-		auto map = fn::ant_generator::generate(std::mt19937{}, 50, 50, 50 * 50 * 100 / 61);
-		map.enumerate([this](size_t x, size_t y, unsigned char tile) {
-			stage.pset(tile == 0 ? 1 : 3, point2(static_cast<int>(x), static_cast<int>(y)));
-		});
-
 		spawn("m_doomling", 30, 26);
 		spawn("m_nosferatu", 25, 30);
 
@@ -96,14 +96,26 @@ namespace px {
 		spawn("m_demon", 31, 27);
 		spawn("m_banshee", 28, 32);
 		spawn("m_butcher", 23, 32);
+
+		// set terrain
+
+		auto map = fn::ant_generator::generate(std::mt19937{}, 50, 50, 50 * 50 * 100 / 61);
+		map.enumerate([this](size_t x, size_t y, unsigned char tile) {
+			stage.pset(tile == 0 ? 1 : 3, point2(static_cast<int>(x), static_cast<int>(y)));
+		});
+
+		// set environment variables
+
+		lights.clear_lightmap();
+		turn_number = 0;
+		turn_pass = true;
 	}
 
 	void environment::spawn(const char * name, int x, int y)
 	{
 		builder b(this);
-
 		b.add_sprite(name);
-		auto transform = b.add_transform({ x, y });
-		stage.spawn(b.request(), transform);
+		b.add_transform({ x, y });
+		stage.spawn(b.request(), nullptr);
 	}
 }

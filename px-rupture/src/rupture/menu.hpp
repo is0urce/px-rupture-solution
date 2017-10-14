@@ -35,10 +35,13 @@ namespace px {
 		}
 		bool click(unsigned int mouse_button, bool is_down)
 		{
-			if (!ImGui::IsAnyWindowHovered() || mouse_button > 5) return false;
+			if (mouse_button > 5) return false;
+			bool hovered = ImGui::IsAnyWindowHovered();
+
+			if (!hovered && is_down) return false; // always process button release
 
 			ImGui::GetIO().MouseDown[mouse_button] = is_down;
-			return true;
+			return hovered;
 		}
 		bool text(unsigned int codepoint)
 		{
@@ -86,13 +89,19 @@ namespace px {
 	private:
 		void compile()
 		{
-			ImGui::SetNextWindowSize({ 100, 100 });
+			ImGui::SetNextWindowSize({ 150, 100 });
 			ImGui::SetNextWindowPos({ 50, 50 });
 			ImGui::Begin("performance", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-			ImGui::Text("O hai sailor");
+
+			static bool metrics = false;
+			if (ImGui::Button("dear imgui metrics")) {
+				metrics = !metrics;
+			}
 			ImGui::End();
 
-			ImGui::ShowMetricsWindow();
+			if (metrics) {
+				ImGui::ShowMetricsWindow(&metrics);
+			}
 		}
 		void render()
 		{
