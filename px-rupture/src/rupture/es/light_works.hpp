@@ -114,6 +114,11 @@ namespace px {
 			last_data.raw = last_texels.data();
 			last_data.version = 0;
 		}
+		void clear()
+		{
+			std::fill(current_texels.begin(), current_texels.end(), 0.0f);
+			std::fill(last_texels.begin(), last_texels.end(), 0.0f);
+		}
 		lightmap_data const* current() noexcept
 		{
 			return &current_data;

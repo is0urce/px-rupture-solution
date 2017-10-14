@@ -207,6 +207,9 @@
     <ClInclude Include="src\rupture\core.hpp" />
     <ClInclude Include="src\rupture\draw\lightmap_control.hpp" />
     <ClInclude Include="src\rupture\draw\lightmap_data.hpp" />
+    <ClInclude Include="src\rupture\draw\message_overlay.hpp" />
+    <ClInclude Include="src\rupture\draw\message.hpp" />
+    <ClInclude Include="src\rupture\draw\popup.hpp" />
     <ClInclude Include="src\rupture\es\builder.hpp" />
     <ClInclude Include="src\rupture\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />

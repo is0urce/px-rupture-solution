@@ -9,8 +9,6 @@
 #include <px/common/point.hpp>
 #include <px/memory/uq_ptr.hpp>
 
-#include <vector>
-
 namespace px {
 
 	class transform_component;
@@ -23,7 +21,7 @@ namespace px {
 		void start();
 		unsigned int current_turn() const noexcept;
 		void pass_turn();
-		bool turn_passed() const noexcept;
+		bool turn_passed() const noexcept; // true if it's world processing stage
 
 	public:
 		virtual ~environment();

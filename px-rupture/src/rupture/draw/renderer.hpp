@@ -39,6 +39,8 @@ namespace px {
 		{
 			delta_time = std::min(1.0, delta_time * 5);
 
+			// fill uniforms
+
 			camera.load<camera_uniform>(GL_STREAM_DRAW, {
 				{ scale, scale * screen_aspect },
 				{ 0.5f, 0.5f },
@@ -49,11 +51,15 @@ namespace px {
 				{ static_cast<float>(delta_time), static_cast<float>(1.0 - delta_time) }
 			});
 
+			// update textures
+
 			if (light_control.is_dirty()) {
 				light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.current->raw);
 				light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.last->raw);
 				light_control.notify_cashing();
 			}
+
+			// sprites drawed to offscreen
 
 			glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -69,12 +75,16 @@ namespace px {
 				}
 			}
 
+			// lightmap drawed to offscreen
+
 			glBindFramebuffer(GL_FRAMEBUFFER, light.framebuffer);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glBlendFunc(GL_ONE, GL_ONE); // additive blending for lights
 			glUseProgram(light_program);
 			light_pass.draw_arrays(GL_QUADS, 8); // two quads for current and last lightmap overlays
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			// combining diffuse with lights, postprocessing, writing to screen
 
 			glUseProgram(postprocess_program);
 			glBlendFunc(GL_ONE, GL_ZERO); // overwrite blending
@@ -192,24 +202,21 @@ namespace px {
 		unsigned int					screen_width;
 		unsigned int					screen_height;
 		float							screen_aspect;
+		float							scale;
 		gl_uniform						camera;
 		gl_program						sprite_program;
 		gl_program						postprocess_program;
 		gl_program						light_program;
-
 		gl_texture						light_current;
 		gl_texture						light_last;
 
 		offscreen						diffuse;
 		offscreen						light;
-
 		pass							postprocess;
 		pass							light_pass;
 
 		std::vector<sprite_batch>		sprites;
-		float							scale;
-
-		std::vector<std::vector<sprite_vertex>> const* sprite_data;
 		lightmap_control				light_control;
+		std::vector<std::vector<sprite_vertex>> const* sprite_data;
 	};
 }
