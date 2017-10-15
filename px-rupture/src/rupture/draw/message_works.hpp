@@ -23,7 +23,6 @@ namespace px {
 			auto & grid = map[location];
 			for (auto & prev : grid) {
 				prev.lift += msg.magnitude;
-				//++prev.line;
 			}
 			grid.emplace_back(popup{ std::move(msg), location, 0.0 });
 			++total;
@@ -72,7 +71,7 @@ namespace px {
 		class lex_less
 		{
 		public:
-			bool operator()(point2 const& a, point2 const& b) const { return a.lex_lt(b); }
+			bool operator()(point2 const& a, point2 const& b) const { return a.lex_less(b); }
 		};
 
 	private:

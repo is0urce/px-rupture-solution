@@ -39,6 +39,11 @@ namespace px {
 		{
 			load(usage, sizeof(pod), &pod);
 		}
+		template <typename C>
+		void load_array(GLenum usage, C const& container)
+		{
+			load(usage, sizeof(typename C::value_type) * container.size(), container.data());
+		}
 	private:
 		void init(GLenum variant)
 		{

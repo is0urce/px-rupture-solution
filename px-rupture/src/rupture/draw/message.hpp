@@ -11,8 +11,8 @@ namespace px {
 	class message
 	{
 	public:
-		std::string text;
-		color tint;
-		double magnitude;
+		std::string	text;
+		color		tint;
+		double		magnitude;
 	};
 }

@@ -223,13 +223,13 @@ namespace px {
 			}
 		}
 
-		bool lex_lt(coordinate const& cmp) const
+		bool lex_less(coordinate const& cmp) const
 		{
 			return std::lexicographical_compare(m_array.cbegin(), m_array.cend(), cmp.m_array.cbegin(), cmp.m_array.cend());
 		}
 		static bool lex_less(coordinate const& a, coordinate const& b)
 		{
-			return a.lex_lt(b);
+			return a.lex_less(b);
 		}
 
 		template <typename Archive>

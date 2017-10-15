@@ -17,14 +17,13 @@
 #include <px/rgl/rgl.hpp>
 #include <px/rgl/compilation.hpp>
 #include <px/rgl/offscreen.hpp>
-
 #include <px/rft/ft_font.hpp>
 
 #include "glyph_vertex.hpp"
 #include "sprite_vertex.hpp"
 #include "camera_uniform.hpp"
 
-#include "sprite_batch.hpp"
+#include "draw_batch.hpp"
 #include "message_control.hpp"
 #include "lightmap_control.hpp"
 
@@ -37,14 +36,12 @@
 namespace px {
 
 	static const char * font_path = "data/fonts/NotoSansUI-Bold.ttf";
+	//static const char * font_path = "data/fonts/TitilliumWeb-Bold.ttf"; //"data/fonts/NotoSansUI-Bold.ttf";
 	static const unsigned int font_size = 32;
 	static const size_t atlas_size = 512;
 
 	class renderer
 	{
-	public:
-		struct camera_data;
-
 	public:
 		void run(double delta_time)
 		{
@@ -54,15 +51,11 @@ namespace px {
 
 			glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
 			glClear(GL_COLOR_BUFFER_BIT);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // alpha blending for sprites
-			glUseProgram(sprite_program);
 			if (sprite_data) {
-				size_t size = sprite_data->size();
-				for (size_t i = 0; i != size; ++i) {
-					std::vector<sprite_vertex> const& vertices = (*sprite_data)[i];
-					if (vertices.size() > 0) {
-						sprites[i].draw_arrays(GL_QUADS, GL_STREAM_DRAW, vertices.size(), vertices.data());
-					}
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // alpha blending for sprites
+				glUseProgram(sprite_program);
+				for (size_t i = 0, size = sprite_data->size(); i != size; ++i) {
+					sprites[i].draw_arrays(GL_QUADS, GL_STREAM_DRAW, (*sprite_data)[i]);
 				}
 			}
 
@@ -77,21 +70,21 @@ namespace px {
 			// combining diffuse with lights, postprocessing, writing to main screen
 
 			glUseProgram(postprocess_program);
-			glBlendFunc(GL_ONE, GL_ZERO); // overwrite blending
+			glBlendFunc(GL_ONE, GL_ZERO); // overwrite
 			postprocess.draw_arrays(GL_QUADS, 4);
 
-			// notification overlay
+			// popup notification message overlay
 
 			glUseProgram(popup_program);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			popups.draw_arrays(GL_QUADS, GL_STREAM_DRAW, glyphs.size(), glyphs.data());
+			popups.pass.draw_arrays(GL_QUADS, static_cast<GLsizei>(glyphs.size()));
 
 			gl_assert();
 		}
 		void resize(int width, int height)
 		{
 			assign_size(width, height);
-			reset_framebuffers();
+			reset_pipeline();
 		}
 		void assign_sprite_data(std::vector<std::vector<sprite_vertex>> const* data) noexcept
 		{
@@ -145,7 +138,7 @@ namespace px {
 			// setup rendering
 
 			create_resources();
-			reset_framebuffers();
+			reset_pipeline();
 		}
 
 	private:
@@ -154,15 +147,14 @@ namespace px {
 			// set states
 
 			glClearColor(0, 0, 0, 1);
-
 			glEnable(GL_BLEND);
 
 			// compile shaders
 
 			sprite_program = compile_program("data/shaders/sprite", { "Camera" }, { "img" });
-			postprocess_program = compile_program("data/shaders/process", {}, { "diffuse", "lightmap" });
 			light_program = compile_program("data/shaders/light", { "Camera" }, { "current", "last" });
 			popup_program = compile_program("data/shaders/text", { "Camera" }, { "img" });
+			postprocess_program = compile_program("data/shaders/process", {}, { "diffuse", "lightmap" });
 
 			// setup textures
 
@@ -176,25 +168,25 @@ namespace px {
 			popups.vertices = GL_ARRAY_BUFFER;
 			popups.geometry.swizzle(popups.vertices, sizeof(glyph_vertex), { GL_FLOAT, GL_FLOAT, GL_FLOAT }, { 2, 2, 4 }, { offsetof(glyph_vertex, position), offsetof(glyph_vertex, texture), offsetof(glyph_vertex, tint) });
 		}
-		void reset_framebuffers()
+		void reset_pipeline()
 		{
 			diffuse.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
 			light.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
 
-			postprocess.output(0, screen_width, screen_height);
-			postprocess.bind_textures({ diffuse.texture, light.texture });
+			for (auto & batch : sprites) {
+				setup_batch(batch);
+			}
 
 			light_pass.output(light.framebuffer, screen_width, screen_height);
 			light_pass.bind_textures({ light_current, light_last });
 			light_pass.bind_uniform(camera);
 
+			postprocess = { 0, 0, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) }; // main framebuffer, no vao
+			postprocess.bind_textures({ diffuse.texture, light.texture });
+
 			popups.pass = { 0, popups.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
 			popups.pass.bind_texture(popups.texture);
 			popups.pass.bind_uniform(camera);
-
-			for (auto & batch : sprites) {
-				setup_batch(batch);
-			}
 		}
 		void assign_size(unsigned int new_width, unsigned int new_height)
 		{
@@ -212,13 +204,13 @@ namespace px {
 		{
 			// popups
 			if (msg_ctrl.is_dirty()) {
-				const float lpt = 0.25f; // lines per tile
-				const float mm = lpt / 64.0f / font_size; // one / freetype pixel-per-unit / font_size / lines-per-tile = multiplier for font-bitmap to world-space mapping
+				const float lm = 0.25f; // lines per tile multiplier
+				const float mm = lm / 64.0f / font_size; // one / freetype pixel-per-unit / font_size / lines-per-tile = multiplier for font-bitmap to world-space mapping
 
 				glyphs.clear();
 				for (auto const& popup : msg_ctrl.data->messages) {
 					const float center = 0.5f + static_cast<float>(popup.position.x());
-					const float baseline = 0.5f + lpt + static_cast<float>(popup.position.y() + popup.lift * lpt);
+					const float baseline = 0.5f + lm + static_cast<float>(popup.position.y() + popup.lift * lm);
 					const glm::vec4 tint = { popup.msg.tint.R, popup.msg.tint.G, popup.msg.tint.B, popup.msg.tint.A };
 					
 					long length = 0;
@@ -242,15 +234,16 @@ namespace px {
 						pen += g.advance_h * mm;
 					});
 				}
+				popups.vertices.load_array(GL_STATIC_DRAW, glyphs);
 				msg_ctrl.notify_cashing();
 			}
 
-			fill_uniforms(delta_time);
 			update_textures();
+			fill_uniforms(delta_time);
 		}
 		void fill_uniforms(double delta_time)
 		{
-			double turn_time = std::min(1.0, delta_time * 5);
+			double turn_time = std::min(1.0, delta_time * 5.0);
 			camera.load<camera_uniform>(GL_STREAM_DRAW, {
 				{ scale, scale * screen_aspect },
 				{ 0.5f, 0.5f },
@@ -259,17 +252,19 @@ namespace px {
 				{ static_cast<float>(light_control.width() / 2), static_cast<float>(light_control.height() / 2) },
 				{ static_cast<float>(light_control.dx()), static_cast<float>(light_control.dy()) },
 				{ static_cast<float>(turn_time), static_cast<float>(1.0 - turn_time) },
-				{ static_cast<float>(delta_time), 0 }
+				{ static_cast<float>(delta_time), 0.0f }
 			});
 		}
 		void update_textures()
 		{
+			// lightmap
 			if (light_control.is_dirty()) {
 				light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.current->raw);
 				light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.last->raw);
 				light_control.notify_cashing();
 			}
 
+			// font bitmap
 			if (popup_font.updated()) {
 				unsigned int atlas_width, atlas_height;
 				void const* bitmap = popup_font.download(atlas_width, atlas_height);

@@ -21,8 +21,19 @@ namespace px {
 		template <typename T>
 		void draw_arrays(GLenum mode, GLenum usage, size_t size, T const* data)
 		{
-			vertices.load(usage, sizeof(T) * size, data);
-			pass.draw_arrays(mode, static_cast<GLsizei>(size));
+			if (size != 0) {
+				vertices.load(usage, sizeof(T) * size, data);
+				pass.draw_arrays(mode, static_cast<GLsizei>(size));
+			}
+		}
+
+		template <typename C>
+		void draw_arrays(GLenum mode, GLenum usage, C const& container)
+		{
+			if (container.size() != 0) {
+				vertices.load_array(usage, container);
+				pass.draw_arrays(mode, static_cast<GLsizei>(container.size()));
+			}
 		}
 	};
 }

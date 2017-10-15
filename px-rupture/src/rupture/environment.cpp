@@ -47,9 +47,8 @@ namespace px {
 			auto destination = last_step + movement;
 			if (stage.is_traversable(destination, rl::traverse_options<rl::traverse>{ 1 })) {
 				player->place(destination);
-				messages.send({ "bump!", 0xffff00, 1.0 }, destination);
-				messages.send({ "* tap *", 0xffffff, 1.0 }, destination);
-				messages.send({ u8"״נטפעû דמגםמ +8 copper ore : success", 0xffffff, 1.0 }, destination);
+				messages.send({ u8"sfx: * ding! *", 0xffffff, 1.0 }, destination);
+				messages.send({ "static_cast<!>", 0xff0000ff, 1.0 }, { 25, 25 });
 				pass_turn();
 			}
 		}

@@ -11,9 +11,8 @@ namespace px {
 	class popup
 	{
 	public:
-		message msg;
-		vector2 position;
-		double lift;
-		//unsigned int line;
+		message	msg;
+		vector2	position;
+		double	lift;
 	};
 }
