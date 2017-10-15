@@ -7,6 +7,7 @@
 
 #include "ft_face.hpp"
 
+#include <algorithm>
 #include <cstring>
 #include <map>
 #include <stdexcept>
@@ -90,6 +91,17 @@ namespace px
 		}
 
 	private:
+		void expand_atlas()
+		{
+			m_width *= 2;
+			m_height *= 2;
+			m_atlas.assign(m_width * m_height, 0);
+			m_pen_x = 0;
+			m_pen_y = 0;
+			m_max_height = 0;
+			m_dirty = true;
+			++m_version;
+		}
 		glyph & rasterize(unsigned int code, unsigned int into)
 		{
 			// load data & create glyph
@@ -107,14 +119,15 @@ namespace px
 				m_pen_y += m_max_height;
 				m_max_height = 0;
 			}
-			if (m_pen_y + y_stride > m_height)
-			{
-				throw std::runtime_error("px::font - atlas too small");
+
+			// expand atlas
+			if (m_pen_y + y_stride > m_height) {
+				expand_atlas();
+				return rasterize(code, into);
 			}
 
 			// copy bitmap
-			for (unsigned int j = 0, h = slot->bitmap.rows; j != h; ++j)
-			{
+			for (unsigned int j = 0, h = slot->bitmap.rows; j != h; ++j) {
 				std::memcpy(&m_atlas[(m_pen_y + j + padding) * m_width + m_pen_x + padding], &slot->bitmap.buffer[j * slot->bitmap.pitch], slot->bitmap.width);
 			}
 

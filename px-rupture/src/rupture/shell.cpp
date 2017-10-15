@@ -36,6 +36,7 @@ namespace px {
 	{
 		renderer.assign_sprite_data(sprites.data());
 		renderer.assign_lightmap_data(lights.current_data(), lights.last_data());
+		renderer.assigm_message_data(messages.data());
 		lights.assign_scene(&stage);
 		stage.assign_sprites(&sprites);
 	}
@@ -62,6 +63,7 @@ namespace px {
 
 		engine.add(&transforms);
 		engine.add(&lights);
+		engine.add(&messages);
 	}
 
 	void shell::frame(double timer)

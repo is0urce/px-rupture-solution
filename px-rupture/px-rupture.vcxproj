@@ -105,7 +105,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -119,7 +119,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,7 +137,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,7 +156,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -164,6 +164,7 @@
     <ClCompile Include="src\rupture\environment.cpp" />
     <ClCompile Include="src\rupture\es\builder.cpp" />
     <ClCompile Include="src\rupture\es\light_system.cpp" />
+    <ClCompile Include="src\rupture\es\notification_system.cpp" />
     <ClCompile Include="src\rupture\es\render_system.cpp" />
     <ClCompile Include="src\rupture\es\sprite_system.cpp" />
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\px\common\pool.hpp" />
     <ClInclude Include="src\px\common\pool_chain.hpp" />
     <ClInclude Include="src\px\common\qtree.hpp" />
+    <ClInclude Include="src\px\common\string.hpp" />
     <ClInclude Include="src\px\common\timer.hpp" />
     <ClInclude Include="src\px\common\vector.hpp" />
     <ClInclude Include="src\px\dev\poly_logger.hpp" />
@@ -205,9 +207,12 @@
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
     <ClInclude Include="src\rupture\core.hpp" />
+    <ClInclude Include="src\rupture\draw\glyph_vertex.hpp" />
     <ClInclude Include="src\rupture\draw\lightmap_control.hpp" />
     <ClInclude Include="src\rupture\draw\lightmap_data.hpp" />
-    <ClInclude Include="src\rupture\draw\message_overlay.hpp" />
+    <ClInclude Include="src\rupture\draw\message_control.hpp" />
+    <ClInclude Include="src\rupture\draw\message_data.hpp" />
+    <ClInclude Include="src\rupture\draw\message_works.hpp" />
     <ClInclude Include="src\rupture\draw\message.hpp" />
     <ClInclude Include="src\rupture\draw\popup.hpp" />
     <ClInclude Include="src\rupture\es\builder.hpp" />
@@ -254,6 +259,7 @@
     <ClInclude Include="src\rupture\es\light_component.hpp" />
     <ClInclude Include="src\rupture\es\light_system.hpp" />
     <ClInclude Include="src\rupture\es\light_works.hpp" />
+    <ClInclude Include="src\rupture\es\notification_system.hpp" />
     <ClInclude Include="src\rupture\es\render_system.hpp" />
     <ClInclude Include="src\rupture\es\sprite_component.hpp" />
     <ClInclude Include="src\rupture\es\sprite_system.hpp" />
@@ -290,6 +296,8 @@
     <None Include="data\shaders\process.vert" />
     <None Include="data\shaders\sprite.frag" />
     <None Include="data\shaders\sprite.vert" />
+    <None Include="data\shaders\text.frag" />
+    <None Include="data\shaders\text.vert" />
     <None Include="data\shaders\ui.frag" />
     <None Include="data\shaders\ui.vert" />
     <None Include="data\textures.json" />

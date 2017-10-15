@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "rupture/draw/sprite_vertex.hpp"
-
 #include <px/es/system.hpp>
 #include <px/es/delta.hpp>
 
@@ -15,6 +13,9 @@ namespace px {
 
 	class renderer;
 	class lightmap_data;
+	class message_data;
+
+	struct sprite_vertex;
 
 	class render_system final
 		: public system<delta>
@@ -23,6 +24,7 @@ namespace px {
 		void resize(int width, int height);
 		void assign_sprite_data(std::vector<std::vector<sprite_vertex>> const* data) noexcept;
 		void assign_lightmap_data(lightmap_data const* current, lightmap_data const* last) noexcept;
+		void assigm_message_data(message_data const* data) noexcept;
 		void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data);
 		void zoom(bool up);
 

@@ -315,13 +315,28 @@
     <ClInclude Include="src\rupture\rl\scene_internal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\draw\message_overlay.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\draw\message.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\draw\popup.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\es\notification_system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\message_works.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\message_data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\message_control.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\glyph_vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\common\string.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -371,6 +386,9 @@
     <ClCompile Include="src\rupture\rl\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\rupture\es\notification_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />
@@ -385,5 +403,7 @@
     <None Include="data\shaders\ui.frag" />
     <None Include="data\shaders\light.vert" />
     <None Include="data\shaders\light.frag" />
+    <None Include="data\shaders\text.frag" />
+    <None Include="data\shaders\text.vert" />
   </ItemGroup>
 </Project>

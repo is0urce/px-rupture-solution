@@ -4,14 +4,16 @@
 
 #include "message.hpp"
 
-#include <px/common/point.hpp>
+#include <px/common/vector.hpp>
 
 namespace px {
 
-	struct popup
+	class popup
 	{
+	public:
 		message msg;
-		point2 position;
+		vector2 position;
 		double lift;
+		//unsigned int line;
 	};
 }

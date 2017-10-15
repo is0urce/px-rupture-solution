@@ -4,6 +4,7 @@
 
 #include "core.hpp"
 
+#include "es/notification_system.hpp"
 #include "rl/scene.hpp"
 
 #include <px/common/point.hpp>
@@ -38,5 +39,6 @@ namespace px {
 		unsigned int			turn_number;
 		bool					turn_pass;
 		point2					last_step;
+		notification_system		messages;
 	};
 }

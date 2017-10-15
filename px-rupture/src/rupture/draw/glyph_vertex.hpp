@@ -1,4 +1,4 @@
-// name: canera_uniform.hpp
+// name: glyph_vertex.hpp
 // type: c++ struct
 
 #pragma once
@@ -11,16 +11,10 @@
 
 namespace px {
 
-	struct camera_uniform
+	struct glyph_vertex
 	{
-		glm::vec2	scale;
-		glm::vec2	translate;
-		glm::vec2	screen;
-		glm::vec2	lightmap_size;
-		glm::vec2	lightmap_range; 
-		glm::vec2	lightmap_last_offset;
-		glm::vec2	interpolate;
-		glm::vec2	timer;
+		glm::vec2 position;
+		glm::vec2 texture;
+		glm::vec4 tint;
 	};
-
 }

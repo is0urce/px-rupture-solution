@@ -5,9 +5,12 @@
 
 #include "environment.hpp"
 
+#include "draw/message.hpp"
+
 #include "es/transform_component.hpp"
 #include "es/composite_component.hpp"
 #include "es/light_component.hpp"
+
 #include "es/builder.hpp"
 
 #include <px/fn/ant_generator.hpp>
@@ -30,11 +33,12 @@ namespace px {
 
 	// methods
 
-	void environment::incarnate(transform_component * focus)
+	void environment::incarnate(transform_component * camera)
 	{
-		player = focus;
-		sprites.target(focus);
-		lights.target(focus);
+		player = camera;
+		sprites.target(camera);
+		lights.target(camera);
+		messages.target(camera);
 	}
 	void environment::step(point2 const& movement)
 	{
@@ -43,6 +47,9 @@ namespace px {
 			auto destination = last_step + movement;
 			if (stage.is_traversable(destination, rl::traverse_options<rl::traverse>{ 1 })) {
 				player->place(destination);
+				messages.send({ "bump!", 0xffff00, 1.0 }, destination);
+				messages.send({ "* tap *", 0xffffff, 1.0 }, destination);
+				messages.send({ u8"״נטפעû דמגםמ +8 copper ore : success", 0xffffff, 1.0 }, destination);
 				pass_turn();
 			}
 		}
@@ -51,9 +58,8 @@ namespace px {
 	{
 		++turn_number;
 		turn_pass = !turn_pass;
-		if (player) {
-			player->store(last_step);
-		}
+
+		if (player && !turn_pass) player->store(last_step);
 	}
 	unsigned int environment::current_turn() const noexcept
 	{

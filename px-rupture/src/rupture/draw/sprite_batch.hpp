@@ -1,4 +1,4 @@
-// name: sprite_batch.hpp
+// name: draw_batch.hpp
 // type: c++
 // auth: is0urce
 // desc: structure
@@ -10,7 +10,7 @@
 
 namespace px {
 
-	struct sprite_batch
+	struct draw_batch
 	{
 		gl_buffer	vertices;
 		gl_vao		geometry;

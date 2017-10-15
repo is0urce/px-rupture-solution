@@ -8,8 +8,9 @@
 
 namespace px {
 	
-	struct message
+	class message
 	{
+	public:
 		std::string text;
 		color tint;
 		double magnitude;

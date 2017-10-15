@@ -18,16 +18,27 @@
 #include <px/rgl/compilation.hpp>
 #include <px/rgl/offscreen.hpp>
 
+#include <px/rft/ft_font.hpp>
+
+#include "glyph_vertex.hpp"
 #include "sprite_vertex.hpp"
-#include "sprite_batch.hpp"
 #include "camera_uniform.hpp"
+
+#include "sprite_batch.hpp"
+#include "message_control.hpp"
 #include "lightmap_control.hpp"
+
+#include <px/common/string.hpp>
 
 #include <algorithm>
 #include <vector>
 #include <stdexcept>
 
 namespace px {
+
+	static const char * font_path = "data/fonts/NotoSansUI-Bold.ttf";
+	static const unsigned int font_size = 32;
+	static const size_t atlas_size = 512;
 
 	class renderer
 	{
@@ -37,29 +48,9 @@ namespace px {
 	public:
 		void run(double delta_time)
 		{
-			delta_time = std::min(1.0, delta_time * 5);
+			prepare_resources(delta_time);
 
-			// fill uniforms
-
-			camera.load<camera_uniform>(GL_STREAM_DRAW, {
-				{ scale, scale * screen_aspect },
-				{ 0.5f, 0.5f },
-				{ static_cast<float>(screen_width), static_cast<float>(screen_height) },
-				{ static_cast<float>(light_control.width()), static_cast<float>(light_control.height()) },
-				{ static_cast<float>(light_control.width() / 2), static_cast<float>(light_control.height() / 2) },
-				{ static_cast<float>(light_control.dx()), static_cast<float>(light_control.dy()) },
-				{ static_cast<float>(delta_time), static_cast<float>(1.0 - delta_time) }
-			});
-
-			// update textures
-
-			if (light_control.is_dirty()) {
-				light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.current->raw);
-				light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.last->raw);
-				light_control.notify_cashing();
-			}
-
-			// sprites drawed to offscreen
+			// sprites drawed to offscreen A
 
 			glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -75,20 +66,25 @@ namespace px {
 				}
 			}
 
-			// lightmap drawed to offscreen
+			// lightmap drawed to offscreen B
 
 			glBindFramebuffer(GL_FRAMEBUFFER, light.framebuffer);
 			glClear(GL_COLOR_BUFFER_BIT);
 			glBlendFunc(GL_ONE, GL_ONE); // additive blending for lights
 			glUseProgram(light_program);
 			light_pass.draw_arrays(GL_QUADS, 8); // two quads for current and last lightmap overlays
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			// combining diffuse with lights, postprocessing, writing to screen
+			// combining diffuse with lights, postprocessing, writing to main screen
 
 			glUseProgram(postprocess_program);
 			glBlendFunc(GL_ONE, GL_ZERO); // overwrite blending
 			postprocess.draw_arrays(GL_QUADS, 4);
+
+			// notification overlay
+
+			glUseProgram(popup_program);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			popups.draw_arrays(GL_QUADS, GL_STREAM_DRAW, glyphs.size(), glyphs.data());
 
 			gl_assert();
 		}
@@ -105,6 +101,10 @@ namespace px {
 		{
 			light_control.current = current;
 			light_control.last = last;
+		}
+		void assign_message_data(message_data const* data) noexcept
+		{
+			msg_ctrl.data = data;
 		}
 		void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data)
 		{
@@ -138,6 +138,7 @@ namespace px {
 		renderer(unsigned int width, unsigned int height)
 			: sprite_data(nullptr)
 			, scale(1.0f)
+			, popup_font(font_path, font_size, atlas_size)
 		{
 			assign_size(width, height);
 
@@ -161,13 +162,19 @@ namespace px {
 			sprite_program = compile_program("data/shaders/sprite", { "Camera" }, { "img" });
 			postprocess_program = compile_program("data/shaders/process", {}, { "diffuse", "lightmap" });
 			light_program = compile_program("data/shaders/light", { "Camera" }, { "current", "last" });
+			popup_program = compile_program("data/shaders/text", { "Camera" }, { "img" });
 
 			// setup textures
 
-			light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
+			light_current.image2d(GL_RGBA, GL_RGBA, 10, 10);
 			light_current.filters(GL_LINEAR, GL_NEAREST); // required
-			light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(20), static_cast<GLsizei>(20));
+			light_last.image2d(GL_RGBA, GL_RGBA, 10, 10);
 			light_last.filters(GL_LINEAR, GL_NEAREST); // required
+
+			popups.texture.image2d(GL_RED, GL_RED, 10, 10);
+			popups.texture.filters(GL_LINEAR, GL_LINEAR); // required
+			popups.vertices = GL_ARRAY_BUFFER;
+			popups.geometry.swizzle(popups.vertices, sizeof(glyph_vertex), { GL_FLOAT, GL_FLOAT, GL_FLOAT }, { 2, 2, 4 }, { offsetof(glyph_vertex, position), offsetof(glyph_vertex, texture), offsetof(glyph_vertex, tint) });
 		}
 		void reset_framebuffers()
 		{
@@ -181,6 +188,10 @@ namespace px {
 			light_pass.bind_textures({ light_current, light_last });
 			light_pass.bind_uniform(camera);
 
+			popups.pass = { 0, popups.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
+			popups.pass.bind_texture(popups.texture);
+			popups.pass.bind_uniform(camera);
+
 			for (auto & batch : sprites) {
 				setup_batch(batch);
 			}
@@ -191,32 +202,107 @@ namespace px {
 			screen_height = new_height;
 			screen_aspect = static_cast<float>(screen_width) / static_cast<float>(screen_height);
 		}
-		void setup_batch(sprite_batch & batch) const
+		void setup_batch(draw_batch & batch) const
 		{
 			batch.pass = { diffuse.framebuffer, batch.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
 			batch.pass.bind_texture(batch.texture);
 			batch.pass.bind_uniform(camera);
 		}
+		void prepare_resources(double delta_time)
+		{
+			// popups
+			if (msg_ctrl.is_dirty()) {
+				const float lpt = 0.25f; // lines per tile
+				const float mm = lpt / 64.0f / font_size; // one / freetype pixel-per-unit / font_size / lines-per-tile = multiplier for font-bitmap to world-space mapping
+
+				glyphs.clear();
+				for (auto const& popup : msg_ctrl.data->messages) {
+					const float center = 0.5f + static_cast<float>(popup.position.x());
+					const float baseline = 0.5f + lpt + static_cast<float>(popup.position.y() + popup.lift * lpt);
+					const glm::vec4 tint = { popup.msg.tint.R, popup.msg.tint.G, popup.msg.tint.B, popup.msg.tint.A };
+					
+					long length = 0;
+					string::enumerate_utf8(popup.msg.text, [&](auto codepoint) {
+						length += popup_font[codepoint].advance_h;
+					});
+
+					float pen = center - length * mm * 0.5f;
+					string::enumerate_utf8(popup.msg.text, [&](auto codepoint) {
+						auto const& g = popup_font[codepoint];
+						const float left = pen + g.bearing_hx * mm;
+						const float top = baseline + g.bearing_hy * mm;
+						const float w = g.width * mm;
+						const float h = g.height * mm;
+
+						glyphs.push_back({ { left + 0, top - h }, { g.sx, g.sy }, tint });
+						glyphs.push_back({ { left + 0, top - 0 }, { g.sx, g.dy }, tint });
+						glyphs.push_back({ { left + w, top - 0 }, { g.dx, g.dy }, tint });
+						glyphs.push_back({ { left + w, top - h }, { g.dx, g.sy }, tint });
+
+						pen += g.advance_h * mm;
+					});
+				}
+				msg_ctrl.notify_cashing();
+			}
+
+			fill_uniforms(delta_time);
+			update_textures();
+		}
+		void fill_uniforms(double delta_time)
+		{
+			double turn_time = std::min(1.0, delta_time * 5);
+			camera.load<camera_uniform>(GL_STREAM_DRAW, {
+				{ scale, scale * screen_aspect },
+				{ 0.5f, 0.5f },
+				{ static_cast<float>(screen_width), static_cast<float>(screen_height) },
+				{ static_cast<float>(light_control.width()), static_cast<float>(light_control.height()) },
+				{ static_cast<float>(light_control.width() / 2), static_cast<float>(light_control.height() / 2) },
+				{ static_cast<float>(light_control.dx()), static_cast<float>(light_control.dy()) },
+				{ static_cast<float>(turn_time), static_cast<float>(1.0 - turn_time) },
+				{ static_cast<float>(delta_time), 0 }
+			});
+		}
+		void update_textures()
+		{
+			if (light_control.is_dirty()) {
+				light_current.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.current->raw);
+				light_last.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(light_control.width()), static_cast<GLsizei>(light_control.height()), 0, GL_FLOAT, light_control.last->raw);
+				light_control.notify_cashing();
+			}
+
+			if (popup_font.updated()) {
+				unsigned int atlas_width, atlas_height;
+				void const* bitmap = popup_font.download(atlas_width, atlas_height);
+				popups.texture.image2d(GL_RED, GL_RED, static_cast<GLsizei>(atlas_width), static_cast<GLsizei>(atlas_height), 0, GL_UNSIGNED_BYTE, bitmap);
+			}
+		}
 
 	private:
-		unsigned int					screen_width;
-		unsigned int					screen_height;
-		float							screen_aspect;
-		float							scale;
-		gl_uniform						camera;
-		gl_program						sprite_program;
-		gl_program						postprocess_program;
-		gl_program						light_program;
-		gl_texture						light_current;
-		gl_texture						light_last;
+		unsigned int									screen_width;
+		unsigned int									screen_height;
+		float											screen_aspect;
+		float											scale;
+		gl_uniform										camera;
+		gl_program										sprite_program;
+		gl_program										postprocess_program;
+		gl_program										popup_program;
+		gl_program										light_program;
+		gl_texture										light_current;
+		gl_texture										light_last;
+		gl_texture										popup_texture;
 
-		offscreen						diffuse;
-		offscreen						light;
-		pass							postprocess;
-		pass							light_pass;
+		offscreen										diffuse;
+		offscreen										light;
+		pass											postprocess;
+		pass											light_pass;
 
-		std::vector<sprite_batch>		sprites;
-		lightmap_control				light_control;
-		std::vector<std::vector<sprite_vertex>> const* sprite_data;
+		message_control									msg_ctrl;
+		draw_batch										popups;
+		std::vector<glyph_vertex>						glyphs;
+		ft_font											popup_font;
+
+		std::vector<draw_batch>							sprites;
+		std::vector<std::vector<sprite_vertex>> const*	sprite_data;
+		lightmap_control								light_control;
 	};
 }
