@@ -6,6 +6,7 @@
 
 #include "es/notification_system.hpp"
 #include "rl/scene.hpp"
+#include "io/repository.hpp"
 
 #include <px/common/point.hpp>
 #include <px/memory/uq_ptr.hpp>
@@ -40,5 +41,6 @@ namespace px {
 		bool					turn_pass;
 		point2					last_step;
 		notification_system		messages;
+		repository				directory;
 	};
 }

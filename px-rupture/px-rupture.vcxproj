@@ -75,12 +75,14 @@
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>bin\</OutDir>
     <IncludePath>src/;include/;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)-dbg</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>bin\</OutDir>
     <IncludePath>src/;include/;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)-dbg</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -269,6 +271,7 @@
     <ClInclude Include="src\rupture\draw\image.hpp" />
     <ClInclude Include="src\rupture\es\transform_works.hpp" />
     <ClInclude Include="src\rupture\es\ui_system.hpp" />
+    <ClInclude Include="src\rupture\io\repository.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
     <ClInclude Include="src\rupture\menu.hpp" />

@@ -28,6 +28,7 @@ namespace px {
 		, turn_pass(true)
 		, player(nullptr)
 		, run(true)
+		, directory("data/save/current", nullptr)
 	{
 	}
 

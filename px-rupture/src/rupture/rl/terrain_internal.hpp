@@ -41,7 +41,7 @@ namespace px {
 			tile & target = tiles.at(location);
 			tile_prototype const& prototype = lib[block_id];
 
-			target.block_id = block_id;
+			target.block_id = prototype.block_id;
 			target.mass = prototype.mass;
 			target.sprite = sprites->make(prototype.name);
 			target.sprite->connect(&target.transform);
