@@ -23,7 +23,8 @@ namespace px {
 		void start();
 		unsigned int current_turn() const noexcept;
 		void pass_turn();
-		bool turn_passed() const noexcept; // true if it's world processing stage
+		bool turn_passed() const noexcept; // true if it's the world processing stage
+		bool is_running() const noexcept;
 
 	public:
 		virtual ~environment();
@@ -34,13 +35,15 @@ namespace px {
 		void spawn(const char* name, int x, int y);
 
 	protected:
+		notification_system		messages;
+		scene					stage;
+
+	private:
 		transform_component *	player;
 		bool					run;
-		scene					stage;
 		unsigned int			turn_number;
-		bool					turn_pass;
+		bool					turn_pass;		// true if it's the world processing stage
 		point2					last_step;
-		notification_system		messages;
 		repository				directory;
 	};
 }

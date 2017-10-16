@@ -34,6 +34,10 @@ namespace px {
 
 	// methods
 
+	bool environment::is_running() const noexcept
+	{
+		return run;
+	}
 	void environment::incarnate(transform_component * camera)
 	{
 		player = camera;

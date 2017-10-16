@@ -68,7 +68,7 @@ namespace px {
 
 	void shell::frame(double timer)
 	{
-		if (run) {
+		if (is_running()) {
 			time.advance(timer);
 			if (turn_passed()) {
 				time.advance_turn(current_turn());

@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="src\rupture\core.cpp" />
     <ClCompile Include="src\rupture\environment.cpp" />
+    <ClCompile Include="src\rupture\es\body_system.cpp" />
     <ClCompile Include="src\rupture\es\builder.cpp" />
     <ClCompile Include="src\rupture\es\light_system.cpp" />
     <ClCompile Include="src\rupture\es\notification_system.cpp" />
@@ -205,6 +206,9 @@
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
     <ClInclude Include="src\px\es\light.hpp" />
     <ClInclude Include="src\px\rgl\offscreen.hpp" />
+    <ClInclude Include="src\px\rl\bar.hpp" />
+    <ClInclude Include="src\px\rl\constitution.hpp" />
+    <ClInclude Include="src\px\rl\entity.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
@@ -217,6 +221,9 @@
     <ClInclude Include="src\rupture\draw\message_works.hpp" />
     <ClInclude Include="src\rupture\draw\message.hpp" />
     <ClInclude Include="src\rupture\draw\popup.hpp" />
+    <ClInclude Include="src\rupture\es\body_component.hpp" />
+    <ClInclude Include="src\rupture\es\body_system.hpp" />
+    <ClInclude Include="src\rupture\es\body_works.hpp" />
     <ClInclude Include="src\rupture\es\builder.hpp" />
     <ClInclude Include="src\rupture\es\composite_component.hpp" />
     <ClInclude Include="src\px\es\composition.hpp" />

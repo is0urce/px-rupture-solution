@@ -87,7 +87,7 @@ namespace px {
 		// main loop
 
 		timer<glfw_time> time;
-		while (win.process()) {
+		while (game.is_running() && win.process()) {
 			game.frame(time);
 		}
 	}

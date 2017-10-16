@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "rupture/app/settings.hpp"
-
 #include <px/common/point.hpp>
 
 #include <filesystem>
@@ -21,10 +19,6 @@ namespace px {
 
 	class repository final
 	{
-	public:
-		static const int coordinate_bias = 0;
-		
-
 	public:
 		bool exists() const
 		{
@@ -80,22 +74,22 @@ namespace px {
 			return query("meta");
 		}
 
-		bool has_scene(std::string const& scene_path) const
+		bool has_scene(std::string const& scene_name) const
 		{
-			return exists(scene_path);
+			return exists(scene_name);
 		}
 		bool has_main() const
 		{
-			return exists(depot_main());
+			return exists("main");
 		}
 		bool has_meta() const
 		{
-			return exists(depot_meta());
+			return exists("meta");
 		}
 
-		bool clear_scene(std::string const& record_name)
+		bool clear_scene(std::string const& scene_name)
 		{
-			return clear(record_name);
+			return clear(scene_name);
 		}
 		bool clear_main()
 		{
@@ -174,6 +168,7 @@ namespace px {
 		}
 
 	private:
+		static const int coordinate_bias = 0;
 		fs::path name;
 		repository const* parent;
 	};

@@ -5,7 +5,6 @@
 #include "transform_component.hpp"
 
 #include <px/common/qtree.hpp>
-#include <px/memory/memory.hpp>
 
 #include <px/common/pool_chain.hpp>
 

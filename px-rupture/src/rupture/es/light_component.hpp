@@ -3,6 +3,8 @@
 #include <px/es/component.hpp>
 #include <px/es/light.hpp>
 
+#include <px/es/link_dispatcher.hpp>
+
 namespace px {
 
 	class transform_component;

@@ -5,6 +5,7 @@
 
 #include "rupture/es/transform_component.hpp"
 #include "rupture/es/composite_component.hpp"
+#include "rupture/es/body_component.hpp"
 
 #include "terrain_internal.hpp"
 
@@ -19,13 +20,25 @@ namespace px {
 		{
 			if (!terrain.is_transparent(location)) return false;
 
-			return true;
+			bool transparent = true;
+			space.find(location, [&](transform_component * pawn) {
+				body_component * body = pawn->linked<body_component>();
+				transparent &= !body || body->blocking().is_transparent();
+			});
+
+			return transparent;
 		}
 		bool is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const
 		{
 			if (!terrain.is_traversable(location, opts)) return false;
 
-			return true;
+			bool traversable = true;
+			space.find(location, [&](transform_component * pawn) {
+				body_component * body = pawn->linked<body_component>();
+				traversable &= !body || body->blocking().is_traversable(opts);
+			});
+
+			return traversable;
 		}
 		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location)
 		{
