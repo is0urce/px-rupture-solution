@@ -3,6 +3,7 @@
 #include "rupture/core.hpp"
 
 #include "composite_component.hpp"
+#include "body_component.hpp"
 #include "sprite_component.hpp"
 #include "transform_component.hpp"
 #include "light_component.hpp"
@@ -17,9 +18,6 @@ namespace px {
 	}
 	builder::builder(core * production_factory)
 		: factory(production_factory)
-		, sprite(nullptr)
-		, transform(nullptr)
-		, light(nullptr)
 	{
 		begin();
 	}
@@ -42,17 +40,26 @@ namespace px {
 	}
 	light_component * builder::add_light()
 	{
-		auto l = factory->lights.make();
-		light = l.get();
-		unit->add(std::move(l));
+		auto part = factory->lights.make();
+		light = part.get();
+		unit->add(std::move(part));
 
 		return light;
+	}
+	body_component * builder::add_body()
+	{
+		auto part = factory->bodies.make();
+		body = part.get();
+		unit->add(std::move(part));
+
+		return body;
 	}
 
 	void builder::link_components()
 	{
 		if (transform && sprite) sprite->connect(transform);
 		if (transform && light) light->connect(transform);
+		if (transform && body) transform->connect(body);
 	}
 
 	uq_ptr<composite_component> builder::request()
@@ -67,6 +74,7 @@ namespace px {
 		transform = nullptr;
 		sprite = nullptr;
 		light = nullptr;
+		body = nullptr;
 		unit = make_uq<composite_component>();
 	}
 }

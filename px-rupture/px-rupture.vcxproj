@@ -210,6 +210,7 @@
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
+    <ClInclude Include="src\px\rl\standing.hpp" />
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
     <ClInclude Include="src\rupture\core.hpp" />

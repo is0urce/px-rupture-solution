@@ -143,9 +143,9 @@ namespace px::rl {
 
 		// ctor & dtor
 	public:
-		bar() noexcept
-			: m_current{}
-			, m_max{}
+		constexpr bar() noexcept
+			: m_current(0)
+			, m_max(0)
 		{
 		}
 		constexpr bar(T max) noexcept

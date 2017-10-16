@@ -9,6 +9,7 @@
 
 #include "es/transform_component.hpp"
 #include "es/composite_component.hpp"
+#include "es/body_component.hpp"
 #include "es/light_component.hpp"
 
 #include "es/builder.hpp"
@@ -126,6 +127,9 @@ namespace px {
 		builder b(this);
 		b.add_sprite(name);
 		b.add_transform({ x, y });
+		body_component * bd = b.add_body();
+		bd->blocking().make_transparent();
+		bd->blocking().make_blocking(rl::traverse::floor);
 		stage.spawn(b.request(), nullptr);
 	}
 }
