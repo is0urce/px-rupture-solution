@@ -7,16 +7,18 @@
 
 namespace px::rl {
 
+	template <typename Faction>
 	class standing
 	{
 	public:
+		typedef Faction faction_type;
 		// reputation
 
-		unsigned int current_faction() const noexcept
+		Faction current_faction() const noexcept
 		{
 			return faction;
 		}
-		void join_faction(unsigned int faction_id) noexcept
+		void join_faction(Faction faction_id) noexcept
 		{
 			faction = faction_id;
 		}
@@ -49,7 +51,7 @@ namespace px::rl {
 		}
 
 	public:
-		constexpr standing(unsigned int faction_id) noexcept
+		constexpr standing(Faction faction_id) noexcept
 			: faction(faction_id)
 		{
 		}
@@ -59,6 +61,6 @@ namespace px::rl {
 		}
 
 	private:
-		unsigned int faction;
+		Faction faction;
 	};
 }

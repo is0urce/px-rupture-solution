@@ -40,6 +40,14 @@ namespace px::rl {
 		{
 			return health;
 		}
+		resource_type const& hp() const
+		{
+			return health;
+		}
+		resource_type const& mp() const
+		{
+			return health;
+		}
 
 		template <typename Archive>
 		void serialize(Archive & archive)

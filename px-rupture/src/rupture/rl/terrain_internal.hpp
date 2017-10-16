@@ -36,7 +36,7 @@ namespace px {
 		{
 			return tiles.get_or(border, location).mass.is_traversable(opt);
 		}
-		void pset(uint32_t block_id, point2 const& location)
+		void pset(std::uint32_t block_id, point2 const& location)
 		{
 			tile & target = tiles.at(location);
 			tile_prototype const& prototype = lib[block_id];
@@ -74,7 +74,7 @@ namespace px {
 		}
 
 	private:
-		void add_prototype(uint32_t block_id, std::string const& name, rl::mass<rl::traverse> const& mass)
+		void add_prototype(std::uint32_t block_id, std::string const& name, rl::mass<rl::traverse> const& mass)
 		{
 			lib[block_id] = { block_id, name, mass };
 		}

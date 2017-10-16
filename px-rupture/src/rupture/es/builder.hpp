@@ -14,7 +14,7 @@ namespace px {
 	class light_component;
 	class body_component;
 
-	class builder
+	class builder final
 	{
 	public:
 		void begin();

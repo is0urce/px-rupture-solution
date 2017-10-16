@@ -40,7 +40,15 @@ namespace px {
 
 			return traversable;
 		}
-		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location)
+		transform_component * any(point2 const& location) const
+		{
+			transform_component * subject = nullptr;
+			space.find(location, [&](transform_component * pawn) {
+				subject = pawn;
+			});
+			return subject;
+		}
+		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location)
 		{
 			if (!transform) transform = ptr->query<transform_component>();
 			if (transform) {
@@ -48,15 +56,15 @@ namespace px {
 				transform->store();
 				transform->incarnate(&space);
 			}
-			insert(std::forward<uq_ptr<composite_component>>(ptr));
+			return insert(std::forward<uq_ptr<composite_component>>(ptr));
 		}
-		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform)
+		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform)
 		{
 			if (!transform) transform = ptr->query<transform_component>();
 			if (transform) {
 				transform->incarnate(&space);
 			}
-			insert(std::forward<uq_ptr<composite_component>>(ptr));
+			return insert(std::forward<uq_ptr<composite_component>>(ptr));
 		}
 
 		qtree<transform_component*> * get_space()
@@ -67,7 +75,7 @@ namespace px {
 		{
 			terrain.assign_sprites(system);
 		}
-		void pset(uint32_t block_id, point2 const& location)
+		void pset(std::uint32_t block_id, point2 const& location)
 		{
 			terrain.pset(block_id, location);
 		}
@@ -77,10 +85,11 @@ namespace px {
 			: space(64)
 		{
 		}
-		void insert(uq_ptr<composite_component> && ptr)
+		uq_ptr<composite_component> & insert(uq_ptr<composite_component> && ptr)
 		{
 			ptr->enable();
 			units.push_back(std::move(ptr));
+			return units.back();
 		}
 
 	private:

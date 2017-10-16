@@ -20,7 +20,7 @@ namespace px {
 	{
 		impl->assign_sprites(system);
 	}
-	void terrain::pset(uint32_t block_id, point2 const& location)
+	void terrain::pset(std::uint32_t block_id, point2 const& location)
 	{
 		impl->pset(block_id, location);
 	}

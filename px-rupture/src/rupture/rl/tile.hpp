@@ -18,7 +18,7 @@ namespace px {
 	class tile
 	{
 	public:
-		uint32_t block_id;
+		std::uint32_t block_id;
 		transform_component transform;
 		uq_ptr<sprite_component> sprite;
 		rl::mass<rl::traverse> mass;

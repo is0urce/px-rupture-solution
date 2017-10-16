@@ -5,6 +5,7 @@
 #include <px/es/link_dispatcher.hpp>
 
 #include <px/rl/constitution.hpp>
+#include <px/rl/entity.hpp>
 #include <px/rl/standing.hpp>
 #include <px/rl/mass.hpp>
 #include <px/rl/traverse.hpp>
@@ -16,8 +17,9 @@ namespace px {
 	class body_component
 		: public component
 		, public link_dispatcher<body_component>
+		, public rl::entity
 		, public rl::constitution
-		, public rl::standing
+		, public rl::standing<unsigned int>
 	{
 	public:
 		rl::mass<rl::traverse> const& blocking() const

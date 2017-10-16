@@ -26,11 +26,11 @@ namespace px {
 		bool is_transparent(point2 const& location) const;
 		bool is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const;
 
-		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location);
-		void spawn(uq_ptr<composite_component> && ptr, transform_component * transform);
+		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location);
+		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform);
 
 		void assign_sprites(sprite_system * system);
-		void pset(uint32_t block_id, point2 const& location);
+		void pset(std::uint32_t block_id, point2 const& location);
 		qtree<transform_component*> * space() noexcept;
 
 	public:

@@ -10,9 +10,9 @@
 #include <px/rgl/rgl.hpp>
 #include <px/rgl/compilation.hpp>
 
-namespace px {
+namespace px::ui {
 
-	class menu final
+	class director_works final
 	{
 	public:
 		void resize(unsigned int w, unsigned int h)
@@ -25,11 +25,13 @@ namespace px {
 			io.DisplaySize = { static_cast<float>(width), static_cast<float>(height) };
 			io.DisplayFramebufferScale = { 1, 1 };
 		}
-		void draw(double delta_time)
+		void begin(double delta_time)
 		{
 			ImGui::GetIO().DeltaTime = static_cast<float>(delta_time);
 			ImGui::NewFrame();
-			compile();
+		}
+		void end()
+		{
 			ImGui::Render();
 			render();
 		}
@@ -66,12 +68,12 @@ namespace px {
 		}
 
 	public:
-		~menu()
+		~director_works()
 		{
 			ImGui::Shutdown();
 			release_pipeline();
 		}
-		menu(unsigned int w, unsigned int h)
+		director_works(unsigned int w, unsigned int h)
 		{
 			resize(w, h);
 			create_pipeline();
@@ -87,22 +89,6 @@ namespace px {
 		}
 
 	private:
-		void compile()
-		{
-			ImGui::SetNextWindowSize({ 150, 100 });
-			ImGui::SetNextWindowPos({ 50, 50 });
-			ImGui::Begin("performance", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-			static bool metrics = false;
-			if (ImGui::Button("dear imgui metrics")) {
-				metrics = !metrics;
-			}
-			ImGui::End();
-
-			if (metrics) {
-				ImGui::ShowMetricsWindow(&metrics);
-			}
-		}
 		void render()
 		{
 			// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)

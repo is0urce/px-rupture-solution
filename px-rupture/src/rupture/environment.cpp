@@ -54,7 +54,7 @@ namespace px {
 			if (stage.is_traversable(destination, rl::traverse_options<rl::traverse>{ 1 })) {
 				player->place(destination);
 				messages.send({ u8"sfx: * ding! *", 0xffffff, 1.0 }, destination);
-				messages.send({ "static_cast<!>", 0xff0000ff, 1.0 }, { 25, 25 });
+				messages.send({ "rubble", 0xffffff, 1.0 }, { 25, 25 });
 				pass_turn();
 			}
 		}

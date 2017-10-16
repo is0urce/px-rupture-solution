@@ -266,6 +266,7 @@
     <ClInclude Include="src\rupture\draw\draw_batch.hpp" />
     <ClInclude Include="src\rupture\draw\sprite_vertex.hpp" />
     <ClInclude Include="src\rupture\environment.hpp" />
+    <ClInclude Include="src\rupture\es\composition_element.hpp" />
     <ClInclude Include="src\rupture\es\light_component.hpp" />
     <ClInclude Include="src\rupture\es\light_system.hpp" />
     <ClInclude Include="src\rupture\es\light_works.hpp" />
@@ -280,9 +281,11 @@
     <ClInclude Include="src\rupture\es\transform_works.hpp" />
     <ClInclude Include="src\rupture\es\ui_system.hpp" />
     <ClInclude Include="src\rupture\io\repository.hpp" />
+    <ClInclude Include="src\rupture\io\scheme.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
-    <ClInclude Include="src\rupture\menu.hpp" />
+    <ClInclude Include="src\rupture\ui\editor.hpp" />
+    <ClInclude Include="src\rupture\ui\menu.hpp" />
     <ClInclude Include="src\rupture\rl\scene.hpp" />
     <ClInclude Include="src\rupture\rl\scene_internal.hpp" />
     <ClInclude Include="src\rupture\rl\terrain.hpp" />
@@ -290,6 +293,8 @@
     <ClInclude Include="src\rupture\rl\tile.hpp" />
     <ClInclude Include="src\rupture\rl\tile_prototype.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
+    <ClInclude Include="src\rupture\ui\director_works.hpp" />
+    <ClInclude Include="src\rupture\ui\panel.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />

@@ -2,7 +2,7 @@
 
 #include "ui_system.hpp"
 
-#include "rupture/menu.hpp"
+#include "rupture/ui/menu.hpp"
 
 #include <px/memory/memory.hpp>
 
