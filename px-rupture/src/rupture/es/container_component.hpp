@@ -5,11 +5,11 @@
 
 namespace px {
 
-	class character_component
+	class container_component
 		: public component
-		, public link_dispatcher<character_component>
+		, public link_dispatcher<container_component>
 	{
 	public:
-		virtual ~character_component() = default;
+		virtual ~container_component() = default;
 	};
 }

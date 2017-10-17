@@ -1,3 +1,5 @@
+// name: npc_component.hpp
+
 #pragma once
 
 #include <px/es/component.hpp>
@@ -5,11 +7,11 @@
 
 namespace px {
 
-	class character_component
+	class npc_component
 		: public component
-		, public link_dispatcher<character_component>
+		, public link_dispatcher<npc_component>
 	{
 	public:
-		virtual ~character_component() = default;
+		virtual ~npc_component() = default;
 	};
 }
