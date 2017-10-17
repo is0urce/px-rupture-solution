@@ -26,4 +26,11 @@ namespace px {
 	{
 
 	}
+
+	// methods
+
+	uq_ptr<npc_component> npc_system::make()
+	{
+		return works->make();
+	}
 }

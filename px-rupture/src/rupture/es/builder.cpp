@@ -1,13 +1,26 @@
+// name: builder.hpp
+// type: c++
+// auth: is0urce
+// desc: class methods implementation
+
 #include "builder.hpp"
 
 #include "rupture/core.hpp"
 
 #include "animator_component.hpp"
-#include "composite_component.hpp"
 #include "body_component.hpp"
-#include "sprite_component.hpp"
-#include "transform_component.hpp"
+#include "composite_component.hpp"
+#include "character_component.hpp"
+#include "container_component.hpp"
+#include "deposite_component.hpp"
+#include "door_component.hpp"
 #include "light_component.hpp"
+#include "npc_component.hpp"
+#include "player_component.hpp"
+#include "sprite_component.hpp"
+#include "storage_component.hpp"
+#include "transform_component.hpp"
+#include "workshop_component.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -15,7 +28,6 @@ namespace px {
 
 	builder::~builder()
 	{
-
 	}
 	builder::builder(core * production_factory)
 		: factory(production_factory)
@@ -28,6 +40,7 @@ namespace px {
 		auto part = factory->sprites.make(name);
 		sprite = part.get();
 		unit->add(std::move(part));
+
 		return sprite;
 	}
 	animator_component * builder::add_animator(std::string const& name)
@@ -63,12 +76,83 @@ namespace px {
 
 		return body;
 	}
+	npc_component * builder::add_npc()
+	{
+		auto part = factory->npcs.make();
+		npc = part.get();
+		unit->add(std::move(part));
+
+		return npc;
+	}
+	character_component * builder::add_character()
+	{
+		auto part = make_uq<character_component>();
+		character = part.get();
+		unit->add(std::move(part));
+
+		return character;
+	}
+	container_component * builder::add_container()
+	{
+		auto part = make_uq<container_component>();
+		container = part.get();
+		unit->add(std::move(part));
+
+		return container;
+	}
+	player_component * builder::add_player()
+	{
+		auto part = make_uq<player_component>();
+		player = part.get();
+		unit->add(std::move(part));
+
+		return player;
+	}
+	door_component * builder::add_door()
+	{
+		auto part = make_uq<door_component>();
+		door = part.get();
+		unit->add(std::move(part));
+
+		return door;
+	}
+	deposite_component * builder::add_deposite()
+	{
+		auto part = make_uq<deposite_component>();
+		deposite = part.get();
+		unit->add(std::move(part));
+
+		return deposite;
+	}
+	storage_component * builder::add_storage()
+	{
+		auto part = make_uq<storage_component>();
+		storage = part.get();
+		unit->add(std::move(part));
+
+		return storage;
+	}
+	workshop_component * builder::add_workshop()
+	{
+		auto part = make_uq<workshop_component>();
+		workshop = part.get();
+		unit->add(std::move(part));
+
+		return workshop;
+	}
 
 	void builder::link_components()
 	{
 		if (transform && sprite) sprite->connect(transform);
 		if (transform && light) light->connect(transform);
 		if (transform && body) transform->connect(body);
+
+		if (body) {
+			if (deposite) body->assign_useable(deposite);
+			if (door) body->assign_useable(door);
+			if (storage) body->assign_useable(storage);
+			if (workshop) body->assign_useable(workshop);
+		}
 	}
 
 	uq_ptr<composite_component> builder::request()
@@ -80,11 +164,20 @@ namespace px {
 	}
 	void builder::begin()
 	{
-		transform = nullptr;
-		sprite = nullptr;
-		light = nullptr;
-		body = nullptr;
 		animator = nullptr;
+		body = nullptr;
+		character = nullptr;
+		container = nullptr;
+		deposite = nullptr;
+		door = nullptr;
+		light = nullptr;
+		npc = nullptr;
+		player = nullptr;
+		sprite = nullptr;
+		storage = nullptr;
+		transform = nullptr;
+		workshop = nullptr;
+
 		unit = make_uq<composite_component>();
 	}
 }

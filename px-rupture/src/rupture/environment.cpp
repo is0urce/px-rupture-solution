@@ -79,34 +79,42 @@ namespace px {
 	{
 		builder b(this);
 
-		b.add_sprite("m_rabling_lumberjack");
+		light_component * light = nullptr;
+
+		b.add_player();
+		b.add_sprite("m_gnome");
 		incarnate(b.add_transform({ 25, 25 }));
-		auto light = b.add_light();
+		light = b.add_light();
 		light->tint = color(1, 1, 1);
 		light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
 
-		b.add_sprite("p_candelabra");
-		b.add_transform({ 24, 25 });
-		light = b.add_light();
-		light->tint = color(1, 0, 0);
-		light->elevation = 0.5;
+		//b.add_sprite("p_candelabra");
+		//b.add_transform({ 26, 25 });
+		//light = b.add_light();
+		//light->tint = color(1, 0, 0);
+		//light->elevation = 0.5;
+		//stage.spawn(b.request(), nullptr);
+
+		//b.add_sprite("p_candelabra");
+		//b.add_transform({ 32, 30 });
+		//light = b.add_light();
+		//light->tint = color(0, 0, 1);
+		//light->elevation = 0.5;
+		//stage.spawn(b.request(), nullptr);
+
+		//spawn("p_alchemy", 21, 24);
+
+		spawn("p_chest", 31, 27);
+		spawn("p_locker", 28, 32);
+		spawn("p_vein", 26, 24);
+
+		b.add_sprite("p_barrel");
+		b.add_transform({ 21, 24 });
+		//light = b.add_light();
+		//light->tint = color(0, 1, 0);
+		//light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
-
-		b.add_sprite("p_candelabra");
-		b.add_transform({ 30, 30 });
-		light = b.add_light();
-		light->tint = color(0, 0, 1);
-		light->elevation = 0.5;
-		stage.spawn(b.request(), nullptr);
-
-		//spawn("m_doomling", 30, 26);
-		spawn("m_nosferatu", 25, 30);
-
-		spawn("m_darkness", 21, 24);
-		//spawn("m_demon", 31, 27);
-		spawn("m_banshee", 28, 32);
-		spawn("m_butcher", 23, 32);
 
 		// set terrain
 
@@ -130,6 +138,14 @@ namespace px {
 		body_component * bd = b.add_body();
 		bd->blocking().make_transparent();
 		bd->blocking().make_blocking(rl::traverse::floor);
+		b.add_animator("door");
+		b.add_character();
+		b.add_container();
+		b.add_npc();
+		b.add_door();
+		b.add_deposite();
+		b.add_storage();
+		b.add_workshop();
 		stage.spawn(b.request(), nullptr);
 	}
 }

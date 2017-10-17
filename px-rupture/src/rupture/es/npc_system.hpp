@@ -16,6 +16,7 @@ namespace px {
 		: public system<delta>
 	{
 	public:
+		uq_ptr<npc_component> make();
 
 	public:
 		virtual ~npc_system();

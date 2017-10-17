@@ -1,3 +1,5 @@
+// name: scene.cpp
+
 #include "scene.hpp"
 
 #include "scene_internal.hpp"

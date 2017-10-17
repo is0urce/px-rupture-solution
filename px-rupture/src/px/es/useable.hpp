@@ -27,6 +27,7 @@ namespace px {
 	public:
 		virtual bool can_use_useable(User /*user*/, Environment /*environment*/) const
 		{
+			return true;
 		}
 		virtual void use_useable(User /*user*/, Environment /*environment*/)
 		{
