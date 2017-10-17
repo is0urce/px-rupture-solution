@@ -21,13 +21,13 @@ namespace px {
 		: public system<delta>
 	{
 	public:
-		uq_ptr<sprite_component> make(std::string const& name);
-		std::vector<std::vector<sprite_vertex>> const* data() const noexcept;
-		void target(transform_component const*) noexcept;
-		void add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture);
+		void											add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture);
+		void											target(transform_component const*) noexcept;
+		uq_ptr<sprite_component>						make(std::string const& name);
+		std::vector<std::vector<sprite_vertex>> const*	data() const noexcept;
 
 		template <typename Document>
-		void load_atlas(Document && doc, unsigned int texture_id, bool reverse_y);
+		void											load_atlas(Document && doc, unsigned int texture_id, bool reverse_y);
 
 	public:
 		virtual ~sprite_system();

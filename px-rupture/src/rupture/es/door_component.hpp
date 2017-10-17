@@ -1,3 +1,5 @@
+// name: door_component.hpp
+
 #pragma once
 
 #include <px/es/component.hpp>
@@ -16,32 +18,8 @@ namespace px {
 	{
 	public:
 		virtual ~door_component() = default;
-	};
-
-	class storage_component
-		: public component
-		, public link_dispatcher<storage_component>
-		, public useable<body_component *, environment *>
-	{
-	public:
-		virtual ~storage_component() = default;
-	};
-
-	class deposite_component
-		: public component
-		, public link_dispatcher<deposite_component>
-		, public useable<body_component *, environment *>
-	{
-	public:
-		virtual ~deposite_component() = default;
-	};
-
-	class workshop_component
-		: public component
-		, public link_dispatcher<workshop_component>
-		, public useable<body_component *, environment *>
-	{
-	public:
-		virtual ~workshop_component() = default;
+		door_component() = default;
+		door_component(door_component const&) = delete;
+		door_component & operator=(door_component const&) = delete;
 	};
 }

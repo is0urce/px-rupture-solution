@@ -20,11 +20,11 @@ namespace px {
 		, public transform
 	{
 	public:
-		void incarnate(qtree<transform_component*> * world);	// set space
-		qtree<transform_component*> * world() const noexcept;	// get current space
-		void move(point2 const& direction);						// move by offset
-		void place(point2 destination);							// place into specified location
-		void swap(transform_component & that);
+		void							incarnate(qtree<transform_component*> * world);	// set space
+		void							move(point2 const& direction);					// move by offset
+		void							place(point2 destination);						// place into specified location
+		qtree<transform_component*> *	world() const noexcept;							// get current space
+		void							swap(transform_component & that);
 
 	public:
 		virtual ~transform_component();

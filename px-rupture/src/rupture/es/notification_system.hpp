@@ -22,9 +22,9 @@ namespace px {
 		: public system<delta>
 	{
 	public:
-		void send(message && msg, point2 const& location);
-		void target(transform_component const* camera) noexcept;
-		message_data const* data() const noexcept;
+		void				target(transform_component const* camera) noexcept;
+		void				send(message && msg, point2 const& location);
+		message_data const*	data() const noexcept;
 
 	public:
 		virtual ~notification_system();

@@ -20,13 +20,13 @@ namespace px {
 	class builder final
 	{
 	public:
-		void begin();
-		uq_ptr<composite_component> request();
-		sprite_component * add_sprite(std::string const& name);
-		transform_component * add_transform(point2 const& location);
-		light_component * add_light();
-		body_component * add_body();
-		animator_component * add_animator(std::string const& name);
+		void						begin();
+		uq_ptr<composite_component>	request();
+		sprite_component *			add_sprite(std::string const& name);
+		transform_component *		add_transform(point2 const& location);
+		light_component *			add_light();
+		body_component *			add_body();
+		animator_component *		add_animator(std::string const& name);
 
 	public:
 		~builder();

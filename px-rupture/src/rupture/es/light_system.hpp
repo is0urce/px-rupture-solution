@@ -19,12 +19,12 @@ namespace px {
 		: public system<delta>
 	{
 	public:
-		void assign_scene(scene const* stage) noexcept;
-		uq_ptr<light_component> make();
-		void target(transform_component const* camera) noexcept;
-		lightmap_data const* current_data() noexcept;
-		lightmap_data const* last_data() noexcept;
-		void clear_lightmap();
+		void					assign_scene(scene const* stage) noexcept;
+		void					target(transform_component const* camera) noexcept;
+		uq_ptr<light_component>	make();
+		lightmap_data const*	current_data() noexcept;
+		lightmap_data const*	last_data() noexcept;
+		void					clear_lightmap();
 
 	public:
 		virtual ~light_system();

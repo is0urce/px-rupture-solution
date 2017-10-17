@@ -6,6 +6,8 @@
 
 namespace px {
 
+	// ctor & dtor
+
 	body_system::~body_system()
 	{
 
@@ -15,6 +17,8 @@ namespace px {
 	{
 
 	}
+
+	// methods
 
 	uq_ptr<body_component> body_system::make()
 	{

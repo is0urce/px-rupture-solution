@@ -275,6 +275,7 @@
     <ClInclude Include="src\rupture\environment.hpp" />
     <ClInclude Include="src\rupture\es\composition_element.hpp" />
     <ClInclude Include="src\rupture\es\container_component.hpp" />
+    <ClInclude Include="src\rupture\es\deposite_component.hpp" />
     <ClInclude Include="src\rupture\es\door_component.hpp" />
     <ClInclude Include="src\rupture\es\light_component.hpp" />
     <ClInclude Include="src\rupture\es\light_system.hpp" />
@@ -286,11 +287,13 @@
     <ClInclude Include="src\rupture\es\sprite_component.hpp" />
     <ClInclude Include="src\rupture\es\sprite_system.hpp" />
     <ClInclude Include="src\rupture\es\sprite_works.hpp" />
+    <ClInclude Include="src\rupture\es\storage_component.hpp" />
     <ClInclude Include="src\rupture\es\transform_component.hpp" />
     <ClInclude Include="src\rupture\es\transform_system.hpp" />
     <ClInclude Include="src\rupture\draw\image.hpp" />
     <ClInclude Include="src\rupture\es\transform_works.hpp" />
     <ClInclude Include="src\rupture\es\ui_system.hpp" />
+    <ClInclude Include="src\rupture\es\workshop_component.hpp" />
     <ClInclude Include="src\rupture\io\repository.hpp" />
     <ClInclude Include="src\rupture\io\scheme.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />

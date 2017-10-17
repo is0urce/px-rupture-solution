@@ -19,12 +19,12 @@ namespace px {
 		: public core
 	{
 	public:
-		void step(point2 const& movement);
-		void start();
-		unsigned int current_turn() const noexcept;
-		void pass_turn();
-		bool turn_passed() const noexcept; // true if it's the world processing stage
-		bool is_running() const noexcept;
+		void			step(point2 const& movement);
+		void			start();
+		unsigned int	current_turn() const noexcept;
+		void			pass_turn();
+		bool			turn_passed() const noexcept; // true if it's the world processing stage
+		bool			is_running() const noexcept;
 
 	public:
 		virtual ~environment();
