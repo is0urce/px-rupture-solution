@@ -116,7 +116,8 @@ namespace px {
 		}
 		void zoom(bool up)
 		{
-			scale *= up ? 1.1f : 0.9f;
+			scale_level = up ? std::min<unsigned int>(5, scale_level + 1) : std::max<unsigned int>(1, scale_level - 1);
+			reset_scale();
 		}
 		float get_scale()
 		{
@@ -126,11 +127,17 @@ namespace px {
 		{
 			scale = pan;
 		}
+		void pixel_scale(unsigned int level, unsigned int ppu)
+		{
+			scale_level = level;
+			scale = level * ppu * 2.0f / screen_width;
+		}
 
 	public:
 		renderer(unsigned int width, unsigned int height)
 			: sprite_data(nullptr)
 			, scale(1.0f)
+			, scale_level(3)
 			, popup_font(font_path, font_size, atlas_size)
 		{
 			assign_size(width, height);
@@ -187,6 +194,12 @@ namespace px {
 			popups.pass = { 0, popups.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
 			popups.pass.bind_texture(popups.texture);
 			popups.pass.bind_uniform(camera);
+
+			reset_scale();
+		}
+		void reset_scale()
+		{
+			pixel_scale(scale_level, 32);
 		}
 		void assign_size(unsigned int new_width, unsigned int new_height)
 		{
@@ -277,6 +290,7 @@ namespace px {
 		unsigned int									screen_height;
 		float											screen_aspect;
 		float											scale;
+		unsigned int									scale_level;
 		gl_uniform										camera;
 		gl_program										sprite_program;
 		gl_program										postprocess_program;
