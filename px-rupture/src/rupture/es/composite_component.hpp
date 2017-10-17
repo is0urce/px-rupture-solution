@@ -9,6 +9,8 @@
 #include <px/es/composition.hpp>
 #include <px/es/persistency.hpp>
 
+#include <string>
+
 namespace px {
 
 	class composite_component
@@ -24,6 +26,14 @@ namespace px {
 		{
 			endurance = lifetime;
 		}
+		std::string name()
+		{
+			return source;
+		}
+		void set_name(std::string resource_name)
+		{
+			source = resource_name;
+		}
 
 	public:
 		virtual ~composite_component()
@@ -38,5 +48,6 @@ namespace px {
 
 	private:
 		persistency endurance;
+		std::string source;
 	};
 }

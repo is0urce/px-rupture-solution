@@ -2,6 +2,7 @@
 
 #include "rupture/core.hpp"
 
+#include "animator_component.hpp"
 #include "composite_component.hpp"
 #include "body_component.hpp"
 #include "sprite_component.hpp"
@@ -22,20 +23,28 @@ namespace px {
 		begin();
 	}
 
-	sprite_component * builder::add_sprite(const char* name)
+	sprite_component * builder::add_sprite(std::string const& name)
 	{
-		auto s = factory->sprites.make(name);
-		sprite = s.get();
-		unit->add(std::move(s));
+		auto part = factory->sprites.make(name);
+		sprite = part.get();
+		unit->add(std::move(part));
 		return sprite;
+	}
+	animator_component * builder::add_animator(std::string const& name)
+	{
+		auto part = factory->animators.make(name);
+		animator = part.get();
+		unit->add(std::move(part));
+
+		return animator;
 	}
 	transform_component * builder::add_transform(point2 const& location)
 	{
-		auto t = factory->transforms.make();
-		t->place(location);
-		t->store();
-		transform = t.get();
-		unit->add(std::move(t));
+		auto part = factory->transforms.make();
+		part->place(location);
+		part->store();
+		transform = part.get();
+		unit->add(std::move(part));
 		return transform;
 	}
 	light_component * builder::add_light()
@@ -75,6 +84,7 @@ namespace px {
 		sprite = nullptr;
 		light = nullptr;
 		body = nullptr;
+		animator = nullptr;
 		unit = make_uq<composite_component>();
 	}
 }

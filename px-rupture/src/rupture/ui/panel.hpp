@@ -1,3 +1,5 @@
+// name: panel.hpp
+
 #pragma once
 
 namespace px::ui {

@@ -1,4 +1,5 @@
-// name: menu.hpp
+// name: director_works.hpp
+// type: c++ header
 
 #pragma once
 

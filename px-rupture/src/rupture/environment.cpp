@@ -79,16 +79,16 @@ namespace px {
 	{
 		builder b(this);
 
-		b.add_sprite("m_imp");
+		b.add_sprite("m_darkness");
 		b.add_transform({ 24, 25 });
-		auto light = b.add_light();
-		light->tint = color(1, 0, 0);
-		light->elevation = 0.5;
+		body_component * bd = b.add_body();
+		bd->blocking().make_opaque();
+		bd->blocking().make_blocking(rl::traverse::floor);
 		stage.spawn(b.request(), nullptr);
 
-		b.add_sprite("m_gnome");
+		b.add_sprite("m_rabling_lumberjack");
 		incarnate(b.add_transform({ 25, 25 }));
-		light = b.add_light();
+		auto light = b.add_light();
 		light->tint = color(1, 1, 1);
 		light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
@@ -112,7 +112,7 @@ namespace px {
 
 		auto map = fn::ant_generator::generate(std::mt19937{}, 50, 50, 50 * 50 * 100 / 61);
 		map.enumerate([this](size_t x, size_t y, unsigned char tile) {
-			stage.pset(tile == 0 ? 1 : 3, point2(static_cast<int>(x), static_cast<int>(y)));
+			stage.pset(tile == 0 ? 1 : 2, point2(static_cast<int>(x), static_cast<int>(y)));
 		});
 
 		// set environment variables

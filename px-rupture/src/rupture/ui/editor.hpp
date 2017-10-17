@@ -1,3 +1,6 @@
+// name: editor.hpp
+// type: c++
+
 #pragma once
 
 #include "panel.hpp"

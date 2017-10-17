@@ -1,4 +1,5 @@
 // name: menu.hpp
+// typc: c++ header
 
 #pragma once
 

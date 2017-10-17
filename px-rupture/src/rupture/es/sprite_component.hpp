@@ -22,5 +22,8 @@ namespace px {
 	{
 	public:
 		virtual ~sprite_component() = default;
+		sprite_component() = default;
+		sprite_component(sprite_component const&) = delete;
+		sprite_component & operator=(sprite_component const&) = delete;
 	};
 }
