@@ -83,23 +83,28 @@ namespace px {
 	}
 	void shell::text(unsigned int codepoint)
 	{
+		if (!is_running() || turn_passed()) return;
 		ui.text(codepoint);
 	}
 	void shell::click(int mouse_button, bool is_down)
 	{
+		if (!is_running() || turn_passed()) return;
 		ui.click(mouse_button, is_down);
 	}
 	void shell::hover(int x, int y)
 	{
+		if (!is_running() || turn_passed()) return;
 		ui.hover(x, y);
 	}
 	void shell::scroll(double horisontal, double vertical)
 	{
+		if (!is_running() || turn_passed()) return;
 		if (ui.scroll(horisontal, vertical)) return;
 		renderer.zoom(horisontal + vertical > 0);
 	}
 	void shell::press(key action_index)
 	{
+		if (!is_running() || turn_passed()) return;
 		if (ui.takes_input()) return;
 
 		switch (action_index) {

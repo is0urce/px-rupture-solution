@@ -69,7 +69,7 @@ namespace px {
 					(int x, int y) {
 						double distance = std::sqrt(distance2(light_x - x, light_y - y, elevation2));
 						distance = 1 + std::max(distance, 1.0);
-						illuminate(x, y, light.tint / distance);
+						illuminate(x, y, light.tint / (distance * distance));
 					});
 				}
 

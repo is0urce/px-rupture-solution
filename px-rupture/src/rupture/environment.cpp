@@ -79,13 +79,6 @@ namespace px {
 	{
 		builder b(this);
 
-		b.add_sprite("m_darkness");
-		b.add_transform({ 24, 25 });
-		body_component * bd = b.add_body();
-		bd->blocking().make_opaque();
-		bd->blocking().make_blocking(rl::traverse::floor);
-		stage.spawn(b.request(), nullptr);
-
 		b.add_sprite("m_rabling_lumberjack");
 		incarnate(b.add_transform({ 25, 25 }));
 		auto light = b.add_light();
@@ -93,18 +86,25 @@ namespace px {
 		light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
 
-		b.add_sprite("m_succubus");
-		b.add_transform({ 30, 25 });
+		b.add_sprite("p_candelabra");
+		b.add_transform({ 24, 25 });
+		light = b.add_light();
+		light->tint = color(1, 0, 0);
+		light->elevation = 0.5;
+		stage.spawn(b.request(), nullptr);
+
+		b.add_sprite("p_candelabra");
+		b.add_transform({ 30, 30 });
 		light = b.add_light();
 		light->tint = color(0, 0, 1);
 		light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
 
-		spawn("m_doomling", 30, 26);
+		//spawn("m_doomling", 30, 26);
 		spawn("m_nosferatu", 25, 30);
 
 		spawn("m_darkness", 21, 24);
-		spawn("m_demon", 31, 27);
+		//spawn("m_demon", 31, 27);
 		spawn("m_banshee", 28, 32);
 		spawn("m_butcher", 23, 32);
 
