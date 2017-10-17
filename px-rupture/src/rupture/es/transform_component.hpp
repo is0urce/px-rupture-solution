@@ -36,14 +36,14 @@ namespace px {
 		transform_component & operator=(transform_component && that) noexcept;
 
 	protected:
-		virtual void activate_component() override;
-		virtual void deactivate_component() override;
+		virtual void					activate_component() override;
+		virtual void					deactivate_component() override;
 
 	private:
-		void insert();
-		void retract();
+		void							insert();
+		void							retract();
 
 	private:
-		qtree<transform_component*> * space;
+		qtree<transform_component*> *	space;
 	};
 }

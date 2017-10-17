@@ -1,4 +1,4 @@
-// name: reputation_subject.hpp
+// name: standing.hpp
 // type: c++ header
 // desc: class definition
 // auth: is0urce

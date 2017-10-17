@@ -22,18 +22,18 @@ namespace px {
 		: public system<delta>
 	{
 	public:
-		void				target(transform_component const* camera) noexcept;
-		void				send(message && msg, point2 const& location);
-		message_data const*	data() const noexcept;
+		void					target(transform_component const* camera) noexcept;
+		void					send(message && msg, point2 const& location);
+		message_data const*		data() const noexcept;
 
 	public:
 		virtual ~notification_system();
 		notification_system();
 
 	protected:
-		virtual void turn_update_system(delta_type const& delta_time) override;
+		virtual void			turn_update_system(delta_type const& delta_time) override;
 
 	private:
-		uq_ptr<message_works> works;
+		uq_ptr<message_works>	works;
 	};
 }

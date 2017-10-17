@@ -28,13 +28,13 @@ namespace px {
 		typedef useable<body_component*, environment*> useable_type;
 
 	public:
-		void assign_useable(useable_type * useable) noexcept;
-		bool is_useable() const noexcept;
-		bool can_use(body_component * user, environment * env) const;
-		void use(body_component * user, environment * env);
-		bool try_use(body_component * user, environment * env);
-		rl::mass<rl::traverse> const& blocking() const noexcept;
-		rl::mass<rl::traverse> & blocking() noexcept;
+		void							assign_useable(useable_type * useable) noexcept;
+		bool							is_useable() const noexcept;
+		bool							can_use(body_component * user, environment * env) const;
+		void							use(body_component * user, environment * env);
+		bool							try_use(body_component * user, environment * env);
+		rl::mass<rl::traverse> const&	blocking() const noexcept;
+		rl::mass<rl::traverse> &		blocking() noexcept;
 
 	public:
 		virtual ~body_component();
@@ -43,7 +43,7 @@ namespace px {
 		body_component & operator=(body_component const&) noexcept = delete;
 
 	private:
-		rl::mass<rl::traverse>	mass;
-		useable_type *			button;
+		rl::mass<rl::traverse>			mass;
+		useable_type *					button;
 	};
 }
