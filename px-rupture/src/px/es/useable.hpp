@@ -25,10 +25,10 @@ namespace px {
 		}
 
 	public:
-		virtual bool can_use_useable(User user, Environment environment) const
+		virtual bool can_use_useable(User /*user*/, Environment /*environment*/) const
 		{
 		}
-		virtual void use_useable(User user, Environment environment)
+		virtual void use_useable(User /*user*/, Environment /*environment*/)
 		{
 		}
 	};

@@ -23,7 +23,7 @@ namespace px {
 		transform_system();
 
 	protected:
-		virtual void turn_update_system(delta_type const& delta_time);
+		virtual void turn_update_system(delta_type const& delta_time) override;
 
 	private:
 		uq_ptr<transform_works> works;

@@ -27,7 +27,7 @@ namespace px {
 		ui_system(unsigned int width, unsigned int height);
 
 	protected:
-		virtual void update_system(delta_type const& delta_time);
+		virtual void update_system(delta_type const& delta_time) override;
 
 	private:
 		uq_ptr<menu> works;

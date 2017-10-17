@@ -11,7 +11,7 @@ namespace px::ui {
 	class editor : public panel
 	{
 	protected:
-		void combine_panel()
+		virtual void combine_panel() override
 		{
 			ImGui::SetNextWindowSize({ 150, 100 });
 			ImGui::SetNextWindowPos({ 50, 50 });

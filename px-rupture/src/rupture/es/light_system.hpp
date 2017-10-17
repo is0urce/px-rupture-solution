@@ -31,7 +31,7 @@ namespace px {
 		light_system();
 
 	protected:
-		virtual void turn_update_system(delta_type const& delta_time);
+		virtual void turn_update_system(delta_type const& delta_time) override;
 
 	private:
 		uq_ptr<light_works> works;

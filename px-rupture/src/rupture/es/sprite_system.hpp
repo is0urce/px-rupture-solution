@@ -34,7 +34,7 @@ namespace px {
 		sprite_system();
 
 	protected:
-		virtual void update_system(delta_type const& delta_time);
+		virtual void update_system(delta_type const& delta_time) override;
 
 	private:
 		uq_ptr<sprite_works> works;

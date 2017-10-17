@@ -165,6 +165,7 @@
     <ClCompile Include="src\rupture\core.cpp" />
     <ClCompile Include="src\rupture\environment.cpp" />
     <ClCompile Include="src\rupture\es\animator_system.cpp" />
+    <ClCompile Include="src\rupture\es\body_component.cpp" />
     <ClCompile Include="src\rupture\es\body_system.cpp" />
     <ClCompile Include="src\rupture\es\builder.cpp" />
     <ClCompile Include="src\rupture\es\light_system.cpp" />
