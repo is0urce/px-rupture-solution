@@ -7,6 +7,7 @@
 
 #include "draw/message.hpp"
 
+#include "es/body_component.hpp"
 #include "es/transform_component.hpp"
 #include "es/composite_component.hpp"
 #include "es/body_component.hpp"
@@ -49,13 +50,14 @@ namespace px {
 	void environment::step(point2 const& movement)
 	{
 		if (player) {
-			last_step = player->position();
-			auto destination = last_step + movement;
-			if (stage.is_traversable(destination, rl::traverse_options<rl::traverse>{ 1 })) {
-				player->place(destination);
-				messages.send({ u8"sfx: * ding! *", 0xffffff, 1.0 }, destination);
-				messages.send({ "rubble", 0xffffff, 1.0 }, { 25, 25 });
-				pass_turn();
+			body_component * body = player->linked<body_component>();
+			if (body) {
+				last_step = player->position();
+				point2 destination = last_step + movement;
+				if (stage.is_traversable(destination, body->movement())) {
+					player->place(destination);
+					pass_turn();
+				}
 			}
 		}
 	}
@@ -80,7 +82,11 @@ namespace px {
 		builder b(this);
 
 		light_component * light = nullptr;
+		body_component * body = nullptr;
 
+		body = b.add_body();
+		body->movement().make_traversable(rl::traverse::floor);
+		body->blocking().make_transparent();
 		b.add_player();
 		b.add_sprite("m_gnome");
 		incarnate(b.add_transform({ 25, 25 }));
@@ -89,31 +95,11 @@ namespace px {
 		light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
 
-		//b.add_sprite("p_candelabra");
-		//b.add_transform({ 26, 25 });
-		//light = b.add_light();
-		//light->tint = color(1, 0, 0);
-		//light->elevation = 0.5;
-		//stage.spawn(b.request(), nullptr);
-
-		//b.add_sprite("p_candelabra");
-		//b.add_transform({ 32, 30 });
-		//light = b.add_light();
-		//light->tint = color(0, 0, 1);
-		//light->elevation = 0.5;
-		//stage.spawn(b.request(), nullptr);
-
-		//spawn("p_alchemy", 21, 24);
-
-		spawn("p_chest", 31, 27);
-		spawn("p_locker", 28, 32);
-		spawn("p_vein", 26, 24);
-
-		b.add_sprite("p_barrel");
+		b.add_sprite("i_cheese");
 		b.add_transform({ 21, 24 });
-		//light = b.add_light();
-		//light->tint = color(0, 1, 0);
-		//light->elevation = 0.5;
+		light = b.add_light();
+		light->tint = color(1.0, 1.0, 1.0);
+		light->elevation = 0.5;
 		stage.spawn(b.request(), nullptr);
 
 		// set terrain

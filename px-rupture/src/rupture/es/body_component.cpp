@@ -28,6 +28,15 @@ namespace px {
 		return mass;
 	}
 
+	body_component::movement_type const& body_component::movement() const noexcept
+	{
+		return traverse_opts;
+	}
+	body_component::movement_type &	body_component::movement() noexcept
+	{
+		return traverse_opts;
+	}
+
 	bool body_component::is_useable() const noexcept
 	{
 		return button != nullptr;
