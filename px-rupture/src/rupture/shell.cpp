@@ -16,7 +16,7 @@ namespace px {
 	}
 	shell::shell(unsigned int start_widht, unsigned int start_height)
 		: renderer(start_widht, start_height)
-		, ui(start_widht, start_height)
+		, ui(start_widht, start_height, this)
 	{
 		connect_managers();
 		load_data();

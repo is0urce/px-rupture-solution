@@ -88,7 +88,7 @@ namespace px {
 		body->movement().make_traversable(rl::traverse::floor);
 		body->blocking().make_transparent();
 		b.add_player();
-		b.add_sprite("m_gnome");
+		b.add_sprite("m_gnome_mage");
 		incarnate(b.add_transform({ 25, 25 }));
 		light = b.add_light();
 		light->tint = color(1, 1, 1);
@@ -134,4 +134,9 @@ namespace px {
 		b.add_workshop();
 		stage.spawn(b.request(), nullptr);
 	}
+
+	//scene *	environment::get_scene() noexcept
+	//{
+	//	return &stage;
+	//}
 }

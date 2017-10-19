@@ -52,10 +52,10 @@ namespace px {
 		~menu()
 		{
 		}
-		menu(unsigned int w, unsigned int h)
+		menu(unsigned int w, unsigned int h, environment * game)
 			: director(w, h)
 		{
-			stack.emplace_back(make_uq<ui::editor>());
+			stack.emplace_back(make_uq<ui::editor>(game));
 		}
 
 	private:
@@ -69,5 +69,6 @@ namespace px {
 	private:
 		ui::director_works				director;
 		std::vector<uq_ptr<ui::panel>>	stack;
+		environment *					game;
 	};
 }

@@ -141,6 +141,11 @@ namespace px {
 		return workshop;
 	}
 
+	void builder::remove_transform()
+	{
+		unit->remove<transform_component>();
+	}
+
 	void builder::link_components()
 	{
 		if (transform && sprite) sprite->connect(transform);
@@ -179,5 +184,28 @@ namespace px {
 		workshop = nullptr;
 
 		unit = make_uq<composite_component>();
+	}
+	void builder::begin(uq_ptr<composite_component> && strip)
+	{
+		unit = std::move(strip);
+
+		if (unit) {
+			animator = unit->query<animator_component>();
+			body = unit->query<body_component>();
+			character = unit->query<character_component>();
+			container = unit->query<container_component>();
+			deposite = unit->query<deposite_component>();
+			door = unit->query<door_component>();
+			light = unit->query<light_component>();
+			npc = unit->query<npc_component>();
+			player = unit->query<player_component>();
+			sprite = unit->query<sprite_component>();
+			storage = unit->query<storage_component>();
+			transform = unit->query<transform_component>();
+			workshop = unit->query<workshop_component>();
+		}
+		else {
+			begin();
+		}
 	}
 }

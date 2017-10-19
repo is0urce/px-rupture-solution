@@ -45,6 +45,8 @@ namespace px {
 		transform_component *		add_transform(point2 const& location);
 		workshop_component *		add_workshop();
 		void						begin();
+		void						begin(uq_ptr<composite_component> && strip);
+		void						remove_transform();
 		uq_ptr<composite_component>	request();
 
 	public:

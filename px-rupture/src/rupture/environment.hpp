@@ -25,6 +25,7 @@ namespace px {
 		void					pass_turn();
 		bool					turn_passed() const noexcept; // true if it's the world processing stage
 		bool					is_running() const noexcept;
+		//scene *					get_scene() noexcept;
 
 	public:
 		virtual ~environment();

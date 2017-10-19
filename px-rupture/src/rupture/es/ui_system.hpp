@@ -10,6 +10,7 @@
 namespace px {
 
 	class menu;
+	class environment;
 
 	class ui_system
 		: public system<delta>
@@ -24,7 +25,7 @@ namespace px {
 
 	public:
 		virtual ~ui_system();
-		ui_system(unsigned int width, unsigned int height);
+		ui_system(unsigned int width, unsigned int height, environment * game);
 
 	protected:
 		virtual void update_system(delta_type const& delta_time) override;

@@ -360,9 +360,6 @@
     <ClInclude Include="src\px\rl\standing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\io\scheme.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\es\composition_element.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -418,6 +415,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\es\npc_works.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\io\schema.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -498,5 +498,6 @@
     <None Include="data\shaders\light.frag" />
     <None Include="data\shaders\text.frag" />
     <None Include="data\shaders\text.vert" />
+    <None Include="data\schemata\dummy.json" />
   </ItemGroup>
 </Project>

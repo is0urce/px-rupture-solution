@@ -1,10 +1,11 @@
 #pragma once
 
 #include "rupture/es/builder.hpp"
+#include "rupture/es/body_component.hpp"
 
 namespace px {
 
-	class scheme
+	class schema
 	{
 	public:
 		template <typename Document>
@@ -12,22 +13,38 @@ namespace px {
 		{
 			factory.begin();
 
-			auto transform_node = document.find("transform");
-			if (transform_node != document.end()) {
+			std::string name;
+			persistency lifetime = persistency::serialized;
+
+			auto transform_node = doc.find("transform");
+			if (transform_node != doc.end()) {
 				load_transform(transform_node, factory);
 			}
 
-			auto sprite_node = document.find("sprite");
-			if (sprite_node != document.end()) {
+			auto sprite_node = doc.find("sprite");
+			if (sprite_node != doc.end()) {
 				load_sprite(sprite_node, factory);
 			}
 
-			auto body_node = document.find("body");
-			if (body_node != document.end()) {
-				load_body(body_noce, factory);
+			auto body_node = doc.find("body");
+			if (body_node != doc.end()) {
+				load_body(body_node, factory);
 			}
 
-			return factory.request();
+			auto name_node = doc.find("name");
+			if (name_node != doc.end()) {
+				name = *name_node;
+				
+			}
+			auto pers_node = doc.find("persistency");
+			if (pers_node != doc.end()) {
+				int pers = *name_node;
+				lifetime = static_cast<persistency>(pers);
+			}
+			auto result = factory.request();
+			result->set_name(name);
+			result->set_persistency(lifetime);
+			return result;
 		}
 
 		template <typename Document>
@@ -48,7 +65,7 @@ namespace px {
 
 		// body
 		template <typename Document>
-		static void load_body(Document && sprite_node, builder & factory)
+		static void load_body(Document && body_node, builder & factory)
 		{
 			auto body = factory.add_body();
 

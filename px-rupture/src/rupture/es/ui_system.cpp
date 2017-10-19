@@ -11,8 +11,8 @@ namespace px {
 	ui_system::~ui_system()
 	{
 	}
-	ui_system::ui_system(unsigned int width, unsigned int height)
-		: works(make_uq<menu>(width, height))
+	ui_system::ui_system(unsigned int width, unsigned int height, environment * game)
+		: works(make_uq<menu>(width, height, game))
 	{
 	}
 
