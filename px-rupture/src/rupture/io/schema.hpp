@@ -34,7 +34,6 @@ namespace px {
 			auto name_node = doc.find("name");
 			if (name_node != doc.end()) {
 				name = *name_node;
-				
 			}
 			auto pers_node = doc.find("persistency");
 			if (pers_node != doc.end()) {
@@ -59,7 +58,7 @@ namespace px {
 		template <typename Document>
 		static void load_sprite(Document && sprite_node, builder & factory)
 		{
-			std::string src = sprite_node->at("src");
+			std::string src = *sprite_node;
 			factory.add_sprite(src);
 		}
 

@@ -120,17 +120,15 @@ namespace px::ui {
 				transform_component * transform = current->query<transform_component>();
 				if (transform) {
 					ImGui::Text("transform");
-
+					ImGui::SameLine();
+					if (ImGui::Button("Remove")) {
+						PX_BUILD(remove_transform());
+					}
 					ImGui::Text("X:"); ImGui::SameLine(); ImGui::InputInt("###x", &transform_x);
 					ImGui::Text("Y:"); ImGui::SameLine(); ImGui::InputInt("###y:", &transform_y);
 					if (ImGui::Button("Place")) {
 						transform->place({ transform_x, transform_y });
 					}
-
-					ImGui::SameLine();
-					if (ImGui::Button("Remove transform")) {
-						PX_BUILD(remove_transform());
-					}			
 				}
 				else if (ImGui::Button("+ Transform")) {
 					PX_BUILD(add_transform({ 0, 0 }));
@@ -142,10 +140,13 @@ namespace px::ui {
 				sprite_component * sprite = current->query<sprite_component>();
 				if (sprite) {
 					ImGui::Text("sprite: %s", sprite->name);
+					ImGui::SameLine();
+					if (ImGui::Button("Remove")) {
+						PX_BUILD(remove_sprite());
+					}
 					ImGui::Text("texture_id: %d", sprite->texture_index);
 					ImGui::Text("sx: %f, dx: %f", sprite->sx_texture, sprite->dx_texture);
 					ImGui::Text("sy: %f, dy: %f", sprite->sy_texture, sprite->dy_texture);
-
 					ImGui::InputText("###snit", sprite_name.data(), sprite_name.size(), ImGuiInputTextFlags_AutoSelectAll);
 					ImGui::SameLine();
 					if (ImGui::Button("Set")) {
@@ -157,7 +158,7 @@ namespace px::ui {
 					PX_BUILD(add_sprite("x_dummy"));
 				}
 
-				// spawn & export
+				// spawn
 
 				ImGui::Separator();
 
@@ -167,14 +168,18 @@ namespace px::ui {
 						game->spawn(std::move(current), transform);
 						load_current_schema();
 					}
-					ImGui::SameLine();
-					if (ImGui::Button("Here")) {
-
-						auto player = game->possessed();
-						transform->place(player->position());
-						game->spawn(std::move(current), transform);
-						load_current_schema();
+					transform_component * player = game->possessed();
+					if (player) {
+						ImGui::SameLine();
+						if (ImGui::Button("Here")) {
+							transform->place(player->position());
+							game->spawn(std::move(current), transform);
+							load_current_schema();
+						}
 					}
+				}
+				else {
+					ImGui::Text("require transform to spawn mobiles");
 				}
 			}
 
@@ -182,7 +187,6 @@ namespace px::ui {
 			if (ImGui::Button("Export")) {
 				auto output = output_stream("data/blueprints/" + current->name() + ".dat");
 				SAVE_OUTPUT_ARCHIVE archive(output);
-
 				blueprint::save(archive, *current);
 			}
 			if (ImGui::Button("Import")) {
