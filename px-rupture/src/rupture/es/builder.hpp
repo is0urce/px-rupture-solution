@@ -45,7 +45,14 @@ namespace px {
 		transform_component *		add_transform(point2 const& location);
 		workshop_component *		add_workshop();
 		void						begin();
-		void						begin(uq_ptr<composite_component> && strip);
+		void						begin(uq_ptr<composite_component> strip);
+		void						remove_body();
+		void						remove_character();
+		void						remove_container();
+		void						remove_light();
+		void						remove_npc();
+		void						remove_player();
+		void						remove_sprite();
 		void						remove_transform();
 		uq_ptr<composite_component>	request();
 

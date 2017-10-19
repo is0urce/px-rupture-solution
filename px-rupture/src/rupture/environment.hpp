@@ -11,21 +11,26 @@
 #include <px/common/point.hpp>
 #include <px/memory/uq_ptr.hpp>
 
+#include <string>
+
 namespace px {
 
 	class transform_component;
+	class composite_component;
 
 	class environment
 		: public core
 	{
 	public:
-		void					step(point2 const& movement);
-		void					start();
 		unsigned int			current_turn() const noexcept;
+		bool					is_running() const noexcept;
 		void					pass_turn();
 		bool					turn_passed() const noexcept; // true if it's the world processing stage
-		bool					is_running() const noexcept;
-		//scene *					get_scene() noexcept;
+		void					spawn(uq_ptr<composite_component> unit, transform_component * hint);
+		void					spawn(std::string const& blueprint, point2 const& position);
+		void					step(point2 const& movement);
+		void					start();
+		transform_component	*	possessed() noexcept;
 
 	public:
 		virtual ~environment();
@@ -33,7 +38,6 @@ namespace px {
 
 	private:
 		void					incarnate(transform_component * target);
-		void					spawn(const char* name, int x, int y);
 
 	protected:
 		notification_system		messages;

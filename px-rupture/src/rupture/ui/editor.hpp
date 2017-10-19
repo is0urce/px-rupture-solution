@@ -11,6 +11,8 @@
 #include "rupture/es/sprite_component.hpp"
 #include "rupture/es/transform_component.hpp"
 #include "rupture/io/schema.hpp"
+#include "rupture/io/blueprint.hpp"
+#include "rupture/io/serialization.hpp"
 #include "rupture/environment.hpp"
 
 #include <imgui/imgui.h>
@@ -22,8 +24,10 @@
 #include <vector>
 
 #define PX_BUILD(OP) { builder factory(game); factory.begin(std::move(current)); factory.OP; current = factory.request(); update(); }
+#define PX_SWAP(A, B) { builder factory(game); factory.begin(std::move(current)); factory.A, factory.B; current = factory.request(); update(); }
 
 namespace px::ui {
+
 	class editor : public panel
 	{
 	public:
@@ -52,6 +56,8 @@ namespace px::ui {
 		{
 			static bool metrics = false;
 			static bool dbg = false;
+
+			if (!game) return;
 
 			ImGui::SetNextWindowSize({ 150, 100 });
 			ImGui::SetNextWindowPos({ 50, 50 });
@@ -104,7 +110,7 @@ namespace px::ui {
 				ImGui::Text("composite");
 
 				ImGui::Text("Name: %s", current->name().c_str());
-				ImGui::InputText("###composite_name", composite_name.data(), composite_name.size() - 1); ImGui::SameLine(); if (ImGui::Button("Name")) {
+				ImGui::InputText("###composite_name", composite_name.data(), composite_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll); ImGui::SameLine(); if (ImGui::Button("Name")) {
 					current->set_name(composite_name.data());
 				}
 
@@ -121,6 +127,7 @@ namespace px::ui {
 						transform->place({ transform_x, transform_y });
 					}
 
+					ImGui::SameLine();
 					if (ImGui::Button("Remove transform")) {
 						PX_BUILD(remove_transform());
 					}			
@@ -130,6 +137,7 @@ namespace px::ui {
 				}
 
 				// sprite
+
 				ImGui::Separator();
 				sprite_component * sprite = current->query<sprite_component>();
 				if (sprite) {
@@ -137,6 +145,13 @@ namespace px::ui {
 					ImGui::Text("texture_id: %d", sprite->texture_index);
 					ImGui::Text("sx: %f, dx: %f", sprite->sx_texture, sprite->dx_texture);
 					ImGui::Text("sy: %f, dy: %f", sprite->sy_texture, sprite->dy_texture);
+
+					ImGui::InputText("###snit", sprite_name.data(), sprite_name.size(), ImGuiInputTextFlags_AutoSelectAll);
+					ImGui::SameLine();
+					if (ImGui::Button("Set")) {
+						std::string str(sprite_name.data());
+						PX_SWAP(remove_sprite(), add_sprite(str));
+					}
 				}
 				else if (ImGui::Button("+ Sprite")) {
 					PX_BUILD(add_sprite("x_dummy"));
@@ -145,13 +160,33 @@ namespace px::ui {
 				// spawn & export
 
 				ImGui::Separator();
-				if (ImGui::Button("Spawn")) {
-				//	game->get_scene()->spawn(std::move(current), transform);
-					load_current_schema();
-				}
 
-				ImGui::Separator();
-				ImGui::Button("Export");
+				if (transform) {
+					ImGui::SameLine();
+					if (ImGui::Button("Spawn")) {
+						game->spawn(std::move(current), transform);
+						load_current_schema();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Here")) {
+
+						auto player = game->possessed();
+						transform->place(player->position());
+						game->spawn(std::move(current), transform);
+						load_current_schema();
+					}
+				}
+			}
+
+			ImGui::Separator();
+			if (ImGui::Button("Export")) {
+				auto output = output_stream("data/blueprints/" + current->name() + ".dat");
+				SAVE_OUTPUT_ARCHIVE archive(output);
+
+				blueprint::save(archive, *current);
+			}
+			if (ImGui::Button("Import")) {
+				game->spawn("dummy", { 20, 20 });
 			}
 
 			ImGui::End();

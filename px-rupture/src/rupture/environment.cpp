@@ -116,27 +116,13 @@ namespace px {
 		turn_pass = true;
 	}
 
-	void environment::spawn(const char * name, int x, int y)
+	void environment::spawn(uq_ptr<composite_component> unit, transform_component * hint)
 	{
-		builder b(this);
-		b.add_sprite(name);
-		b.add_transform({ x, y });
-		body_component * bd = b.add_body();
-		bd->blocking().make_transparent();
-		bd->blocking().make_blocking(rl::traverse::floor);
-		b.add_animator("door");
-		b.add_character();
-		b.add_container();
-		b.add_npc();
-		b.add_door();
-		b.add_deposite();
-		b.add_storage();
-		b.add_workshop();
-		stage.spawn(b.request(), nullptr);
+		stage.spawn(std::move(unit), hint);
 	}
 
-	//scene *	environment::get_scene() noexcept
-	//{
-	//	return &stage;
-	//}
+	transform_component	* environment::possessed() noexcept
+	{
+		return player;
+	}
 }

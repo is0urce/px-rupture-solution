@@ -163,6 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\core.cpp" />
+    <ClCompile Include="src\rupture\environment-io.cpp" />
     <ClCompile Include="src\rupture\environment.cpp" />
     <ClCompile Include="src\rupture\es\animator_system.cpp" />
     <ClCompile Include="src\rupture\es\body_component.cpp" />
@@ -297,8 +298,10 @@
     <ClInclude Include="src\rupture\es\transform_works.hpp" />
     <ClInclude Include="src\rupture\es\ui_system.hpp" />
     <ClInclude Include="src\rupture\es\workshop_component.hpp" />
+    <ClInclude Include="src\rupture\io\blueprint.hpp" />
     <ClInclude Include="src\rupture\io\repository.hpp" />
     <ClInclude Include="src\rupture\io\schema.hpp" />
+    <ClInclude Include="src\rupture\io\serialization.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
     <ClInclude Include="src\rupture\ui\editor.hpp" />

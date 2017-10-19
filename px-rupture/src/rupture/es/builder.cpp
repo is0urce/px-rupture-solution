@@ -39,7 +39,9 @@ namespace px {
 	{
 		auto part = factory->sprites.make(name);
 		sprite = part.get();
-		unit->add(std::move(part));
+		if (sprite) {
+			unit->add(std::move(part));
+		}
 
 		return sprite;
 	}
@@ -145,6 +147,35 @@ namespace px {
 	{
 		unit->remove<transform_component>();
 	}
+	void builder::remove_sprite()
+	{
+		unit->remove<sprite_component>();
+	}
+
+	void builder::remove_body()
+	{
+		unit->remove<body_component>();
+	}
+	void builder::remove_character()
+	{
+		unit->remove<character_component>();
+	}
+	void builder::remove_container()
+	{
+		unit->remove<sprite_component>();
+	}
+	void builder::remove_light()
+	{
+		unit->remove<light_component>();
+	}
+	void builder::remove_npc()
+	{
+		unit->remove<npc_component>();
+	}
+	void builder::remove_player()
+	{
+		unit->remove<player_component>();
+	}
 
 	void builder::link_components()
 	{
@@ -185,7 +216,7 @@ namespace px {
 
 		unit = make_uq<composite_component>();
 	}
-	void builder::begin(uq_ptr<composite_component> && strip)
+	void builder::begin(uq_ptr<composite_component> strip)
 	{
 		unit = std::move(strip);
 

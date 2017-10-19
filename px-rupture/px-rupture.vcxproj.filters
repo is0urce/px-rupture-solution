@@ -420,6 +420,12 @@
     <ClInclude Include="src\rupture\io\schema.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\io\serialization.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\io\blueprint.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -480,6 +486,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\rupture\es\npc_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rupture\environment-io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

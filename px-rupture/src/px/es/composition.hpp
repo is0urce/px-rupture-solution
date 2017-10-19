@@ -46,6 +46,7 @@ namespace px {
 		{
 			m_components.clear();
 		}
+		// number of presented components
 		size_t size() const noexcept
 		{
 			return m_components.size();
