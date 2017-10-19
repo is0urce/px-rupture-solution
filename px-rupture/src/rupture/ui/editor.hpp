@@ -134,7 +134,9 @@ namespace px::ui {
 				sprite_component * sprite = current->query<sprite_component>();
 				if (sprite) {
 					ImGui::Text("sprite: %s", sprite->name);
-					ImGui::Text("sx: %r, sy: %r, dx: %r, dy: %r", sprite->sx_texture, sprite->sy_texture, sprite->dx_texture, sprite->dy_texture);
+					ImGui::Text("texture_id: %d", sprite->texture_index);
+					ImGui::Text("sx: %f, dx: %f", sprite->sx_texture, sprite->dx_texture);
+					ImGui::Text("sy: %f, dy: %f", sprite->sy_texture, sprite->dy_texture);
 				}
 				else if (ImGui::Button("+ Sprite")) {
 					PX_BUILD(add_sprite("x_dummy"));
