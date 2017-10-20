@@ -114,8 +114,6 @@ namespace px::ui {
 
 			// blueprint selection
 
-
-
 			//ImGui::InputText("###strref", &strref[0], strref.size());
 			//ImGui::SameLine();
 			//if (ImGui::Button("Load")) {
@@ -237,6 +235,7 @@ namespace px::ui {
 						ImGui::Text("mp: %s", (energy ? (std::to_string(energy->current()) + "/" + std::to_string(energy->maximum())) : std::string{ "empty" }).c_str());
 						ImGui::EndTooltip();
 					}
+					ImGui::SameLine();
 					if (ImGui::Button("remove##remove_body")) {
 						PX_BUILD(remove_body());
 					}
@@ -313,7 +312,6 @@ namespace px::ui {
 					current = nullptr;
 				}
 			}
-
 
 			ImGui::End();
 		}
