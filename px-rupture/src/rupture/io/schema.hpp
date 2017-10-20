@@ -13,8 +13,8 @@ namespace px {
 		{
 			factory.begin();
 
-			std::string name;
-			persistency lifetime = persistency::serialized;
+			std::string name = doc.value("name", std::string{});
+			persistency lifetime = static_cast<persistency>(doc.value("persistency", static_cast<int>(persistency::serialized)));
 
 			auto transform_node = doc.find("transform");
 			if (transform_node != doc.end()) {
@@ -31,15 +31,6 @@ namespace px {
 				load_body(body_node, factory);
 			}
 
-			auto name_node = doc.find("name");
-			if (name_node != doc.end()) {
-				name = *name_node;
-			}
-			auto pers_node = doc.find("persistency");
-			if (pers_node != doc.end()) {
-				int pers = *name_node;
-				lifetime = static_cast<persistency>(pers);
-			}
 			auto result = factory.request();
 			result->set_name(name);
 			result->set_persistency(lifetime);
@@ -69,26 +60,20 @@ namespace px {
 			auto body = factory.add_body();
 
 			// entity
-			auto tag_node = body_node->find("tag");
-			if (tag_node != body_node->end()) {
-				body->set_tag(*tag_node);
-			}
-			auto name_node = body_node->find("name");
-			if (name_node != body_node->end()) {
-				body->set_name(*name_node);
-			}
-			auto description_node = body_node->find("description");
-			if (description_node != body_node->end()) {
-				body->set_description(description_node.value());
-			}
+			body->set_tag(body_node->value("tag", std::string{ "" }));
+			body->set_name(body_node->value("name", std::string{ "" }));
+			body->set_description(body_node->value("description", std::string{ "" }));
 
 			// standings
-			auto faction_node = body_node->find("faction");
-			if (faction_node != body_node->end()) {
-				body->join_faction(*faction_node);
-			}
+			body->join_faction(body_node->value("faction", 0));
 
-			//	// mass
+			// mass
+			bool is_transparent = body_node->value("transparent", false);
+			unsigned long long blocking_mask = body_node->value("traversable", 0);
+			unsigned long long movement_mask = body_node->value("movement", 0);
+			body->blocking().make_transparent(is_transparent);
+			body->blocking().make_traversable(body_component::mass_type::bitset_type{ blocking_mask });
+			body->movement().make_traversable(body_component::mass_type::bitset_type{ movement_mask });
 
 			//	auto transperency_node = body_node->find("transparent");
 			//	if (transperency_node != body_node->end()) {
@@ -111,15 +96,17 @@ namespace px {
 
 			//	// resources
 
-			//	auto hp_node = body_node->find("hp");
-			//	if (hp_node != body_node->end()) {
-			//		body->health().create(hp_node.value());
-			//	}
+			auto hp_node = body_node->find("hp");
+			if (hp_node != body_node->end()) {
+				int hp = *hp_node;
+				body->health().emplace(hp, hp);
+			}
 
-			//	auto mp_node = body_node->find("mp");
-			//	if (mp_node != body_node->end()) {
-			//		body->energy().create(mp_node.value());
-			//	}
+			auto mp_node = body_node->find("mp");
+			if (mp_node != body_node->end()) {
+				int mp = *mp_node;
+				body->energy().emplace(mp, mp);
+			}
 		}
 	};
 }

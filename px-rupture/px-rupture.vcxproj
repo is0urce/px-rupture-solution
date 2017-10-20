@@ -327,6 +327,7 @@
     <None Include="data\config.json" />
     <None Include="data\controls.json" />
     <None Include="data\schemata\dummy.json" />
+    <None Include="data\schemata\mobile.json" />
     <None Include="data\shaders\light.frag" />
     <None Include="data\shaders\light.vert" />
     <None Include="data\shaders\process.frag" />

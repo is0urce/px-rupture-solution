@@ -46,6 +46,16 @@ namespace px {
 		composite_component(composite_component const&) = delete;
 		composite_component& operator=(composite_component const&) = delete;
 
+	protected:
+		virtual void activate_component() override
+		{
+			enable();
+		}
+		virtual void deactivate_component() override
+		{
+			disable();
+		}
+
 	private:
 		persistency endurance;
 		std::string source;

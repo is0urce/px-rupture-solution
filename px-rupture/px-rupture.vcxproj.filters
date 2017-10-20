@@ -508,5 +508,6 @@
     <None Include="data\shaders\text.frag" />
     <None Include="data\shaders\text.vert" />
     <None Include="data\schemata\dummy.json" />
+    <None Include="data\schemata\mobile.json" />
   </ItemGroup>
 </Project>

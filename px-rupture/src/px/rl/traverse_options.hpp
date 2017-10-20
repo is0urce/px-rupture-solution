@@ -25,6 +25,8 @@ namespace px::rl
 
 		// traverable getters
 
+		operator bitset_type() const noexcept { return bits };
+		bitset_type traverse_bitset() const noexcept { return bits; };
 		constexpr bool is_traversable() const { return bits[0]; }
 		constexpr bool is_traversable(traverse_options const& opts) const { return (bits & opts.bits).any(); }
 		constexpr bool is_traversable(E layer) const { return bits[static_cast<size_t>(layer)]; }

@@ -8,55 +8,56 @@
 
 namespace px::rl {
 
+	template <typename I>
 	class constitution
 	{
 	public:
-		typedef std::optional<bar<int>> resource_type;
+		typedef std::optional<bar<I>> resource_type;
 
 	public:
 		bool is_dead() const
 		{
-			return health.has_value() && health->empty();
+			return hp.has_value() && hp->empty();
 		}
 		bool is_alive() const
 		{
-			return health.has_value() && health->empty();
+			return hp.has_value() && !hp->empty();
 		}
 
 		bool has_health() const
 		{
-			return health.has_value();
+			return hp.has_value();
 		}
 		bool has_energy() const
 		{
-			return health.has_value();
+			return mp.has_value();
 		}
 
-		resource_type & hp()
+		resource_type & health()
 		{
-			return health;
+			return hp;
 		}
-		resource_type & mp()
+		resource_type & energy()
 		{
-			return health;
+			return mp;
 		}
-		resource_type const& hp() const
+		resource_type const& health() const
 		{
-			return health;
+			return hp;
 		}
-		resource_type const& mp() const
+		resource_type const& energy() const
 		{
-			return health;
+			return mp;
 		}
 
 		template <typename Archive>
 		void serialize(Archive & archive)
 		{
-			bool has_hp = health.has_value();
-			bool has_mp = health.has_value();
+			bool has_hp = hp.has_value();
+			bool has_mp = mp.has_value();
 			archive(has_hp, has_mp);
-			if (has_hp) archive(*health);
-			if (has_mp) archive(*energy);
+			if (has_hp) archive(*hp);
+			if (has_mp) archive(*mp);
 		}
 
 	public:
@@ -65,7 +66,7 @@ namespace px::rl {
 		}
 
 	private:
-		resource_type health;
-		resource_type energy;
+		resource_type hp;
+		resource_type mp;
 	};
 }

@@ -13,6 +13,8 @@
 #include <px/rl/mass.hpp>
 #include <px/rl/traverse.hpp>
 
+#include <cstdint>
+
 namespace px {
 
 	class transform_component;
@@ -23,8 +25,8 @@ namespace px {
 		: public component
 		, public link_dispatcher<body_component>
 		, public rl::entity
-		, public rl::constitution
-		, public rl::standing<unsigned int>
+		, public rl::constitution<int32_t>
+		, public rl::standing<int32_t>
 	{
 	public:
 		typedef useable<body_component*, environment*> useable_type;

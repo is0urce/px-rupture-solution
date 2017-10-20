@@ -130,8 +130,23 @@ namespace px::ui {
 
 				ImGui::Separator();
 				ImGui::Text("composite");
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("name: %s", current->name().c_str());
+					ImGui::Text("size: %d", current->size());
+					ImGui::Text("persistency: %d", static_cast<unsigned int>(current->lifetime()));
+					ImGui::EndTooltip();
+				}
 
-				ImGui::Text("Name: %s", current->name().c_str());
+				ImGui::SameLine();
+				if (ImGui::Button("activate##composite_on")) {
+					current->enable();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("deactivate##composite_off")) {
+					current->disable();
+				}
+
 				ImGui::InputText("##composite_name", composite_name.data(), composite_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll); ImGui::SameLine(); if (ImGui::Button("Name")) {
 					current->set_name(composite_name.data());
 				}
@@ -142,14 +157,25 @@ namespace px::ui {
 				transform_component * transform = current->query<transform_component>();
 				if (transform) {
 					ImGui::Text("transform");
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+						ImGui::Text("current: (%d, %d)", transform->position().x(), transform->position().y());
+						ImGui::Text("last: (%d, %d)", transform->last().x(), transform->last().y());
+						ImGui::Text("space: %p", transform->world());
+						ImGui::EndTooltip();
+					}
 					ImGui::SameLine();
 					if (ImGui::Button("remove##remove_transform")) {
 						PX_BUILD(remove_transform());
 					}
-					ImGui::Text("X:"); ImGui::SameLine(); ImGui::InputInt("##transform_x", &transform_x);
-					ImGui::Text("Y:"); ImGui::SameLine(); ImGui::InputInt("##transform_y", &transform_y);
-					if (ImGui::Button("place##transform_place")) {
-						transform->place({ transform_x, transform_y });
+					else {
+						bool place = false;
+						ImGui::Text("x"); ImGui::SameLine(); place |= ImGui::InputInt("##transform_x", &transform_x);
+						ImGui::Text("y"); ImGui::SameLine(); place |= ImGui::InputInt("##transform_y", &transform_y);
+						if (place) {
+							transform->place({ transform_x, transform_y });
+						}
 					}
 				}
 				else if (ImGui::Button("+ transform")) {
@@ -162,22 +188,96 @@ namespace px::ui {
 				sprite_component * sprite = current->query<sprite_component>();
 				if (sprite) {
 					ImGui::Text("sprite: %s", sprite->name);
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+						ImGui::Text("texture_id: %d", sprite->texture_index);
+						ImGui::Text("sx: %f, dx: %f", sprite->sx_texture, sprite->dx_texture);
+						ImGui::Text("sy: %f, dy: %f", sprite->sy_texture, sprite->dy_texture);
+						ImGui::EndTooltip();
+					}
+
 					ImGui::SameLine();
 					if (ImGui::Button("remove##remove_sprite")) {
 						PX_BUILD(remove_sprite());
 					}
-					ImGui::Text("texture_id: %d", sprite->texture_index);
-					ImGui::Text("sx: %f, dx: %f", sprite->sx_texture, sprite->dx_texture);
-					ImGui::Text("sy: %f, dy: %f", sprite->sy_texture, sprite->dy_texture);
-					ImGui::InputText("##sprite_text", sprite_name.data(), sprite_name.size(), ImGuiInputTextFlags_AutoSelectAll);
-					ImGui::SameLine();
-					if (ImGui::Button("set##set_sprite")) {
-						std::string str(sprite_name.data());
-						PX_SWAP(remove_sprite(), add_sprite(str));
+					else {
+						ImGui::InputText("##sprite_text", sprite_name.data(), sprite_name.size(), ImGuiInputTextFlags_AutoSelectAll);
+						ImGui::SameLine();
+						if (ImGui::Button("set##set_sprite")) {
+							std::string str(sprite_name.data());
+							PX_SWAP(remove_sprite(), add_sprite(str));
+						}
 					}
 				}
 				else if (ImGui::Button("+ sprite")) {
 					PX_BUILD(add_sprite("x_dummy"));
+				}
+
+				// body
+
+				ImGui::Separator();
+				body_component * body = current->query<body_component>();
+				if (body) {
+					auto & mass = body->blocking();
+					auto & movement = body->movement();
+					auto & health = body->health();
+					auto & energy = body->energy();
+					ImGui::Text("body: %s", body->tag().c_str());
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::Text("tag: %s", body->tag().c_str());
+						ImGui::Text("name: %s", body->name().c_str());
+						ImGui::Text("description: %s", body->description().c_str());
+						ImGui::Text("faction_id: %d", static_cast<unsigned int>(body->current_faction()));
+						ImGui::Text("transparent: %s", mass.is_transparent() ? "true" : "false");
+						ImGui::Text("blocking: %s", mass.traverse_bitset().to_string().c_str());
+						ImGui::Text("movement: %s", movement.traverse_bitset().to_string().c_str());
+						ImGui::Text("hp: %s", (health ? (std::to_string(health->current()) + "/" + std::to_string(health->maximum())) : std::string{ "empty" }).c_str());
+						ImGui::Text("mp: %s", (energy ? (std::to_string(energy->current()) + "/" + std::to_string(energy->maximum())) : std::string{ "empty" }).c_str());
+						ImGui::EndTooltip();
+					}
+					if (ImGui::Button("remove##remove_body")) {
+						PX_BUILD(remove_body());
+					}
+					else {
+						if (ImGui::Checkbox("transparent##body_transparent", &body_transparent)) {
+							mass.make_transparent(body_transparent);
+						}
+						if (health) {
+							bool mod = false;
+							ImGui::Text("hp "); ImGui::SameLine(); mod |= ImGui::InputInt("##hp_current", &hp);
+							ImGui::Text("max"); ImGui::SameLine(); mod |= ImGui::InputInt("##hp_max", &hp_max);
+							if (mod) {
+								health->set(hp, hp_max);
+							}
+						}
+						else {
+							if (ImGui::Button("+ hp")) {
+								hp = 0;
+								hp_max = 0;
+								health.emplace(hp, hp_max);
+							}
+						}
+						if (energy) {
+							bool mod = false;
+							ImGui::Text("mp "); ImGui::SameLine(); mod |= ImGui::InputInt("##mp_current", &mp);
+							ImGui::Text("max"); ImGui::SameLine(); mod |= ImGui::InputInt("##mp_max", &mp_max);
+							if (mod) {
+								energy->set(mp, mp_max);
+							}
+						}
+						else {
+							if (ImGui::Button("+ mp")) {
+								mp = 0;
+								mp_max = 0;
+								energy.emplace(mp, mp_max);
+							}
+						}
+					}
+				}
+				else if (ImGui::Button("+ body")) {
+					PX_BUILD(add_body());
 				}
 
 				// spawn
@@ -185,7 +285,6 @@ namespace px::ui {
 				ImGui::Separator();
 
 				if (transform) {
-					ImGui::SameLine();
 					if (ImGui::Button("Spawn")) {
 						game->spawn(std::move(current), transform);
 					}
@@ -201,19 +300,20 @@ namespace px::ui {
 				else {
 					ImGui::Text("require transform to spawn mobiles");
 				}
+
+				ImGui::Separator();
+
+				if (ImGui::Button("Export")) {
+					auto output = output_stream("data/blueprints/" + current->name() + ".dat");
+					SAVE_OUTPUT_ARCHIVE archive(output);
+					blueprint::save(archive, *current);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Discard")) {
+					current = nullptr;
+				}
 			}
 
-			// export
-
-			ImGui::Separator();
-			if (ImGui::Button("Export")) {
-				auto output = output_stream("data/blueprints/" + current->name() + ".dat");
-				SAVE_OUTPUT_ARCHIVE archive(output);
-				blueprint::save(archive, *current);
-			}
-			if (ImGui::Button("Import")) {
-				game->spawn("dummy", { 20, 20 });
-			}
 
 			ImGui::End();
 		}
@@ -294,6 +394,19 @@ namespace px::ui {
 					sprite_name.fill(0);
 					std::copy(str.cbegin(), str.cbegin() + std::min(str.length(), sprite_name.size() - 2), sprite_name.begin()); // reserve extra zero for end of a string
 				}
+				if (auto body = current->query<body_component>()) {
+					body_transparent = body->blocking().is_transparent();
+					auto const& health = body->health();
+					auto const& energy = body->energy();
+					if (health) {
+						hp = health->current();
+						hp_max = health->maximum();
+					}
+					if (energy) {
+						mp = energy->current();
+						mp_max = energy->maximum();
+					}
+				}
 			}
 		}
 
@@ -321,6 +434,12 @@ namespace px::ui {
 		int							transform_y;
 
 		std::array<char, 128>		sprite_name;
+
+		bool						body_transparent;
+		int							hp;
+		int							hp_max;
+		int							mp;
+		int							mp_max;
 	};
 }
 
