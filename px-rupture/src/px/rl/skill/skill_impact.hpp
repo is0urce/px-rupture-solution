@@ -43,7 +43,7 @@ namespace px::rl {
 
 			bool try_use(user_type user, target_type target)
 			{
-				bool can_use = useable_skill(user, target)
+				bool can_use = useable_skill(user, target);
 				if (can_use) {
 					use_skill(user, target);
 				}

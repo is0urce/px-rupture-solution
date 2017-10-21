@@ -323,6 +323,7 @@
     <ClInclude Include="src\rupture\app\settings.hpp" />
     <ClInclude Include="src\rupture\script\script.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
+    <ClInclude Include="src\rupture\script\unit.hpp" />
     <ClInclude Include="src\rupture\ui\editor.hpp" />
     <ClInclude Include="src\rupture\ui\menu.hpp" />
     <ClInclude Include="src\rupture\rl\scene.hpp" />
