@@ -11,12 +11,14 @@ namespace px {
 
 	class character_component;
 	class character_works;
+	class script;
 
 	class character_system
 		: public system<delta>
 	{
 	public:
 		uq_ptr<character_component> make();
+		void load(script * scripts);
 
 	public:
 		virtual ~character_system();

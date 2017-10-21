@@ -29,18 +29,21 @@ namespace px::rl
 		void learn_skill(std::string const& tag)
 		{
 			if (m_book) {
-				auto & record = m_book[tag];
+				auto & record = (*m_book)[tag];
 				if (record) {
-					m_skills.emplace_back(std::get<0>(*record), &std::get<1>(*record));
+					m_skills.emplace_back();
+					m_skills.back().state() = std::get<0>(*record);
+					m_skills.back().assign_impact(std::get<1>(*record));
 				}
 			}
 		}
 		void replace_skill(std::string const&, size_t slot)
 		{
 			if (m_book) {
-				auto & record = m_book[tag];
+				auto & record = (*m_book)[tag];
 				if (record) {
-					m_skills[slot] = { std::get<0>(*record), &std::get<1>(*record) };
+					m_skills[slot].state() = std::get<0>(*record);
+					m_skills[slot].assign_impact(std::get<1>(*record));
 				}
 			}
 		}
@@ -66,7 +69,7 @@ namespace px::rl
 		template <size_t Slot>
 		skill_type & at()
 		{
-			return m_skills.at(slot);
+			return m_skills.at(Slot);
 		}
 		skill_type * get_skill(size_t index)
 		{

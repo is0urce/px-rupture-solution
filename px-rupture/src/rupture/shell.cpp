@@ -53,6 +53,8 @@ namespace px {
 			add_atlas(atlas.c_str(), texture_id);
 			++texture_id;
 		}
+
+		characters.load(&mashine);
 	}
 
 	void shell::register_systems()

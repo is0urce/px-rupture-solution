@@ -6,6 +6,7 @@
 #include "panel.hpp"
 
 #include "rupture/app/document.hpp"
+#include "rupture/app/settings.hpp"
 #include "rupture/es/builder.hpp"
 #include "rupture/es/composite_component.hpp"
 #include "rupture/es/character_component.hpp"
@@ -133,10 +134,11 @@ namespace px::ui {
 				ImGui::Text("composite");
 				if (ImGui::IsItemHovered()) {
 					ImGui::BeginTooltip();
+					//ImGui::Text("adress: %p", current.get());
+					//ImGui::Separator();
 					ImGui::Text("name: %s", current->name().c_str());
 					ImGui::Text("size: %d", current->size());
 					ImGui::Text("persistency: %d", static_cast<unsigned int>(current->lifetime()));
-					//ImGui::Text("adress: %p", current.get());
 					ImGui::EndTooltip();
 				}
 
@@ -170,8 +172,8 @@ namespace px::ui {
 					ImGui::Text("transform");
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
-						ImGui::Text("adress: %p", transform);
-						ImGui::Separator();
+						//ImGui::Text("adress: %p", transform);
+						//ImGui::Separator();
 						ImGui::Text("current: (%d, %d)", transform->position().x(), transform->position().y());
 						ImGui::Text("last: (%d, %d)", transform->last().x(), transform->last().y());
 						ImGui::Text("space: %p", transform->world());
@@ -356,7 +358,7 @@ namespace px::ui {
 		{
 			if (game) {
 				builder factory(game);
-				current = schema::load(document::load_document("data/schemata/" + schema_name), factory);
+				current = schema::load(document::load_document(settings::schemata_path + schema_name), factory);
 				update_props();
 			}
 		}
@@ -444,7 +446,6 @@ namespace px::ui {
 
 		int							schema_selected;
 		std::vector<std::string>	schemata;
-
 		int							blueprint_selected;
 		std::vector<std::string>	blueprints;
 

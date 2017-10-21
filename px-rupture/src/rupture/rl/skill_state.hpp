@@ -43,7 +43,7 @@ namespace px {
 		{
 			return m_hostile;
 		}
-		int cost() const noexcept
+		Integer cost() const noexcept
 		{
 			return m_cost;
 		}
@@ -71,7 +71,7 @@ namespace px {
 		{
 			m_cooldown = cooldown_duration;
 		}
-		void set_cost(int cost) noexcept
+		void set_cost(Integer cost) noexcept
 		{
 			m_cost = cost;
 		}

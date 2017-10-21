@@ -357,6 +357,7 @@
     <None Include="data\shaders\text.vert" />
     <None Include="data\shaders\ui.frag" />
     <None Include="data\shaders\ui.vert" />
+    <None Include="data\skills.json" />
     <None Include="data\textures.json" />
     <None Include="data\tiles.json" />
   </ItemGroup>

@@ -24,6 +24,9 @@ namespace px {
 		virtual ~skill()
 		{
 		}
+		skill()
+		{
+		}
 
 	protected:
 		virtual bool useable_instance() const override

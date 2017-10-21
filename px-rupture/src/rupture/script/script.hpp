@@ -11,14 +11,13 @@ namespace px {
 
 	class body_component;
 	class script_internal;
-	class skill;
 
-	class script
+	class script final
 	{
 	public:
 		void run(std::string const& code);
 		void execute(std::string const& file);
-		skill & impact(std::string const& name);
+		rl::skill_functional<body_component *, body_component *, point2> impact(std::string const& name);
 
 	public:
 		~script();

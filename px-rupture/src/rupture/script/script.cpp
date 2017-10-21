@@ -27,7 +27,7 @@ namespace px {
 		works->execute(name);
 	}
 
-	skill & script::impact(std::string const& name)
+	rl::skill_functional<body_component *, body_component *, point2> script::impact(std::string const& name)
 	{
 		return works->impact(name);
 	}

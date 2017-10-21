@@ -548,5 +548,6 @@
     <None Include="data\shaders\text.vert" />
     <None Include="data\schemata\dummy.json" />
     <None Include="data\schemata\mobile.json" />
+    <None Include="data\skills.json" />
   </ItemGroup>
 </Project>

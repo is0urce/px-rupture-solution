@@ -43,6 +43,7 @@ namespace px {
 	protected:
 		notification_system		messages;
 		scene					stage;
+		script					mashine;
 
 	private:
 		transform_component *	player;
@@ -51,6 +52,5 @@ namespace px {
 		bool					turn_pass;		// true if it's the world processing stage
 		point2					last_step;
 		repository				directory;
-		script					code;
 	};
 }
