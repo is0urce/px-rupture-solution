@@ -19,31 +19,33 @@ namespace px::rl
 		typedef Skill skill_type;
 		typedef typename Skill::state_type state_type;
 		typedef typename Skill::impact_type impact_type;
-		typedef std::map<std::string, std::optional<std::tuple<state_type, impact_type *>>> book_type;
+		typedef std::map<std::string, std::tuple<state_type, impact_type *>> book_type;
 
 	public:
-		void assign_book(book_type * book)
+		void assign_book(book_type const* book)
 		{
 			m_book = book;
 		}
 		void learn_skill(std::string const& tag)
 		{
 			if (m_book) {
-				auto & record = (*m_book)[tag];
-				if (record) {
+				auto const& it = m_book->find(tag);
+				if (it != m_book->end()) {
+					auto const& record = it->second;
 					m_skills.emplace_back();
-					m_skills.back().state() = std::get<0>(*record);
-					m_skills.back().assign_impact(std::get<1>(*record));
+					m_skills.back().state() = std::get<0>(record);
+					m_skills.back().assign_impact(std::get<1>(record));
 				}
 			}
 		}
 		void replace_skill(std::string const&, size_t slot)
 		{
 			if (m_book) {
-				auto & record = (*m_book)[tag];
-				if (record) {
-					m_skills[slot].state() = std::get<0>(*record);
-					m_skills[slot].assign_impact(std::get<1>(*record));
+				auto const& it = m_book->find(tag);
+				if (it != m_book->end()) {
+					auto const& record = it->second;
+					m_skills[slot].state() = std::get<0>(record);
+					m_skills[slot].assign_impact(std::get<1>(record));
 				}
 			}
 		}
@@ -107,6 +109,6 @@ namespace px::rl
 
 	private:
 		std::vector<skill_type>		m_skills;	// array of learned/selected skills
-		book_type *					m_book;		// create and invalidate source
+		book_type const*			m_book;		// create and invalidate source
 	};
 }

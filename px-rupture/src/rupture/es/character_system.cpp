@@ -25,6 +25,9 @@ namespace px {
 		if (mashine) {
 			works->add(name, {}, mashine->impact("data/scripts/" + name + ".lua"));
 		}
+		auto c = works->make();
+		c->learn_skill("hit");
+		c->at<0>().use(nullptr, nullptr);
 	}
 
 	void character_system::turn_update_system(delta_type const& /*delta_time*/)

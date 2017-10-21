@@ -35,11 +35,11 @@ namespace px {
 		void add(std::string const& name, skill::state_type const& start, rl::skill_functional<body_component *, body_component *, point2> && impact)
 		{
 			auto & fn = lib[name] = std::move(impact);
-			book[name].emplace(start, &fn);
+			book[name] = { start, &fn };
 		}
 
 	private:
 		std::map<std::string, rl::skill_functional<body_component *, body_component *, point2>> lib;
-		std::map<std::string, std::optional<std::tuple<skill::state_type, skill::impact_type * >>> book;
+		std::map<std::string, std::tuple<skill::state_type, skill::impact_type * >> book;
 	};
 }
