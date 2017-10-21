@@ -216,6 +216,11 @@
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
+    <ClInclude Include="src\px\rl\skill\skill_functional.hpp" />
+    <ClInclude Include="src\px\rl\skill\skill_impact.hpp" />
+    <ClInclude Include="src\px\rl\skill\skill_instance.hpp" />
+    <ClInclude Include="src\rupture\rl\skill\skill.hpp" />
+    <ClInclude Include="src\rupture\rl\skill\skill_state.hpp" />
     <ClInclude Include="src\px\rl\standing.hpp" />
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />

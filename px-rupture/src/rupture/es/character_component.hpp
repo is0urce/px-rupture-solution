@@ -3,6 +3,8 @@
 #include <px/es/component.hpp>
 #include <px/es/link_dispatcher.hpp>
 
+#include "rupture/rl/skill/skill.hpp"
+
 namespace px {
 
 	class character_component
@@ -11,5 +13,8 @@ namespace px {
 	{
 	public:
 		virtual ~character_component() = default;
+
+	private:
+		rl::skill action;
 	};
 }
