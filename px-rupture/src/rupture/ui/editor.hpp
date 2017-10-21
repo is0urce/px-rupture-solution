@@ -23,10 +23,20 @@
 #include <string>
 #include <vector>
 
-#define PX_BUILD(OP) { builder factory(game); factory.begin(std::move(current)); factory.OP; current = factory.request(); update(); }
-#define PX_SWAP(A, B) { builder factory(game); factory.begin(std::move(current)); factory.A, factory.B; current = factory.request(); update(); }
+#define PX_BUILD(OP) { builder factory(game); factory.begin(std::move(current)); factory.OP; current = factory.request(); update_props(); }
+#define PX_SWAP(A, B) { builder factory(game); factory.begin(std::move(current)); factory.A, factory.B; current = factory.request(); update_props(); }
 
 namespace px::ui {
+
+	inline bool vector_getter(void * data, int n, const char** result)
+	{
+		auto & vector = *static_cast<std::vector<std::string>*>(data);
+		if (n >= 0 && n < static_cast<int>(vector.size())) {
+			*result = vector[n].c_str();
+			return true;
+		}
+		return false;
+	}
 
 	class editor : public panel
 	{
@@ -46,10 +56,8 @@ namespace px::ui {
 		//}
 		editor(environment * e) noexcept
 			: game(e)
-			, schemata_dirty(true)
-			, blueprints_dirty(true)
 		{
-			schema_strref.fill(0);
+			refresh_template_items();
 		}
 
 	protected:
@@ -57,8 +65,6 @@ namespace px::ui {
 		{
 			static bool metrics = false;
 			static bool dbg = false;
-
-			if (!game) return;
 
 			ImGui::SetNextWindowSize({ 150, 100 });
 			ImGui::SetNextWindowPos({ 50, 50 });
@@ -79,6 +85,10 @@ namespace px::ui {
 			}
 
 			// editor
+			if (!game) return;
+
+			transform_component * camera = game->possessed();
+
 			const float window_width = 250.0f;
 			const float screen_width = ImGui::GetIO().DisplaySize.x;
 			const float screen_height = ImGui::GetIO().DisplaySize.y;
@@ -88,41 +98,32 @@ namespace px::ui {
 
 			// template selection
 
-			refresh_template_items();
-			if (ImGui::Combo("###schemata", &schema_selected, schemata_flat.data(), static_cast<int>(schemata_count))) {
-				schema_strref.fill(0);
-				auto const& name = schemata[schema_selected];
-				std::copy(name.cbegin(), name.cbegin() + std::min(name.length(), schema_strref.size() - 2), schema_strref.begin());
-			}
-			if (ImGui::Combo("###blueprints", &blueprint_selected, blueprints_flat.data(), static_cast<int>(blueprints_count))) {
-				//strref.fill(0);
-				//auto const& name = blueprints[blueprint_selected];
-				//std::copy(name.cbegin(), name.cbegin() + std::min(name.length(), strref.size() - 2), strref.begin());
-			}
-
+			ImGui::Combo("##shemata_list", &schema_selected, vector_getter, static_cast<void*>(&schemata), static_cast<int>(schemata.size()));
 			ImGui::SameLine();
-			if (ImGui::Button("Refresh###refresh_schemata")) {
-				schemata_dirty = true;
-				blueprints_dirty = true;
-			}
-
-			ImGui::InputText("###schemata_strref", schema_strref.data(), schema_strref.size());
-			ImGui::SameLine();
-			if (ImGui::Button("Load###load_schema")) {
+			if (ImGui::Button("load###load_schema")) {
 				load_current_schema();
 			}
 
-			// blueprint selection
+			ImGui::Combo("##blueprints_list", &blueprint_selected, vector_getter, static_cast<void*>(&blueprints), static_cast<int>(blueprints.size()));
+			ImGui::SameLine();
+			if (ImGui::Button("load###load_blueprint")) {
+				load_current_blueprint();
+			}
 
-			//ImGui::InputText("###strref", &strref[0], strref.size());
-			//ImGui::SameLine();
-			//if (ImGui::Button("Load")) {
-			//	load_current_schema();
-			//}
+			if (ImGui::Button("pick###pick_unit")) {
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("refresh###refresh_templates")) {
+				refresh_template_items();
+			}
 
 			// object props
 
 			if (current) {
+
+				transform_component * transform = current->query<transform_component>();
+				sprite_component * sprite = current->query<sprite_component>();
+				body_component * body = current->query<body_component>();
 
 				// composite
 
@@ -133,34 +134,44 @@ namespace px::ui {
 					ImGui::Text("name: %s", current->name().c_str());
 					ImGui::Text("size: %d", current->size());
 					ImGui::Text("persistency: %d", static_cast<unsigned int>(current->lifetime()));
+					ImGui::Text("adress: %p", current.get());
 					ImGui::EndTooltip();
 				}
 
+				if (camera && transform) {
+					ImGui::SameLine();
+					if (ImGui::Button("at me##composite_place_at_me")) {
+						transform->place(camera->position());
+						current->enable();
+						update_props();
+					}
+				}
 				ImGui::SameLine();
-				if (ImGui::Button("activate##composite_on")) {
+				if (ImGui::Button("on##composite_on")) {
 					current->enable();
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("deactivate##composite_off")) {
+				if (ImGui::Button("off##composite_off")) {
 					current->disable();
 				}
 
-				ImGui::InputText("##composite_name", composite_name.data(), composite_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll); ImGui::SameLine(); if (ImGui::Button("Name")) {
+				ImGui::InputText("##composite_name", composite_name.data(), composite_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll);
+				ImGui::SameLine();
+				if (ImGui::Button("name##name_composite")) {
 					current->set_name(composite_name.data());
 				}
 
 				// transform
 
-				ImGui::Separator();
-				transform_component * transform = current->query<transform_component>();
 				if (transform) {
+					ImGui::Separator();
 					ImGui::Text("transform");
-					if (ImGui::IsItemHovered())
-					{
+					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
 						ImGui::Text("current: (%d, %d)", transform->position().x(), transform->position().y());
 						ImGui::Text("last: (%d, %d)", transform->last().x(), transform->last().y());
 						ImGui::Text("space: %p", transform->world());
+						ImGui::Text("adress: %p", transform);
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
@@ -183,7 +194,6 @@ namespace px::ui {
 				// sprite
 
 				ImGui::Separator();
-				sprite_component * sprite = current->query<sprite_component>();
 				if (sprite) {
 					ImGui::Text("sprite: %s", sprite->name);
 					if (ImGui::IsItemHovered())
@@ -215,7 +225,6 @@ namespace px::ui {
 				// body
 
 				ImGui::Separator();
-				body_component * body = current->query<body_component>();
 				if (body) {
 					auto & mass = body->blocking();
 					auto & movement = body->movement();
@@ -284,14 +293,15 @@ namespace px::ui {
 				ImGui::Separator();
 
 				if (transform) {
-					if (ImGui::Button("Spawn")) {
+
+					if (ImGui::Button("spawn##spawn_at_transform")) {
 						game->spawn(std::move(current), transform);
 					}
-					transform_component * player = game->possessed();
-					if (player) {
+
+					if (camera) {
 						ImGui::SameLine();
-						if (ImGui::Button("Here")) {
-							transform->place(player->position());
+						if (ImGui::Button("here##spawn_here")) {
+							transform->place(camera->position());
 							game->spawn(std::move(current), transform);
 						}
 					}
@@ -306,6 +316,8 @@ namespace px::ui {
 					auto output = output_stream("data/blueprints/" + current->name() + ".dat");
 					SAVE_OUTPUT_ARCHIVE archive(output);
 					blueprint::save(archive, *current);
+
+					refresh_template_items();
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Discard")) {
@@ -317,64 +329,59 @@ namespace px::ui {
 		}
 
 	private:
-		void load_schema(std::string const& name)
+		void load_schema(std::string const& schema_name)
 		{
 			if (game) {
 				builder factory(game);
-				current = schema::load(document::load_document(name), factory);
+				current = schema::load(document::load_document("data/schemata/" + schema_name), factory);
+				update_props();
+			}
+		}
+		void load_blueprint(std::string const& blueprint_name)
+		{
+			if (game) {
+				auto input = input_stream("data/blueprints/" + blueprint_name);
+				SAVE_INPUT_ARCHIVE archive(input);
+				builder factory(game);
+				current = blueprint::load(archive, factory);
+				update_props();
 			}
 		}
 		void refresh_template_items()
 		{
-			if (blueprints_dirty) {
-				load_items(blueprint_selected, blueprints_count, blueprints, blueprints_flat, "data/blueprints/");
-				blueprints_dirty = false;
-			}
-			if (schemata_dirty) {
-				load_items(schema_selected, schemata_count, schemata, schemata_flat, "data/schemata/");
-				schemata_dirty = false;
-			}
+			load_items(blueprint_selected, blueprints, "data/blueprints/");
+			load_items(schema_selected, schemata, "data/schemata/");
 		}
-		static void load_items(int & selected, size_t & count, std::vector<std::string> & names, std::vector<char> & flat, std::string const& path)
+		static void load_items(int & selected, std::vector<std::string> & names, std::string const& path)
 		{
 			namespace fs = std::experimental::filesystem;
 
-			selected = -1;
-			count = 0;
 			names.clear();
-
 			for (fs::directory_entry const& entry : fs::directory_iterator(path)) {
 				if (fs::is_regular_file(entry.path())) {
 					names.push_back(entry.path().filename().string());
-					++count;
 				}
 			}
 
-			size_t letters = 0;
-			for (auto const& file : names) {
-				letters += file.length() + 1;
-			}
-
-			size_t cursor = 0;
-			flat.resize(letters + 1);
-			for (auto const& file : names) {
-				size_t len = file.length();
-				std::copy(file.cbegin(), file.cbegin() + len, flat.begin() + cursor);
-				flat[cursor + len] = 0;
-				cursor += len + 1;
-			}
-			flat[cursor] = 0; // double 00 at end
+			selected = -1;
 		}
 		void load_current_schema()
 		{
-			if (schema_strref[0] != 0) {
-				load_schema("data/schemata/" + std::string(schema_strref.data()));
+			if (schema_selected >= 0) {
+				load_schema(schemata[schema_selected]);
 			}
-			update();
 		}
-		void update()
+		void load_current_blueprint()
+		{
+			if (blueprint_selected >= 0) {
+				load_blueprint(blueprints[blueprint_selected]);
+			}
+		}
+		void update_props()
 		{
 			if (current) {
+				current->enable();
+
 				composite_lifetime = static_cast<int>(current->lifetime());
 
 				composite_name.fill(0);
@@ -413,17 +420,10 @@ namespace px::ui {
 		uq_ptr<composite_component>	current;
 
 		int							schema_selected;
-		std::array<char, 128>		schema_strref;
-		bool						schemata_dirty;
 		std::vector<std::string>	schemata;
-		std::vector<char>			schemata_flat;
-		size_t						schemata_count;
 
 		int							blueprint_selected;
-		bool						blueprints_dirty;
 		std::vector<std::string>	blueprints;
-		std::vector<char>			blueprints_flat;
-		size_t						blueprints_count;
 
 		std::array<char, 128>		composite_name;
 		int							composite_lifetime;
@@ -440,5 +440,3 @@ namespace px::ui {
 		int							mp_max;
 	};
 }
-
-#undef PX_LEN
