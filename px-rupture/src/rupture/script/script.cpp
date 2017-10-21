@@ -12,7 +12,7 @@ namespace px {
 	script::script()
 		: works(make_uq<script_internal>())
 	{
-		works->run("print(3)");
+		//works->run(R"(print("lua print..."))");
 	}
 
 	void script::run(std::string const& code)

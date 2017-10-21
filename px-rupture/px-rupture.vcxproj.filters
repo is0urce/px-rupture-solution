@@ -447,6 +447,9 @@
     <ClInclude Include="src\rupture\rl\skill\skill.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\app\bootstrap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">

@@ -1,6 +1,6 @@
 // name: tests.cpp
 
-#define PX_RUN_TESTS 1
+#include "rupture/app/bootstrap.hpp"
 
 #if PX_RUN_TESTS
 
@@ -16,21 +16,26 @@
 
 #include "case/link_test.hpp"
 
-unsigned int px::test::total = 0;
-unsigned int px::test::fails = 0;
-const char * px::test::lastmsg = "not specified";
 
-void run_tests()
-{
-	test_coordinate();
-	test_pool();
-	test_qtree();
-	test_link();
-	test_matrix();
-	test_memory();
 
-	test_traverse();
-	px::test::print();
+namespace px {
+
+	unsigned int test::total = 0;
+	unsigned int test::fails = 0;
+	const char * test::lastmsg = "not specified";
+
+	void run_tests()
+	{
+		test_coordinate();
+		test_pool();
+		test_qtree();
+		test_link();
+		test_matrix();
+		test_memory();
+
+		test_traverse();
+		test::print();
+	}
 }
 
 #endif // TESTS

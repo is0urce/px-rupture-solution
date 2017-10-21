@@ -3,6 +3,7 @@
 #define GLEW_STATIC
 #include <gl/glew.h>
 
+#include "app/bootstrap.hpp"
 #include "app/configuration.hpp"
 #include "app/document.hpp"
 #include "app/settings.hpp"
@@ -111,9 +112,9 @@ namespace px {
 	}
 }
 
-void run_tests();
+
 
 int main() {
-	run_tests();
+	px::bootstrap();
 	return px::run_application();
 }
