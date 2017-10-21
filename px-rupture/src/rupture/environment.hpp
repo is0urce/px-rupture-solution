@@ -7,6 +7,7 @@
 #include "es/notification_system.hpp"
 #include "rl/scene.hpp"
 #include "io/repository.hpp"
+#include "script/script.hpp"
 
 #include <px/common/point.hpp>
 #include <px/memory/uq_ptr.hpp>
@@ -50,5 +51,6 @@ namespace px {
 		bool					turn_pass;		// true if it's the world processing stage
 		point2					last_step;
 		repository				directory;
+		script					code;
 	};
 }

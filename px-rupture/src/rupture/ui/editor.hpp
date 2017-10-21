@@ -134,7 +134,7 @@ namespace px::ui {
 					ImGui::Text("name: %s", current->name().c_str());
 					ImGui::Text("size: %d", current->size());
 					ImGui::Text("persistency: %d", static_cast<unsigned int>(current->lifetime()));
-					ImGui::Text("adress: %p", current.get());
+					//ImGui::Text("adress: %p", current.get());
 					ImGui::EndTooltip();
 				}
 
@@ -171,7 +171,7 @@ namespace px::ui {
 						ImGui::Text("current: (%d, %d)", transform->position().x(), transform->position().y());
 						ImGui::Text("last: (%d, %d)", transform->last().x(), transform->last().y());
 						ImGui::Text("space: %p", transform->world());
-						ImGui::Text("adress: %p", transform);
+						//ImGui::Text("adress: %p", transform);
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
