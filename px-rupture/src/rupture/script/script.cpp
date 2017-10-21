@@ -12,16 +12,23 @@ namespace px {
 	script::script()
 		: works(make_uq<script_internal>())
 	{
-		//works->run(R"(print("lua print..."))");
+		works->run(R"(print("lua print..."))");
 	}
+
+	// methods
 
 	void script::run(std::string const& code)
 	{
 		works->run(code);
 	}
 
-	void script::execute(std::string const& /*name*/)
+	void script::execute(std::string const& name)
 	{
+		works->execute(name);
+	}
 
+	skill & script::impact(std::string const& name)
+	{
+		return works->impact(name);
 	}
 }

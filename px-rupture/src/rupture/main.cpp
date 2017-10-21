@@ -112,8 +112,6 @@ namespace px {
 	}
 }
 
-
-
 int main() {
 	px::bootstrap();
 	return px::run_application();

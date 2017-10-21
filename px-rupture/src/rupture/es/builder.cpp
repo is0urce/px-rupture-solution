@@ -88,7 +88,7 @@ namespace px {
 	}
 	character_component * builder::add_character()
 	{
-		auto part = make_uq<character_component>();
+		auto part = factory->characters.make();
 		character = part.get();
 		unit->add(std::move(part));
 

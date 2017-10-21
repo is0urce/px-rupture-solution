@@ -14,11 +14,11 @@
 
 #include <cstdint>
 
-namespace px::rl {
+namespace px {
 
 	class body_component;
 
-	class skill : public skill_instance<skill_state<int32_t>, body_component *, body_component *, point2>
+	class skill : public rl::skill_instance<skill_state<int32_t>, body_component *, body_component *, point2>
 	{
 	public:
 		virtual ~skill()

@@ -108,6 +108,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;lib\lua53.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,6 +124,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;lib\lua53.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -136,10 +140,11 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;lib\lua53.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,10 +160,11 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>lib\glew32s.lib;lib\glfw3.lib;lib\freetype281.lib;lib\lua53.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -169,6 +175,7 @@
     <ClCompile Include="src\rupture\es\body_component.cpp" />
     <ClCompile Include="src\rupture\es\body_system.cpp" />
     <ClCompile Include="src\rupture\es\builder.cpp" />
+    <ClCompile Include="src\rupture\es\character_system.cpp" />
     <ClCompile Include="src\rupture\es\light_system.cpp" />
     <ClCompile Include="src\rupture\es\notification_system.cpp" />
     <ClCompile Include="src\rupture\es\npc_system.cpp" />
@@ -219,9 +226,12 @@
     <ClInclude Include="src\px\rl\skill\skill_functional.hpp" />
     <ClInclude Include="src\px\rl\skill\skill_impact.hpp" />
     <ClInclude Include="src\px\rl\skill\skill_instance.hpp" />
+    <ClInclude Include="src\px\rl\skill\skill_set.hpp" />
     <ClInclude Include="src\rupture\app\bootstrap.hpp" />
-    <ClInclude Include="src\rupture\rl\skill\skill.hpp" />
-    <ClInclude Include="src\rupture\rl\skill\skill_state.hpp" />
+    <ClInclude Include="src\rupture\es\character_system.hpp" />
+    <ClInclude Include="src\rupture\es\character_works.hpp" />
+    <ClInclude Include="src\rupture\rl\skill.hpp" />
+    <ClInclude Include="src\rupture\rl\skill_state.hpp" />
     <ClInclude Include="src\px\rl\standing.hpp" />
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />

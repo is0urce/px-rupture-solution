@@ -272,3 +272,4 @@ __pycache__/
 /px-rupture/include
 /px-rupture/lib
 /px-rupture/log.txt
+*.dll

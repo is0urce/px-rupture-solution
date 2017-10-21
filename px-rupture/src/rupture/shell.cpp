@@ -64,6 +64,7 @@ namespace px {
 
 		// order is important
 		engine.add(&transforms);
+		engine.add(&characters);
 		engine.add(&npcs);
 		engine.add(&lights);
 		engine.add(&messages);

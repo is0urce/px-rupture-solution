@@ -8,6 +8,7 @@
 #include "rupture/app/document.hpp"
 #include "rupture/es/builder.hpp"
 #include "rupture/es/composite_component.hpp"
+#include "rupture/es/character_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 #include "rupture/es/transform_component.hpp"
 #include "rupture/io/schema.hpp"
@@ -124,6 +125,7 @@ namespace px::ui {
 				transform_component * transform = current->query<transform_component>();
 				sprite_component * sprite = current->query<sprite_component>();
 				body_component * body = current->query<body_component>();
+				character_component * character = current->query<character_component>();
 
 				// composite
 
@@ -163,15 +165,16 @@ namespace px::ui {
 
 				// transform
 
+				ImGui::Separator();
 				if (transform) {
-					ImGui::Separator();
 					ImGui::Text("transform");
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
+						ImGui::Text("adress: %p", transform);
+						ImGui::Separator();
 						ImGui::Text("current: (%d, %d)", transform->position().x(), transform->position().y());
 						ImGui::Text("last: (%d, %d)", transform->last().x(), transform->last().y());
 						ImGui::Text("space: %p", transform->world());
-						//ImGui::Text("adress: %p", transform);
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
@@ -286,6 +289,26 @@ namespace px::ui {
 				}
 				else if (ImGui::Button("+ body")) {
 					PX_BUILD(add_body());
+				}
+
+				// character
+
+				ImGui::Separator();
+				if (character) {
+					ImGui::Text("character");
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::Text("adress: %p", character);
+						ImGui::Separator();
+						ImGui::EndTooltip();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("remove##remove_character")) {
+						PX_BUILD(remove_character());
+					}
+				}
+				else if (ImGui::Button("+ character")) {
+					PX_BUILD(add_character());
 				}
 
 				// spawn

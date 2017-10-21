@@ -441,13 +441,22 @@
     <ClInclude Include="src\px\rl\skill\skill_instance.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\rl\skill\skill_state.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rupture\rl\skill\skill.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\app\bootstrap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\es\character_system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\es\character_works.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\rl\skill\skill_set.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\rl\skill.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\rl\skill_state.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -516,6 +525,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\rupture\script\script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rupture\es\character_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

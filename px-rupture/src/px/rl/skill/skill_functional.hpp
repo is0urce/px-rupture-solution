@@ -45,13 +45,13 @@ namespace px::rl {
 			, m_ground_check(gfc)
 		{
 		}
-		skill_functional(variant_targeted /*mark*/, target_fn tf, target_predicate tfc)
+		skill_functional(v_targeted /*mark*/, target_fn tf, target_predicate tfc)
 			: m_targeted(true)
 			, m_target(tf)
 			, m_target_check(tfc)
 		{
 		}
-		skill_functional(variant_area /*mark*/, area_fn gf, area_predicate gfc)
+		skill_functional(v_area /*mark*/, area_fn gf, area_predicate gfc)
 			: m_targeted(false)
 			, m_ground(gf)
 			, m_ground_check(gfc)

@@ -13,11 +13,11 @@
 
 #include <string>
 
-namespace px::rl
-{
+namespace px {
+
 	template <typename Integer>
 	class skill_state
-		: public entity
+		: public rl::entity
 	{
 	public:
 		typedef Integer time_type;
