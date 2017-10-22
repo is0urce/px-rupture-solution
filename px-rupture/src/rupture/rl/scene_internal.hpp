@@ -48,6 +48,15 @@ namespace px {
 			});
 			return subject;
 		}
+		body_component * anybody(point2 const& location) const
+		{
+			body_component * found = nullptr;
+			space.find(location, [&](transform_component * pawn) {
+				body_component * body = pawn->linked<body_component>();
+				if (body) found = body;
+			});
+			return found;
+		}
 		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location)
 		{
 			if (!transform) transform = ptr->query<transform_component>();

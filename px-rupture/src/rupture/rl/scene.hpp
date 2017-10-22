@@ -15,6 +15,7 @@ namespace px {
 	class scene_internal;
 
 	class transform_component;
+	class body_component;
 	class composite_component;
 	class sprite_system;
 
@@ -32,6 +33,9 @@ namespace px {
 		void assign_sprites(sprite_system * system);
 		void pset(std::uint32_t block_id, point2 const& location);
 		qtree<transform_component*> * space() noexcept;
+
+		transform_component * any(point2 const& location) const;
+		body_component * anybody(point2 const& location) const;
 
 	public:
 		~scene();

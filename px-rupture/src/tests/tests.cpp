@@ -16,8 +16,6 @@
 
 #include "case/link_test.hpp"
 
-
-
 namespace px {
 
 	unsigned int test::total = 0;

@@ -1,4 +1,4 @@
-// name: inspector.hpp
+// name: status.hpp
 // type: c++
 
 #pragma once
@@ -13,14 +13,14 @@
 
 namespace px::ui {
 
-	class inspector final
+	class status final
 		: public panel
 	{
 	public:
-		virtual ~inspector()
+		virtual ~status()
 		{
 		}
-		inspector(environment * env)
+		status(environment * env)
 			: game(env)
 		{
 		}
@@ -34,15 +34,15 @@ namespace px::ui {
 			const float screen_height = ImGui::GetIO().DisplaySize.y;
 			const float window_width = 250.0f;
 			const float window_height = 100.0f;
-			ImGui::SetNextWindowPos({ screen_width - window_width - 22, screen_height - window_height - 22 }, ImGuiCond_Always);
+			ImGui::SetNextWindowPos({ 22, screen_height - window_height - 22 }, ImGuiCond_Always);
 			ImGui::SetNextWindowSize({ window_width, window_height });
 
-			transform_component * target = game->target();
+			transform_component * target = game->possessed();
 			if (target) {
 				auto body = target->linked<body_component>();
 
 				if (body) {
-					ImGui::Begin("##target_inspector"
+					ImGui::Begin("##status_inspector"
 						, nullptr
 						, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 

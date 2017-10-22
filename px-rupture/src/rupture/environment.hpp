@@ -33,6 +33,8 @@ namespace px {
 		void					step(point2 const& movement);
 		void					start();
 		transform_component	*	possessed() noexcept;
+		transform_component *	target() noexcept;
+		void					focus(point2 offset);
 		void					action(unsigned int action_idx);
 
 	public:
@@ -41,6 +43,7 @@ namespace px {
 
 	private:
 		void					incarnate(transform_component * target);
+		void					lock_target();
 
 	protected:
 		notification_system		messages;
@@ -49,10 +52,13 @@ namespace px {
 
 	private:
 		transform_component *	player;
+		repository				directory;
 		bool					run;
 		unsigned int			turn_number;
 		bool					turn_pass;		// true if it's the world processing stage
 		point2					last_step;
-		repository				directory;
+		point2					target_hover;	// offset of target area
+		point2					target_area;	// target area in world coordinates
+		transform_component *	target_unit;	// targeted unit
 	};
 }

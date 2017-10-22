@@ -29,6 +29,9 @@ namespace px {
 		: turn_number(0)
 		, turn_pass(true)
 		, player(nullptr)
+		, target_unit(nullptr)
+		, target_area(0, 0)
+		, target_hover(0, 0)
 		, run(true)
 		, directory("data/save/current", nullptr)
 	{
@@ -89,15 +92,19 @@ namespace px {
 	}
 	void environment::pass_turn()
 	{
-		++turn_number;
-		turn_pass = !turn_pass;
-
-		if (player && !turn_pass) player->store(last_step);
+		pass_turn(player ? player->position() : last_step);
 	}
 	void environment::pass_turn(point2 const& last)
 	{
+		++turn_number;
+		turn_pass = !turn_pass;
+
+		if (player && !turn_pass) {
+			player->store(last_step);
+		}
+		lock_target();
+
 		last_step = last;
-		pass_turn();
 	}
 	unsigned int environment::current_turn() const noexcept
 	{
@@ -161,5 +168,20 @@ namespace px {
 	transform_component	* environment::possessed() noexcept
 	{
 		return player;
+	}
+	transform_component	* environment::target() noexcept
+	{
+		return target_unit;
+	}
+	void environment::focus(point2 offset)
+	{
+		target_hover = offset;
+		lock_target();
+	}
+	void environment::lock_target()
+	{
+		target_area = target_hover + (player ? player->position() : point2(0, 0));
+		body_component * body = stage.anybody(target_area);
+		target_unit = body ? body->linked<transform_component>() : nullptr;
 	}
 }

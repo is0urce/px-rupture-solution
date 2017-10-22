@@ -97,7 +97,9 @@ namespace px {
 	void shell::hover(int x, int y)
 	{
 		if (!is_running() || turn_passed()) return;
-		ui.hover(x, y);
+		if (!ui.hover(x, y)) {
+			focus({ x, y });
+		}
 	}
 	void shell::scroll(double horisontal, double vertical)
 	{

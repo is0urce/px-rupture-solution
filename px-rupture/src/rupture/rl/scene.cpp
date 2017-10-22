@@ -48,4 +48,13 @@ namespace px {
 	{
 		return works->get_space();
 	}
+
+	transform_component * scene::any(point2 const& location) const
+	{
+		return works->any(location);
+	}
+	body_component * scene::anybody(point2 const& location) const
+	{
+		return works->anybody(location);
+	}
 }
