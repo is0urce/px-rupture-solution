@@ -325,6 +325,7 @@
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
     <ClInclude Include="src\rupture\script\unit.hpp" />
     <ClInclude Include="src\rupture\ui\editor.hpp" />
+    <ClInclude Include="src\rupture\ui\inspector.hpp" />
     <ClInclude Include="src\rupture\ui\menu.hpp" />
     <ClInclude Include="src\rupture\rl\scene.hpp" />
     <ClInclude Include="src\rupture\rl\scene_internal.hpp" />
@@ -335,6 +336,7 @@
     <ClInclude Include="src\rupture\shell.hpp" />
     <ClInclude Include="src\rupture\ui\director_works.hpp" />
     <ClInclude Include="src\rupture\ui\panel.hpp" />
+    <ClInclude Include="src\rupture\ui\performance.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />

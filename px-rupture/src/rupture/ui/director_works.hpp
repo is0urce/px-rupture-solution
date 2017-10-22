@@ -170,11 +170,11 @@ namespace px::ui {
 			glEnableVertexAttribArray(locationUV);
 			glEnableVertexAttribArray(locationColor);
 
-#define MY_OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
-			glVertexAttribPointer(locationPosition, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)MY_OFFSETOF(ImDrawVert, pos));
-			glVertexAttribPointer(locationUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)MY_OFFSETOF(ImDrawVert, uv));
-			glVertexAttribPointer(locationColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)MY_OFFSETOF(ImDrawVert, col));
-#undef MY_OFFSETOF
+#define PX_OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+			glVertexAttribPointer(locationPosition, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)PX_OFFSETOF(ImDrawVert, pos));
+			glVertexAttribPointer(locationUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)PX_OFFSETOF(ImDrawVert, uv));
+			glVertexAttribPointer(locationColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)PX_OFFSETOF(ImDrawVert, col));
+#undef PX_OFFSETOF
 		}
 		void release_pipeline()
 		{
@@ -196,18 +196,18 @@ namespace px::ui {
 		}
 
 	private:
-		unsigned int width;
-		unsigned int height;
-		gl_texture font;
-		gl_program shader;
+		unsigned int	width;
+		unsigned int	height;
+		gl_texture		font;
+		gl_program		shader;
 
-		int locationTex;
-		int locationProjMtx;
-		int locationPosition;
-		int locationUV;
-		int locationColor;
-		unsigned int vbo;
-		unsigned int vao;
-		unsigned int elements;
+		int				locationTex;
+		int				locationProjMtx;
+		int				locationPosition;
+		int				locationUV;
+		int				locationColor;
+		unsigned int	vbo;
+		unsigned int	vao;
+		unsigned int	elements;
 	};
 }

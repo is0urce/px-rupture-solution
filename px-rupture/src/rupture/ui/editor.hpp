@@ -30,8 +30,7 @@
 
 namespace px::ui {
 
-	inline bool vector_getter(void * data, int n, const char** result)
-	{
+	inline bool vector_getter(void * data, int n, const char** result) {
 		auto & vector = *static_cast<std::vector<std::string>*>(data);
 		if (n >= 0 && n < static_cast<int>(vector.size())) {
 			*result = vector[n].c_str();
@@ -40,7 +39,8 @@ namespace px::ui {
 		return false;
 	}
 
-	class editor : public panel
+	class editor final
+		: public panel
 	{
 	public:
 		void assign_environment(environment * env) noexcept
@@ -65,28 +65,6 @@ namespace px::ui {
 	protected:
 		virtual void combine_panel() override
 		{
-			static bool metrics = false;
-			static bool dbg = false;
-
-			ImGui::SetNextWindowSize({ 150, 100 });
-			ImGui::SetNextWindowPos({ 50, 50 });
-			ImGui::Begin("performance", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-			if (ImGui::Button("dear imgui metrics")) {
-				metrics = !metrics;
-			}
-			if (ImGui::Button("test window")) {
-				dbg = !dbg;
-			}
-			ImGui::End();
-
-			if (dbg) {
-				ImGui::ShowTestWindow();
-			}
-			if (metrics) {
-				ImGui::ShowMetricsWindow(&metrics);
-			}
-
-			// editor
 			if (!game) return;
 
 			transform_component * camera = game->possessed();
@@ -96,7 +74,8 @@ namespace px::ui {
 			const float screen_height = ImGui::GetIO().DisplaySize.y;
 			ImGui::SetNextWindowPos({ screen_width - window_width, 0 }, ImGuiCond_Always);
 			ImGui::SetNextWindowSize({ window_width, screen_height });
-			ImGui::Begin("Editor", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+			ImGui::SetNextWindowCollapsed(true, ImGuiCond_Once);
+			ImGui::Begin("Editor", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
 			// template selection
 
@@ -337,7 +316,7 @@ namespace px::ui {
 
 				ImGui::Separator();
 
-				if (ImGui::Button("Export")) {
+				if (ImGui::Button("export#export_composite")) {
 					auto output = output_stream("data/blueprints/" + current->name() + ".dat");
 					SAVE_OUTPUT_ARCHIVE archive(output);
 					blueprint::save(archive, *current);
@@ -345,7 +324,7 @@ namespace px::ui {
 					refresh_template_items();
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("Discard")) {
+				if (ImGui::Button("discard#discard_composite")) {
 					current = nullptr;
 				}
 			}
