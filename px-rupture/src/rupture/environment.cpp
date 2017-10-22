@@ -71,18 +71,17 @@ namespace px {
 	void environment::action(unsigned int idx)
 	{
 		if (player) {
-			body_component * body = player->linked<body_component>();
-			if (body) {
-				character_component * character = body->linked<character_component>();
-				if (character) {
-					auto skill = character->get(idx);
-					if (skill) {
+			if (auto body = player->linked<body_component>()) {
+				if (auto character = body->linked<character_component>()) {
+					if (auto skill = character->get(idx)) {
+						bool success = false;
 						if (skill->is_targeted()) {
-							skill->use(body, { 0, 0 });
-							pass_turn();
+							success = skill->try_use(body, target_area);
 						}
 						else {
-							skill->use(body, body);
+							success = skill->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
+						}
+						if (success) {
 							pass_turn();
 						}
 					}
