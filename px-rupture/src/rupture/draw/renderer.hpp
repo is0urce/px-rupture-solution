@@ -45,6 +45,7 @@ namespace px {
 	public:
 		void run(double delta_time)
 		{
+			if (screen_width == 0 || screen_height == 0) return;
 			prepare_resources(delta_time);
 
 			// sprites drawed to offscreen A
@@ -81,7 +82,7 @@ namespace px {
 
 			gl_assert();
 		}
-		void resize(int width, int height)
+		void resize(unsigned int width, unsigned int height)
 		{
 			assign_size(width, height);
 			reset_pipeline();
@@ -119,11 +120,11 @@ namespace px {
 			scale_level = up ? std::min<unsigned int>(5, scale_level + 1) : std::max<unsigned int>(1, scale_level - 1);
 			reset_scale();
 		}
-		float get_scale()
+		float get_scale() const noexcept
 		{
 			return scale;
 		}
-		void set_scale(float pan)
+		void set_scale(float pan) noexcept
 		{
 			scale = pan;
 		}
@@ -131,6 +132,14 @@ namespace px {
 		{
 			scale_level = level;
 			scale = level * ppu * 2.0f / screen_width;
+		}
+		unsigned int width() const noexcept
+		{
+			return screen_width;
+		}
+		unsigned int height() const noexcept
+		{
+			return screen_height;
 		}
 
 	public:

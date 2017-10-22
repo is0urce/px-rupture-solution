@@ -25,7 +25,7 @@ namespace px {
 		void hover(int x, int y);
 		void scroll(double horisontal, double vertical);
 		void press(key action_index);
-		void resize(int w, int h);
+		void resize(unsigned int screen_width, unsigned int screen_height);
 
 	public:
 		virtual ~shell();
@@ -44,5 +44,7 @@ namespace px {
 
 		render_system		renderer;
 		ui_system			ui;
+		unsigned int		width;
+		unsigned int		height;
 	};
 }

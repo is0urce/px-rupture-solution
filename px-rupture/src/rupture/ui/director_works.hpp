@@ -109,8 +109,7 @@ namespace px::ui {
 
 			// Setup viewport, orthographic projection matrix
 			glViewport(0, 0, static_cast<GLsizei>(framebuffer_width), static_cast<GLsizei>(framebuffer_height));
-			const float ortho_projection[4][4] =
-			{
+			const float ortho_projection[4][4] = {
 				{ 2.0f / io.DisplaySize.x, 0.0f,                   0.0f, 0.0f },
 				{ 0.0f,                  2.0f / -io.DisplaySize.y, 0.0f, 0.0f },
 				{ 0.0f,                  0.0f,                  -1.0f, 0.0f },

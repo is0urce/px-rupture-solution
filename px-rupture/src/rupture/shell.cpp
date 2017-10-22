@@ -5,6 +5,8 @@
 #include "app/document.hpp"
 #include "app/settings.hpp"
 
+#include <px/common/vector.hpp>
+
 #include <lodepng.h>
 
 #include <string>
@@ -14,9 +16,11 @@ namespace px {
 	shell::~shell()
 	{
 	}
-	shell::shell(unsigned int start_widht, unsigned int start_height)
-		: renderer(start_widht, start_height)
-		, ui(start_widht, start_height, this)
+	shell::shell(unsigned int start_width, unsigned int start_height)
+		: renderer(start_width, start_height)
+		, ui(start_width, start_height, this)
+		, width(start_width)
+		, height(start_height)
 	{
 		connect_managers();
 		load_data();
@@ -26,8 +30,10 @@ namespace px {
 
 	// methods
 
-	void shell::resize(int width, int height)
+	void shell::resize(unsigned int screen_width, unsigned int screen_height)
 	{
+		width = screen_width;
+		height = screen_height;
 		renderer.resize(width, height);
 		ui.resize(width, height);
 	}
@@ -92,14 +98,23 @@ namespace px {
 	void shell::click(int mouse_button, bool is_down)
 	{
 		if (!is_running() || turn_passed()) return;
-		ui.click(mouse_button, is_down);
+		if (ui.click(mouse_button, is_down)) return;
+		if (mouse_button == 0 && is_down) {
+			advance();
+		}
 	}
 	void shell::hover(int x, int y)
 	{
 		if (!is_running() || turn_passed()) return;
-		if (!ui.hover(x, y)) {
-			focus({ x, y });
-		}
+		if (ui.hover(x, y)) return;
+		
+		vector2 position(x, y);
+		position /= vector2(width, height);			// (0, 1) screen space
+		position += { -0.5, -0.5 };					// to screen center
+		position *= { 2.0, -2.0 * height / width };	// account aspect
+		position /= renderer.get_scale();
+		position += { 0.5, 0.5 };					// tile center offset
+		focus(position.floor());
 	}
 	void shell::scroll(double horisontal, double vertical)
 	{

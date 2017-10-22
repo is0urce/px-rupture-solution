@@ -37,6 +37,13 @@ namespace px::ui {
 			ImGui::SetNextWindowPos({ screen_width - window_width - 22, screen_height - window_height - 22 }, ImGuiCond_Always);
 			ImGui::SetNextWindowSize({ window_width, window_height });
 
+			//ImGui::Begin("##target_inspector"
+			//	, nullptr
+			//	, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
+			//point2 area = game->area();
+			//ImGui::Text("area: %s", (std::to_string(area.x()) + "," + std::to_string(area.y())).c_str());
+			//ImGui::End();
+
 			transform_component * target = game->target();
 			if (target) {
 				auto body = target->linked<body_component>();

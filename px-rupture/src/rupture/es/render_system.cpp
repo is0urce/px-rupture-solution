@@ -21,7 +21,7 @@ namespace px {
 		works->run(delta_time.turn_duration);
 	}
 
-	void render_system::resize(int width, int height)
+	void render_system::resize(unsigned int width, unsigned int height)
 	{
 		render_system::works->resize(width, height);
 	}
@@ -45,5 +45,18 @@ namespace px {
 	void render_system::zoom(bool is_up)
 	{
 		works->zoom(is_up);
+	}
+	float render_system::get_scale() const noexcept
+	{
+		return works->get_scale();
+	}
+
+	unsigned int render_system::width() const noexcept
+	{
+		return works->width();
+	}
+	unsigned int render_system::height() const noexcept
+	{
+		return works->height();
 	}
 }

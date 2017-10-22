@@ -90,6 +90,10 @@ namespace px {
 			}
 		}
 	}
+	void environment::advance()
+	{
+		pass_turn();
+	}
 	void environment::pass_turn()
 	{
 		pass_turn(player ? player->position() : last_step);
@@ -172,6 +176,10 @@ namespace px {
 	transform_component	* environment::target() noexcept
 	{
 		return target_unit;
+	}
+	point2 environment::area() const noexcept
+	{
+		return target_area;
 	}
 	void environment::focus(point2 offset)
 	{

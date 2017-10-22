@@ -31,9 +31,11 @@ namespace px {
 		void					spawn(uq_ptr<composite_component> unit, transform_component * hint);
 		void					spawn(std::string const& blueprint, point2 const& position);
 		void					step(point2 const& movement);
+		void					advance();
 		void					start();
 		transform_component	*	possessed() noexcept;
 		transform_component *	target() noexcept;
+		point2					area() const noexcept;
 		void					focus(point2 offset);
 		void					action(unsigned int action_idx);
 
