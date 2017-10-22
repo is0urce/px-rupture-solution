@@ -35,5 +35,26 @@ namespace px {
 			link<T> const* l = static_cast<C const*>(this);
 			return l->get_link();
 		}
+
+		// quick link variadic template
+		// qlink<last, ..., first>()
+		template <typename T, typename ... Args>
+		T * qlink() const noexcept
+		{
+			return hlink<T, Args..., link_dispatcher>();
+		}
+
+	private:
+		template <typename T, typename ... Args>
+		T * hlink() const noexcept
+		{
+			auto * p = hlink<Args...>();
+			return p ? p->linked<T>() : nullptr;
+		}
+		template <>
+		link_dispatcher * hlink<link_dispatcher>() const noexcept
+		{
+			return const_cast<link_dispatcher *>(this);
+		}
 	};
 }

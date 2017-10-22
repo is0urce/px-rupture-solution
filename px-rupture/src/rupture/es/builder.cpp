@@ -179,11 +179,20 @@ namespace px {
 
 	void builder::link_components()
 	{
-		if (transform && sprite) sprite->connect(transform);
-		if (transform && light) light->connect(transform);
-		if (transform && body) transform->connect(body);
+		if (transform) {
+			transform->connect(body);
+		}
+		if (sprite) {
+			sprite->connect(transform);
+		}
+		if (light) {
+			light->connect(transform);
+		}
 
 		if (body) {
+			body->connect(transform);
+			body->connect(character);
+
 			if (deposite) body->assign_useable(deposite);
 			if (door) body->assign_useable(door);
 			if (storage) body->assign_useable(storage);

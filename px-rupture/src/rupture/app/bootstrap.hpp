@@ -1,6 +1,12 @@
 #pragma once
 
+#ifdef NDEBUG
 #define PX_RUN_TESTS 0
+#else
+#define PX_RUN_TESTS 1
+#endif // NDEBUG
+
+
 
 #if PX_RUN_TESTS
 

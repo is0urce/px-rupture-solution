@@ -26,12 +26,14 @@ namespace px {
 		unsigned int			current_turn() const noexcept;
 		bool					is_running() const noexcept;
 		void					pass_turn();
+		void					pass_turn(point2 const& step);
 		bool					turn_passed() const noexcept; // true if it's the world processing stage
 		void					spawn(uq_ptr<composite_component> unit, transform_component * hint);
 		void					spawn(std::string const& blueprint, point2 const& position);
 		void					step(point2 const& movement);
 		void					start();
 		transform_component	*	possessed() noexcept;
+		void					action(unsigned int action_idx);
 
 	public:
 		virtual ~environment();

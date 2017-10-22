@@ -34,5 +34,8 @@ void test_link()
 
 		test::require(a.linked<component_b>() == &b);
 		test::require(a.linked<component_b>()->linked<component_a>() == &a);
+
+		test::require(a.qlink<component_a, component_b>() == &a);
+		test::require(a.qlink<component_b>() == &b);
 	}
 }

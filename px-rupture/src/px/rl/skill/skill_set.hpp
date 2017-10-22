@@ -26,7 +26,7 @@ namespace px::rl
 		{
 			m_book = book;
 		}
-		void learn_skill(std::string const& tag)
+		void learn(std::string const& tag)
 		{
 			if (m_book) {
 				auto const& it = m_book->find(tag);
@@ -38,24 +38,23 @@ namespace px::rl
 				}
 			}
 		}
-		void replace_skill(std::string const&, size_t slot)
+		void replace(std::string const& tag, size_t slot)
 		{
 			if (m_book) {
 				auto const& it = m_book->find(tag);
 				if (it != m_book->end()) {
 					auto const& record = it->second;
-					m_skills[slot].state() = std::get<0>(record);
 					m_skills[slot].assign_impact(std::get<1>(record));
 				}
 			}
 		}
-		void invalidate_skills()
+		void invalidate()
 		{
 			for (size_t i = 0, size = m_skills.size(); i != size; ++i) {
 				replace_skill(m_skills[i].state().tag(), i);
 			}
 		}
-		void clear_skills()
+		void clear()
 		{
 			m_skills.clear();
 		}
@@ -73,18 +72,18 @@ namespace px::rl
 		{
 			return m_skills.at(Slot);
 		}
-		skill_type * get_skill(size_t index)
+		skill_type * get(size_t index)
 		{
 			return index < m_skills.size() ? &m_skills[index] : nullptr;
 		}
-		skill_type const* get_skill(size_t index) const
+		skill_type const* get(size_t index) const
 		{
 			return index < m_skills.size() ? &m_skills[index] : nullptr;
 		}
 		void reduce_cooldown(unsigned int dt)
 		{
 			for (auto & skill : m_skills) {
-				skill.state().cooldown_by(dt);
+				skill.state().reduce_cooldown(dt);
 			}
 		}
 
@@ -92,7 +91,7 @@ namespace px::rl
 		void serialize(Archive & archive)
 		{
 			archive(m_skills);
-			invalidate_skills();
+			invalidate();
 		}
 
 	public:

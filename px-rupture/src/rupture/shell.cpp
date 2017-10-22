@@ -115,6 +115,13 @@ namespace px {
 		case key::move_west: step({ -1, 0 }); break;
 		case key::move_north: step({ 0, 1 }); break;
 		case key::move_south: step({ 0, -1 }); break;
+
+		case key::action0: action(0); break;
+		case key::action1: action(1); break;
+		case key::action2: action(2); break;
+		case key::action3: action(3); break;
+		case key::action4: action(4); break;
+		case key::action5: action(5); break;
 		}
 	}
 

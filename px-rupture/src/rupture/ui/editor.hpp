@@ -43,21 +43,11 @@ namespace px::ui {
 		: public panel
 	{
 	public:
-		void assign_environment(environment * env) noexcept
-		{
-			game = env;
-		}
-
-	public:
 		virtual ~editor()
 		{
 		}
-		//editor() noexcept
-		//	: editor(nullptr)
-		//{
-		//}
-		editor(environment * e) noexcept
-			: game(e)
+		editor(environment * env)
+			: game(env)
 		{
 			refresh_template_items();
 		}
@@ -316,15 +306,12 @@ namespace px::ui {
 
 				ImGui::Separator();
 
-				if (ImGui::Button("export#export_composite")) {
-					auto output = output_stream("data/blueprints/" + current->name() + ".dat");
-					SAVE_OUTPUT_ARCHIVE archive(output);
-					blueprint::save(archive, *current);
-
+				if (ImGui::Button("export##export_composite")) {
+					export_composite();
 					refresh_template_items();
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("discard#discard_composite")) {
+				if (ImGui::Button("discard##discard_composite")) {
 					current = nullptr;
 				}
 			}
@@ -344,17 +331,21 @@ namespace px::ui {
 		void load_blueprint(std::string const& blueprint_name)
 		{
 			if (game) {
-				auto input = input_stream("data/blueprints/" + blueprint_name);
-				SAVE_INPUT_ARCHIVE archive(input);
 				builder factory(game);
-				current = blueprint::load(archive, factory);
+				auto input = input_stream(settings::blueprints_path + blueprint_name);
+				current = blueprint::load(SAVE_INPUT_ARCHIVE(input), factory);
 				update_props();
 			}
 		}
+		void export_composite()
+		{
+			auto output = output_stream(settings::blueprints_path + current->name() + ".dat");
+			blueprint::save(SAVE_OUTPUT_ARCHIVE(output), *current);
+		}
 		void refresh_template_items()
 		{
-			load_items(blueprint_selected, blueprints, "data/blueprints/");
-			load_items(schema_selected, schemata, "data/schemata/");
+			load_items(blueprint_selected, blueprints, settings::blueprints_path);
+			load_items(schema_selected, schemata, settings::schemata_path);
 		}
 		static void load_items(int & selected, std::vector<std::string> & names, std::string const& path)
 		{
