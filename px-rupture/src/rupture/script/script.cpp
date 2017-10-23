@@ -1,3 +1,5 @@
+// name: script.cpp
+
 #include "script.hpp"
 
 #include "script_internal.hpp"
@@ -12,7 +14,6 @@ namespace px {
 	script::script()
 		: works(make_uq<script_internal>())
 	{
-		works->run(R"(print("lua print..."))");
 	}
 
 	// methods

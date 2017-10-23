@@ -1,3 +1,5 @@
+// name: character_system.cpp
+
 #include "character_system.hpp"
 #include "character_works.hpp"
 
@@ -40,7 +42,7 @@ namespace px {
 			state.set_cost(skill_node.value("cost", 0));
 			state.set_cooldown(skill_node.value("cd", 0));
 
-			works->add(tag, state, mashine->impact(settings::schemata_path + script + ".lua"));
+			works->add(tag, state, mashine->impact(settings::scripts_path + script + ".lua"));
 		}
 	}
 

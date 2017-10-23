@@ -85,6 +85,7 @@ namespace px {
 
 			lua.new_usertype<unit>("unit"
 				, "damage", &unit::damage
+				, "is_valid", &unit::is_valid
 				);
 
 			lua.new_usertype<point2>("point"

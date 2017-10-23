@@ -1,4 +1,4 @@
-// name: status.hpp
+// name: skills.hpp
 // type: c++
 
 #pragma once
