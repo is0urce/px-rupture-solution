@@ -83,10 +83,12 @@ namespace px::ui {
 			auto &io = ImGui::GetIO();
 			io.IniFilename = nullptr;
 			io.DeltaTime = 0;
+			//io.FontGlobalScale = 2.0f;
 
 			auto &style = ImGui::GetStyle();
 			style.WindowRounding = 0;
 			style.ScrollbarRounding = 0;
+			style.AntiAliasedLines = false;
 		}
 
 	private:

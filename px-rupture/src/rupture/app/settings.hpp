@@ -15,6 +15,8 @@ namespace px {
 			const static char *const tiles_path;
 			const static char *const schemata_path;
 			const static char *const blueprints_path;
+			const static char *const scripts_path;
+			const static char *const skills_path;
 			const static char *const log_path;
 		};
 
@@ -23,8 +25,10 @@ namespace px {
 		const char *const settings::configuration_path = "data/config.json";
 		const char *const settings::texture_path = "data/textures.json";
 		const char *const settings::tiles_path = "data/tiles.json";
+		const char *const settings::skills_path = "data/skills.json";
 		const char *const settings::log_path = "log.txt";
 		const char *const settings::schemata_path = "data/schemata/";
 		const char *const settings::blueprints_path = "data/blueprints/";
+		const char *const settings::scripts_path = "data/scripts/";
 	}
 }

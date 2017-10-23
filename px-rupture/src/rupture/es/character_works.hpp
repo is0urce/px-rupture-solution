@@ -32,10 +32,10 @@ namespace px {
 		{
 
 		}
-		void add(std::string const& name, skill::state_type const& start, rl::skill_functional<body_component *, body_component *, point2> && impact)
+		void add(std::string const& tag, skill::state_type const& start, rl::skill_functional<body_component *, body_component *, point2> && impact)
 		{
-			auto & fn = lib[name] = std::move(impact);
-			book[name] = { start, &fn };
+			auto & fn = lib[tag] = std::move(impact);
+			book[tag] = { start, &fn };
 		}
 
 	private:

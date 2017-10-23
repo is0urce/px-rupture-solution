@@ -1,6 +1,8 @@
 #include "character_system.hpp"
 #include "character_works.hpp"
 
+#include "rupture/app/document.hpp"
+#include "rupture/app/settings.hpp"
 #include "rupture/script/script.hpp"
 
 #include <px/memory/memory.hpp>
@@ -21,9 +23,24 @@ namespace px {
 	}
 	void character_system::load(script * mashine)
 	{
-		std::string name = "hit";
-		if (mashine) {
-			works->add(name, {}, mashine->impact("data/scripts/" + name + ".lua"));
+		auto doc = document::load_document(settings::skills_path);
+		auto skill_list = doc["skills"];
+		for (auto const& skill_node : skill_list) {
+			std::string script = skill_node.at("script");
+			std::string tag = skill_node.at("tag");
+
+			std::string name = skill_node.value("name", tag);
+			std::string alias = skill_node.value("alias", name);
+
+			skill::state_type state;
+			state.set_tag(tag);
+			state.set_name(name);
+			state.set_description(skill_node.value("description", ""));
+			state.set_alias(alias);
+			state.set_cost(skill_node.value("cost", 0));
+			state.set_cooldown(skill_node.value("cd", 0));
+
+			works->add(tag, state, mashine->impact(settings::schemata_path + script + ".lua"));
 		}
 	}
 

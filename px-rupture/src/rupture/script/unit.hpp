@@ -8,12 +8,14 @@ namespace px {
 	class unit
 	{
 	public:
-		void damage(int amount)
-		{
+		void damage(int amount) {
 			if (body) {
 				auto & hp = body->health();
 				if (hp) hp->damage(amount);
 			}
+		}
+		bool is_valid() const noexcept {
+			return body != nullptr;
 		}
 
 	public:
@@ -29,8 +31,7 @@ namespace px {
 		}
 
 	private:
-		transform_component * location()
-		{
+		transform_component * location() {
 			return transform;
 		}
 

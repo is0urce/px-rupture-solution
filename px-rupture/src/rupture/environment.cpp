@@ -138,8 +138,8 @@ namespace px {
 		light->tint = color(1, 1, 1);
 		light->elevation = 0.5;
 		auto ch = b.add_character();
-		ch->learn("hit");
-		ch->learn("hit");
+		ch->learn("sk_s_melee");
+		ch->learn("sk_s_melee");
 		stage.spawn(b.request(), nullptr);
 
 		b.add_sprite("i_cheese");

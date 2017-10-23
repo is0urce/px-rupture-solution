@@ -10,6 +10,7 @@
 #include "inspector.hpp"
 #include "performance.hpp"
 #include "status.hpp"
+#include "skills.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -58,9 +59,11 @@ namespace px {
 		menu(unsigned int w, unsigned int h, environment * game)
 			: director(w, h)
 		{
-			stack.emplace_back(make_uq<ui::performance>());
+			stack.emplace_back(make_uq<ui::skills>(game));
 			stack.emplace_back(make_uq<ui::status>(game));
 			stack.emplace_back(make_uq<ui::inspector>(game));
+
+			stack.emplace_back(make_uq<ui::performance>());
 			stack.emplace_back(make_uq<ui::editor>(game));
 		}
 

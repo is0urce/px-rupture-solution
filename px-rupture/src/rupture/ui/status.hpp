@@ -34,7 +34,7 @@ namespace px::ui {
 			const float screen_height = ImGui::GetIO().DisplaySize.y;
 			const float window_width = 250.0f;
 			const float window_height = 100.0f;
-			ImGui::SetNextWindowPos({ 22, screen_height - window_height - 22 }, ImGuiCond_Always);
+			ImGui::SetNextWindowPos({ 22, screen_height - window_height - 50 }, ImGuiCond_Always);
 			ImGui::SetNextWindowSize({ window_width, window_height });
 
 			transform_component * target = game->possessed();
