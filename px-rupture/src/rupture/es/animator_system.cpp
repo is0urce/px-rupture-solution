@@ -26,11 +26,14 @@ namespace px {
 	}
 	void animator_system::turn_update_system(delta_type const& /*delta_time*/)
 	{
-		works->finish_animations();
 	}
 
 	void animator_system::load(sprite_system const* sprites_sys)
 	{
 		works->load(sprites_sys);
+	}
+	void animator_system::finish_animations()
+	{
+		works->finish_animations();
 	}
 }

@@ -17,6 +17,7 @@ namespace px {
 	{
 	public:
 		uq_ptr<transform_component> make();
+		void store();
 
 	public:
 		virtual ~transform_system();

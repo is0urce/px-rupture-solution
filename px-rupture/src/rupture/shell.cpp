@@ -86,7 +86,7 @@ namespace px {
 			if (turn_passed()) {
 				time.advance_turn(current_turn());
 				engine.turn_update(time);
-				pass_turn();
+				return_turn();
 			}
 			engine.update(time);
 		}

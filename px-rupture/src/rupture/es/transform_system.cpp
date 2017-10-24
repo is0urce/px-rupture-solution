@@ -19,7 +19,6 @@ namespace px {
 
 	void transform_system::turn_update_system(delta const& /*timers*/)
 	{
-		works->store();
 	}
 
 	// methods
@@ -27,5 +26,10 @@ namespace px {
 	uq_ptr<transform_component> transform_system::make()
 	{
 		return works->make();
+	}
+
+	void transform_system::store()
+	{
+		works->store();
 	}
 }

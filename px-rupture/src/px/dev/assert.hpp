@@ -13,7 +13,7 @@ namespace px {
 	}
 }
 
-#elif // !NDEBUG
+#else
 
 namespace px {
 

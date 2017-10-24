@@ -35,8 +35,7 @@ namespace px {
 		{
 			if (!camera) return;
 
-			ox = camera->position().x() - radius;
-			oy = camera->position().y() - radius;
+			set_offsets();
 
 			color ambient(0, 0, 0, 1);
 			double ambient_inv_distance = 0;
@@ -79,13 +78,7 @@ namespace px {
 				c += ambient;
 			});
 
-			// update export data structure
-			last_data = current_data;
-
-			current_data.ox = ox;
-			current_data.oy = oy;
-			current_data.version = current_data.version + 1;
-			current_data.raw = (last_data.raw == current_texels.data() ? last_texels : current_texels).data(); // alternate
+			move_ligtmaps(); 
 			
 			float * pen = current_data.raw;
 			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & c) {
@@ -118,6 +111,12 @@ namespace px {
 		{
 			std::fill(current_texels.begin(), current_texels.end(), 0.0f);
 			std::fill(last_texels.begin(), last_texels.end(), 0.0f);
+
+			set_offsets();
+			current_data.ox = ox;
+			current_data.oy = oy;
+			last_data.ox = ox;
+			last_data.oy = oy;
 		}
 		lightmap_data const* current() noexcept
 		{
@@ -142,6 +141,23 @@ namespace px {
 		light_works & operator=(light_works const&) = delete;
 
 	private:
+		void set_offsets()
+		{
+			if (camera) {
+				ox = camera->position().x() - radius;
+				oy = camera->position().y() - radius;
+			}
+		}
+		// store current into last
+		void move_ligtmaps()
+		{
+			last_data = current_data; // update export data structure
+
+			current_data.ox = ox;
+			current_data.oy = oy;
+			current_data.version = current_data.version + 1;
+			current_data.raw = (last_data.raw == current_texels.data() ? last_texels : current_texels).data(); // alternate
+		}
 		double distance2(double dx, double dy, double elevation2)
 		{
 			return std::sqrt(dx * dx + dy * dy + elevation2);
@@ -160,6 +176,7 @@ namespace px {
 				pset(x - ox, y - oy, c);
 			}
 		}
+		// add to point color
 		void pset(int x, int y, color c)
 		{
 			if (contains(x, y)) {

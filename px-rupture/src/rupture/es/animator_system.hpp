@@ -19,6 +19,7 @@ namespace px {
 	public:
 		uq_ptr<animator_component> make(std::string const& name);
 		void load(sprite_system const* sprites_sys);
+		void finish_animations();
 
 	public:
 		virtual ~animator_system();

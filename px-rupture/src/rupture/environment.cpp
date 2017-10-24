@@ -52,7 +52,7 @@ namespace px {
 		messages.target(camera);
 
 		if (camera) {
-			last_step = camera->position();
+		//	last_step = camera->position();
 		}
 	}
 	void environment::step(point2 const& movement)
@@ -60,11 +60,13 @@ namespace px {
 		if (player) {
 			body_component * body = player->linked<body_component>();
 			if (body) {
-				last_step = player->position();
-				point2 destination = last_step + movement;
+				point2 current = player->position();
+				point2 destination = current + movement;
 				if (stage.is_traversable(destination, body->movement())) {
+
+					start_turn();
 					player->place(destination);
-					pass_turn(last_step);
+					end_turn();
 				}
 			}
 		}
@@ -76,6 +78,7 @@ namespace px {
 				if (auto character = body->linked<character_component>()) {
 					if (auto skill = character->get(idx)) {
 						bool success = false;
+						start_turn();
 						if (skill->is_targeted()) {
 							success = skill->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
 						}
@@ -83,7 +86,7 @@ namespace px {
 							success = skill->try_use(body, target_area);
 						}
 						if (success) {
-							pass_turn();
+							end_turn();
 						}
 					}
 				}
@@ -92,23 +95,8 @@ namespace px {
 	}
 	void environment::advance()
 	{
-		pass_turn();
-	}
-	void environment::pass_turn()
-	{
-		pass_turn(player ? player->position() : last_step);
-	}
-	void environment::pass_turn(point2 const& last)
-	{
-		++turn_number;
-		turn_pass = !turn_pass;
-
-		if (player && !turn_pass) {
-			player->store(last_step);
-		}
-		lock_target();
-
-		last_step = last;
+		start_turn();
+		end_turn();
 	}
 	unsigned int environment::current_turn() const noexcept
 	{
@@ -143,9 +131,9 @@ namespace px {
 		ch->learn("sk_v_melee");
 		ch->learn("sk_o_teleport");
 
-		//auto anim = 
+		auto anim = 
 			b.add_animator("a_door");
-		//anim->play(0);
+		anim->play(0);
 		stage.spawn(b.request(), nullptr);
 
 		b.add_sprite("i_cheese");
@@ -196,5 +184,22 @@ namespace px {
 		target_area = target_hover + (player ? player->position() : point2(0, 0));
 		body_component * body = stage.anybody(target_area);
 		target_unit = body ? body->linked<transform_component>() : nullptr;
+	}
+
+	void environment::start_turn()
+	{
+		transforms.store();
+		animators.finish_animations();
+	}
+	void environment::return_turn()
+	{
+		++turn_number;
+		turn_pass = false;
+
+		lock_target();
+	}
+	void environment::end_turn()
+	{
+		turn_pass = true;
 	}
 }
