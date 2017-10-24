@@ -10,6 +10,7 @@
 #include "rupture/es/builder.hpp"
 #include "rupture/es/composite_component.hpp"
 #include "rupture/es/character_component.hpp"
+#include "rupture/es/container_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 #include "rupture/es/transform_component.hpp"
 #include "rupture/io/schema.hpp"
@@ -96,6 +97,7 @@ namespace px::ui {
 				sprite_component * sprite = current->query<sprite_component>();
 				body_component * body = current->query<body_component>();
 				character_component * character = current->query<character_component>();
+				container_component * container = current->query<container_component>();
 
 				// composite
 
@@ -280,6 +282,26 @@ namespace px::ui {
 				}
 				else if (ImGui::Button("+ character")) {
 					PX_BUILD(add_character());
+				}
+
+				// container block
+
+				ImGui::Separator();
+				if (container) {
+					ImGui::Text("container");
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::Text("adress: %p", container);
+						ImGui::Separator();
+						ImGui::EndTooltip();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("remove##remove_container")) {
+						PX_BUILD(remove_container());
+					}
+				}
+				else if (ImGui::Button("+ container")) {
+					PX_BUILD(add_container());
 				}
 
 				// spawn

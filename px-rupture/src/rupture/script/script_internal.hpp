@@ -2,6 +2,8 @@
 
 #include "unit.hpp"
 
+#include <px/dev/assert.hpp>
+
 #include <sol.hpp>
 
 #include <map>
@@ -28,39 +30,44 @@ namespace px {
 				lua.script_file(path, sandbox);
 
 				bool targeted = sandbox["targeted"].get_or(false);
+				sol::function action = sandbox["action"];
+				sol::function condition = sandbox["condition"];
 
 				// functional
-				auto target_action = [&sandbox](body_component * user, body_component * target) -> void {
+				auto target_action = [action](body_component * user, body_component * target) -> void {
 					try {
-						sandbox["action"](unit(user), unit(target));
+						action(unit(user), unit(target));
 					}
-					catch (sol::error & lua_error) {
-						(void)lua_error;
+					catch (sol::error & error) {
+						px::debug(error.what());
 					}
 				};
-				auto target_condition = [&sandbox](body_component * user, body_component * target) -> bool {
+
+				auto area_action = [action](body_component * user, point2 const& area) -> void {
 					try {
-						return sandbox["condition"](unit(user), unit(target));
+						action(unit(user), area);
 					}
-					catch (sol::error & lua_error) {
-						(void)lua_error;
+					catch (sol::error & error) {
+						px::debug(error.what());
+					}
+				};
+
+
+				auto target_condition = [condition](body_component * user, body_component * target) -> bool {
+					try {
+						return condition(unit(user), unit(target));
+					}
+					catch (sol::error & error) {
+						px::debug(error.what());
 						return false;
 					}
 				};
-				auto area_action = [&sandbox](body_component * user, point2 const& area) -> void {
+				auto area_condition = [condition](body_component * user, point2 const& area) -> bool {
 					try {
-						sandbox["action"](unit(user), area);
+						return condition(unit(user), area);
 					}
-					catch (sol::error & lua_error) {
-						(void)lua_error;
-					}
-				};
-				auto area_condition = [&sandbox](body_component * user, point2 const& area) -> bool {
-					try {
-						return sandbox["condition"](unit(user), area);
-					}
-					catch (sol::error & lua_error) {
-						(void)lua_error;
+					catch (sol::error & error) {
+						px::debug(error.what());
 						return false;
 					}
 				};
@@ -69,13 +76,13 @@ namespace px {
 
 				return { targeted, target_action, target_condition, area_action, area_condition };
 			}
-			catch (sol::error & lua_error) {
-				(void)lua_error;
+			catch (sol::error & error) {
+				px::debug(error.what());
+				return {};
 			}
 			catch (...) {
 				throw std::runtime_error("px::script::load_skill(path), path=" + path);
 			}
-			return {};
 		}
 
 	public:
@@ -86,6 +93,8 @@ namespace px {
 			lua.new_usertype<unit>("unit"
 				, "damage", &unit::damage
 				, "is_valid", &unit::is_valid
+				, "place", &unit::place
+				, "position", &unit::position
 				);
 
 			lua.new_usertype<point2>("point"

@@ -209,6 +209,7 @@
     <ClInclude Include="src\px\common\string.hpp" />
     <ClInclude Include="src\px\common\timer.hpp" />
     <ClInclude Include="src\px\common\vector.hpp" />
+    <ClInclude Include="src\px\dev\assert.hpp" />
     <ClInclude Include="src\px\dev\poly_logger.hpp" />
     <ClInclude Include="src\px\dev\logger.hpp" />
     <ClInclude Include="src\px\dev\test.hpp" />

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "rupture/es/body_component.hpp"
+#include "rupture/es/transform_component.hpp"
 
 namespace px {
 
@@ -19,6 +20,16 @@ namespace px {
 		bool is_valid() const noexcept {
 			return body != nullptr;
 		}
+		void place(point2 target) {
+			auto pawn = get_transform();
+			if (pawn) {
+				pawn->place(target);
+			}
+		}
+		point2 position() {
+			auto pawn = get_transform();
+			return pawn ? pawn->position() : point2(0, 0);
+		}
 
 	public:
 		unit()
@@ -33,7 +44,9 @@ namespace px {
 		}
 
 	private:
-		transform_component * location() {
+		transform_component * get_transform() {
+			if (transform) return transform;
+			if (body) transform = body->linked<transform_component>();
 			return transform;
 		}
 

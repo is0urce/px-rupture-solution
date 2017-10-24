@@ -76,10 +76,10 @@ namespace px {
 					if (auto skill = character->get(idx)) {
 						bool success = false;
 						if (skill->is_targeted()) {
-							success = skill->try_use(body, target_area);
+							success = skill->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
 						}
 						else {
-							success = skill->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
+							success = skill->try_use(body, target_area);
 						}
 						if (success) {
 							pass_turn();
@@ -138,8 +138,9 @@ namespace px {
 		light->tint = color(1, 1, 1);
 		light->elevation = 0.5;
 		auto ch = b.add_character();
-		ch->learn("sk_s_melee");
-		ch->learn("sk_s_melee");
+		ch->learn("sk_v_melee");
+		ch->learn("sk_v_melee");
+		ch->learn("sk_o_teleport");
 		stage.spawn(b.request(), nullptr);
 
 		b.add_sprite("i_cheese");

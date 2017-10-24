@@ -146,35 +146,43 @@ namespace px {
 	void builder::remove_transform()
 	{
 		unit->remove<transform_component>();
+		transform = nullptr;
 	}
 	void builder::remove_sprite()
 	{
 		unit->remove<sprite_component>();
+		sprite = nullptr;
 	}
 
 	void builder::remove_body()
 	{
 		unit->remove<body_component>();
+		body = nullptr;
 	}
 	void builder::remove_character()
 	{
 		unit->remove<character_component>();
+		character = nullptr;
 	}
 	void builder::remove_container()
 	{
-		unit->remove<sprite_component>();
+		unit->remove<container_component>();
+		container = nullptr;
 	}
 	void builder::remove_light()
 	{
 		unit->remove<light_component>();
+		light = nullptr;
 	}
 	void builder::remove_npc()
 	{
 		unit->remove<npc_component>();
+		npc = nullptr;
 	}
 	void builder::remove_player()
 	{
 		unit->remove<player_component>();
+		player = nullptr;
 	}
 
 	void builder::link_components()
