@@ -29,6 +29,10 @@ namespace px {
 	{
 		return works->make(name);
 	}
+	sprite const* sprite_system::frame(std::string const& name) const
+	{
+		return works->frame(name);
+	}
 
 	std::vector<std::vector<sprite_vertex>> const* sprite_system::data() const noexcept
 	{

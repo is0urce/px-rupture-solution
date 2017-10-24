@@ -11,8 +11,7 @@
 
 namespace px {
 
-	struct camera_uniform
-	{
+	struct camera_uniform {
 		glm::vec2	scale;
 		glm::vec2	translate;
 		glm::vec2	screen;
@@ -22,5 +21,4 @@ namespace px {
 		glm::vec2	interpolate;
 		glm::vec2	timer;
 	};
-
 }

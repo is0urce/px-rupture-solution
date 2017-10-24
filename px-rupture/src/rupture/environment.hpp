@@ -7,7 +7,6 @@
 #include "es/notification_system.hpp"
 #include "rl/scene.hpp"
 #include "io/repository.hpp"
-#include "script/script.hpp"
 
 #include <px/common/point.hpp>
 #include <px/memory/uq_ptr.hpp>
@@ -50,7 +49,6 @@ namespace px {
 	protected:
 		notification_system		messages;
 		scene					stage;
-		script					mashine;
 
 	private:
 		transform_component *	player;

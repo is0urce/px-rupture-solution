@@ -49,16 +49,18 @@ namespace px {
 	{
 		auto part = factory->animators.make(name);
 		animator = part.get();
-		unit->add(std::move(part));
+		if (animator) {
+			unit->add(std::move(part));
+		}
 
 		return animator;
 	}
 	transform_component * builder::add_transform(point2 const& location)
 	{
 		auto part = factory->transforms.make();
+		transform = part.get();
 		part->place(location);
 		part->store();
-		transform = part.get();
 		unit->add(std::move(part));
 		return transform;
 	}
@@ -187,6 +189,9 @@ namespace px {
 
 	void builder::link_components()
 	{
+		if (animator) {
+			animator->connect(sprite);
+		}
 		if (transform) {
 			transform->connect(body);
 		}

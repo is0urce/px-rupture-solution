@@ -10,6 +10,8 @@
 #include "es/sprite_system.hpp"
 #include "es/transform_system.hpp"	// store position
 
+#include "script/script.hpp"
+
 namespace px {
 
 	class core
@@ -19,6 +21,8 @@ namespace px {
 		core();
 
 	public:
+		script				mashine;
+
 		animator_system		animators;
 		body_system			bodies;
 		character_system	characters;

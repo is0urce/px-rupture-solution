@@ -26,16 +26,17 @@ namespace px {
 		{
 			uq_ptr<sprite_component> result;
 
-			auto iterator = lib.find(name);
-			if (iterator != lib.end()) {
-
+			if (sprite const* img = frame(name)) {
 				result = pool.make_uq();
-				static_cast<sprite&>(*result) = iterator->second;
-
-				result->name = iterator->first.c_str();
+				static_cast<sprite&>(*result) = *img;
 			}
 
 			return result;
+		}
+		sprite const* frame(std::string const& name) const
+		{
+			auto iterator = lib.find(name);
+			return iterator == lib.end() ? nullptr : &iterator->second;
 		}
 		void target(transform_component const* follow) noexcept
 		{
@@ -95,6 +96,7 @@ namespace px {
 			img.x_multiple = 1;
 			img.y_multiple = 1;
 			img.texture_index = texture_index;
+			img.name = lib.find(name)->first.c_str();
 		}
 		std::vector<std::vector<sprite_vertex>> const* data() const noexcept
 		{

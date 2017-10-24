@@ -16,6 +16,7 @@ namespace px {
 	class sprite_works;
 	class transform_component;
 	struct sprite_vertex;
+	struct sprite;
 
 	class sprite_system final
 		: public system<delta>
@@ -25,6 +26,7 @@ namespace px {
 		void											target(transform_component const*) noexcept;
 		uq_ptr<sprite_component>						make(std::string const& name);
 		std::vector<std::vector<sprite_vertex>> const*	data() const noexcept;
+		sprite const*									frame(std::string const& name) const;
 
 		template <typename Document>
 		void											load_atlas(Document && doc, unsigned int texture_id, bool reverse_y);

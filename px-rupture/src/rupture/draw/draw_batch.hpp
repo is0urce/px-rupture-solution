@@ -10,13 +10,7 @@
 
 namespace px {
 
-	struct draw_batch
-	{
-		gl_buffer	vertices;
-		gl_vao		geometry;
-		gl_texture	texture;
-		pass		pass;
-
+	struct draw_batch {
 	public:
 		template <typename T>
 		void draw_arrays(GLenum mode, GLenum usage, size_t size, T const* data)
@@ -35,5 +29,10 @@ namespace px {
 				pass.draw_arrays(mode, static_cast<GLsizei>(container.size()));
 			}
 		}
+
+		gl_buffer	vertices;
+		gl_vao		geometry;
+		gl_texture	texture;
+		pass		pass;
 	};
 }

@@ -7,6 +7,7 @@
 
 #include "draw/message.hpp"
 
+#include "es/animator_component.hpp"
 #include "es/body_component.hpp"
 #include "es/character_component.hpp"
 #include "es/composite_component.hpp"
@@ -141,6 +142,10 @@ namespace px {
 		ch->learn("sk_v_melee");
 		ch->learn("sk_v_melee");
 		ch->learn("sk_o_teleport");
+
+		//auto anim = 
+			b.add_animator("a_door");
+		//anim->play(0);
 		stage.spawn(b.request(), nullptr);
 
 		b.add_sprite("i_cheese");

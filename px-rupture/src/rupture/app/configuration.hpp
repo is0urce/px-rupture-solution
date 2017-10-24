@@ -9,8 +9,7 @@
 
 namespace px {
 
-	class configuration final
-	{
+	class configuration {
 	public:
 		template <typename Document>
 		void load(Document && document)

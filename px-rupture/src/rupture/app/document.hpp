@@ -13,8 +13,7 @@
 
 namespace px {
 
-	class document final
-	{
+	class document {
 	public:
 		static auto load_document(std::string const& document_name)
 		{

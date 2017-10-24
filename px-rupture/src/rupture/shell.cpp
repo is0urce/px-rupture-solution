@@ -61,6 +61,7 @@ namespace px {
 		}
 
 		characters.load(&mashine);
+		animators.load(&sprites);
 	}
 
 	void shell::register_systems()

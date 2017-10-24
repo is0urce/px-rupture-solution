@@ -11,12 +11,14 @@ namespace px {
 
 	class animator_component;
 	class animator_works;
+	class sprite_system;
 
 	class animator_system
 		: public system<delta>
 	{
 	public:
 		uq_ptr<animator_component> make(std::string const& name);
+		void load(sprite_system const* sprites_sys);
 
 	public:
 		virtual ~animator_system();

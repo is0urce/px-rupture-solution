@@ -477,6 +477,12 @@
     <ClInclude Include="src\px\dev\assert.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\draw\keyframe.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\draw\animation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -548,6 +554,9 @@
     <ClCompile Include="src\rupture\es\character_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\rupture\es\animator_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />
@@ -567,5 +576,6 @@
     <None Include="data\schemata\dummy.json" />
     <None Include="data\schemata\mobile.json" />
     <None Include="data\skills.json" />
+    <None Include="data\animations.json" />
   </ItemGroup>
 </Project>

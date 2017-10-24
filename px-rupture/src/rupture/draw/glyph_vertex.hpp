@@ -11,8 +11,7 @@
 
 namespace px {
 
-	struct glyph_vertex
-	{
+	struct glyph_vertex	{
 		glm::vec2 position;
 		glm::vec2 texture;
 		glm::vec4 tint;
