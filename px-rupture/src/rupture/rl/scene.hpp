@@ -9,6 +9,7 @@
 #include <px/rl/traverse.hpp>
 
 #include <cstdint> // uint32_t block_id
+#include <functional>
 
 namespace px {
 
@@ -36,6 +37,8 @@ namespace px {
 
 		transform_component * any(point2 const& location) const;
 		body_component * anybody(point2 const& location) const;
+
+		void discard(std::function<bool(composite_component &)> predicate);
 
 	public:
 		~scene();

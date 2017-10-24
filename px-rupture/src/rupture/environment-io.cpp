@@ -10,7 +10,7 @@
 
 namespace px {
 
-	void environment::spawn(std::string const& blueprint_name, point2 const& position)
+	uq_ptr<composite_component>	& environment::spawn(std::string const& blueprint_name, point2 const& position)
 	{
 		auto input = input_stream("data/blueprints/" + blueprint_name + ".dat");
 		SAVE_INPUT_ARCHIVE archive(input);
@@ -20,6 +20,6 @@ namespace px {
 		auto transform = unit->query<transform_component>();
 		transform->place(position);
 		transform->store();
-		spawn(std::move(unit), transform);
+		return spawn(std::move(unit), transform);
 	}
 }

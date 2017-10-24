@@ -10,6 +10,7 @@ namespace px {
 
 	transform_component::~transform_component()
 	{
+		retract();
 	}
 	transform_component::transform_component() noexcept
 		: space(nullptr)

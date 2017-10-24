@@ -11,6 +11,7 @@ namespace px {
 	{
 		serialized = 0,	// should be partialy serialized
 		permanent = 1,	// should not be serialized if possible
-		temporary = 2	// should be discarded on serializaton
+		temporary = 2,	// should be discarded on serializaton
+		destroying = 3,	// in destruction
 	};
 }

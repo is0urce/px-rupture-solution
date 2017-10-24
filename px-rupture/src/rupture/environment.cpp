@@ -50,20 +50,13 @@ namespace px {
 		sprites.target(camera);
 		lights.target(camera);
 		messages.target(camera);
-
-		if (camera) {
-		//	last_step = camera->position();
-		}
 	}
 	void environment::step(point2 const& movement)
 	{
 		if (player) {
-			body_component * body = player->linked<body_component>();
-			if (body) {
-				point2 current = player->position();
-				point2 destination = current + movement;
+			if (body_component * body = player->linked<body_component>()) {
+				point2 destination = player->position() + movement;
 				if (stage.is_traversable(destination, body->movement())) {
-
 					start_turn();
 					player->place(destination);
 					end_turn();
@@ -71,12 +64,12 @@ namespace px {
 			}
 		}
 	}
-	void environment::action(unsigned int idx)
+	void environment::action(unsigned int action_idx)
 	{
 		if (player) {
 			if (auto body = player->linked<body_component>()) {
 				if (auto character = body->linked<character_component>()) {
-					if (auto skill = character->get(idx)) {
+					if (auto skill = character->get(action_idx)) {
 						bool success = false;
 						start_turn();
 						if (skill->is_targeted()) {
@@ -130,17 +123,17 @@ namespace px {
 		ch->learn("sk_v_melee");
 		ch->learn("sk_v_melee");
 		ch->learn("sk_o_teleport");
-
-		auto anim = 
-			b.add_animator("a_door");
+		auto anim = b.add_animator("a_door");
 		anim->play(0);
-		stage.spawn(b.request(), nullptr);
+		auto pc = b.request();
+		pc->set_persistency(persistency::permanent);
+		stage.spawn(std::move(pc), nullptr);
 
 		b.add_sprite("i_cheese");
 		b.add_transform({ 21, 24 });
-		light = b.add_light();
-		light->tint = color(1.0, 1.0, 1.0);
-		light->elevation = 0.5;
+		body = b.add_body();
+		body->blocking().make_transparent();
+		body->health().emplace(10);
 		stage.spawn(b.request(), nullptr);
 
 		// set terrain
@@ -157,9 +150,9 @@ namespace px {
 		turn_pass = true;
 	}
 
-	void environment::spawn(uq_ptr<composite_component> unit, transform_component * hint)
+	uq_ptr<composite_component>	& environment::spawn(uq_ptr<composite_component> unit, transform_component * hint)
 	{
-		stage.spawn(std::move(unit), hint);
+		return stage.spawn(std::move(unit), hint);
 	}
 
 	transform_component	* environment::possessed() noexcept
@@ -193,6 +186,23 @@ namespace px {
 	}
 	void environment::return_turn()
 	{
+		// rip
+		stage.discard([&](composite_component & composite) -> bool {
+			if (composite.lifetime() == persistency::permanent) return false;
+
+			auto body = composite.query<body_component>();
+			if (body && body->is_dead()) {
+				composite.set_persistency(persistency::destroying);
+
+				// spawn loot bag
+				if (auto transform = composite.query<transform_component>();) {
+					//spawn("dummy", transform->position());
+				}
+			}
+
+			return composite.lifetime() == persistency::destroying;
+		});
+
 		++turn_number;
 		turn_pass = false;
 

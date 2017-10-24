@@ -88,6 +88,21 @@ namespace px {
 		{
 			terrain.pset(block_id, location);
 		}
+		template <typename Operator>
+		void discard(Operator && predicate) {
+			size_t i = 0;
+			size_t size = units.size();
+			while (i != size) {
+				if (predicate(*units[i])) {
+					units[i] = std::move(units.back());
+					units.pop_back();
+					--size;
+				}
+				else {
+					++i;
+				}
+			}
+		}
 
 	public:
 		scene_internal()

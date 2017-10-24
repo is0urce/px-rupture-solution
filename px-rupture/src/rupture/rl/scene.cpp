@@ -57,4 +57,8 @@ namespace px {
 	{
 		return works->anybody(location);
 	}
+	void scene::discard(std::function<bool(composite_component &)> predicate)
+	{
+		works->discard(predicate);
+	}
 }
