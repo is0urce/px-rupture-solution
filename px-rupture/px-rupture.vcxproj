@@ -224,6 +224,7 @@
     <ClInclude Include="src\px\rl\bar.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />
+    <ClInclude Include="src\rupture\rl\status.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
     <ClInclude Include="src\px\rl\skill\skill_functional.hpp" />
     <ClInclude Include="src\px\rl\skill\skill_impact.hpp" />

@@ -195,7 +195,7 @@ namespace px {
 				composite.set_persistency(persistency::destroying);
 
 				// spawn loot bag
-				if (auto transform = composite.query<transform_component>();) {
+				if (auto transform = composite.query<transform_component>()) {
 					//spawn("dummy", transform->position());
 				}
 			}

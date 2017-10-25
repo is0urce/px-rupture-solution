@@ -113,10 +113,7 @@ namespace px {
 			std::fill(last_texels.begin(), last_texels.end(), 0.0f);
 
 			set_offsets();
-			current_data.ox = ox;
-			current_data.oy = oy;
-			last_data.ox = ox;
-			last_data.oy = oy;
+			move_ligtmaps();
 		}
 		lightmap_data const* current() noexcept
 		{
