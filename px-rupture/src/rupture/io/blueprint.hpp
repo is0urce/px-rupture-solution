@@ -34,14 +34,14 @@ namespace px {
 					archive(composition_element::sprite);
 					archive(std::string(sprite->name));
 				}
-				//else if (auto body = dynamic_cast<body_component const*>(raw)) {
-				//	archive(composition_element::body);
-				//	archive(*body);
-				//}
-				//else if (auto container = dynamic_cast<container_component const*>(raw)) {
-				//	archive(composition_element::container);
-				//	archive(*container);
-				//}
+				else if (auto body = dynamic_cast<body_component const*>(raw)) {
+					archive(composition_element::body);
+					archive(*body);
+				}
+				else if (auto container = dynamic_cast<container_component const*>(raw)) {
+					archive(composition_element::container);
+					archive(*container);
+				}
 				//else if (auto character = dynamic_cast<character_component const*>(raw)) {
 				//	archive(composition_element::character);
 				//	archive(*character);
@@ -91,32 +91,32 @@ namespace px {
 					factory.add_sprite(tag);
 					break;
 				}
-				//case composition_element::body: {
-				//	archive(*builder.add_body());
-				//	break;
-				//}
-				//case composition_element::container: {
-				//	archive(*builder.add_container());
-				//	break;
-				//}
+				case composition_element::body: {
+					archive(*factory.add_body());
+					break;
+				}
+				case composition_element::container: {
+					archive(*factory.add_container());
+					break;
+				}
 				//case composition_element::character: {
-				//	archive(*builder.add_character());
+				//	archive(*factory.add_character());
 				//	break;
 				//}
 				//case composition_element::storage: {
-				//	builder.add_storage();
+				//	factory.add_storage();
 				//	break;
 				//}
 				//case composition_element::deposit: {
-				//	builder.add_deposit();
+				//	factory.add_deposit();
 				//	break;
 				//}
 				//case composition_element::player: {
-				//	builder.add_player();
+				//	factory.add_player();
 				//	break;
 				//}
 				//case composition_element::npc: {
-				//	archive(*builder.add_npc());
+				//	archive(*factory.add_npc());
 				//	break;
 				//}
 				case composition_element::undefined: {

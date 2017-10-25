@@ -49,6 +49,14 @@ namespace px {
 		movement_type const&						movement() const noexcept;
 		movement_type &								movement() noexcept;
 
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			archive(mass, traverse_opts);
+			archive(static_cast<rl::entity &>(*this));
+			archive(static_cast<rl::constitution<int32_t> &>(*this));
+			archive(static_cast<rl::standing<int32_t> &>(*this));
+		}
+
 	public:
 		virtual ~body_component();
 		body_component() noexcept;

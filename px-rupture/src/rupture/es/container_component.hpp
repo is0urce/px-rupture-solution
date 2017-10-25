@@ -13,6 +13,12 @@ namespace px {
 		, public rl::inventory
 	{
 	public:
+		template <typename Archive>
+		void serialize(Archive & /*archive*/) {
+			//archive(static_cast<rl::inventory &>(*this));
+		}
+
+	public:
 		virtual ~container_component() = default;
 		container_component() = default;
 		container_component(container_component const&) = delete;

@@ -212,6 +212,11 @@ namespace px {
 			if (storage) body->assign_useable(storage);
 			if (workshop) body->assign_useable(workshop);
 		}
+
+		if (deposite) {
+			deposite->connect(container);
+			deposite->connect(unit.get());
+		}
 	}
 
 	uq_ptr<composite_component> builder::request()

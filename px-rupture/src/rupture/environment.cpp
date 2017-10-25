@@ -208,9 +208,15 @@ namespace px {
 			if (body && body->is_dead()) {
 				composite.set_persistency(persistency::destroying);
 
+				auto loot = body->linked<container_component>();
+				auto pawn = body->linked<transform_component>();
+
 				// spawn loot bag
-				if (auto transform = composite.query<transform_component>()) {
-					//spawn("dummy", transform->position());
+				if (pawn && loot) {
+					auto & bag = spawn("bag", pawn->position());
+					if (auto drop = bag->query<container_component>()) {
+						drop->take(*loot);
+					}
 				}
 			}
 

@@ -56,8 +56,14 @@ namespace px::rl {
 			bool has_hp = hp.has_value();
 			bool has_mp = mp.has_value();
 			archive(has_hp, has_mp);
-			if (has_hp) archive(*hp);
-			if (has_mp) archive(*mp);
+			if (has_hp) {
+				if (!hp.has_value()) hp.emplace();
+				archive(*hp);
+			}
+			if (has_mp) {
+				if (!mp.has_value()) mp.emplace();
+				archive(*mp);
+			}
 		}
 
 	public:

@@ -94,6 +94,10 @@ namespace px::ui {
 			if (current) {
 
 				transform_component * transform = current->query<transform_component>();
+				sprite_component * sprite = current->query<sprite_component>();
+				body_component * body = current->query<body_component>();
+				character_component * character = current->query<character_component>();
+				container_component * container = current->query<container_component>();
 
 				// composite
 
@@ -132,8 +136,8 @@ namespace px::ui {
 
 				// transform
 
-				ImGui::Separator();
 				if (transform) {
+					ImGui::Separator();
 					ImGui::Text("transform");
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
@@ -157,14 +161,35 @@ namespace px::ui {
 						}
 					}
 				}
-				else if (ImGui::Button("+ transform")) {
-					PX_BUILD(add_transform({ 0, 0 }));
-				}
 
-				combine_sprite();
-				combine_body();
-				combine_character();
-				combine_container();
+				combine_sprite(sprite);
+				combine_body(body);
+				combine_character(character);
+				combine_container(container);
+
+				ImGui::Separator();
+				if (ImGui::Button("add...")) ImGui::OpenPopup("add##add_component");
+				if (ImGui::BeginPopup("add##add_component")) {
+					if (!transform && ImGui::MenuItem("transform##add_transform_component")) {
+						PX_BUILD(add_transform({ 0, 0 }));
+					}
+					if (!sprite && ImGui::MenuItem("sprite##add_sprite_component")) {
+						PX_BUILD(add_sprite("x_dummy"));
+					}
+					if (!body && ImGui::MenuItem("body##add_body")) {
+						PX_BUILD(add_body());
+					}
+					if (!character && ImGui::MenuItem("character##add_character")) {
+						PX_BUILD(add_character());
+					}
+					if (!container && ImGui::MenuItem("container##add_container")) {
+						PX_BUILD(add_container());
+					}
+					ImGui::MenuItem("door##add_door_component");
+					ImGui::MenuItem("deposit##add_deposit_component");
+					ImGui::MenuItem("storage##add_storage_component");
+					ImGui::EndPopup();
+				}
 
 				// spawn
 
@@ -202,11 +227,10 @@ namespace px::ui {
 		}
 
 	private:
-		void combine_sprite()
+		void combine_sprite(sprite_component * sprite)
 		{
-			sprite_component * sprite = current->query<sprite_component>();
-			ImGui::Separator();
 			if (sprite) {
+				ImGui::Separator();
 				ImGui::Text("sprite: %s", sprite->name);
 				if (ImGui::IsItemHovered())
 				{
@@ -230,15 +254,11 @@ namespace px::ui {
 					}
 				}
 			}
-			else if (ImGui::Button("+ sprite")) {
-				PX_BUILD(add_sprite("x_dummy"));
-			}
 		}
-		void combine_body()
+		void combine_body(body_component * body)
 		{
-			body_component * body = current->query<body_component>();
-			ImGui::Separator();
 			if (body) {
+				ImGui::Separator();
 				auto & mass = body->blocking();
 				auto & movement = body->movement();
 				auto & health = body->health();
@@ -324,15 +344,11 @@ namespace px::ui {
 					}
 				}
 			}
-			else if (ImGui::Button("+ body")) {
-				PX_BUILD(add_body());
-			}
 		}
-		void combine_character()
+		void combine_character(character_component * character)
 		{
-			character_component * character = current->query<character_component>();
-			ImGui::Separator();
 			if (character) {
+				ImGui::Separator();
 				ImGui::Text("character");
 				if (ImGui::IsItemHovered()) {
 					ImGui::BeginTooltip();
@@ -345,15 +361,11 @@ namespace px::ui {
 					PX_BUILD(remove_character());
 				}
 			}
-			else if (ImGui::Button("+ character")) {
-				PX_BUILD(add_character());
-			}
 		}
-		void combine_container()
+		void combine_container(container_component * container)
 		{
-			container_component * container = current->query<container_component>();
-			ImGui::Separator();
 			if (container) {
+				ImGui::Separator();
 				ImGui::Text("container");
 				if (ImGui::IsItemHovered()) {
 					ImGui::BeginTooltip();
@@ -365,9 +377,6 @@ namespace px::ui {
 				if (ImGui::Button("remove##remove_container")) {
 					PX_BUILD(remove_container());
 				}
-			}
-			else if (ImGui::Button("+ container")) {
-				PX_BUILD(add_container());
 			}
 		}
 		void load_schema(std::string const& schema_name)
