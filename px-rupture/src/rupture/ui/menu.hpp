@@ -8,6 +8,7 @@
 
 #include "editor.hpp"
 #include "inspector.hpp"
+#include "inventory.hpp"
 #include "performance.hpp"
 #include "status.hpp"
 #include "skills.hpp"
@@ -51,6 +52,7 @@ namespace px {
 		{
 			return director.takes_input();
 		}
+		//void open_inventory(container_component * cont);
 
 	public:
 		~menu()
@@ -58,6 +60,7 @@ namespace px {
 		}
 		menu(unsigned int w, unsigned int h, environment * game)
 			: director(w, h)
+			, inventory_open(true)
 		{
 			stack.emplace_back(make_uq<ui::skills>(game));
 			stack.emplace_back(make_uq<ui::status>(game));
@@ -65,6 +68,8 @@ namespace px {
 
 			stack.emplace_back(make_uq<ui::performance>());
 			stack.emplace_back(make_uq<ui::editor>(game));
+			stack.emplace_back(make_uq<ui::inventory>(game, &inventory_open));
+			//inventory = stack.back().get();
 		}
 
 	private:
@@ -79,5 +84,7 @@ namespace px {
 		ui::director_works				director;
 		std::vector<uq_ptr<ui::panel>>	stack;
 		environment *					game;
+		bool							inventory_open;
+		ui::inventory *					inventory;
 	};
 }

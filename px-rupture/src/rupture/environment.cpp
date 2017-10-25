@@ -11,6 +11,7 @@
 #include "es/body_component.hpp"
 #include "es/character_component.hpp"
 #include "es/composite_component.hpp"
+#include "es/container_component.hpp"
 #include "es/light_component.hpp"
 #include "es/transform_component.hpp"
 
@@ -18,6 +19,8 @@
 
 #include <px/fn/ant_generator.hpp>
 #include <random>
+
+#include <px/memory/memory.hpp>
 
 namespace px {
 
@@ -106,6 +109,7 @@ namespace px {
 
 		light_component * light = nullptr;
 		body_component * body = nullptr;
+		container_component * cont = nullptr;
 
 		body = b.add_body();
 		body->movement().make_traversable(rl::traverse::floor);
@@ -125,6 +129,11 @@ namespace px {
 		ch->learn("sk_o_teleport");
 		auto anim = b.add_animator("a_door");
 		anim->play(0);
+		cont = b.add_container();
+		for (int i = 0; i != 5; ++i) {
+			auto & ip = cont->add(make_uq<rl::item>());
+			ip->set_name("orb of number " + std::to_string(i));
+		}
 		auto pc = b.request();
 		pc->set_persistency(persistency::permanent);
 		stage.spawn(std::move(pc), nullptr);
@@ -134,6 +143,11 @@ namespace px {
 		body = b.add_body();
 		body->blocking().make_transparent();
 		body->health().emplace(10);
+		cont = b.add_container();
+		for (int i = 0; i != 5; ++i) {
+			auto & ip = cont->add(make_uq<rl::item>());
+			ip->set_name("essence #" + std::to_string(i));
+		}
 		stage.spawn(b.request(), nullptr);
 
 		// set terrain

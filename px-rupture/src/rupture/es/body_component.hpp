@@ -19,6 +19,7 @@ namespace px {
 
 	class transform_component;
 	class character_component;
+	class container_component;
 
 	class environment;
 
@@ -26,6 +27,7 @@ namespace px {
 		: public component
 		, public link<transform_component>
 		, public link<character_component>
+		, public link<container_component>
 		, public link_dispatcher<body_component>
 		, public rl::entity
 		, public rl::constitution<int32_t>

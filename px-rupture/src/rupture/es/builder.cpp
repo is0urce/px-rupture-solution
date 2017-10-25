@@ -205,6 +205,7 @@ namespace px {
 		if (body) {
 			body->connect(transform);
 			body->connect(character);
+			body->connect(container);
 
 			if (deposite) body->assign_useable(deposite);
 			if (door) body->assign_useable(door);

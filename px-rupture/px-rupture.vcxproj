@@ -224,6 +224,8 @@
     <ClInclude Include="src\px\rl\bar.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />
+    <ClInclude Include="src\rupture\rl\inventory.hpp" />
+    <ClInclude Include="src\rupture\rl\item.hpp" />
     <ClInclude Include="src\rupture\rl\status.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
     <ClInclude Include="src\px\rl\skill\skill_functional.hpp" />
@@ -331,6 +333,7 @@
     <ClInclude Include="src\rupture\script\unit.hpp" />
     <ClInclude Include="src\rupture\ui\editor.hpp" />
     <ClInclude Include="src\rupture\ui\inspector.hpp" />
+    <ClInclude Include="src\rupture\ui\inventory.hpp" />
     <ClInclude Include="src\rupture\ui\menu.hpp" />
     <ClInclude Include="src\rupture\rl\scene.hpp" />
     <ClInclude Include="src\rupture\rl\scene_internal.hpp" />

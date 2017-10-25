@@ -51,7 +51,11 @@ namespace px {
 		{
 			return ptr;
 		}
-		T & operator*() const
+		T const& operator*() const
+		{
+			return *ptr;
+		}
+		T & operator*()
 		{
 			return *ptr;
 		}

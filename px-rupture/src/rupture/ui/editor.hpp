@@ -126,9 +126,7 @@ namespace px::ui {
 					current->disable();
 				}
 
-				ImGui::InputText("##composite_name", composite_name.data(), composite_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll);
-				ImGui::SameLine();
-				if (ImGui::Button("name##name_composite")) {
+				if (ImGui::InputText("##composite_name", composite_name.data(), composite_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
 					current->set_name(composite_name.data());
 				}
 
@@ -264,9 +262,36 @@ namespace px::ui {
 					PX_BUILD(remove_body());
 				}
 				else {
+
+					ImGui::Text("tag: ");
+					ImGui::SameLine();
+					if (ImGui::InputText("##body_tag", body_tag.data(), body_tag.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
+						body->set_tag(body_tag.data());
+					}
+					ImGui::Text("name:");
+					ImGui::SameLine();
+					if (ImGui::InputText("##body_name", body_name.data(), body_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
+						body->set_name(body_name.data());
+					}
+					ImGui::Text("desc:");
+					ImGui::SameLine();
+					if (ImGui::InputText("##body_description", body_description.data(), body_description.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
+						body->set_description(body_description.data());
+					}
+
+					// mass
 					if (ImGui::Checkbox("transparent##body_transparent", &body_transparent)) {
 						mass.make_transparent(body_transparent);
 					}
+					if (ImGui::Button("set blocking")) {
+						mass.make_blocking();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("set traversable")) {
+						mass.make_traversable();
+					}
+
+					// resource
 					if (health) {
 						bool mod = false;
 						ImGui::Text("hp "); ImGui::SameLine(); mod |= ImGui::InputInt("##hp_current", &hp);
@@ -403,10 +428,7 @@ namespace px::ui {
 				current->enable();
 
 				composite_lifetime = static_cast<int>(current->lifetime());
-
-				composite_name.fill(0);
-				std::string name = current->name();
-				std::copy(name.cbegin(), name.cbegin() + std::min(name.length(), composite_name.size() - 2), composite_name.begin()); // reserve extra zero for end of a string
+				copy_str(current->name(), composite_name);
 
 				if (auto transform = current->query<transform_component>()) {
 					auto pos = transform->position();
@@ -414,10 +436,7 @@ namespace px::ui {
 					transform_y = pos.y();
 				}
 				if (auto sprite = current->query<sprite_component>()) {
-					std::string str(sprite->name);
-
-					sprite_name.fill(0);
-					std::copy(str.cbegin(), str.cbegin() + std::min(str.length(), sprite_name.size() - 2), sprite_name.begin()); // reserve extra zero for end of a string
+					copy_str(sprite->name, sprite_name);
 				}
 				if (auto body = current->query<body_component>()) {
 					body_transparent = body->blocking().is_transparent();
@@ -431,8 +450,18 @@ namespace px::ui {
 						mp = energy->current();
 						mp_max = energy->maximum();
 					}
+					copy_str(body->name(), body_name);
+					copy_str(body->tag(), body_tag);
+					copy_str(body->description(), body_description);
 				}
 			}
+		}
+		template <size_t max>
+		void copy_str(std::string str, std::array<char, max> & ar)
+		{
+			static_assert(max > 2);
+			ar.fill(0);
+			std::copy(str.cbegin(), str.cbegin() + std::min(str.length(), ar.size() - 2), ar.begin()); // reserve extra zero for end of a string
 		}
 
 	private:
@@ -452,10 +481,13 @@ namespace px::ui {
 
 		std::array<char, 128>		sprite_name;
 
-		bool						body_transparent;
+		std::array<char, 128>		body_tag;
+		std::array<char, 128>		body_name;
+		std::array<char, 1024>		body_description;
 		int							hp;
 		int							hp_max;
 		int							mp;
 		int							mp_max;
+		bool						body_transparent;
 	};
 }

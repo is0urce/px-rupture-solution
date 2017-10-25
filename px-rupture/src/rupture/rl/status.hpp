@@ -1,6 +1,6 @@
 #pragma once
 
-namespace px {
+namespace px::rl {
 
 	class status {
 	public:
