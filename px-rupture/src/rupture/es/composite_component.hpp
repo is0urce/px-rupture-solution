@@ -22,7 +22,7 @@ namespace px {
 		{
 			return endurance;
 		}
-		void set_persistency(persistency lifetime)
+		void set_persistency(persistency lifetime) noexcept
 		{
 			endurance = lifetime;
 		}
@@ -33,6 +33,10 @@ namespace px {
 		void set_name(std::string resource_name)
 		{
 			source = resource_name;
+		}
+		void destroy() noexcept
+		{
+			endurance = persistency::destroying;
 		}
 
 	public:

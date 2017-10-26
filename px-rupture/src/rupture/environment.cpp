@@ -69,7 +69,8 @@ namespace px {
 	}
 	void environment::action(unsigned int action_idx)
 	{
-		if (player) {
+		if (!player || turn_pass) return;
+
 			if (auto body = player->linked<body_component>()) {
 				if (auto character = body->linked<character_component>()) {
 					if (auto skill = character->get(action_idx)) {
@@ -87,12 +88,26 @@ namespace px {
 					}
 				}
 			}
-		}
 	}
 	void environment::advance()
 	{
+		if (!player || turn_pass) return;
+
 		start_turn();
 		end_turn();
+	}
+	void environment::use(unsigned int /*mods*/)
+	{
+		if (!player || turn_pass) return;
+
+		if (target_unit) {
+			auto useable = target_unit->linked<body_component>();
+			auto user = player->linked<body_component>();
+			if (user && useable) {
+				start_turn();
+				useable->try_use(user, this);
+			}
+		}
 	}
 	unsigned int environment::current_turn() const noexcept
 	{
@@ -231,5 +246,8 @@ namespace px {
 	void environment::end_turn()
 	{
 		turn_pass = true;
+	}
+	void environment::popup(std::string text, color tint, point2 location) {
+		messages.send({ text, tint, 1.0 }, location);
 	}
 }

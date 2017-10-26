@@ -11,6 +11,7 @@
 #include "rupture/es/composite_component.hpp"
 #include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
+#include "rupture/es/deposit_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 #include "rupture/es/transform_component.hpp"
 #include "rupture/io/schema.hpp"
@@ -99,6 +100,8 @@ namespace px::ui {
 				character_component * character = current->query<character_component>();
 				container_component * container = current->query<container_component>();
 
+				deposite_component * deposite = current->query<deposite_component>();
+
 				// composite
 
 				ImGui::Separator();
@@ -166,6 +169,7 @@ namespace px::ui {
 				combine_body(body);
 				combine_character(character);
 				combine_container(container);
+				combine_deposite(deposite);
 
 				ImGui::Separator();
 				if (ImGui::Button("add...")) ImGui::OpenPopup("add##add_component");
@@ -185,8 +189,10 @@ namespace px::ui {
 					if (!container && ImGui::MenuItem("container##add_container")) {
 						PX_BUILD(add_container());
 					}
+					if (!deposite && ImGui::MenuItem("deposite##add_deposit_component")) {
+						PX_BUILD(add_deposite());
+					}
 					ImGui::MenuItem("door##add_door_component");
-					ImGui::MenuItem("deposit##add_deposit_component");
 					ImGui::MenuItem("storage##add_storage_component");
 					ImGui::EndPopup();
 				}
@@ -379,6 +385,27 @@ namespace px::ui {
 				}
 			}
 		}
+		void combine_deposite(deposite_component * deposite)
+		{
+			if (deposite) {
+				ImGui::Separator();
+				ImGui::Text("deposite");
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("dissolve: %s", deposite->dissolving() ? "true" : "false");
+					ImGui::Separator();
+					ImGui::Text("adress: %p", deposite);
+					ImGui::EndTooltip();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("remove##remove_deposite")) {
+					PX_BUILD(remove_deposite());
+				}
+				if (ImGui::Checkbox("dissolve##deposite_dissolve", &deposite_dissolve)) {
+					deposite->set_dissolve(deposite_dissolve);
+				}
+			}
+		}
 		void load_schema(std::string const& schema_name)
 		{
 			if (game) {
@@ -463,6 +490,9 @@ namespace px::ui {
 					copy_str(body->tag(), body_tag);
 					copy_str(body->description(), body_description);
 				}
+				if (auto deposite = current->query<deposite_component>()) {
+					deposite_dissolve = deposite->dissolving();
+				}
 			}
 		}
 		template <size_t max>
@@ -498,5 +528,7 @@ namespace px::ui {
 		int							mp;
 		int							mp_max;
 		bool						body_transparent;
+
+		bool						deposite_dissolve;
 	};
 }

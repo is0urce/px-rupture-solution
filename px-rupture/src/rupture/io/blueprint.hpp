@@ -6,6 +6,7 @@
 
 #include "rupture/es/body_component.hpp"
 #include "rupture/es/container_component.hpp"
+#include "rupture/es/deposit_component.hpp"
 #include "rupture/es/transform_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 
@@ -49,9 +50,10 @@ namespace px {
 				//else if (auto storage = dynamic_cast<storage_component const*>(part.raw)) {
 				//	archive(composition_element::storage);
 				//}
-				//else if (auto deposit = dynamic_cast<deposit_component const*>(part.raw)) {
-				//	archive(composition_element::deposit);
-				//}
+				else if (auto deposit = dynamic_cast<deposite_component const*>(raw)) {
+					archive(composition_element::deposit);
+					archive(*deposit);
+				}
 				//else if (auto player = dynamic_cast<player_component const*>(part.raw)) {
 				//	archive(composition_element::player);
 				//}
@@ -107,10 +109,10 @@ namespace px {
 				//	factory.add_storage();
 				//	break;
 				//}
-				//case composition_element::deposit: {
-				//	factory.add_deposit();
-				//	break;
-				//}
+				case composition_element::deposit: {
+					archive(*factory.add_deposite());
+					break;
+				}
 				//case composition_element::player: {
 				//	factory.add_player();
 				//	break;

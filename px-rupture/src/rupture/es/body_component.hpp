@@ -20,12 +20,14 @@ namespace px {
 	class transform_component;
 	class character_component;
 	class container_component;
+	class composite_component;
 
 	class environment;
 
 	class body_component
 		: public component
 		, public link<transform_component>
+		, public link<composite_component>
 		, public link<character_component>
 		, public link<container_component>
 		, public link_dispatcher<body_component>

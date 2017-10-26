@@ -8,7 +8,7 @@ namespace px::rl {
 		double dot;
 		double hp_bonus;
 		double accuracy;
-		double crit;
+		double critical;
 		
 	public:
 		status()
@@ -16,16 +16,21 @@ namespace px::rl {
 			, dot(0)
 			, hp_bonus(0)
 			, accuracy(0)
-			, crit(0)
+			, critical(0)
 		{
 		}
 
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			archive(damage, dot, hp_bonus, accuracy, critical);
+		}
+
 	public:
-		status & operator+=(status & lh) {
+		status & operator+=(status & lh) noexcept {
 			damage += lh.damage;
 			dot += lh.dot;
 			hp_bonus += lh.hp_bonus;
-			crit += lh.crit;
+			critical += lh.critical;
 		}
 	};
 }

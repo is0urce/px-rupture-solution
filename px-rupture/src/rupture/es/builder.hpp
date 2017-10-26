@@ -49,6 +49,7 @@ namespace px {
 		void						remove_body();
 		void						remove_character();
 		void						remove_container();
+		void						remove_deposite();
 		void						remove_light();
 		void						remove_npc();
 		void						remove_player();

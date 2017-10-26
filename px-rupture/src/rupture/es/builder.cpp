@@ -12,7 +12,7 @@
 #include "composite_component.hpp"
 #include "character_component.hpp"
 #include "container_component.hpp"
-#include "deposite_component.hpp"
+#include "deposit_component.hpp"
 #include "door_component.hpp"
 #include "light_component.hpp"
 #include "npc_component.hpp"
@@ -171,6 +171,11 @@ namespace px {
 		unit->remove<container_component>();
 		container = nullptr;
 	}
+	void builder::remove_deposite()
+	{
+		unit->remove<deposite_component>();
+		deposite = nullptr;
+	}
 	void builder::remove_light()
 	{
 		unit->remove<light_component>();
@@ -206,6 +211,7 @@ namespace px {
 			body->connect(transform);
 			body->connect(character);
 			body->connect(container);
+			body->connect(unit.get());
 
 			if (deposite) body->assign_useable(deposite);
 			if (door) body->assign_useable(door);

@@ -33,6 +33,14 @@ namespace px::rl {
 			}
 			l.items.clear();
 		}
+		template <typename Op>
+		void take(inventory & l, Op && fn) {
+			for (item_ptr & i : l.items) {
+				fn(*i);
+				items.push_back(std::move(i));
+			}
+			l.items.clear();
+		}
 		size_t size() {
 			return items.size();
 		}

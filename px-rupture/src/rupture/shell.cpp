@@ -140,6 +140,8 @@ namespace px {
 		case key::action3: action(3); break;
 		case key::action4: action(4); break;
 		case key::action5: action(5); break;
+
+		case key::action_use: use(0); break;
 		}
 	}
 

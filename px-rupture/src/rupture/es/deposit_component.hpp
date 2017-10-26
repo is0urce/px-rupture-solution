@@ -21,23 +21,25 @@ namespace px {
 		, public useable<body_component *, environment *>
 	{
 	public:
-		void set_disposable(bool should_destroy)
-		{
-			dispose = should_destroy;
+		void set_dissolve(bool should_destroy) noexcept;
+		bool dissolving() const noexcept;
+
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			archive(dissolve);
 		}
+
 	public:
-		virtual ~deposite_component() = default;
-		deposite_component()
-			: dispose(false)
-		{
-		}
+		virtual ~deposite_component();
+		deposite_component();
 		deposite_component(deposite_component const&) = delete;
 		deposite_component & operator=(deposite_component const&) = delete;
 
 	protected:
-		// useable
+		virtual bool can_use_useable(body_component * user, environment * environment) const override;
+		virtual void use_useable(body_component * user, environment * environment) override;
 
 	private:
-		bool dispose;
+		bool dissolve;
 	};
 }

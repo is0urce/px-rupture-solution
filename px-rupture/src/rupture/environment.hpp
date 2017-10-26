@@ -25,17 +25,21 @@ namespace px {
 		bool							is_running() const noexcept;
 		uq_ptr<composite_component>	&	spawn(uq_ptr<composite_component> unit, transform_component * hint);
 		uq_ptr<composite_component> &	spawn(std::string const& blueprint, point2 const& position);
-		void							step(point2 const& movement);
-		void							advance();
+		void							step(point2 const& movement);		// move player
+		void							advance();							// move player to target
+		void							action(unsigned int action_idx);	// use skill
+		void							use(unsigned int mods);				// use object
 		void							start();
 		transform_component	*			possessed() noexcept;
 		transform_component *			target() noexcept;
 		point2							area() const noexcept;
 		void							focus(point2 offset);
-		void							action(unsigned int action_idx);
-		bool							turn_passed() const noexcept; // true if it's the world processing stage
-		unsigned int					current_turn() const noexcept;
-		void							return_turn();
+		void							start_turn();						// clear from previous turn
+		void							end_turn();							// end player turn and sart world processing
+		bool							turn_passed() const noexcept;		// true if it's the world processing stage
+		unsigned int					current_turn() const noexcept;		// returns turn number
+		void							return_turn();						// pass turn back to player
+		void							popup(std::string, color tint, point2 location);
 
 	public:
 		virtual ~environment();
@@ -44,8 +48,6 @@ namespace px {
 	private:
 		void							incarnate(transform_component * target);
 		void							lock_target();
-		void							start_turn();
-		void							end_turn();
 
 	protected:
 		notification_system				messages;
