@@ -41,6 +41,8 @@ namespace px {
 			state.set_alias(alias);
 			state.set_cost(skill_node.value("cost", 0));
 			state.set_cooldown(skill_node.value("cd", 0));
+			state.set_hostile(skill_node.value("hostile", true));
+			state.set_duration(skill_node.value("duration", 1));
 
 			works->add(tag, state, mashine->impact(settings::scripts_path + script + ".lua"));
 		}

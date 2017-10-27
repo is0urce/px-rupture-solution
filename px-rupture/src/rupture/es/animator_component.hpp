@@ -30,9 +30,9 @@ namespace px {
 		animation const*				current() const;
 		size_t							size() const;
 
-		//template <typename Archive>
-		//void serialize(Archive & /*archive*/) {
-		//}
+		template <typename Archive>
+		void serialize(Archive & /*archive*/) {
+		}
 
 	public:
 		virtual ~animator_component();

@@ -4,7 +4,9 @@
 #include "rupture/es/composite_component.hpp"
 #include "rupture/es/composition_element.hpp"
 
+#include "rupture/es/animator_component.hpp"
 #include "rupture/es/body_component.hpp"
+#include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
 #include "rupture/es/transform_component.hpp"
@@ -39,6 +41,7 @@ namespace px {
 				else if (auto animator = dynamic_cast<animator_component const*>(raw)) {
 					archive(composition_element::animator);
 					archive(std::string(animator->get_id()));
+					archive(*animator);
 				}
 				else if (auto body = dynamic_cast<body_component const*>(raw)) {
 					archive(composition_element::body);
@@ -48,11 +51,11 @@ namespace px {
 					archive(composition_element::container);
 					archive(*container);
 				}
-				//else if (auto character = dynamic_cast<character_component const*>(raw)) {
-				//	archive(composition_element::character);
-				//	archive(*character);
-				//}
-				//else if (auto storage = dynamic_cast<storage_component const*>(part.raw)) {
+				else if (auto character = dynamic_cast<character_component const*>(raw)) {
+					archive(composition_element::character);
+					archive(*character);
+				}
+				//else if (auto storage = dynamic_cast<storage_component const*>(raw)) {
 				//	archive(composition_element::storage);
 				//}
 				else if (auto deposit = dynamic_cast<deposite_component const*>(raw)) {
@@ -94,15 +97,15 @@ namespace px {
 					break;
 				}
 				case composition_element::sprite: {
-					std::string tag;
-					archive(tag);
-					factory.add_sprite(tag);
+					std::string sprite_tag;
+					archive(sprite_tag);
+					factory.add_sprite(sprite_tag);
 					break;
 				}
 				case composition_element::animator: {
 					std::string name_id;
 					archive(name_id);
-					factory.add_animator(name_id);
+					archive(*factory.add_animator(name_id));
 					break;
 				}
 				case composition_element::body: {
@@ -113,10 +116,10 @@ namespace px {
 					archive(*factory.add_container());
 					break;
 				}
-				//case composition_element::character: {
-				//	archive(*factory.add_character());
-				//	break;
-				//}
+				case composition_element::character: {
+					archive(*factory.add_character());
+					break;
+				}
 				//case composition_element::storage: {
 				//	factory.add_storage();
 				//	break;

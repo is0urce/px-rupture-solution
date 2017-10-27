@@ -26,6 +26,10 @@ namespace px::rl
 		{
 			m_book = book;
 		}
+		book_type const* get_book() const noexcept
+		{
+			return m_book;
+		}
 		void learn(std::string const& tag)
 		{
 			if (m_book) {
@@ -38,20 +42,17 @@ namespace px::rl
 				}
 			}
 		}
-		void replace(std::string const& tag, size_t slot)
-		{
-			if (m_book) {
-				auto const& it = m_book->find(tag);
-				if (it != m_book->end()) {
-					auto const& record = it->second;
-					m_skills[slot].assign_impact(std::get<1>(record));
-				}
-			}
-		}
 		void invalidate()
 		{
 			for (size_t i = 0, size = m_skills.size(); i != size; ++i) {
-				replace_skill(m_skills[i].state().tag(), i);
+				invalidate(m_skills[i].state().tag(), i);
+			}
+		}
+		void remove(size_t idx)
+		{
+			if (idx < m_skills.size()) {
+				m_skills[idx] = std::move(m_skills.back());
+				m_skills.pop_back();
 			}
 		}
 		void clear()
@@ -88,23 +89,38 @@ namespace px::rl
 		}
 
 		template <typename Archive>
-		void serialize(Archive & archive)
-		{
+		void serialize(Archive & archive) {
 			archive(m_skills);
 			invalidate();
 		}
 
 	public:
+		~skill_set()
+		{
+		}
 		skill_set()
 			: m_book(nullptr)
 		{
 		}
-		skill_set(book_type * book)
-			: m_book(book)
+		skill_set(book_type * skillbook)
+			: m_book(skillbook)
 		{
 		}
 		skill_set(skill_set const&) = delete;
 		skill_set & operator=(skill_set const&) = delete;
+
+	private:
+		void invalidate(std::string const& tag, size_t slot)
+		{
+			if (m_book) {
+				auto const& it = m_book->find(tag);
+				if (it != m_book->end()) {
+					auto const& record = it->second;
+					// do not modify state, so cooldowns not affected by serialization
+					m_skills[slot].assign_impact(std::get<1>(record));
+				}
+			}
+		}
 
 	private:
 		std::vector<skill_type>		m_skills;	// array of learned/selected skills

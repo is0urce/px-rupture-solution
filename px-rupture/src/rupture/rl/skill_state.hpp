@@ -121,9 +121,9 @@ namespace px {
 		}
 
 		template <typename Archive>
-		void serialize(Archive & archive)
-		{
+		void serialize(Archive & archive) {
 			archive(static_cast<entity &>(*this));
+			archive(m_alias);
 			archive(m_cooldown, m_timer, m_duration, m_min_range, m_max_range, m_cost, m_hostile);
 		}
 
@@ -140,15 +140,15 @@ namespace px {
 		}
 
 	private:
+		std::string	m_alias;		// short name
 		time_type	m_cooldown;		// remaining time to ready state
 		time_type	m_timer;		// cooldown duration
-		time_type	m_duration;		// turns to use
+		time_type	m_duration;		// use time
 
 		range_type	m_min_range;	// min use distance
 		range_type	m_max_range;	// max use distance
 
 		Integer		m_cost;			// resource required to use
 		bool		m_hostile;		// is considered as hostile by npc
-		std::string	m_alias;		// short name
 	};
 }

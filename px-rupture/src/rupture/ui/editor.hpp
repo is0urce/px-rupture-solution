@@ -181,7 +181,7 @@ namespace px::ui {
 				combine_body(body);
 				combine_character(character);
 				combine_container(container);
-				if (deposit) combine_deposit(*deposit);
+				combine_deposit(deposit);
 				combine_player(player);
 				combine_npc(npc);
 
@@ -356,8 +356,6 @@ namespace px::ui {
 				ImGui::Text("hp: %s", (health ? (std::to_string(health->current()) + "/" + std::to_string(health->maximum())) : std::string{ "empty" }).c_str());
 				ImGui::Text("mp: %s", (energy ? (std::to_string(energy->current()) + "/" + std::to_string(energy->maximum())) : std::string{ "empty" }).c_str());
 				ImGui::Text("useable: %s", body->is_useable() ? "true" : "false");
-				//ImGui::Separator();
-				//ImGui::Text("adress: %p", body);
 				ImGui::EndTooltip();
 			}
 			ImGui::SameLine();
@@ -431,17 +429,55 @@ namespace px::ui {
 		{
 			if (!character) return;
 
+			size_t size = character->size();
+
 			ImGui::Separator();
 			ImGui::Text("character");
-			//if (ImGui::IsItemHovered()) {
-			//	ImGui::BeginTooltip();
-			//	//ImGui::Text("adress: %p", character);
-			//	//ImGui::Separator();
-			//	ImGui::EndTooltip();
-			//}
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("book: %p", character->get_book());
+				ImGui::Text("size: %d", size);
+				ImGui::EndTooltip();
+			}
 			ImGui::SameLine();
 			if (ImGui::Button("x##remove_character")) {
 				PX_BUILD(remove_character());
+			}
+			else {
+				if (size == 0) {
+					ImGui::Text("no skills");
+				}
+				for (size_t i = 0; i != size; ++i) {
+					auto sk = character->get(i);
+					if (sk) {
+						auto & state = sk->state();
+						ImGui::Text("%d) %s", i, state.alias().c_str());
+						if (ImGui::IsItemHovered()) {
+							ImGui::BeginTooltip();
+							ImGui::Text("tag: %s", state.tag().c_str());
+							ImGui::Text("name: %s", state.name().c_str());
+							ImGui::Text("description: %s", state.description().c_str());
+							ImGui::Text("cd: %d/%d", state.cooldown_remaining(), state.cooldown_duration());
+							ImGui::Text("cost: %d", state.cost());
+							ImGui::Text("hostile: %s", state.hostile() ? "true" : "false");
+							ImGui::Text("targeted: %s", sk->is_targeted() ? "true" : "false");
+							ImGui::EndTooltip();
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("x##remove_skill")) {
+							character->remove(i);
+						}
+					}
+					else {
+						ImGui::Text("%d: null", i);
+					}
+				}
+				ImGui::InputText("##learn_skill_input", character_learn.data(), character_learn.size(), ImGuiInputTextFlags_AutoSelectAll);
+				ImGui::SameLine();
+				if (ImGui::Button("learn##skill")) {
+					character->learn(character_learn.data());
+					character_learn.fill(0);
+				}
 			}
 		}
 		void combine_container(container_component * container)
@@ -450,27 +486,25 @@ namespace px::ui {
 
 			ImGui::Separator();
 			ImGui::Text("container");
-			//if (ImGui::IsItemHovered()) {
-			//	ImGui::BeginTooltip();
-			//	//ImGui::Text("adress: %p", container);
-			//	//ImGui::Separator();
-			//	ImGui::EndTooltip();
-			//}
 			ImGui::SameLine();
 			if (ImGui::Button("x##remove_container")) {
 				PX_BUILD(remove_container());
 			}
 		}
-		void combine_deposit(deposite_component & deposit)
+		void combine_deposit(deposite_component * deposit)
 		{
+			if (!deposit) return;
+
 			ImGui::Separator();
 			ImGui::Text("deposite");
 			ImGui::SameLine();
 			if (ImGui::Button("x##remove_deposit")) {
 				PX_BUILD(remove_deposite());
 			}
-			if (ImGui::Checkbox("dissolve##deposit_dissolve", &deposit_dissolve)) {
-				deposit.set_dissolve(deposit_dissolve);
+			else {
+				if (ImGui::Checkbox("dissolve##deposit_dissolve", &deposit_dissolve)) {
+					deposit->set_dissolve(deposit_dissolve);
+				}
 			}
 		}
 		void combine_player(player_component * player)
@@ -497,20 +531,20 @@ namespace px::ui {
 		}
 		void load_schema(std::string const& schema_name)
 		{
-			if (game) {
-				builder factory(game);
-				current = schema::load(document::load_document(settings::schemata_path + schema_name), factory);
-				update_props();
-			}
+			if (!game) return;
+
+			builder factory(game);
+			current = schema::load(document::load_document(settings::schemata_path + schema_name), factory);
+			update_props();
 		}
 		void load_blueprint(std::string const& blueprint_name)
 		{
-			if (game) {
-				builder factory(game);
-				auto input = input_stream(settings::blueprints_path + blueprint_name);
-				current = blueprint::load(SAVE_INPUT_ARCHIVE(input), factory);
-				update_props();
-			}
+			if (!game) return;
+
+			builder factory(game);
+			auto input = input_stream(settings::blueprints_path + blueprint_name);
+			current = blueprint::load(SAVE_INPUT_ARCHIVE(input), factory);
+			update_props();
 		}
 		void export_composite()
 		{
@@ -526,14 +560,13 @@ namespace px::ui {
 		{
 			namespace fs = std::experimental::filesystem;
 
+			selected = -1;
 			names.clear();
 			for (fs::directory_entry const& entry : fs::directory_iterator(path)) {
 				if (fs::is_regular_file(entry.path())) {
 					names.push_back(entry.path().filename().string());
 				}
 			}
-
-			selected = -1;
 		}
 		void load_current_schema()
 		{
@@ -563,6 +596,10 @@ namespace px::ui {
 				if (auto sprite = current->query<sprite_component>()) {
 					copy_str(sprite->name, sprite_name);
 				}
+				if (auto animator = current->query<animator_component>()) {
+					copy_str(animator->get_id(), animator_name);
+					animator_playing = animator->is_playing();
+				}
 				if (auto body = current->query<body_component>()) {
 					body_transparent = body->blocking().is_transparent();
 					auto const& health = body->health();
@@ -582,16 +619,13 @@ namespace px::ui {
 				if (auto deposit = current->query<deposite_component>()) {
 					deposit_dissolve = deposit->dissolving();
 				}
-				if (auto animator = current->query<animator_component>()) {
-					copy_str(animator->get_id(), animator_name);
-					animator_playing = animator->is_playing();
-				}
+				character_learn.fill(0);
 			}
 		}
 		template <size_t max>
 		void copy_str(std::string str, std::array<char, max> & ar)
 		{
-			static_assert(max > 2);
+			static_assert(max > 1);
 			ar.fill(0);
 			std::copy(str.cbegin(), str.cbegin() + std::min(str.length(), ar.size() - 2), ar.begin()); // reserve extra zero for end of a string
 		}
@@ -616,15 +650,17 @@ namespace px::ui {
 		std::array<char, 128>		body_tag;
 		std::array<char, 128>		body_name;
 		std::array<char, 1024>		body_description;
+		bool						body_transparent;
 		int							hp;
 		int							hp_max;
 		int							mp;
 		int							mp_max;
-		bool						body_transparent;
 
 		bool						deposit_dissolve;
 
 		std::array<char, 128>		animator_name;
 		bool						animator_playing;
+
+		std::array<char, 128>		character_learn;
 	};
 }
