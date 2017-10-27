@@ -8,6 +8,7 @@
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
 #include "rupture/es/transform_component.hpp"
+#include "rupture/es/player_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 
 namespace px {
@@ -35,6 +36,10 @@ namespace px {
 					archive(composition_element::sprite);
 					archive(std::string(sprite->name));
 				}
+				else if (auto animator = dynamic_cast<animator_component const*>(raw)) {
+					archive(composition_element::animator);
+					archive(std::string(animator->get_id()));
+				}
 				else if (auto body = dynamic_cast<body_component const*>(raw)) {
 					archive(composition_element::body);
 					archive(*body);
@@ -54,9 +59,10 @@ namespace px {
 					archive(composition_element::deposit);
 					archive(*deposit);
 				}
-				//else if (auto player = dynamic_cast<player_component const*>(part.raw)) {
-				//	archive(composition_element::player);
-				//}
+				else if (auto player = dynamic_cast<player_component const*>(raw)) {
+					archive(composition_element::player);
+					archive(*player);
+				}
 				//else if (auto npc = dynamic_cast<npc_component const*>(part.raw)) {
 				//	archive(composition_element::npc);
 				//	archive(*npc);
@@ -93,6 +99,12 @@ namespace px {
 					factory.add_sprite(tag);
 					break;
 				}
+				case composition_element::animator: {
+					std::string name_id;
+					archive(name_id);
+					factory.add_animator(name_id);
+					break;
+				}
 				case composition_element::body: {
 					archive(*factory.add_body());
 					break;
@@ -113,10 +125,10 @@ namespace px {
 					archive(*factory.add_deposite());
 					break;
 				}
-				//case composition_element::player: {
-				//	factory.add_player();
-				//	break;
-				//}
+				case composition_element::player: {
+					archive(*factory.add_player());
+					break;
+				}
 				//case composition_element::npc: {
 				//	archive(*factory.add_npc());
 				//	break;

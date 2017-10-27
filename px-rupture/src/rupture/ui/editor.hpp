@@ -8,10 +8,13 @@
 #include "rupture/app/document.hpp"
 #include "rupture/app/settings.hpp"
 #include "rupture/es/builder.hpp"
+#include "rupture/es/animator_component.hpp"
 #include "rupture/es/composite_component.hpp"
 #include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
+#include "rupture/es/player_component.hpp"
+#include "rupture/es/npc_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 #include "rupture/es/transform_component.hpp"
 #include "rupture/io/schema.hpp"
@@ -106,6 +109,9 @@ namespace px::ui {
 				container_component * container = current->query<container_component>();
 
 				deposite_component * deposit = current->query<deposite_component>();
+				animator_component * animator = current->query<animator_component>();
+				player_component * player = current->query<player_component>();
+				npc_component * npc = current->query<npc_component>();
 
 				// composite
 
@@ -171,34 +177,56 @@ namespace px::ui {
 				}
 
 				combine_sprite(sprite);
+				combine_animator(animator);
 				combine_body(body);
 				combine_character(character);
 				combine_container(container);
 				if (deposit) combine_deposit(*deposit);
+				combine_player(player);
+				combine_npc(npc);
 
 				ImGui::Separator();
 				if (ImGui::Button("add...")) ImGui::OpenPopup("add##add_component");
 				if (ImGui::BeginPopup("add##add_component")) {
-					if (!transform && ImGui::MenuItem("transform##add_transform_component")) {
+					if (!transform && ImGui::MenuItem("transform##add")) {
 						PX_BUILD(add_transform({ 0, 0 }));
 					}
-					if (!sprite && ImGui::MenuItem("sprite##add_sprite_component")) {
+					if (!sprite && ImGui::MenuItem("sprite##add")) {
 						PX_BUILD(add_sprite("x_dummy"));
 					}
-					if (!body && ImGui::MenuItem("body##add_body")) {
+					if (!animator && ImGui::MenuItem("animator##add")) {
+						PX_BUILD(add_animator("a_dummy"));
+					}
+					if (!body && ImGui::MenuItem("body##add")) {
 						PX_BUILD(add_body());
 					}
-					if (!character && ImGui::MenuItem("character##add_character")) {
+					if (!character && ImGui::MenuItem("character##add")) {
 						PX_BUILD(add_character());
 					}
-					if (!container && ImGui::MenuItem("container##add_container")) {
+					if (!container && ImGui::MenuItem("container##add")) {
 						PX_BUILD(add_container());
 					}
-					if (!deposit && ImGui::MenuItem("deposite##add_deposit_component")) {
-						PX_BUILD(add_deposite());
+					if (!deposit) {
+						if (ImGui::BeginMenu("useables..##add")) {
+							if (ImGui::MenuItem("deposit##add")) {
+								PX_BUILD(add_deposite());
+							}
+							ImGui::MenuItem("door##add");
+							ImGui::MenuItem("storage##add");
+							ImGui::EndMenu();
+						}
 					}
-					ImGui::MenuItem("door##add_door_component");
-					ImGui::MenuItem("storage##add_storage_component");
+					if (!player && !npc) {
+						if (ImGui::BeginMenu("controls..##add")) {
+							if (ImGui::MenuItem("player##add")) {
+								PX_BUILD(add_player());
+							}
+							if (ImGui::MenuItem("npc##add")) {
+								PX_BUILD(add_npc());
+							}
+							ImGui::EndMenu();
+						}
+					}
 					ImGui::EndPopup();
 				}
 
@@ -238,6 +266,41 @@ namespace px::ui {
 		}
 
 	private:
+		void combine_animator(animator_component * animator)
+		{
+			if (!animator) return;
+
+			ImGui::Separator();
+			ImGui::Text("animator: %s", animator->get_id());
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("size: %d", animator->size());
+				ImGui::Text("playing: %s", animator_playing ? "yes" : "no");
+				if (animator_playing) {
+					ImGui::Text("current: %p", animator->current());
+				}
+				ImGui::EndTooltip();
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_animator")) {
+				PX_BUILD(remove_animator());
+			}
+			else {
+				ImGui::InputText("##animator_name", animator_name.data(), animator_name.size(), ImGuiInputTextFlags_AutoSelectAll);
+				ImGui::SameLine();
+				if (ImGui::Button("set##set_animator")) {
+					std::string last = animator->get_id();
+					std::string str(animator_name.data());
+					PX_BUILD(remove_animator());
+					PX_BUILD(add_animator(str));
+					animator = current->query<animator_component>();
+					if (!animator) {
+						PX_BUILD(add_animator(last)); // fallback
+					}
+				}
+			}
+		}
 		void combine_sprite(sprite_component * sprite)
 		{
 			if (!sprite) return;
@@ -403,11 +466,33 @@ namespace px::ui {
 			ImGui::Separator();
 			ImGui::Text("deposite");
 			ImGui::SameLine();
-			if (ImGui::Button("x##remove_deposite")) {
+			if (ImGui::Button("x##remove_deposit")) {
 				PX_BUILD(remove_deposite());
 			}
-			if (ImGui::Checkbox("dissolve##deposite_dissolve", &deposit_dissolve)) {
+			if (ImGui::Checkbox("dissolve##deposit_dissolve", &deposit_dissolve)) {
 				deposit.set_dissolve(deposit_dissolve);
+			}
+		}
+		void combine_player(player_component * player)
+		{
+			if (!player) return;
+
+			ImGui::Separator();
+			ImGui::Text("player");
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_player")) {
+				PX_BUILD(remove_player());
+			}
+		}
+		void combine_npc(npc_component * npc)
+		{
+			if (!npc) return;
+
+			ImGui::Separator();
+			ImGui::Text("npc");
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_npc")) {
+				PX_BUILD(remove_npc());
 			}
 		}
 		void load_schema(std::string const& schema_name)
@@ -497,6 +582,10 @@ namespace px::ui {
 				if (auto deposit = current->query<deposite_component>()) {
 					deposit_dissolve = deposit->dissolving();
 				}
+				if (auto animator = current->query<animator_component>()) {
+					copy_str(animator->get_id(), animator_name);
+					animator_playing = animator->is_playing();
+				}
 			}
 		}
 		template <size_t max>
@@ -534,5 +623,8 @@ namespace px::ui {
 		bool						body_transparent;
 
 		bool						deposit_dissolve;
+
+		std::array<char, 128>		animator_name;
+		bool						animator_playing;
 	};
 }

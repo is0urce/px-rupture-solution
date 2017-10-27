@@ -145,6 +145,11 @@ namespace px {
 		return workshop;
 	}
 
+	void builder::remove_animator()
+	{
+		unit->remove<animator_component>();
+		animator = nullptr;
+	}
 	void builder::remove_transform()
 	{
 		unit->remove<transform_component>();

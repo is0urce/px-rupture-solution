@@ -46,6 +46,7 @@ namespace px {
 		workshop_component *		add_workshop();
 		void						begin();
 		void						begin(uq_ptr<composite_component> strip);
+		void						remove_animator();
 		void						remove_body();
 		void						remove_character();
 		void						remove_container();

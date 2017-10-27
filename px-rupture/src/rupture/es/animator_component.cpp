@@ -14,14 +14,22 @@ namespace px {
 	{
 	}
 
-	void animator_component::play(size_t animation_id)
+	bool animator_component::play(size_t animation_id)
 	{
-		current_index = animation_id;
-		playing = true;
+		if (animation_id <= animations.size()) {
+			current_index = animation_id;
+			playing = true;
+			return true;
+		}
+		return false;
 	}
 	void animator_component::stop()
 	{
 		playing = false;
+	}
+	void animator_component::resume()
+	{
+		playing = true;
 	}
 	bool animator_component::is_playing() const noexcept
 	{
@@ -51,5 +59,10 @@ namespace px {
 	animation const* animator_component::current() const
 	{
 		return animations[current_index];
+	}
+
+	size_t animator_component::size() const
+	{
+		return animations.size();
 	}
 }
