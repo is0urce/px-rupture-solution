@@ -27,8 +27,13 @@
 #include <string>
 #include <vector>
 
-#define PX_BUILD(OP) { builder factory(game); factory.begin(std::move(current)); factory.OP; current = factory.request(); update_props(); }
-#define PX_SWAP(A, B) { builder factory(game); factory.begin(std::move(current)); factory.A, factory.B; current = factory.request(); update_props(); }
+#define PX_BUILD(OP)	{ \
+							builder factory(game); \
+							factory.begin(std::move(current)); \
+							factory.OP; \
+							current = factory.request(); \
+							update_props(); \
+						}
 
 namespace px::ui {
 
@@ -100,7 +105,7 @@ namespace px::ui {
 				character_component * character = current->query<character_component>();
 				container_component * container = current->query<container_component>();
 
-				deposite_component * deposite = current->query<deposite_component>();
+				deposite_component * deposit = current->query<deposite_component>();
 
 				// composite
 
@@ -111,8 +116,8 @@ namespace px::ui {
 					ImGui::Text("name: %s", current->name().c_str());
 					ImGui::Text("size: %d", current->size());
 					ImGui::Text("persistency: %d", static_cast<unsigned int>(current->lifetime()));
-					ImGui::Separator();
-					ImGui::Text("adress: %p", current.get());
+					//ImGui::Separator();
+					//ImGui::Text("adress: %p", current.get());
 					ImGui::EndTooltip();
 				}
 
@@ -147,12 +152,12 @@ namespace px::ui {
 						ImGui::Text("space: %p", transform->world());
 						ImGui::Text("current: (%d, %d)", transform->position().x(), transform->position().y());
 						ImGui::Text("last: (%d, %d)", transform->last().x(), transform->last().y());
-						ImGui::Separator();
-						ImGui::Text("adress: %p", transform);
+						//ImGui::Separator();
+						//ImGui::Text("adress: %p", transform);
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
-					if (ImGui::Button("remove##remove_transform")) {
+					if (ImGui::Button("x##remove_transform")) {
 						PX_BUILD(remove_transform());
 					}
 					else {
@@ -169,7 +174,7 @@ namespace px::ui {
 				combine_body(body);
 				combine_character(character);
 				combine_container(container);
-				combine_deposite(deposite);
+				if (deposit) combine_deposit(*deposit);
 
 				ImGui::Separator();
 				if (ImGui::Button("add...")) ImGui::OpenPopup("add##add_component");
@@ -189,7 +194,7 @@ namespace px::ui {
 					if (!container && ImGui::MenuItem("container##add_container")) {
 						PX_BUILD(add_container());
 					}
-					if (!deposite && ImGui::MenuItem("deposite##add_deposit_component")) {
+					if (!deposit && ImGui::MenuItem("deposite##add_deposit_component")) {
 						PX_BUILD(add_deposite());
 					}
 					ImGui::MenuItem("door##add_door_component");
@@ -235,175 +240,174 @@ namespace px::ui {
 	private:
 		void combine_sprite(sprite_component * sprite)
 		{
-			if (sprite) {
-				ImGui::Separator();
-				ImGui::Text("sprite: %s", sprite->name);
-				if (ImGui::IsItemHovered())
-				{
-					ImGui::BeginTooltip();
-					ImGui::Text("texture_id: %d", sprite->texture_index);
-					ImGui::Text("sx: %f, dx: %f", sprite->sx_texture, sprite->dx_texture);
-					ImGui::Text("sy: %f, dy: %f", sprite->sy_texture, sprite->dy_texture);
-					ImGui::EndTooltip();
-				}
+			if (!sprite) return;
 
+			ImGui::Separator();
+			ImGui::Text("sprite: %s", sprite->name);
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("texture_id: %d", sprite->texture_index);
+				ImGui::Text("sx: %f, dx: %f", sprite->sx_texture, sprite->dx_texture);
+				ImGui::Text("sy: %f, dy: %f", sprite->sy_texture, sprite->dy_texture);
+				ImGui::EndTooltip();
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_sprite")) {
+				PX_BUILD(remove_sprite());
+			}
+			else {
+				ImGui::InputText("##sprite_text", sprite_name.data(), sprite_name.size(), ImGuiInputTextFlags_AutoSelectAll);
 				ImGui::SameLine();
-				if (ImGui::Button("remove##remove_sprite")) {
+				if (ImGui::Button("set##set_sprite")) {
+					std::string last(sprite->name);
+					std::string str(sprite_name.data());
 					PX_BUILD(remove_sprite());
-				}
-				else {
-					ImGui::InputText("##sprite_text", sprite_name.data(), sprite_name.size(), ImGuiInputTextFlags_AutoSelectAll);
-					ImGui::SameLine();
-					if (ImGui::Button("set##set_sprite")) {
-						std::string str(sprite_name.data());
-						PX_SWAP(remove_sprite(), add_sprite(str));
+					PX_BUILD(add_sprite(str));
+					sprite = current->query<sprite_component>();
+					if (!sprite) {
+						PX_BUILD(add_sprite(last)); // fallback
 					}
 				}
 			}
 		}
 		void combine_body(body_component * body)
 		{
-			if (body) {
-				ImGui::Separator();
-				auto & mass = body->blocking();
-				auto & movement = body->movement();
-				auto & health = body->health();
-				auto & energy = body->energy();
-				ImGui::Text("body: %s", body->tag().c_str());
-				if (ImGui::IsItemHovered()) {
-					ImGui::BeginTooltip();
-					ImGui::Text("tag: %s", body->tag().c_str());
-					ImGui::Text("name: %s", body->name().c_str());
-					ImGui::Text("description: %s", body->description().c_str());
-					ImGui::Text("faction_id: %d", static_cast<unsigned int>(body->current_faction()));
-					ImGui::Text("transparent: %s", mass.is_transparent() ? "true" : "false");
-					ImGui::Text("blocking: %s", mass.traverse_bitset().to_string().c_str());
-					ImGui::Text("movement: %s", movement.traverse_bitset().to_string().c_str());
-					ImGui::Text("hp: %s", (health ? (std::to_string(health->current()) + "/" + std::to_string(health->maximum())) : std::string{ "empty" }).c_str());
-					ImGui::Text("mp: %s", (energy ? (std::to_string(energy->current()) + "/" + std::to_string(energy->maximum())) : std::string{ "empty" }).c_str());
-					ImGui::EndTooltip();
+			if (!body) return;
+
+			ImGui::Separator();
+			auto & mass = body->blocking();
+			auto & movement = body->movement();
+			auto & health = body->health();
+			auto & energy = body->energy();
+			ImGui::Text("body: %s", body->tag().c_str());
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("tag: %s", body->tag().c_str());
+				ImGui::Text("name: %s", body->name().c_str());
+				ImGui::Text("description: %s", body->description().c_str());
+				ImGui::Text("faction_id: %d", static_cast<unsigned int>(body->current_faction()));
+				ImGui::Text("transparent: %s", mass.is_transparent() ? "true" : "false");
+				ImGui::Text("blocking: %s", mass.traverse_bitset().to_string().c_str());
+				ImGui::Text("movement: %s", movement.traverse_bitset().to_string().c_str());
+				ImGui::Text("hp: %s", (health ? (std::to_string(health->current()) + "/" + std::to_string(health->maximum())) : std::string{ "empty" }).c_str());
+				ImGui::Text("mp: %s", (energy ? (std::to_string(energy->current()) + "/" + std::to_string(energy->maximum())) : std::string{ "empty" }).c_str());
+				ImGui::Text("useable: %s", body->is_useable() ? "true" : "false");
+				//ImGui::Separator();
+				//ImGui::Text("adress: %p", body);
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_body")) {
+				PX_BUILD(remove_body());
+			}
+			else {
+
+				ImGui::Text("tag: ");
+				ImGui::SameLine();
+				if (ImGui::InputText("##body_tag", body_tag.data(), body_tag.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
+					body->set_tag(body_tag.data());
+				}
+				ImGui::Text("name:");
+				ImGui::SameLine();
+				if (ImGui::InputText("##body_name", body_name.data(), body_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
+					body->set_name(body_name.data());
+				}
+				ImGui::Text("desc:");
+				ImGui::SameLine();
+				if (ImGui::InputText("##body_description", body_description.data(), body_description.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
+					body->set_description(body_description.data());
+				}
+
+				// mass
+				if (ImGui::Checkbox("transparent##body_transparent", &body_transparent)) {
+					mass.make_transparent(body_transparent);
+				}
+				if (ImGui::Button("set blocking")) {
+					mass.make_blocking();
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("remove##remove_body")) {
-					PX_BUILD(remove_body());
+				if (ImGui::Button("set traversable")) {
+					mass.make_traversable();
+				}
+
+				// resource
+				if (health) {
+					bool mod = false;
+					ImGui::Text("hp "); ImGui::SameLine(); mod |= ImGui::InputInt("##hp_current", &hp);
+					ImGui::Text("max"); ImGui::SameLine(); mod |= ImGui::InputInt("##hp_max", &hp_max);
+					if (mod) {
+						health->set(hp, hp_max);
+					}
 				}
 				else {
-
-					ImGui::Text("tag: ");
-					ImGui::SameLine();
-					if (ImGui::InputText("##body_tag", body_tag.data(), body_tag.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
-						body->set_tag(body_tag.data());
+					if (ImGui::Button("+ hp")) {
+						hp = 0;
+						hp_max = 0;
+						health.emplace(hp, hp_max);
 					}
-					ImGui::Text("name:");
-					ImGui::SameLine();
-					if (ImGui::InputText("##body_name", body_name.data(), body_name.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
-						body->set_name(body_name.data());
+				}
+				if (energy) {
+					bool mod = false;
+					ImGui::Text("mp "); ImGui::SameLine(); mod |= ImGui::InputInt("##mp_current", &mp);
+					ImGui::Text("max"); ImGui::SameLine(); mod |= ImGui::InputInt("##mp_max", &mp_max);
+					if (mod) {
+						energy->set(mp, mp_max);
 					}
-					ImGui::Text("desc:");
-					ImGui::SameLine();
-					if (ImGui::InputText("##body_description", body_description.data(), body_description.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
-						body->set_description(body_description.data());
-					}
-
-					// mass
-					if (ImGui::Checkbox("transparent##body_transparent", &body_transparent)) {
-						mass.make_transparent(body_transparent);
-					}
-					if (ImGui::Button("set blocking")) {
-						mass.make_blocking();
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("set traversable")) {
-						mass.make_traversable();
-					}
-
-					// resource
-					if (health) {
-						bool mod = false;
-						ImGui::Text("hp "); ImGui::SameLine(); mod |= ImGui::InputInt("##hp_current", &hp);
-						ImGui::Text("max"); ImGui::SameLine(); mod |= ImGui::InputInt("##hp_max", &hp_max);
-						if (mod) {
-							health->set(hp, hp_max);
-						}
-					}
-					else {
-						if (ImGui::Button("+ hp")) {
-							hp = 0;
-							hp_max = 0;
-							health.emplace(hp, hp_max);
-						}
-					}
-					if (energy) {
-						bool mod = false;
-						ImGui::Text("mp "); ImGui::SameLine(); mod |= ImGui::InputInt("##mp_current", &mp);
-						ImGui::Text("max"); ImGui::SameLine(); mod |= ImGui::InputInt("##mp_max", &mp_max);
-						if (mod) {
-							energy->set(mp, mp_max);
-						}
-					}
-					else {
-						if (ImGui::Button("+ mp")) {
-							mp = 0;
-							mp_max = 0;
-							energy.emplace(mp, mp_max);
-						}
+				}
+				else {
+					if (ImGui::Button("+ mp")) {
+						mp = 0;
+						mp_max = 0;
+						energy.emplace(mp, mp_max);
 					}
 				}
 			}
 		}
 		void combine_character(character_component * character)
 		{
-			if (character) {
-				ImGui::Separator();
-				ImGui::Text("character");
-				if (ImGui::IsItemHovered()) {
-					ImGui::BeginTooltip();
-					ImGui::Text("adress: %p", character);
-					ImGui::Separator();
-					ImGui::EndTooltip();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("remove##remove_character")) {
-					PX_BUILD(remove_character());
-				}
+			if (!character) return;
+
+			ImGui::Separator();
+			ImGui::Text("character");
+			//if (ImGui::IsItemHovered()) {
+			//	ImGui::BeginTooltip();
+			//	//ImGui::Text("adress: %p", character);
+			//	//ImGui::Separator();
+			//	ImGui::EndTooltip();
+			//}
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_character")) {
+				PX_BUILD(remove_character());
 			}
 		}
 		void combine_container(container_component * container)
 		{
-			if (container) {
-				ImGui::Separator();
-				ImGui::Text("container");
-				if (ImGui::IsItemHovered()) {
-					ImGui::BeginTooltip();
-					ImGui::Text("adress: %p", container);
-					ImGui::Separator();
-					ImGui::EndTooltip();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("remove##remove_container")) {
-					PX_BUILD(remove_container());
-				}
+			if (!container) return;
+
+			ImGui::Separator();
+			ImGui::Text("container");
+			//if (ImGui::IsItemHovered()) {
+			//	ImGui::BeginTooltip();
+			//	//ImGui::Text("adress: %p", container);
+			//	//ImGui::Separator();
+			//	ImGui::EndTooltip();
+			//}
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_container")) {
+				PX_BUILD(remove_container());
 			}
 		}
-		void combine_deposite(deposite_component * deposite)
+		void combine_deposit(deposite_component & deposit)
 		{
-			if (deposite) {
-				ImGui::Separator();
-				ImGui::Text("deposite");
-				if (ImGui::IsItemHovered()) {
-					ImGui::BeginTooltip();
-					ImGui::Text("dissolve: %s", deposite->dissolving() ? "true" : "false");
-					ImGui::Separator();
-					ImGui::Text("adress: %p", deposite);
-					ImGui::EndTooltip();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("remove##remove_deposite")) {
-					PX_BUILD(remove_deposite());
-				}
-				if (ImGui::Checkbox("dissolve##deposite_dissolve", &deposite_dissolve)) {
-					deposite->set_dissolve(deposite_dissolve);
-				}
+			ImGui::Separator();
+			ImGui::Text("deposite");
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_deposite")) {
+				PX_BUILD(remove_deposite());
+			}
+			if (ImGui::Checkbox("dissolve##deposite_dissolve", &deposit_dissolve)) {
+				deposit.set_dissolve(deposit_dissolve);
 			}
 		}
 		void load_schema(std::string const& schema_name)
@@ -490,8 +494,8 @@ namespace px::ui {
 					copy_str(body->tag(), body_tag);
 					copy_str(body->description(), body_description);
 				}
-				if (auto deposite = current->query<deposite_component>()) {
-					deposite_dissolve = deposite->dissolving();
+				if (auto deposit = current->query<deposite_component>()) {
+					deposit_dissolve = deposit->dissolving();
 				}
 			}
 		}
@@ -529,6 +533,6 @@ namespace px::ui {
 		int							mp_max;
 		bool						body_transparent;
 
-		bool						deposite_dissolve;
+		bool						deposit_dissolve;
 	};
 }

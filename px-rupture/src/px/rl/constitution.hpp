@@ -51,8 +51,7 @@ namespace px::rl {
 		}
 
 		template <typename Archive>
-		void serialize(Archive & archive)
-		{
+		void serialize(Archive & archive) {
 			bool has_hp = hp.has_value();
 			bool has_mp = mp.has_value();
 			archive(has_hp, has_mp);

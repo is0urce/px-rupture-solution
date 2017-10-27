@@ -1,3 +1,5 @@
+// name: deposit_component.cpp
+
 #include "deposit_component.hpp"
 
 #include "rupture/environment.hpp"
@@ -10,7 +12,6 @@ namespace px {
 
 	deposite_component::~deposite_component()
 	{
-
 	}
 	deposite_component::deposite_component()
 		: dissolve(true)
@@ -21,9 +22,9 @@ namespace px {
 
 	bool deposite_component::can_use_useable(body_component * user, environment * environment) const {
 		if (user && environment) {
-			if (auto cont = user->linked<container_component>()) {
-				return true;
-			}
+			auto dest = user->linked<container_component>();
+			auto source = linked<container_component>();
+			return source && dest;
 		}
 		return false;
 	}
@@ -41,7 +42,7 @@ namespace px {
 					}
 				});
 
-				// destroy unit
+				// destroy deposit
 				if (dissolve) {
 					if (auto composite = linked<composite_component>()) {
 						composite->destroy();

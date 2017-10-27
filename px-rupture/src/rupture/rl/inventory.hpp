@@ -1,3 +1,5 @@
+// name: inventory.hpp
+
 #pragma once
 
 #include "item.hpp"
@@ -18,32 +20,39 @@ namespace px::rl {
 			items.push_back(std::move(item));
 			return items.back();
 		}
+
 		item * get(size_t idx) {
 			return idx >= items.size() ? nullptr : items[idx].get();
 		}
+
+		// remove item from position
 		bool remove(size_t idx) {
 			if (idx >= items.size()) return false;
 			items[idx] = std::move(items.back());
 			items.pop_back();
 			return true;
 		}
-		void take(inventory & l) {
-			for (item_ptr & i : l.items) {
+
+		void take(inventory & loot) {
+			for (item_ptr & i : loot.items) {
 				items.push_back(std::move(i));
 			}
-			l.items.clear();
+			loot.items.clear();
 		}
+
 		template <typename Op>
-		void take(inventory & l, Op && fn) {
-			for (item_ptr & i : l.items) {
+		void take(inventory & loot, Op && fn) {
+			for (item_ptr & i : loot.items) {
 				fn(*i);
 				items.push_back(std::move(i));
 			}
-			l.items.clear();
+			loot.items.clear();
 		}
+
 		size_t size() {
 			return items.size();
 		}
+
 		template <typename Op>
 		void enumerate(Op && fn)
 		{
@@ -51,6 +60,7 @@ namespace px::rl {
 				fn(*ptr);
 			}
 		}
+
 		template <typename Op>
 		void enumerate(Op && fn) const
 		{

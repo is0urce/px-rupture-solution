@@ -1,4 +1,7 @@
-// name: deposite_component.hpp
+// name: deposit_component.hpp
+// type: c++ header
+// auth: is0urce
+// desc: class declaration
 
 #pragma once
 
@@ -21,11 +24,11 @@ namespace px {
 		, public useable<body_component *, environment *>
 	{
 	public:
-		void set_dissolve(bool should_destroy) noexcept;
-		bool dissolving() const noexcept;
+		void			set_dissolve(bool should_destroy) noexcept;
+		bool			dissolving() const noexcept;
 
 		template <typename Archive>
-		void serialize(Archive & archive) {
+		void			serialize(Archive & archive) {
 			archive(dissolve);
 		}
 
@@ -36,10 +39,10 @@ namespace px {
 		deposite_component & operator=(deposite_component const&) = delete;
 
 	protected:
-		virtual bool can_use_useable(body_component * user, environment * environment) const override;
-		virtual void use_useable(body_component * user, environment * environment) override;
+		virtual bool	can_use_useable(body_component * user, environment * environment) const override;
+		virtual void	use_useable(body_component * user, environment * environment) override;
 
 	private:
-		bool dissolve;
+		bool			dissolve;
 	};
 }

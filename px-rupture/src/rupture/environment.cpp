@@ -221,7 +221,7 @@ namespace px {
 
 			auto body = composite.query<body_component>();
 			if (body && body->is_dead()) {
-				composite.set_persistency(persistency::destroying);
+				composite.destroy();
 
 				auto loot = body->linked<container_component>();
 				auto pawn = body->linked<transform_component>();
