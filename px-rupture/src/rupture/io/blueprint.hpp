@@ -9,9 +9,10 @@
 #include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
-#include "rupture/es/transform_component.hpp"
+#include "rupture/es/npc_component.hpp"
 #include "rupture/es/player_component.hpp"
 #include "rupture/es/sprite_component.hpp"
+#include "rupture/es/transform_component.hpp"
 
 namespace px {
 
@@ -66,10 +67,10 @@ namespace px {
 					archive(composition_element::player);
 					archive(*player);
 				}
-				//else if (auto npc = dynamic_cast<npc_component const*>(part.raw)) {
-				//	archive(composition_element::npc);
-				//	archive(*npc);
-				//}
+				else if (auto npc = dynamic_cast<npc_component const*>(raw)) {
+					archive(composition_element::npc);
+					archive(*npc);
+				}
 				else {
 					archive(composition_element::undefined);
 				}
@@ -132,10 +133,10 @@ namespace px {
 					archive(*factory.add_player());
 					break;
 				}
-				//case composition_element::npc: {
-				//	archive(*factory.add_npc());
-				//	break;
-				//}
+				case composition_element::npc: {
+					archive(*factory.add_npc());
+					break;
+				}
 				case composition_element::undefined: {
 					break; // there was unserilized (temporary) component, just skip it
 				}

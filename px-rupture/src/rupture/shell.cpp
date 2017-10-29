@@ -45,6 +45,7 @@ namespace px {
 		renderer.assigm_message_data(messages.data());
 		lights.assign_scene(&stage);
 		stage.assign_sprites(&sprites);
+		npcs.assign_scene(&stage);
 	}
 	void shell::load_data()
 	{

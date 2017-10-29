@@ -195,6 +195,7 @@
     <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\px\algorithm\fov.hpp" />
     <ClInclude Include="src\px\algorithm\recursive_shadowcasting.hpp" />
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\color.hpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
     <ClInclude Include="src\px\es\light.hpp" />
     <ClInclude Include="src\px\rgl\offscreen.hpp" />
+    <ClInclude Include="src\px\rl\ai_state.hpp" />
     <ClInclude Include="src\px\rl\bar.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />

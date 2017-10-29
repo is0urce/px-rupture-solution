@@ -1,4 +1,4 @@
-// name: recursive_shadow.hpp
+// name: recursive_shadowcasting.hpp
 // type: c++ header
 // auth: is0urce
 // desc: recursive shadowcasting

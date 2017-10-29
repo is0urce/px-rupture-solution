@@ -10,27 +10,26 @@ namespace px {
 
 	// ctor & dtor
 
-	npc_system::~npc_system()
-	{
-
+	npc_system::~npc_system() {
 	}
 	npc_system::npc_system()
 		: works(make_uq<npc_works>())
 	{
-
 	}
 
 	// virtual overrides
 
-	void npc_system::turn_update_system(delta_type const& /*delta_time*/)
-	{
-
+	void npc_system::turn_update_system(delta_type const& /*delta_time*/) {
+		works->turn();
 	}
 
 	// methods
 
-	uq_ptr<npc_component> npc_system::make()
-	{
+	void npc_system::assign_scene(scene * world) noexcept {
+		works->assign_scene(world);
+	}
+
+	uq_ptr<npc_component> npc_system::make() {
 		return works->make();
 	}
 }

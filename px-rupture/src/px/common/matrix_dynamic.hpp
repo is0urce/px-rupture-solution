@@ -127,34 +127,41 @@ namespace px {
 
 		// querry functions: operator[] not throws, at() throws, select returns default (outer) if out of range
 		// specialized point2 acessors for easy querry with bracket-initialized points
+		// get & set nocheck
+		// autos for notorious vector<bool> specialization
 
-		element_type const& get(size_t x, size_t y) const
+		auto get(size_t x, size_t y) const
 		{
 			return m_data[y * m_width + x];
 		}
-		element_type & get(size_t x, size_t y)
+		auto get(size_t x, size_t y)
 		{
 			return m_data[y * m_width + x];
 		}
 		template <typename Pair>
-		element_type const& get(Pair && key) const
+		auto get(Pair && key) const
 		{
 			return m_data[key.get<1>() * m_width + key.get<0>()];
 		}
 		template <typename Pair>
-		element_type & get(Pair && key)
+		auto get(Pair && key)
 		{
 			return m_data[key.get<1>() * m_width + key.get<0>()];
 		}
 		template <size_t X, size_t Y>
-		element_type const& get() const
+		auto get() const
 		{
 			return m_data[Y * m_width + X];
 		}
 		template <size_t X, size_t Y>
-		element_type & get()
+		auto get()
 		{
 			return m_data[Y * m_width + X];
+		}
+		template <typename Pair>
+		void set(element_type const& value, Pair && key)
+		{
+			m_data[key.get<1>() * m_width + key.get<0>()] = value;
 		}
 
 		template <typename Pair>
@@ -202,12 +209,12 @@ namespace px {
 		template <typename Pair>
 		element_type const& get_or(element_type const& outer, Pair && key) const
 		{
-			return contains(key) ? operator[](key) : outer;
+			return contains(key) ? m_data[key.get<1>() * m_width + key.get<0>()] : outer;
 		}
 		template <typename Pair>
 		element_type & get_or(element_type & outer, Pair && key)
 		{
-			return contains(key) ? operator[](key) : outer;
+			return contains(key) ? m_data[key.get<1>() * m_width + key.get<0>()] : outer;
 		}
 
 	public:

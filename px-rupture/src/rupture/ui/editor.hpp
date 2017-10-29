@@ -444,9 +444,6 @@ namespace px::ui {
 				PX_BUILD(remove_character());
 			}
 			else {
-				if (size == 0) {
-					ImGui::Text("no skills");
-				}
 				for (size_t i = 0; i != size; ++i) {
 					auto sk = character->get(i);
 					if (sk) {
@@ -477,6 +474,14 @@ namespace px::ui {
 				if (ImGui::Button("learn##skill")) {
 					character->learn(character_learn.data());
 					character_learn.fill(0);
+				}
+				if (size == 0) {
+					ImGui::Text("no skills");
+				}
+				else {
+					if (ImGui::Button("clear##skills")) {
+						character->clear();
+					}
 				}
 			}
 		}
@@ -524,6 +529,13 @@ namespace px::ui {
 
 			ImGui::Separator();
 			ImGui::Text("npc");
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("state: %d", npc_state);
+				ImGui::Text("range: %d", npc_range);
+				ImGui::Text("destination: (%d, %d)", npc_waypoint_x, npc_waypoint_y);
+				ImGui::EndTooltip();
+			}
 			ImGui::SameLine();
 			if (ImGui::Button("x##remove_npc")) {
 				PX_BUILD(remove_npc());
@@ -619,7 +631,16 @@ namespace px::ui {
 				if (auto deposit = current->query<deposite_component>()) {
 					deposit_dissolve = deposit->dissolving();
 				}
+
+				// character
 				character_learn.fill(0);
+
+				if (auto npc = current->query<npc_component>()) {
+					npc_state = static_cast<int>(npc->get_state());
+					npc_range = static_cast<int>(npc->get_range());
+					npc_waypoint_x = npc->destination().x();
+					npc_waypoint_y = npc->destination().y();
+				}
 			}
 		}
 		template <size_t max>
@@ -662,5 +683,10 @@ namespace px::ui {
 		bool						animator_playing;
 
 		std::array<char, 128>		character_learn;
+
+		int							npc_state;
+		int							npc_range;
+		int							npc_waypoint_x;
+		int							npc_waypoint_y;
 	};
 }

@@ -35,12 +35,17 @@ void test_matrix()
 				matrix2<int, 3, 3> mt;
 
 				mt[point2(0, 0)] = 1;
+				mt[point2(1, 1)] = 2;
 
 				test::require(mt[point2(0, 0)] == 1);
 				test::require(mt.at(0, 0) == 1);
+				test::require(mt.at(1, 1) == 2);
 				test::require(mt.at(point2(0, 0)) == 1);
 				test::require(mt.get(0, 0) == 1);
+				test::require(mt.get(1, 1) == 2);
+				test::require(mt.get(0, 0) == 1);
 				test::require(mt.get(point2(0, 0)) == 1);
+				test::require(mt.get(point2(1, 1)) == 2);
 				test::require(mt.get<0, 0>() == 1);
 				test::require(mt.get_or(18, 100, 100) == 18);
 				test::require(mt.get_or(18, point2(3, 6)) == 18);
@@ -88,9 +93,11 @@ void test_matrix()
 			test::section("matrix access");
 			{
 				matrix2<int> mt(4, 5, 8);
+				mt.at(1, 1) = 1;
 
 				test::require(mt[point2(0, 0)] == 8);
 				test::require(mt.at(0, 0) == 8);
+				test::require(mt.at(1, 1) == 1);
 				test::require(mt.at(point2(0, 0)) == 8);
 				test::require(mt.get(0, 0) == 8);
 				test::require(mt.get(point2(0, 0)) == 8);

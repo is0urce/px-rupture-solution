@@ -11,11 +11,13 @@ namespace px {
 
 	class npc_component;
 	class npc_works;
+	class scene;
 
 	class npc_system
 		: public system<delta>
 	{
 	public:
+		void assign_scene(scene * world) noexcept;
 		uq_ptr<npc_component> make();
 
 	public:

@@ -224,6 +224,10 @@ namespace px {
 			if (workshop) body->assign_useable(workshop);
 		}
 
+		if (npc) {
+			npc->connect(transform);
+		}
+
 		if (deposite) {
 			deposite->connect(container);
 			deposite->connect(unit.get());
