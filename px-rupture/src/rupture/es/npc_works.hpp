@@ -26,47 +26,55 @@ namespace px {
 	public:
 		void turn() {
 			fov observed;
-
 			pool.enumerate([&](npc_component & npc) {
 				if (!npc.is_active()) return;
+
+				// ensure valid composition
 				transform_component * transform = npc.linked<transform_component>();
 				if (!transform) return;
 				body_component * body = transform->linked<body_component>();
 				if (!body) return;
 
-				if (npc.get_state() == rl::ai_state::idle) {
+				// ensure npc can act
+				if (!body->is_alive()) return;
+
+				// health drop check
+				if (npc.get_state() == rl::ai_state::idle && !body->health()->full()) {
 					npc.set_state(rl::ai_state::alert);
+					npc.destination() = transform->position(); // init waypoint to current position
+				}
+
+				// select enemy in range
+				auto range = npc.get_range();
+				observed.calculate(transform->position(), range, [&](int x, int y) { return stage->is_transparent({ x, y }); });
+				transform_component * target = lock_target(transform->position(), *body, observed);
+				if (target) {
+					npc.set_state(rl::ai_state::alert);
+					npc.destination() = target->position();
 				}
 
 				if (npc.get_state() == rl::ai_state::alert) {
-					//auto range = npc.get_range();
-					unsigned int range = 20;
-					observed.calculate(transform->position(), range, [&](int x, int y) { return stage->is_transparent({ x, y }); });
 
-					transform_component * target = lock_target(transform, body, range);
-
-					if (target) {
-						point2 dest = target->position();
-						if (observed.contains(dest)) {
-							transform->place(dest);
-						}
-					}
+					//point2 dest = npc.destination();
+					//if (observed.contains(dest)) {
+					//	transform->place(dest);
+					//}
 				}
 			});
 		}
 	private:
-		transform_component * lock_target(transform_component * transform, body_component * body, unsigned int range)
+		transform_component * lock_target(point2 const& center, body_component::standing_type const& faction, fov const& observe)
 		{
 			transform_component * result = nullptr;
-			stage->space()->find(transform->position(), range, [&](int /*x*/, int /*y*/, transform_component * subject) {
-				if (subject) {
-					if (auto subject_body = subject->linked<body_component>()) {
-						if (body->is_hostile(*subject_body)) {
-							result = subject;
-						}
+			stage->space()->find(center, observe.range(), [&](int /*x*/, int /*y*/, transform_component * subject) {
+				if (!subject) return;
+				if (!observe.contains(subject->position())) return;
+
+				if (auto subject_body = subject->linked<body_component>()) {
+					if (faction.is_hostile(*subject_body)) {
+						result = subject;
 					}
 				}
-				result = subject;
 			});
 			return result;
 		}

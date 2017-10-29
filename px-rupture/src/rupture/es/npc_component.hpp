@@ -9,6 +9,7 @@
 #include <px/rl/ai_state.hpp>
 
 #include <cstdint>
+#include <tuple>
 
 namespace px {
 
@@ -26,15 +27,20 @@ namespace px {
 		}
 		std::uint32_t get_range() const noexcept
 		{
-			return perception_range;
+			return state == rl::ai_state::idle ? range_idle : range_alert;
+		}
+		std::tuple<std::uint32_t, std::uint32_t> get_ranges() const noexcept
+		{
+			return { range_idle, range_alert };
 		}
 		void set_state(rl::ai_state current) noexcept
 		{
 			state = current;
 		}
-		void set_range(std::uint32_t range) noexcept
+		void set_range(std::uint32_t idle, std::uint32_t alert) noexcept
 		{
-			perception_range = range;
+			range_idle = idle;
+			range_alert = alert;
 		}
 		point2 & destination()
 		{
@@ -43,14 +49,15 @@ namespace px {
 
 		template <typename Archive>
 		void serialize(Archive & archive) {
-			archive(state, perception_range, waypoint);
+			archive(state, waypoint, range_idle, range_alert);
 		}
 
 	public:
 		virtual ~npc_component() = default;
 		npc_component()
 			: state(rl::ai_state::idle)
-			, perception_range(0)
+			, range_idle(0)
+			, range_alert(0)
 			, waypoint{ 0, 0 }
 		{
 		}
@@ -59,7 +66,8 @@ namespace px {
 
 	private:
 		rl::ai_state	state;
-		std::uint32_t	perception_range;
+		std::uint32_t	range_idle;
+		std::uint32_t	range_alert;
 		point2			waypoint;
 	};
 }

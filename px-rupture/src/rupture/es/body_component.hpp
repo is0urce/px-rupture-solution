@@ -36,20 +36,21 @@ namespace px {
 		, public rl::standing<int32_t>
 	{
 	public:
-		typedef useable<body_component*, environment*> useable_type;
-		typedef rl::mass<rl::traverse> mass_type;
-		typedef rl::traverse_options<rl::traverse> movement_type;
+		typedef useable<body_component*, environment*>	useable_type;
+		typedef rl::mass<rl::traverse>					mass_type;
+		typedef rl::traverse_options<rl::traverse>		movement_type;
+		typedef rl::standing<int32_t>					standing_type;
 
 	public:
-		void										assign_useable(useable_type * useable) noexcept;
-		bool										is_useable() const noexcept;
-		bool										can_use(body_component * user, environment * env) const;
-		void										use(body_component * user, environment * env);
-		bool										try_use(body_component * user, environment * env);
-		mass_type const&							blocking() const noexcept;
-		mass_type &									blocking() noexcept;
-		movement_type const&						movement() const noexcept;
-		movement_type &								movement() noexcept;
+		void											assign_useable(useable_type * useable) noexcept;
+		bool											is_useable() const noexcept;
+		bool											can_use(body_component * user, environment * env) const;
+		void											use(body_component * user, environment * env);
+		bool											try_use(body_component * user, environment * env);
+		mass_type const&								blocking() const noexcept;
+		mass_type &										blocking() noexcept;
+		movement_type const&							movement() const noexcept;
+		movement_type &									movement() noexcept;
 
 		template <typename Archive>
 		void serialize(Archive & archive) {
@@ -66,8 +67,8 @@ namespace px {
 		body_component & operator=(body_component const&) noexcept = delete;
 
 	private:
-		mass_type									mass;
-		movement_type								traverse_opts;
-		useable_type *								button;
+		mass_type										mass;
+		movement_type									traverse_opts;
+		useable_type *									button;
 	};
 }

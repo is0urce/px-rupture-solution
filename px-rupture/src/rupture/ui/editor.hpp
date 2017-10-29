@@ -532,13 +532,17 @@ namespace px::ui {
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
 				ImGui::Text("state: %d", npc_state);
-				ImGui::Text("range: %d", npc_range);
+				ImGui::Text("range: %d, %d", npc_range_idle, npc_range_alert);
 				ImGui::Text("destination: (%d, %d)", npc_waypoint_x, npc_waypoint_y);
 				ImGui::EndTooltip();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("x##remove_npc")) {
 				PX_BUILD(remove_npc());
+			}
+			else {
+				if (ImGui::InputInt("idle##npc_range", &npc_range_idle)) npc->set_range(npc_range_idle, npc_range_alert);
+				if (ImGui::InputInt("alert##npc_range", &npc_range_alert)) npc->set_range(npc_range_idle, npc_range_alert);
 			}
 		}
 		void load_schema(std::string const& schema_name)
@@ -637,7 +641,9 @@ namespace px::ui {
 
 				if (auto npc = current->query<npc_component>()) {
 					npc_state = static_cast<int>(npc->get_state());
-					npc_range = static_cast<int>(npc->get_range());
+					auto ranges = npc->get_ranges();
+					npc_range_idle = static_cast<int>(std::get<0>(ranges));
+					npc_range_alert = static_cast<int>(std::get<1>(ranges));
 					npc_waypoint_x = npc->destination().x();
 					npc_waypoint_y = npc->destination().y();
 				}
@@ -685,7 +691,8 @@ namespace px::ui {
 		std::array<char, 128>		character_learn;
 
 		int							npc_state;
-		int							npc_range;
+		int							npc_range_idle;
+		int							npc_range_alert;
 		int							npc_waypoint_x;
 		int							npc_waypoint_y;
 	};

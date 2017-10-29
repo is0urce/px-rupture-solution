@@ -32,6 +32,10 @@ namespace px {
 			point2 relative = absolute - center + point2(r, r);
 			return grid.contains(relative) ? grid.get(relative) : false;
 		}
+		unsigned int range() const noexcept
+		{
+			return r;
+		}
 
 	public:
 		fov()
