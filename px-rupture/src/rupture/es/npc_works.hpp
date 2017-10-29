@@ -1,10 +1,14 @@
 // name: npc_works.hpp
+// type: c++
+// auth: is0urce
+// desc: npc ai system internal class
 
 #pragma once
 
+#include "body_component.hpp"
+#include "character_component.hpp"
 #include "npc_component.hpp"
 #include "transform_component.hpp"
-#include "body_component.hpp"
 
 #include "rupture/rl/scene.hpp"
 
@@ -35,6 +39,8 @@ namespace px {
 				if (!pawn) return;
 				body_component * body = pawn->linked<body_component>();
 				if (!body) return;
+				character_component * character = body->linked<character_component>();
+				if (!character) return;
 
 				// ensure npc can act
 				if (!body->is_alive()) return;
@@ -56,22 +62,44 @@ namespace px {
 
 				// act
 				if (!npc.is_idle()) {
+					bool cast = false;
 
-					const unsigned int iteration_steps = 150;
-					auto path = a_star::find(pawn->position(), npc.destination(), [&](point2 const& location) { return stage->is_traversable(location, body->movement()); }, iteration_steps);
+					// use direct skills
+					if (target) {
+						auto * target_body = target->linked<body_component>();
+						for (size_t i = 0, size = character->size(); !cast && i != size; ++i) {
+							if (auto * skill = character->get(i)) {
+								cast = skill->is_targeted() && skill->try_use(body, target_body);
+							}
+						}
+					}
 
-					if (path.size() != 0) {
-						point2 const& next = path.front();
-						if (stage->is_traversable(next, body->movement())) {
-							pawn->place(next);
+					// use area skills
+					if (!cast) {
+						for (size_t i = 0, size = character->size(); !cast && i != size; ++i) {
+							if (auto * skill = character->get(i)) {
+								cast = !skill->is_targeted() && skill->try_use(body, npc.destination());
+							}
+						}
+					}
+
+					// or advance
+					if (!cast) {
+						const unsigned int iteration_steps = 150;
+						auto path = a_star::find(pawn->position(), npc.destination(), [opts = body->movement(), this](point2 const& location) { return stage->is_traversable(location, opts); }, iteration_steps);
+
+						if (path.size() != 0) {
+							point2 const& next = path.front();
+							if (stage->is_traversable(next, body->movement())) {
+								pawn->place(next);
+							}
 						}
 					}
 				}
 			});
 		}
 	private:
-		transform_component * lock_target(point2 const& center, body_component::standing_type const& faction, fov const& observe)
-		{
+		transform_component * lock_target(point2 const& center, body_component::standing_type const& faction, fov const& observe) {
 			transform_component * result = nullptr;
 			stage->space()->find(center, observe.range(), [&](int /*x*/, int /*y*/, transform_component * subject) {
 				if (!subject) return;

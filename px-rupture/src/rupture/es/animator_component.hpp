@@ -31,7 +31,7 @@ namespace px {
 		size_t							size() const;
 
 		template <typename Archive>
-		void serialize(Archive & /*archive*/) {
+		void							serialize(Archive & /*archive*/) {
 		}
 
 	public:
