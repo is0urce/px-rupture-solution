@@ -11,6 +11,7 @@
 #include <px/common/pool_chain.hpp>
 #include <px/common/qtree.hpp>
 #include <px/algorithm/fov.hpp>
+#include <px/algorithm/a_star.hpp>
 
 namespace px {
 
@@ -30,35 +31,41 @@ namespace px {
 				if (!npc.is_active()) return;
 
 				// ensure valid composition
-				transform_component * transform = npc.linked<transform_component>();
-				if (!transform) return;
-				body_component * body = transform->linked<body_component>();
+				transform_component * pawn = npc.linked<transform_component>();
+				if (!pawn) return;
+				body_component * body = pawn->linked<body_component>();
 				if (!body) return;
 
 				// ensure npc can act
 				if (!body->is_alive()) return;
 
 				// health drop check
-				if (npc.get_state() == rl::ai_state::idle && !body->health()->full()) {
-					npc.set_state(rl::ai_state::alert);
-					npc.destination() = transform->position(); // init waypoint to current position
+				if (npc.is_idle() && !body->health()->full()) {
+					npc.alert();
+					npc.destination() = pawn->position(); // init waypoint to current position
 				}
 
 				// select enemy in range
 				auto range = npc.get_range();
-				observed.calculate(transform->position(), range, [&](int x, int y) { return stage->is_transparent({ x, y }); });
-				transform_component * target = lock_target(transform->position(), *body, observed);
+				observed.calculate(pawn->position(), range, [&](int x, int y) { return stage->is_transparent({ x, y }); });
+				transform_component * target = lock_target(pawn->position(), *body, observed);
 				if (target) {
-					npc.set_state(rl::ai_state::alert);
+					npc.alert();
 					npc.destination() = target->position();
 				}
 
-				if (npc.get_state() == rl::ai_state::alert) {
+				// act
+				if (!npc.is_idle()) {
 
-					//point2 dest = npc.destination();
-					//if (observed.contains(dest)) {
-					//	transform->place(dest);
-					//}
+					const unsigned int iteration_steps = 150;
+					auto path = a_star::find(pawn->position(), npc.destination(), [&](point2 const& location) { return stage->is_traversable(location, body->movement()); }, iteration_steps);
+
+					if (path.size() != 0) {
+						point2 const& next = path.front();
+						if (stage->is_traversable(next, body->movement())) {
+							pawn->place(next);
+						}
+					}
 				}
 			});
 		}

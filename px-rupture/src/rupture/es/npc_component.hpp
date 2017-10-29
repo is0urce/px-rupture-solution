@@ -33,10 +33,10 @@ namespace px {
 		{
 			return { range_idle, range_alert };
 		}
-		void set_state(rl::ai_state current) noexcept
-		{
-			state = current;
-		}
+		//void set_state(rl::ai_state current) noexcept
+		//{
+		//	state = current;
+		//}
 		void set_range(std::uint32_t idle, std::uint32_t alert) noexcept
 		{
 			range_idle = idle;
@@ -45,6 +45,14 @@ namespace px {
 		point2 & destination()
 		{
 			return waypoint;
+		}
+		bool is_idle() const noexcept
+		{
+			return state == rl::ai_state::idle;
+		}
+		void alert()
+		{
+			state = rl::ai_state::alert;
 		}
 
 		template <typename Archive>

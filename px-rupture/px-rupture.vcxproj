@@ -195,6 +195,7 @@
     <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\px\algorithm\a_star.hpp" />
     <ClInclude Include="src\px\algorithm\fov.hpp" />
     <ClInclude Include="src\px\algorithm\recursive_shadowcasting.hpp" />
     <ClInclude Include="src\px\common\bindings.hpp" />

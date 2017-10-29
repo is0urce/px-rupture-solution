@@ -132,6 +132,7 @@ namespace px {
 		body->health().emplace(100);
 		body->energy().emplace(50);
 		body->set_name("Gnome");
+		body->join_faction(1);
 		b.add_player();
 		b.add_sprite("m_gnome_mage");
 		incarnate(b.add_transform({ 25, 25 }));
