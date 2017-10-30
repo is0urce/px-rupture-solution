@@ -12,23 +12,22 @@
 
 namespace px {
 
-	class script_internal final
-	{
+	class script_internal final {
 	public:
-		void assign_environment(environment * game)
-		{
+
+		void assign_environment(environment * game) {
 			lua["game"] = script_environment(game);
 		}
-		void run(std::string const& code)
-		{
+
+		void run(std::string const& code) {
 			lua.script(code);
 		}
-		void execute(std::string const& path)
-		{
+
+		void execute(std::string const& path) {
 			lua.script_file(path);
 		}
-		rl::skill_functional<body_component *, body_component *, point2> impact(std::string const& path)
-		{
+
+		rl::skill_functional<body_component *, body_component *, point2> impact(std::string const& path) {
 			try {
 				auto & sandbox = skills[path] = sol::environment(lua, sol::create, lua.globals());
 				lua.script_file(path, sandbox);
@@ -90,8 +89,7 @@ namespace px {
 		}
 
 	public:
-		script_internal()
-		{
+		script_internal() {
 			lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table);
 
 			add_usertypes();

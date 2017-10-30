@@ -1,6 +1,7 @@
 // name: script_environment.hpp
-
-// script bindings for game object unit
+// type: c++
+// auth: is0urce
+// desc: script bindings for game object unit
 
 #pragma once
 
@@ -15,8 +16,7 @@
 
 namespace px {
 
-	class script_environment
-	{
+	class script_environment {
 	public:
 		int distance(point2 const& a, point2 const& b) {
 			return game->distance(a, b);
@@ -53,15 +53,16 @@ namespace px {
 			rl::damage_type damage_type = rl::damage_type::pure;
 
 			if (user_body && target_body) {
-				auto hit = game->hit(*target_body, *target_body);
+				rl::hit_result hit = game->hit(*target_body, *target_body);
+				std::tie(damage, damage_type) = game->dps(*target_body);
 				switch (hit)
 				{
-				case px::rl::hit_result::connects:
-				case px::rl::hit_result::critical:
-					std::tie(damage, damage_type) = game->dps(*target_body);
+				case rl::hit_result::connects:
+				case rl::hit_result::critical:
+					connects = true;
 					break;
-				case px::rl::hit_result::failure:
-				case px::rl::hit_result::miss:
+				case rl::hit_result::failure:
+				case rl::hit_result::miss:
 				default:
 					break;
 				}
@@ -81,8 +82,7 @@ namespace px {
 		//	game->->terrain().pset(location, tile_index);
 		//}
 
-		void damage(script_unit & target, int damage, int damage_type)
-		{
+		void damage(script_unit & target, int damage, int damage_type) {
 			if (auto * body = target.get_body()) {
 				game->damage(*body, damage, static_cast<rl::damage_type>(damage_type));
 			}

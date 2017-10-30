@@ -228,6 +228,9 @@
     <ClInclude Include="src\px\rl\bar.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\damage_type.hpp" />
+    <ClInclude Include="src\px\rl\effect.hpp" />
+    <ClInclude Include="src\px\rl\enhancement.hpp" />
+    <ClInclude Include="src\px\rl\enhancement_collection.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />
     <ClInclude Include="src\px\rl\hit_result.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />

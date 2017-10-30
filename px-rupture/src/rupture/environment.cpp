@@ -228,9 +228,9 @@ namespace px {
 				auto pawn = body->linked<transform_component>();
 
 				// spawn loot bag
-				if (pawn && loot) {
+				if (pawn && loot && loot->size() != 0) {
 					auto & bag = spawn("bag", pawn->position());
-					if (auto drop = bag->query<container_component>()) {
+					if (container_component * drop = bag->qlink<container_component, body_component, transform_component>()) {
 						drop->take(*loot);
 					}
 				}
@@ -268,6 +268,7 @@ namespace px {
 		if (auto & hp = target.health()) {
 			hp->damage(damage);
 
+			// send popup notification
 			if (transform_component * pawn = target.linked<transform_component>()) {
 				popup(std::to_string(damage), pawn == player ? 0xff0000 : 0xffff00, pawn->position());
 			}

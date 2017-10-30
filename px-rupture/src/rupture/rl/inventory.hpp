@@ -26,11 +26,18 @@ namespace px::rl {
 		}
 
 		// remove item from position
-		bool remove(size_t idx) {
-			if (idx >= items.size()) return false;
+		//bool remove(size_t idx) {
+		//	if (idx >= items.size()) return false;
+		//	items[idx] = std::move(items.back());
+		//	items.pop_back();
+		//	return true;
+		//}
+		item_ptr remove(size_t idx) {
+			if (idx >= items.size()) return nullptr;
+			item_ptr result = std::move(items[idx]);
 			items[idx] = std::move(items.back());
 			items.pop_back();
-			return true;
+			return result;
 		}
 
 		void take(inventory & loot) {

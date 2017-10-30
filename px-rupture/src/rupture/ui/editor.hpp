@@ -24,6 +24,8 @@
 
 #include <imgui/imgui.h>
 
+#include <px/memory/memory.hpp>
+
 #include <algorithm>
 #include <array>
 #include <filesystem>
@@ -451,9 +453,7 @@ namespace px::ui {
 						ImGui::Text("%d) %s", i, state.alias().c_str());
 						if (ImGui::IsItemHovered()) {
 							ImGui::BeginTooltip();
-							ImGui::Text("tag: %s", state.tag().c_str());
-							ImGui::Text("name: %s", state.name().c_str());
-							ImGui::Text("description: %s", state.description().c_str());
+							combine_entity(state);
 							ImGui::Text("cd: %d/%d", state.cooldown_remaining(), state.cooldown_duration());
 							ImGui::Text("cost: %d", state.cost());
 							ImGui::Text("hostile: %s", state.hostile() ? "true" : "false");
@@ -489,11 +489,71 @@ namespace px::ui {
 		{
 			if (!container) return;
 
+			size_t size = container->size();
 			ImGui::Separator();
 			ImGui::Text("container");
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+
+				ImGui::Text("items: %d", size);
+
+				ImGui::EndTooltip();
+			}
 			ImGui::SameLine();
 			if (ImGui::Button("x##remove_container")) {
 				PX_BUILD(remove_container());
+			}
+			else {
+
+				if (size != 0) {
+					for (size_t i = 0; i != size; ++i) {
+						rl::item * ptr = container->get(i);
+						if (ptr) {
+							ImGui::Text("%d) %s", i, ptr->tag().c_str());
+							if (ImGui::IsItemHovered()) {
+								ImGui::BeginTooltip();
+								combine_entity(*ptr);
+								ImGui::Text("enh size:  %d", ptr->size());
+								ImGui::Text("power:     %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::power)).magnitude0);
+								ImGui::Text("damage:    %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::damage)).magnitude0);
+								ImGui::Text("hp bonus:  %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::hp_bonus)).magnitude0);
+								ImGui::Text("ore power: %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::ingredient_power)).magnitude0);
+								ImGui::Text("essence:   %d", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::essence)).value0);
+								ImGui::EndTooltip();
+							}
+							ImGui::SameLine();
+							ImGui::PushID(static_cast<int>(i));
+							if (ImGui::Button("x")) {
+								container->remove(i);
+								i = 0;
+							}
+							ImGui::PopID();
+						}
+					}
+				}
+
+				ImGui::InputText("tag##create_item", item_tag.data(), item_tag.size(), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_CharsNoBlank);
+				ImGui::InputText("name##create_item", item_name.data(), item_name.size(), ImGuiInputTextFlags_AutoSelectAll);
+				ImGui::InputText("description##create_item", item_description.data(), item_description.size());
+
+				ImGui::InputFloat("power##create_item", &item_power);
+				ImGui::InputFloat("damage##create_item", &item_damage);
+				ImGui::InputFloat("hp##create_item", &item_hp_bonus);
+				ImGui::InputFloat("ore power##create_item", &item_ore_power);
+				ImGui::InputInt("essence##create_item", &item_essence);
+
+				if (ImGui::Button("create##item")) {
+					auto & item = container->add(make_uq<rl::item>());
+					item->set_tag(item_tag.data());
+					item->set_name(item_name.data());
+					item->set_description(item_description.data());
+
+					item->push_back(rl::item::enhancement_type::real(rl::effect::power, 0, item_power, item_power));
+					item->push_back(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+					//item->hp_bonus = item_hp_bonus;
+					//item->ingredient_power = item_ore_power;
+					//item->essence = item_essence;
+				}
 			}
 		}
 		void combine_deposit(deposite_component * deposit)
@@ -544,6 +604,11 @@ namespace px::ui {
 				if (ImGui::InputInt("idle##npc_range", &npc_range_idle)) npc->set_range(npc_range_idle, npc_range_alert);
 				if (ImGui::InputInt("alert##npc_range", &npc_range_alert)) npc->set_range(npc_range_idle, npc_range_alert);
 			}
+		}
+		void combine_entity(rl::entity const& subject) {
+			ImGui::Text("tag: %s", subject.tag().c_str());
+			ImGui::Text("name: %s", subject.name().c_str());
+			ImGui::Text("description: %s", subject.description().c_str());
 		}
 		void load_schema(std::string const& schema_name)
 		{
@@ -647,6 +712,18 @@ namespace px::ui {
 					npc_waypoint_x = npc->destination().x();
 					npc_waypoint_y = npc->destination().y();
 				}
+
+				// item
+				item_tag.fill(0);
+				item_description.fill(0);
+				item_name.fill(0);
+				item_power = 0;
+				item_damage = 0;
+				item_hp_bonus = 0;
+				item_accuracy = 0;
+				item_critical = 0;
+				item_ore_power = 0;
+				item_essence = 0;
 			}
 		}
 		template <size_t max>
@@ -695,5 +772,16 @@ namespace px::ui {
 		int							npc_range_alert;
 		int							npc_waypoint_x;
 		int							npc_waypoint_y;
+
+		std::array<char, 128>		item_tag;
+		std::array<char, 128>		item_name;
+		std::array<char, 1024>		item_description;
+		float						item_power;
+		float						item_damage;
+		float						item_hp_bonus;
+		float						item_accuracy;
+		float						item_critical;
+		float						item_ore_power;
+		int							item_essence;
 	};
 }
