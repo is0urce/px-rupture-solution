@@ -53,8 +53,8 @@ namespace px {
 			rl::damage_type damage_type = rl::damage_type::pure;
 
 			if (user_body && target_body) {
-				rl::hit_result hit = game->hit(*target_body, *target_body);
-				std::tie(damage, damage_type) = game->dps(*target_body);
+				rl::hit_result hit = game->hit(*user_body, *target_body);
+				std::tie(damage, damage_type) = game->dps(*user_body);
 				switch (hit)
 				{
 				case rl::hit_result::connects:

@@ -1,3 +1,5 @@
+// name: hit_result.hpp
+
 #pragma once
 
 namespace px::rl {

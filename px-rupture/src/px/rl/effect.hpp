@@ -1,3 +1,5 @@
+// name: effect.hpp
+
 #pragma once
 
 namespace px::rl {

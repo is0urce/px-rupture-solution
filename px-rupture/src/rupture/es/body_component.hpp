@@ -64,6 +64,11 @@ namespace px {
 		void														unequip(rl::equipment slot);
 		rl::item *													equipment(rl::equipment slot) const;
 		enhancement_type											accumulate(enhancement_type start) const;
+		std::uint32_t												level() const;
+		std::uint32_t												experience() const;
+		void														set_level(std::uint32_t n);
+		void														set_experience(std::uint32_t n);
+		
 
 		template <typename Archive>
 		void														serialize(Archive & archive) {
@@ -71,8 +76,8 @@ namespace px {
 			archive(static_cast<rl::entity &>(*this));
 			archive(static_cast<rl::constitution<int32_t> &>(*this));
 			archive(static_cast<rl::standing<int32_t> &>(*this));
-			archive(mannequin);
-			archive(buffs);
+			archive(mannequin, buffs);
+			archive(lvl, exp);
 		}
 
 	public:
@@ -87,5 +92,7 @@ namespace px {
 		useable_type *												button;
 		rl::doll<rl::equipment, rl::item>							mannequin;
 		std::vector<buff_type>										buffs;
+		std::uint32_t												lvl;
+		std::uint32_t												exp;
 	};
 }

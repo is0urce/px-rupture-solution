@@ -1,3 +1,5 @@
+// name: damage_type.hpp
+
 #pragma once
 
 namespace px::rl {

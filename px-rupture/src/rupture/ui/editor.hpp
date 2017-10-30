@@ -349,13 +349,15 @@ namespace px::ui {
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
 				combine_entity(*body);
-				ImGui::Text("faction_id: %d", static_cast<unsigned int>(body->current_faction()));
+				ImGui::Text("level:       %d", body->level());
+				ImGui::Text("exp:         %d", body->experience());
+				ImGui::Text("faction_id:  %d", static_cast<unsigned int>(body->current_faction()));
 				ImGui::Text("transparent: %s", mass.is_transparent() ? "true" : "false");
-				ImGui::Text("blocking: %s", mass.traverse_bitset().to_string().c_str());
-				ImGui::Text("movement: %s", movement.traverse_bitset().to_string().c_str());
-				ImGui::Text("hp: %s", (health ? (std::to_string(health->current()) + "/" + std::to_string(health->maximum())) : std::string{ "empty" }).c_str());
-				ImGui::Text("mp: %s", (energy ? (std::to_string(energy->current()) + "/" + std::to_string(energy->maximum())) : std::string{ "empty" }).c_str());
-				ImGui::Text("useable: %s", body->is_useable() ? "true" : "false");
+				ImGui::Text("blocking:    %s", mass.traverse_bitset().to_string().c_str());
+				ImGui::Text("movement:    %s", movement.traverse_bitset().to_string().c_str());
+				ImGui::Text("hp:          %s", (health ? (std::to_string(health->current()) + "/" + std::to_string(health->maximum())) : std::string{ "empty" }).c_str());
+				ImGui::Text("mp:          %s", (energy ? (std::to_string(energy->current()) + "/" + std::to_string(energy->maximum())) : std::string{ "empty" }).c_str());
+				ImGui::Text("useable:     %s", body->is_useable() ? "true" : "false");
 				ImGui::EndTooltip();
 			}
 			ImGui::SameLine();
@@ -366,7 +368,7 @@ namespace px::ui {
 
 				ImGui::Text("tag: ");
 				ImGui::SameLine();
-				if (ImGui::InputText("##body_tag", body_tag.data(), body_tag.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
+				if (ImGui::InputText("##body_tag", body_tag.data(), body_tag.size() - 1, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_CharsNoBlank)) {
 					body->set_tag(body_tag.data());
 				}
 				ImGui::Text("name:");
@@ -378,6 +380,15 @@ namespace px::ui {
 				ImGui::SameLine();
 				if (ImGui::InputText("##body_description", body_description.data(), body_description.size() - 1, ImGuiInputTextFlags_AutoSelectAll)) {
 					body->set_description(body_description.data());
+				}
+
+
+				// level
+				if (ImGui::InputInt("level##body", &level)) {
+					body->set_level(level);
+				}
+				if (ImGui::InputInt("experience##body", &experience)) {
+					body->set_experience(experience);
 				}
 
 				// mass
@@ -424,7 +435,17 @@ namespace px::ui {
 					}
 				}
 
-				if (ImGui::Button("equip#equip_first")) {
+				if (auto i = body->equipment(rl::equipment::hand)) {
+					ImGui::Text("hand: ");
+					ImGui::SameLine();
+					combine_item(*i);
+					ImGui::SameLine();
+					if (ImGui::Button("x##unequip_hand")) {
+						body->unequip(rl::equipment::hand);
+					}
+				}
+
+				if (ImGui::Button("equip##equip_first")) {
 					body->equip(0);
 				}
 			}
@@ -529,23 +550,28 @@ namespace px::ui {
 				ImGui::InputText("name##create_item", item_name.data(), item_name.size(), ImGuiInputTextFlags_AutoSelectAll);
 				ImGui::InputText("description##create_item", item_description.data(), item_description.size());
 
-				ImGui::InputFloat("power##create_item", &item_power);
+				//ImGui::InputFloat("power##create_item", &item_power);
 				ImGui::InputFloat("damage##create_item", &item_damage);
-				ImGui::InputFloat("hp##create_item", &item_hp_bonus);
+				//ImGui::InputFloat("hp##create_item", &item_hp_bonus);
 				ImGui::InputFloat("ore power##create_item", &item_ore_power);
 				ImGui::InputInt("essence##create_item", &item_essence);
 
-				if (ImGui::Button("create##item")) {
+				if (ImGui::Button("+ weapon##item")) {
 					auto & item = container->add(make_uq<rl::item>());
 					item->set_tag(item_tag.data());
 					item->set_name(item_name.data());
 					item->set_description(item_description.data());
 
-					item->add(rl::item::enhancement_type::real(rl::effect::power, 0, item_power, item_power));
 					item->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
-					//item->hp_bonus = item_hp_bonus;
-					//item->ingredient_power = item_ore_power;
-					//item->essence = item_essence;
+				}
+				if (ImGui::Button("+ ore##item")) {
+					auto & item = container->add(make_uq<rl::item>());
+					item->set_tag(item_tag.data());
+					item->set_name(item_name.data());
+					item->set_description(item_description.data());
+
+					item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, 0, item_power, 0));
+					item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, item_essence, 0));
 				}
 			}
 		}
@@ -584,8 +610,8 @@ namespace px::ui {
 			ImGui::Text("npc");
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
-				ImGui::Text("state: %d", npc_state);
-				ImGui::Text("range: %d, %d", npc_range_idle, npc_range_alert);
+				ImGui::Text("state:       %d", npc_state);
+				ImGui::Text("range:       %d, %d", npc_range_idle, npc_range_alert);
 				ImGui::Text("destination: (%d, %d)", npc_waypoint_x, npc_waypoint_y);
 				ImGui::EndTooltip();
 			}
@@ -599,16 +625,16 @@ namespace px::ui {
 			}
 		}
 		void combine_entity(rl::entity const& subject) {
-			ImGui::Text("tag: %s", subject.tag().c_str());
-			ImGui::Text("name: %s", subject.name().c_str());
-			ImGui::Text("description: %s", subject.description().c_str());
+			ImGui::Text("tag:         '%s'", subject.tag().c_str());
+			ImGui::Text("name:        '%s'", subject.name().c_str());
+			ImGui::Text("description: '%s'", subject.description().c_str());
 		}
 		void combine_item(rl::item const& item) {
 			ImGui::Text("%s x%d", item.tag().c_str(), item.count());
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
 				combine_entity(item);
-				ImGui::Text("stack: [%d/%d]", item.count(), item.maximum());
+				ImGui::Text("stack:     [%d/%d]", item.count(), item.maximum());
 				ImGui::Text("size:      %d", item.size());
 				ImGui::Text("power:     %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::power)).magnitude0);
 				ImGui::Text("damage:    %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::damage)).magnitude0);
@@ -690,6 +716,10 @@ namespace px::ui {
 					animator_playing = animator->is_playing();
 				}
 				if (auto body = current->query<body_component>()) {
+					copy_str(body->name(), body_name);
+					copy_str(body->tag(), body_tag);
+					copy_str(body->description(), body_description);
+
 					body_transparent = body->blocking().is_transparent();
 					auto const& health = body->health();
 					auto const& energy = body->energy();
@@ -701,9 +731,9 @@ namespace px::ui {
 						mp = energy->current();
 						mp_max = energy->maximum();
 					}
-					copy_str(body->name(), body_name);
-					copy_str(body->tag(), body_tag);
-					copy_str(body->description(), body_description);
+
+					level = body->level();
+					experience = body->experience();
 				}
 				if (auto deposit = current->query<deposite_component>()) {
 					deposit_dissolve = deposit->dissolving();
@@ -767,6 +797,8 @@ namespace px::ui {
 		int							hp_max;
 		int							mp;
 		int							mp_max;
+		int							level;
+		int							experience;
 
 		bool						deposit_dissolve;
 

@@ -1,3 +1,5 @@
+// name: body_system.cpp
+
 #include "body_system.hpp"
 
 #include "body_works.hpp"
@@ -16,6 +18,13 @@ namespace px {
 		: works(make_uq<body_works>())
 	{
 
+	}
+
+	// virtual overrides
+
+	void body_system::turn_update_system(delta_type const& /*delta_time*/)
+	{
+		works->tick();
 	}
 
 	// methods

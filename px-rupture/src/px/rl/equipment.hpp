@@ -1,3 +1,5 @@
+// name: equipment.hpp
+
 #pragma once
 
 namespace px::rl {

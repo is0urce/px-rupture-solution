@@ -75,9 +75,10 @@ namespace px {
 
 		// order is important
 		engine.add(&transforms);
-		engine.add(&characters);
-		engine.add(&npcs);
-		engine.add(&lights);
+		engine.add(&characters);	// cooldowns
+		engine.add(&npcs);			// ai
+		engine.add(&bodies);		// effects ticks
+		engine.add(&lights);		// make shadowmap
 		engine.add(&messages);
 	}
 

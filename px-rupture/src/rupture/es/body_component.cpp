@@ -78,6 +78,22 @@ namespace px {
 	}
 
 	body_component::enhancement_type body_component::accumulate(enhancement_type accumulator) const {
+		for (auto const& buff : buffs) {
+			accumulator = buff.accumulate(accumulator);
+		}
 		return mannequin.accumulate(accumulator);
+	}
+
+	std::uint32_t body_component::level() const {
+		return lvl;
+	}
+	std::uint32_t body_component::experience() const {
+		return exp;
+	}
+	void body_component::set_level(std::uint32_t n) {
+		lvl = n;
+	}
+	void body_component::set_experience(std::uint32_t n) {
+		exp = n;
 	}
 }

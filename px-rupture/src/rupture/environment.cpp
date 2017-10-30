@@ -260,8 +260,9 @@ namespace px {
 	rl::hit_result environment::hit(body_component const& /*source*/, body_component const& /*target*/) const {
 		return rl::hit_result::connects;
 	}
-	std::tuple<int, rl::damage_type> environment::dps(body_component const& /*source*/) const {
-		int damage = 0;
+	std::tuple<int, rl::damage_type> environment::dps(body_component const& source) const {
+		auto dps = source.accumulate(body_component::enhancement_type::zero(rl::effect::damage));
+		int damage = static_cast<int>(dps.magnitude0);
 		return { damage, rl::damage_type::pure };
 	}
 	void environment::damage(body_component & target, int damage, rl::damage_type /*discard*/) {
