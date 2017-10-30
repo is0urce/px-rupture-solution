@@ -1,3 +1,5 @@
+// name: doll.hpp
+
 #pragma once
 
 #include <px/memory/memory.hpp>
@@ -6,30 +8,45 @@
 #include <utility>
 
 namespace px::rl {
+
 	template <typename Equipment, typename Item>
 	class doll {
 	public:
 		typedef Item item_type;
 		typedef uq_ptr<item_type> item_ptr;
+		typedef typename item_type::enhancement_type enhancement_type;
 
 	public:
+		// returns swapped item
 		item_ptr equip(Equipment slot, item_ptr && item) {
 			item_ptr old = std::move(container[slot]);
 			container[slot] = std::forward<item_ptr>(item);
 			return old;
 		}
+
+		// returns nullptr if no equipment
 		item_type * operator[](Equipment slot) const {
 			auto it = container.find(slot);
 			if (it == container.end()) return nullptr;
 			return it->second.get();
 		}
+
+		// returns removed item (or nullptr if nothing to remove)
 		item_ptr remove(Equipment slot) {
 			item_ptr result = std::move(container[slot]);
 			container.erase(slot);
 			return result;
 		}
+
 		bool is_equipped(Equipment slot) const {
 			return container.find(slot) != container.end();
+		}
+
+		enhancement_type accumulate(enhancement_type accumulator) const {
+			for (auto const& element : container) {
+				accumulator = element.second->accumulate(accumulator);
+			}
+			return accumulator;
 		}
 
 		template <typename Archive>

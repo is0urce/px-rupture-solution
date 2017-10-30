@@ -12,6 +12,7 @@ namespace px::rl {
 		damage,
 		armor,
 		resistance,
+		dodge,
 
 		hp_bonus,
 		hp_regen,

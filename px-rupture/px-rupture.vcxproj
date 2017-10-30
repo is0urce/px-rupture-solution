@@ -239,7 +239,6 @@
     <ClInclude Include="src\px\rl\stack.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />
     <ClInclude Include="src\rupture\rl\item.hpp" />
-    <ClInclude Include="src\rupture\rl\status.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
     <ClInclude Include="src\px\rl\skill\skill_functional.hpp" />
     <ClInclude Include="src\px\rl\skill\skill_impact.hpp" />

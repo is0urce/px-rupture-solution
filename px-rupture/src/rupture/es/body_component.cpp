@@ -76,4 +76,8 @@ namespace px {
 	rl::item * body_component::equipment(rl::equipment slot) const {
 		return mannequin[slot];
 	}
+
+	body_component::enhancement_type body_component::accumulate(enhancement_type accumulator) const {
+		return mannequin.accumulate(accumulator);
+	}
 }

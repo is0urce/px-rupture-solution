@@ -477,9 +477,6 @@
     <ClInclude Include="src\rupture\draw\animation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\rl\status.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\rl\item.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

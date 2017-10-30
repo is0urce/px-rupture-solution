@@ -16,7 +16,7 @@ namespace px::rl {
 
 	public:
 		enhancement_type accumulate(enhancement_type accumulator) const {
-			for (enhancement_type const& element : collection) {
+			for (enhancement_type const& element : container) {
 				if (element.main == accumulator.main) {
 					accumulator += element;
 					accumulator.sub = element.sub;
@@ -25,7 +25,7 @@ namespace px::rl {
 			return accumulator;
 		}
 		bool has_effect(Effect efx) const {
-			for (enhancement_type const& element : collection) {
+			for (enhancement_type const& element : container) {
 				if (element.main == efx) {
 					return true;
 				}
@@ -33,7 +33,7 @@ namespace px::rl {
 			return false;
 		}
 		int find_subtype(Effect efx, int or_else) const {
-			for (enhancement_type const& element : collection) {
+			for (enhancement_type const& element : container) {
 				if (element.main == efx) {
 					return element.sub;
 				}
@@ -42,19 +42,19 @@ namespace px::rl {
 		}
 		void add(enhancement_type val)
 		{
-			collection.push_back(val);
+			container.push_back(val);
 		}
 		size_t size() const
 		{
-			return collection.size();
+			return container.size();
 		}
 
 		template <typename Archive>
 		void serialize(Archive & archive) {
-			archive(collection);
+			archive(container);
 		}
 
 	private:
-		std::vector<enhancement<Effect, Integral, Real>> collection;
+		std::vector<enhancement<Effect, Integral, Real>> container;
 	};
 }
