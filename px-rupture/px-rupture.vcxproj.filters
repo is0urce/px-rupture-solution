@@ -456,9 +456,6 @@
     <ClInclude Include="src\rupture\rl\skill_state.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\script\unit.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\ui\inspector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -502,6 +499,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\px\algorithm\a_star.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\script\script_environment.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\script\script_unit.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\rl\damage_type.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\rl\hit_result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -601,5 +610,8 @@
     <None Include="data\schemata\mobile.json" />
     <None Include="data\skills.json" />
     <None Include="data\animations.json" />
+    <None Include="data\scripts\lib_rupture.lua" />
+    <None Include="data\scripts\sk_v_melee.lua" />
+    <None Include="data\scripts\sk_o_teleport.lua" />
   </ItemGroup>
 </Project>

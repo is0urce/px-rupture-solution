@@ -7,8 +7,7 @@
 
 namespace px {
 
-	class transform_component;
-	class unit
+	class script_unit
 	{
 	public:
 		void damage(int amount) {
@@ -17,8 +16,14 @@ namespace px {
 				if (hp) hp->damage(amount);
 			}
 		}
+		bool is_alive() const {
+			return body && body->is_alive();
+		}
 		bool is_valid() const noexcept {
 			return body != nullptr;
+		}
+		bool is_enemy(script_unit const& subject) const {
+			return body && subject.body && body->is_hostile(*subject.body);
 		}
 		void place(point2 target) {
 			auto pawn = get_transform();
@@ -31,23 +36,26 @@ namespace px {
 			return pawn ? pawn->position() : point2(0, 0);
 		}
 
+		body_component * get_body() {
+			return body;
+		}
+		body_component const* get_body() const {
+			return body;
+		}
+		transform_component * get_transform() {
+			return body ? body->linked<transform_component>() : nullptr;
+		}
+
 	public:
-		unit()
+		script_unit()
 			: body(nullptr)
 			, transform(nullptr)
 		{
 		}
-		unit(body_component * user)
+		script_unit(body_component * user)
 			: body(user)
 			, transform(nullptr)
 		{
-		}
-
-	private:
-		transform_component * get_transform() {
-			if (transform) return transform;
-			if (body) transform = body->linked<transform_component>();
-			return transform;
 		}
 
 	private:

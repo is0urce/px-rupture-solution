@@ -46,6 +46,7 @@ namespace px {
 		lights.assign_scene(&stage);
 		stage.assign_sprites(&sprites);
 		npcs.assign_scene(&stage);
+		mashine.assign_environment(this);
 	}
 	void shell::load_data()
 	{

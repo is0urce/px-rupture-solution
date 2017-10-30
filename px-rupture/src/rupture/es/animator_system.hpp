@@ -22,7 +22,7 @@ namespace px {
 		void						finish_animations();
 
 	public:
-		virtual ~animator_system();
+		virtual						~animator_system();
 		animator_system();
 
 	protected:

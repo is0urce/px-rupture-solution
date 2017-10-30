@@ -227,7 +227,9 @@
     <ClInclude Include="src\px\rl\ai_state.hpp" />
     <ClInclude Include="src\px\rl\bar.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
+    <ClInclude Include="src\px\rl\damage_type.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />
+    <ClInclude Include="src\px\rl\hit_result.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />
     <ClInclude Include="src\rupture\rl\item.hpp" />
     <ClInclude Include="src\rupture\rl\status.hpp" />
@@ -332,9 +334,10 @@
     <ClInclude Include="src\rupture\io\serialization.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
+    <ClInclude Include="src\rupture\script\script_environment.hpp" />
     <ClInclude Include="src\rupture\script\script.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
-    <ClInclude Include="src\rupture\script\unit.hpp" />
+    <ClInclude Include="src\rupture\script\script_unit.hpp" />
     <ClInclude Include="src\rupture\ui\editor.hpp" />
     <ClInclude Include="src\rupture\ui\inspector.hpp" />
     <ClInclude Include="src\rupture\ui\inventory.hpp" />
@@ -365,6 +368,9 @@
     <None Include="data\controls.json" />
     <None Include="data\schemata\dummy.json" />
     <None Include="data\schemata\mobile.json" />
+    <None Include="data\scripts\lib_rupture.lua" />
+    <None Include="data\scripts\sk_o_teleport.lua" />
+    <None Include="data\scripts\sk_v_melee.lua" />
     <None Include="data\shaders\light.frag" />
     <None Include="data\shaders\light.vert" />
     <None Include="data\shaders\process.frag" />

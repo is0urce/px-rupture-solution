@@ -18,6 +18,11 @@ namespace px {
 
 	// methods
 
+	void script::assign_environment(environment * game)
+	{
+		works->assign_environment(game);
+	}
+
 	void script::run(std::string const& code)
 	{
 		works->run(code);

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "unit.hpp"
+#include "script_unit.hpp"
+#include "script_environment.hpp"
 
 #include <px/dev/assert.hpp>
 
@@ -11,10 +12,13 @@
 
 namespace px {
 
-	class body_component;
 	class script_internal final
 	{
 	public:
+		void assign_environment(environment * game)
+		{
+			lua["game"] = script_environment(game);
+		}
 		void run(std::string const& code)
 		{
 			lua.script(code);
@@ -36,7 +40,7 @@ namespace px {
 				// functional
 				auto target_action = [action](body_component * user, body_component * target) -> void {
 					try {
-						action(unit(user), unit(target));
+						action(script_unit(user), script_unit(target));
 					}
 					catch (sol::error & error) {
 						px::debug(error.what());
@@ -45,7 +49,7 @@ namespace px {
 
 				auto area_action = [action](body_component * user, point2 const& area) -> void {
 					try {
-						action(unit(user), area);
+						action(script_unit(user), area);
 					}
 					catch (sol::error & error) {
 						px::debug(error.what());
@@ -55,7 +59,7 @@ namespace px {
 
 				auto target_condition = [condition](body_component * user, body_component * target) -> bool {
 					try {
-						return condition(unit(user), unit(target));
+						return condition(script_unit(user), script_unit(target));
 					}
 					catch (sol::error & error) {
 						px::debug(error.what());
@@ -64,7 +68,7 @@ namespace px {
 				};
 				auto area_condition = [condition](body_component * user, point2 const& area) -> bool {
 					try {
-						return condition(unit(user), area);
+						return condition(script_unit(user), area);
 					}
 					catch (sol::error & error) {
 						px::debug(error.what());
@@ -90,17 +94,43 @@ namespace px {
 		{
 			lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table);
 
-			lua.new_usertype<unit>("unit"
-				, "damage", &unit::damage
-				, "is_valid", &unit::is_valid
-				, "place", &unit::place
-				, "position", &unit::position
+			add_usertypes();
+			add_functions();
+		}
+
+	private:
+		void add_usertypes() {
+			lua.new_usertype<script_unit>("unit"
+				, "damage", &script_unit::damage
+				, "is_alive", &script_unit::is_alive
+				, "is_enemy", &script_unit::is_enemy
+				, "is_valid", &script_unit::is_valid
+				, "place", &script_unit::place
+				, "position", &script_unit::position
 				);
 
 			lua.new_usertype<point2>("point"
 				, "x", &point2::x
 				, "y", &point2::y
 				);
+
+			lua.new_usertype<script_environment>("environment"
+				, "distance", &script_environment::distance
+				, "hit", &script_environment::hit
+				, "damage", &script_environment::damage
+				, "distance", &script_environment::distance
+				, "popup", &script_environment::popup
+				//, "vfx", &script_environment::emit_vfx
+				//, "vfx_projectile", &script_environment::emit_projectile
+				//, "vfx_missile", &script_environment::emit_missile
+				//, "vfx_decal", &script_environment::emit_decal
+				//, "mass_export", &script_environment::mass_export
+				, "spawn", &script_environment::spawn
+				//, "pset", &script_environment::pset
+				);
+		}
+		void add_functions() {
+			lua.script_file("data/scripts/lib_rupture.lua");
 		}
 
 	private:

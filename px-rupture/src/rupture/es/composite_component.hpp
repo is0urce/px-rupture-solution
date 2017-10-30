@@ -8,6 +8,7 @@
 #include <px/es/component.hpp>
 #include <px/es/composition.hpp>
 #include <px/es/persistency.hpp>
+#include <px/es/link_dispatcher.hpp>
 
 #include <string>
 
@@ -16,6 +17,8 @@ namespace px {
 	class composite_component
 		: public component
 		, public composition
+		, public link<transform_component>
+		, public link_dispatcher<composite_component>
 	{
 	public:
 		persistency lifetime() const noexcept

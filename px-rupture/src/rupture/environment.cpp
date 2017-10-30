@@ -251,4 +251,26 @@ namespace px {
 	void environment::popup(std::string text, color tint, point2 location) {
 		messages.send({ text, tint, 1.0 }, location);
 	}
+
+	int	environment::distance(point2 const& a, point2 const& b) const
+	{
+		return a.king_distance(b);
+	}
+
+	rl::hit_result environment::hit(body_component const& /*source*/, body_component const& /*target*/) const {
+		return rl::hit_result::connects;
+	}
+	std::tuple<int, rl::damage_type> environment::dps(body_component const& /*source*/) const {
+		int damage = 0;
+		return { damage, rl::damage_type::pure };
+	}
+	void environment::damage(body_component & target, int damage, rl::damage_type /*discard*/) {
+		if (auto & hp = target.health()) {
+			hp->damage(damage);
+
+			if (transform_component * pawn = target.linked<transform_component>()) {
+				popup(std::to_string(damage), pawn == player ? 0xff0000 : 0xffff00, pawn->position());
+			}
+		}
+	}
 }

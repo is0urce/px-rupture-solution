@@ -61,7 +61,7 @@ namespace px {
 		}
 
 	public:
-		virtual ~body_component();
+		virtual											~body_component();
 		body_component() noexcept;
 		body_component(body_component const&) noexcept = delete;
 		body_component & operator=(body_component const&) noexcept = delete;

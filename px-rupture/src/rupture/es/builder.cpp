@@ -232,6 +232,8 @@ namespace px {
 			deposite->connect(container);
 			deposite->connect(unit.get());
 		}
+
+		unit->connect(transform);
 	}
 
 	uq_ptr<composite_component> builder::request()
