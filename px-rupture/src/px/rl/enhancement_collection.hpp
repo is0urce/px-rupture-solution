@@ -1,3 +1,5 @@
+// enhancement_collection.hpp
+
 #pragma once
 
 #include <px/rl/enhancement.hpp>
@@ -8,14 +10,13 @@ namespace px::rl {
 
 	template <typename Effect, typename Integral = int, typename Real = double>
 	class enhancement_collection
-		: public std::vector<enhancement<Effect, Integral, Real>>
 	{
 	public:
 		typedef enhancement<Effect, Integral, Real> enhancement_type;
 
 	public:
 		enhancement_type accumulate(enhancement_type accumulator) const {
-			for (enhancement_type const& element : *this) {
+			for (enhancement_type const& element : collection) {
 				if (element.main == accumulator.main) {
 					accumulator += element;
 					accumulator.sub = element.sub;
@@ -24,7 +25,7 @@ namespace px::rl {
 			return accumulator;
 		}
 		bool has_effect(Effect efx) const {
-			for (enhancement_type const& element : *this) {
+			for (enhancement_type const& element : collection) {
 				if (element.main == efx) {
 					return true;
 				}
@@ -32,17 +33,28 @@ namespace px::rl {
 			return false;
 		}
 		int find_subtype(Effect efx, int or_else) const {
-			for (enhancement_type const& element : *this) {
+			for (enhancement_type const& element : collection) {
 				if (element.main == efx) {
 					return element.sub;
 				}
 			}
 			return or_else;
 		}
+		void add(enhancement_type val)
+		{
+			collection.push_back(val);
+		}
+		size_t size() const
+		{
+			return collection.size();
+		}
 
 		template <typename Archive>
 		void serialize(Archive & archive) {
-			archive(static_cast<std::vector<enhancement<Effect, Integral, Real>> &>(*this));
+			archive(collection);
 		}
+
+	private:
+		std::vector<enhancement<Effect, Integral, Real>> collection;
 	};
 }

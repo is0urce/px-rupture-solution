@@ -5,6 +5,7 @@
 #include "item.hpp"
 
 #include <px/memory/uq_ptr.hpp>
+#include <px/memory/memory.hpp>
 
 #include <vector>
 
@@ -25,13 +26,6 @@ namespace px::rl {
 			return idx >= items.size() ? nullptr : items[idx].get();
 		}
 
-		// remove item from position
-		//bool remove(size_t idx) {
-		//	if (idx >= items.size()) return false;
-		//	items[idx] = std::move(items.back());
-		//	items.pop_back();
-		//	return true;
-		//}
 		item_ptr remove(size_t idx) {
 			if (idx >= items.size()) return nullptr;
 			item_ptr result = std::move(items[idx]);
@@ -48,9 +42,9 @@ namespace px::rl {
 		}
 
 		template <typename Op>
-		void take(inventory & loot, Op && fn) {
+		void take(inventory & loot, Op && msg) {
 			for (item_ptr & i : loot.items) {
-				fn(*i);
+				msg(*i);
 				items.push_back(std::move(i));
 			}
 			loot.items.clear();
@@ -75,6 +69,38 @@ namespace px::rl {
 				fn(*ptr);
 			}
 		}
+
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			size_t size = items.size();
+			archive(size);
+			items.resize(size);
+			for (size_t i = 0; i != size; ++i) {
+				if (!items[i]) items[i] = make_uq<rl::item>();
+				uq_ptr<item> & r = items[i];
+				item & it = *r;
+				it;
+				archive(it);
+			}
+		}
+		//template <typename Archive>
+		//void save(Archive & archive) const {
+		//	size_t size = items.size();
+		//	archive(size);
+		//	for (size_t i = 0; i != size; ++i) {
+		//		archive(*items[i]);
+		//	}
+		//}
+		//template <typename Archive>
+		//void load(Archive & archive) {
+		//	size_t size;
+		//	archive(size);
+		//	items.resize(size);
+		//	for (size_t i = 0; i != size; ++i) {
+		//		items[i] = make_uq<rl::item>();
+		//		archive(*items[i]);
+		//	}
+		//}
 
 	public:
 		inventory()

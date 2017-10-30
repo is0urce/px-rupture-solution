@@ -226,13 +226,17 @@
     <ClInclude Include="src\px\rgl\offscreen.hpp" />
     <ClInclude Include="src\px\rl\ai_state.hpp" />
     <ClInclude Include="src\px\rl\bar.hpp" />
+    <ClInclude Include="src\px\rl\buff.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\damage_type.hpp" />
+    <ClInclude Include="src\px\rl\doll.hpp" />
     <ClInclude Include="src\px\rl\effect.hpp" />
     <ClInclude Include="src\px\rl\enhancement.hpp" />
     <ClInclude Include="src\px\rl\enhancement_collection.hpp" />
     <ClInclude Include="src\px\rl\entity.hpp" />
+    <ClInclude Include="src\px\rl\equipment.hpp" />
     <ClInclude Include="src\px\rl\hit_result.hpp" />
+    <ClInclude Include="src\px\rl\stack.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />
     <ClInclude Include="src\rupture\rl\item.hpp" />
     <ClInclude Include="src\rupture\rl\status.hpp" />

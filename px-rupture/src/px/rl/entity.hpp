@@ -11,8 +11,7 @@
 
 namespace px::rl {
 
-	class entity
-	{
+	class entity {
 	public:
 		std::string name() const
 		{
@@ -38,11 +37,13 @@ namespace px::rl {
 		{
 			m_description = text;
 		}
-
+		bool same_tag(entity const& et) const
+		{
+			return m_tag == et.m_tag;
+		}
 
 		template <typename Archive>
-		void serialize(Archive & archive)
-		{
+		void serialize(Archive & archive) {
 			archive(m_name, m_tag, m_description);
 		}
 

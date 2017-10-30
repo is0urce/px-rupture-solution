@@ -16,7 +16,7 @@ namespace px {
 		SAVE_INPUT_ARCHIVE archive(input);
 
 		builder factory(this);
-		auto unit = blueprint::load(archive, factory);
+		auto unit = blueprint::assemble(archive, factory);
 		auto transform = unit->query<transform_component>();
 		transform->place(position);
 		transform->store();

@@ -348,9 +348,7 @@ namespace px::ui {
 			ImGui::Text("body: %s", body->tag().c_str());
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
-				ImGui::Text("tag: %s", body->tag().c_str());
-				ImGui::Text("name: %s", body->name().c_str());
-				ImGui::Text("description: %s", body->description().c_str());
+				combine_entity(*body);
 				ImGui::Text("faction_id: %d", static_cast<unsigned int>(body->current_faction()));
 				ImGui::Text("transparent: %s", mass.is_transparent() ? "true" : "false");
 				ImGui::Text("blocking: %s", mass.traverse_bitset().to_string().c_str());
@@ -424,6 +422,10 @@ namespace px::ui {
 						mp_max = 0;
 						energy.emplace(mp, mp_max);
 					}
+				}
+
+				if (ImGui::Button("equip#equip_first")) {
+					body->equip(0);
 				}
 			}
 		}
@@ -509,18 +511,9 @@ namespace px::ui {
 					for (size_t i = 0; i != size; ++i) {
 						rl::item * ptr = container->get(i);
 						if (ptr) {
-							ImGui::Text("%d) %s", i, ptr->tag().c_str());
-							if (ImGui::IsItemHovered()) {
-								ImGui::BeginTooltip();
-								combine_entity(*ptr);
-								ImGui::Text("enh size:  %d", ptr->size());
-								ImGui::Text("power:     %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::power)).magnitude0);
-								ImGui::Text("damage:    %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::damage)).magnitude0);
-								ImGui::Text("hp bonus:  %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::hp_bonus)).magnitude0);
-								ImGui::Text("ore power: %f", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::ingredient_power)).magnitude0);
-								ImGui::Text("essence:   %d", ptr->accumulate(rl::item::enhancement_type::zero(rl::effect::essence)).value0);
-								ImGui::EndTooltip();
-							}
+							ImGui::Text("%d) ", i);
+							ImGui::SameLine();
+							combine_item(*ptr);
 							ImGui::SameLine();
 							ImGui::PushID(static_cast<int>(i));
 							if (ImGui::Button("x")) {
@@ -548,8 +541,8 @@ namespace px::ui {
 					item->set_name(item_name.data());
 					item->set_description(item_description.data());
 
-					item->push_back(rl::item::enhancement_type::real(rl::effect::power, 0, item_power, item_power));
-					item->push_back(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+					item->add(rl::item::enhancement_type::real(rl::effect::power, 0, item_power, item_power));
+					item->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
 					//item->hp_bonus = item_hp_bonus;
 					//item->ingredient_power = item_ore_power;
 					//item->essence = item_essence;
@@ -610,6 +603,21 @@ namespace px::ui {
 			ImGui::Text("name: %s", subject.name().c_str());
 			ImGui::Text("description: %s", subject.description().c_str());
 		}
+		void combine_item(rl::item const& item) {
+			ImGui::Text("%s x%d", item.tag().c_str(), item.count());
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				combine_entity(item);
+				ImGui::Text("stack: [%d/%d]", item.count(), item.maximum());
+				ImGui::Text("size:      %d", item.size());
+				ImGui::Text("power:     %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::power)).magnitude0);
+				ImGui::Text("damage:    %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::damage)).magnitude0);
+				ImGui::Text("hp bonus:  %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::hp_bonus)).magnitude0);
+				ImGui::Text("ore power: %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::ingredient_power)).magnitude0);
+				ImGui::Text("essence:   %d", item.accumulate(rl::item::enhancement_type::zero(rl::effect::essence)).value0);
+				ImGui::EndTooltip();
+			}
+		}
 		void load_schema(std::string const& schema_name)
 		{
 			if (!game) return;
@@ -624,13 +632,13 @@ namespace px::ui {
 
 			builder factory(game);
 			auto input = input_stream(settings::blueprints_path + blueprint_name);
-			current = blueprint::load(SAVE_INPUT_ARCHIVE(input), factory);
+			current = blueprint::assemble(SAVE_INPUT_ARCHIVE(input), factory);
 			update_props();
 		}
 		void export_composite()
 		{
 			auto output = output_stream(settings::blueprints_path + current->name() + ".dat");
-			blueprint::save(SAVE_OUTPUT_ARCHIVE(output), *current);
+			blueprint::store(SAVE_OUTPUT_ARCHIVE(output), *current);
 		}
 		void refresh_template_items()
 		{

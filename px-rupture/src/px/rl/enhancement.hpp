@@ -13,10 +13,6 @@ namespace px::rl {
 		Real		magnitude1;
 
 	public:
-		template <typename Archive>
-		void serialize(Archive & archive) {
-			archive(main, sub, value0, value1, magnitude0, magnitude1);
-		}
 		enhancement & operator +=(enhancement const& lh) {
 			value0 += lh.value0;
 			value1 += lh.value1;
@@ -24,8 +20,10 @@ namespace px::rl {
 			magnitude1 += lh.magnitude1;
 			return *this;
 		}
-		bool same_type(enhancement & e) const {
-			return main == e.main;
+
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			archive(main, sub, value0, value1, magnitude0, magnitude1);
 		}
 
 	public:

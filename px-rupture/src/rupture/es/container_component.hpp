@@ -14,8 +14,8 @@ namespace px {
 	{
 	public:
 		template <typename Archive>
-		void serialize(Archive & /*archive*/) {
-			//archive(static_cast<rl::inventory &>(*this));
+		void serialize(Archive & archive) {
+			archive(static_cast<rl::inventory &>(*this));
 		}
 
 	public:

@@ -20,7 +20,7 @@ namespace px {
 	{
 	public:
 		template <typename Archive>
-		static void save(Archive && archive, composite_component & unit)
+		static void store(Archive && archive, composite_component & unit)
 		{
 			std::string name = unit.name();
 			persistency lifetime = unit.lifetime();
@@ -77,7 +77,7 @@ namespace px {
 			});
 		}
 		template <typename Archive>
-		static uq_ptr<composite_component> load(Archive && archive, builder & factory)
+		static uq_ptr<composite_component> assemble(Archive && archive, builder & factory)
 		{
 			std::string name;
 			persistency lifetime;

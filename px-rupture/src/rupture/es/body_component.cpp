@@ -1,6 +1,7 @@
 // name: body_component.cpp
 
 #include "body_component.hpp"
+#include "container_component.hpp"
 
 namespace px {
 
@@ -54,5 +55,25 @@ namespace px {
 	bool body_component::try_use(body_component * user, environment * env)
 	{
 		return button && button->try_use(user, env);
+	}
+	void body_component::equip(size_t idx) {
+		if (container_component * cont = linked<container_component>()) {
+			if (auto item_ptr = cont->remove(idx)) {
+				if (auto swap_ptr = mannequin.equip(rl::equipment::hand, std::move(item_ptr))) {
+					cont->add(std::move(swap_ptr));
+				}
+			}
+		}
+	}
+	void body_component::unequip(rl::equipment slot) {
+		if (container_component * cont = linked<container_component>()) {
+			auto item_ptr = mannequin.remove(slot);
+			if (item_ptr) {
+				cont->add(std::move(item_ptr));
+			}
+		}
+	}
+	rl::item * body_component::equipment(rl::equipment slot) const {
+		return mannequin[slot];
 	}
 }
