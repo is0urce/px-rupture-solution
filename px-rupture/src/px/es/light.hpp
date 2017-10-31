@@ -21,11 +21,9 @@ namespace px {
 
 	public:
 		template <typename Archive>
-		void serialize(Archive & archive)
-		{
+		void serialize(Archive & archive) {
 			archive(tint, elevation, is_on, source);
 		}
-
 
 	public:
 		light() noexcept

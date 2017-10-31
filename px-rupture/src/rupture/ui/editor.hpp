@@ -13,6 +13,7 @@
 #include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
+#include "rupture/es/light_component.hpp"
 #include "rupture/es/player_component.hpp"
 #include "rupture/es/npc_component.hpp"
 #include "rupture/es/sprite_component.hpp"
@@ -114,6 +115,7 @@ namespace px::ui {
 				animator_component * animator = current->query<animator_component>();
 				player_component * player = current->query<player_component>();
 				npc_component * npc = current->query<npc_component>();
+				light_component * light = current->query<light_component>();
 
 				// composite
 
@@ -178,12 +180,20 @@ namespace px::ui {
 					}
 				}
 
+				// visual
 				combine_sprite(sprite);
 				combine_animator(animator);
+				combine_light(light);
+
+				// rpg
 				combine_body(body);
 				combine_character(character);
 				combine_container(container);
+
+				// useables
 				combine_deposit(deposit);
+
+				// control
 				combine_player(player);
 				combine_npc(npc);
 
@@ -198,6 +208,9 @@ namespace px::ui {
 					}
 					if (!animator && ImGui::MenuItem("animator##add")) {
 						PX_BUILD(add_animator("a_dummy"));
+					}
+					if (!light && ImGui::MenuItem("light##add")) {
+						PX_BUILD(add_light());
 					}
 					if (!body && ImGui::MenuItem("body##add")) {
 						PX_BUILD(add_body());
@@ -624,6 +637,41 @@ namespace px::ui {
 				if (ImGui::InputInt("alert##npc_range", &npc_range_alert)) npc->set_range(npc_range_idle, npc_range_alert);
 			}
 		}
+		void combine_light(light_component * light) {
+			if (!light) return;
+			ImGui::Separator();
+			ImGui::Text("light");
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("is on:       %s", light->is_on ? "true" : "false");
+				ImGui::Text("color:       rgba(%f, %f, %f, %f)", light->tint.R, light->tint.G, light->tint.B, light->tint.A);
+				ImGui::Text("elevation:   %f", light->elevation);
+				ImGui::Text("source type: %d", light->source);
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_light")) {
+				PX_BUILD(remove_light());
+			}
+			else {
+				if (ImGui::ColorPicker4("color##picker", &light_tint[0], ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview)) {
+					light_tint[3] = 1; // alpha
+					light->tint.R = light_tint[0];
+					light->tint.G = light_tint[1];
+					light->tint.B = light_tint[2];
+					light->tint.A = 1;
+				}
+				if (ImGui::Checkbox("on##light", &light_on)) {
+					light->is_on = light_on;
+				}
+				if (ImGui::InputFloat("elevation##light", &light_elevation)) {
+					light->elevation = light_elevation;
+				}
+				if (ImGui::InputInt("source##light_type", &light_type)) {
+					light->source = static_cast<light_source>(light_type);
+				}
+			}
+		}
 		void combine_entity(rl::entity const& subject) {
 			ImGui::Text("tag:         '%s'", subject.tag().c_str());
 			ImGui::Text("name:        '%s'", subject.name().c_str());
@@ -714,6 +762,15 @@ namespace px::ui {
 				if (auto animator = current->query<animator_component>()) {
 					copy_str(animator->get_id(), animator_name);
 					animator_playing = animator->is_playing();
+				}
+				if (auto light = current->query<light_component>()) {
+					light_tint[0] = static_cast<float>(light->tint.R);
+					light_tint[1] = static_cast<float>(light->tint.G);
+					light_tint[2] = static_cast<float>(light->tint.B);
+					light_tint[3] = static_cast<float>(light->tint.A);
+					light_elevation = static_cast<float>(light->elevation);
+					light_on = light->is_on;
+					light_type = static_cast<int>(light->source);
 				}
 				if (auto body = current->query<body_component>()) {
 					copy_str(body->name(), body_name);
@@ -823,5 +880,10 @@ namespace px::ui {
 		float						item_critical;
 		float						item_ore_power;
 		int							item_essence;
+
+		float						light_tint[4];
+		float						light_elevation;
+		bool						light_on;
+		int							light_type;
 	};
 }

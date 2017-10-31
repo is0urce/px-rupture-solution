@@ -179,7 +179,7 @@ namespace px {
 			if (contains(x, y)) {
 				if (!painted_flags[y * width + x]) {
 					painted_flags[y * width + x] = true;
-					map.get(x, y) += c;
+					map.at(x, y) += c;
 				}
 			}
 		}

@@ -137,22 +137,23 @@ namespace px {
 		b.add_sprite("m_gnome_mage");
 		incarnate(b.add_transform({ 25, 25 }));
 		light = b.add_light();
-		light->tint = color(1, 1, 1);
+		light->tint = color(1, 1, 1, 1);
 		light->elevation = 0.5;
+		light->is_on = true;
 		auto ch = b.add_character();
 		ch->learn("sk_v_melee");
 		ch->learn("sk_v_melee");
 		ch->learn("sk_o_teleport");
-		auto anim = b.add_animator("a_door");
-		anim->play(0);
+		//auto anim = b.add_animator("a_door");
+		//anim->play(0);
 		cont = b.add_container();
-		for (int i = 0; i != 5; ++i) {
-			auto & ip = cont->add(make_uq<rl::item>());
-			ip->set_name("orb of number " + std::to_string(i));
-		}
+		auto weapon = make_uq<rl::item>();
+		weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6, 6));
+		cont->add(std::move(weapon));
 		auto pc = b.request();
 		pc->set_persistency(persistency::permanent);
-		stage.spawn(std::move(pc), nullptr);
+		auto & unit = stage.spawn(std::move(pc), nullptr);
+		unit->query<body_component>()->equip(0);
 
 		b.add_sprite("i_cheese");
 		b.add_transform({ 21, 24 });
@@ -160,11 +161,9 @@ namespace px {
 		body->blocking().make_transparent();
 		body->health().emplace(10);
 		cont = b.add_container();
-		for (int i = 0; i != 5; ++i) {
-			auto & ip = cont->add(make_uq<rl::item>());
-			ip->set_name("essence #" + std::to_string(i));
-		}
+		
 		stage.spawn(b.request(), nullptr);
+
 
 		// set terrain
 

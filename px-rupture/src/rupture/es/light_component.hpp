@@ -1,5 +1,7 @@
 // name: light_component.hpp
 
+#pragma once
+
 #include <px/es/component.hpp>
 #include <px/es/light.hpp>
 

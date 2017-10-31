@@ -9,6 +9,7 @@
 #include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
+#include "rupture/es/light_component.hpp"
 #include "rupture/es/npc_component.hpp"
 #include "rupture/es/player_component.hpp"
 #include "rupture/es/sprite_component.hpp"
@@ -43,6 +44,10 @@ namespace px {
 					archive(composition_element::animator);
 					archive(std::string(animator->get_id()));
 					archive(*animator);
+				}
+				else if (auto light = dynamic_cast<light_component const*>(raw)) {
+					archive(composition_element::light);
+					archive(*light);
 				}
 				else if (auto body = dynamic_cast<body_component const*>(raw)) {
 					archive(composition_element::body);
@@ -107,6 +112,10 @@ namespace px {
 					std::string name_id;
 					archive(name_id);
 					archive(*factory.add_animator(name_id));
+					break;
+				}
+				case composition_element::light: {
+					archive(*factory.add_light());
 					break;
 				}
 				case composition_element::body: {
