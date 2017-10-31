@@ -12,14 +12,19 @@ namespace px {
 	{
 	public:
 		void tick() {
-
 			pool.enumerate([](body_component & body) {
-
-				// rip
-				if (body.is_dead()) {
-					composite_component * unit = body.linked<composite_component>();
-					if (unit) {
-						//unit->destroy();
+				if (composite_component * unit = body.linked<composite_component>()) {
+					switch (unit->lifetime()) {
+					case persistency::permanent: // skip
+						break;
+					case persistency::destroying:
+						unit->decay(1);
+						break;
+					default:
+						if (body.is_dead()) {
+							unit->destroy(0);
+						}
+						break;
 					}
 				}
 			});

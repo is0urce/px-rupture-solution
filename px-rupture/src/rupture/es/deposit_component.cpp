@@ -45,7 +45,7 @@ namespace px {
 				// destroy deposit
 				if (dissolve) {
 					if (auto composite = linked<composite_component>()) {
-						composite->destroy();
+						composite->destroy(0);
 					}
 				}
 

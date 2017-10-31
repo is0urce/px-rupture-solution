@@ -89,11 +89,12 @@ namespace px {
 			terrain.pset(block_id, location);
 		}
 		template <typename Operator>
-		void discard(Operator && predicate) {
+		void discard(Operator && msg) {
 			size_t i = 0;
 			size_t size = units.size();
 			while (i != size) {
-				if (predicate(*units[i])) {
+				if (units[i]->decayed()) {
+					msg(units[i]);
 					units[i] = std::move(units.back());
 					units.pop_back();
 					--size;

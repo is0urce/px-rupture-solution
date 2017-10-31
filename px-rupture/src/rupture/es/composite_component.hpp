@@ -14,7 +14,7 @@
 
 namespace px {
 
-	class composite_component
+	class composite_component final
 		: public component
 		, public composition
 		, public link<transform_component>
@@ -37,9 +37,25 @@ namespace px {
 		{
 			source = resource_name;
 		}
-		void destroy() noexcept
+		void destroy(unsigned char time) noexcept
 		{
 			endurance = persistency::destroying;
+			decay_timer = time;
+		}
+		unsigned char decay(unsigned char delta_time) {
+			decay_timer = (delta_time > decay_timer) ? 0 : decay_timer - delta_time;
+			return decay_timer;
+		}
+		unsigned char decay() const {
+			return decay_timer;
+		}
+		bool decayed() const {
+			return endurance == persistency::destroying && decay_timer == 0;
+		}
+
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			archive(endurance, source, decay_timer);
 		}
 
 	public:
@@ -48,6 +64,7 @@ namespace px {
 		}
 		composite_component()
 			: endurance(persistency::serialized)
+			, decay_timer(0)
 		{
 		}
 		composite_component(composite_component const&) = delete;
@@ -64,7 +81,8 @@ namespace px {
 		}
 
 	private:
-		persistency endurance;
-		std::string source;
+		persistency		endurance;
+		std::string		source;
+		unsigned char	decay_timer;
 	};
 }

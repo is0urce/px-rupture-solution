@@ -148,7 +148,7 @@ namespace px {
 		//anim->play(0);
 		cont = b.add_container();
 		auto weapon = make_uq<rl::item>();
-		weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6, 6));
+		weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6, 0));
 		cont->add(std::move(weapon));
 		auto pc = b.request();
 		pc->set_persistency(persistency::permanent);
@@ -216,26 +216,21 @@ namespace px {
 	void environment::return_turn()
 	{
 		// rip
-		stage.discard([&](composite_component & composite) -> bool {
-			if (composite.lifetime() == persistency::permanent) return false;
+		stage.discard([&](uq_ptr<composite_component> & composite) {
+			if (!composite) return;
+			if (transform_component * pawn = composite->linked<transform_component>()) {
+				if (body_component * body = pawn->linked<body_component>()) {
+					if (container_component * loot = body->linked<container_component>()) {
 
-			auto body = composite.query<body_component>();
-			if (body && body->is_dead()) {
-				composite.destroy();
-
-				auto loot = body->linked<container_component>();
-				auto pawn = body->linked<transform_component>();
-
-				// spawn loot bag
-				if (pawn && loot && loot->size() != 0) {
-					auto & bag = spawn("bag", pawn->position());
-					if (container_component * drop = bag->qlink<container_component, body_component, transform_component>()) {
-						drop->take(*loot);
+						if (loot->size() != 0) {
+							auto & bag = spawn("bag", pawn->position());
+							if (container_component * drop = bag->qlink<container_component, body_component, transform_component>()) {
+								drop->take(*loot);
+							}
+						}
 					}
 				}
 			}
-
-			return composite.lifetime() == persistency::destroying;
 		});
 
 		++turn_number;

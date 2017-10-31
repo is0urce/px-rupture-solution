@@ -38,7 +38,7 @@ namespace px {
 		transform_component * any(point2 const& location) const;
 		body_component * anybody(point2 const& location) const;
 
-		void discard(std::function<bool(composite_component &)> predicate);
+		void discard(std::function<void(uq_ptr<composite_component> &)> msg_fn);
 
 	public:
 		~scene();

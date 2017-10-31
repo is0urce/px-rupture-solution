@@ -17,21 +17,15 @@
 
 namespace px {
 
-	class blueprint
-	{
+	class blueprint	{
 	public:
-		template <typename Archive>
-		static void store(Archive && archive, composite_component & unit)
-		{
-			std::string name = unit.name();
-			persistency lifetime = unit.lifetime();
-			archive(name);
-			archive(lifetime);
 
+		template <typename Archive>
+		static void store(Archive && archive, composite_component & unit) {
 			size_t total_components = unit.size();
 			archive(total_components);
-			unit.enumerate_components([&](auto const& part) {
-				component * raw = part.get();
+			unit.enumerate_components([&](auto const& component_ptr) {
+				component * raw = component_ptr.get();
 				if (auto transform = dynamic_cast<transform_component const*>(raw)) {
 					archive(composition_element::transform);
 					archive(*transform);
@@ -80,15 +74,12 @@ namespace px {
 					archive(composition_element::undefined);
 				}
 			});
-		}
-		template <typename Archive>
-		static uq_ptr<composite_component> assemble(Archive && archive, builder & factory)
-		{
-			std::string name;
-			persistency lifetime;
-			archive(name);
-			archive(lifetime);
 
+			archive(unit);
+		}
+
+		template <typename Archive>
+		static uq_ptr<composite_component> assemble(Archive && archive, builder & factory) {
 			size_t size;								// total components in unit
 			composition_element variant;				// current component type
 			transform_component * transform = nullptr;	// transform hint
@@ -156,8 +147,7 @@ namespace px {
 			}
 
 			auto unit = factory.request();
-			unit->set_name(name);
-			unit->set_persistency(lifetime);
+			archive(*unit);
 			return unit;
 		}
 	};
