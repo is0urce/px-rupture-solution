@@ -67,7 +67,7 @@ namespace px {
 					recursive_shadowcasting::light(light_x, light_y, radius, [&](int x, int y) { return is_transparent(x, y); }, [&]
 					(int x, int y) {
 						double distance = std::sqrt(distance2(light_x - x, light_y - y, elevation2));
-						distance = 1 + std::max(distance, 1.0);
+						distance = std::max(distance, 1.0);
 						illuminate(x, y, light.tint / (distance * distance));
 					});
 				}

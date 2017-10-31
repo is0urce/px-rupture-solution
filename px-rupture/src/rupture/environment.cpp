@@ -137,7 +137,7 @@ namespace px {
 		b.add_sprite("m_gnome_mage");
 		incarnate(b.add_transform({ 25, 25 }));
 		light = b.add_light();
-		light->tint = color(1, 1, 1, 1);
+		light->tint = color(0.3, 0.3, 0.05, 1);
 		light->elevation = 0.5;
 		light->is_on = true;
 		auto ch = b.add_character();
