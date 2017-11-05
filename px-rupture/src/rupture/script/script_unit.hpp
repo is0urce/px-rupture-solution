@@ -31,6 +31,18 @@ namespace px {
 				pawn->place(target);
 			}
 		}
+		int mp() const {
+			if (!body) return 0;
+			auto const& mp = body->energy();
+			if (!mp) return 0;
+			return mp->current();
+		}
+		void deplete(int val) {
+			if (!body) return;
+			auto & mp = body->energy();
+			if (!mp) return;
+			mp->damage(val);
+		}
 		point2 position() {
 			auto pawn = get_transform();
 			return pawn ? pawn->position() : point2(0, 0);

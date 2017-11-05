@@ -25,8 +25,7 @@ namespace px {
 		}
 
 	public:
-		virtual ~useable()
-		{
+		virtual ~useable() {
 		}
 
 	public:

@@ -34,6 +34,7 @@ namespace px::ui {
 			if (ImGui::Button("test window")) {
 				dbg = !dbg;
 			}
+			ImGui::SetWindowFontScale(0.5f);
 			ImGui::End();
 
 			if (metrics) {

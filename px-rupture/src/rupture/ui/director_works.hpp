@@ -80,15 +80,18 @@ namespace px::ui {
 			create_pipeline();
 			load_font();
 
-			auto &io = ImGui::GetIO();
+			auto & io = ImGui::GetIO();
 			io.IniFilename = nullptr;
 			io.DeltaTime = 0;
-			//io.FontGlobalScale = 2.0f;
+			//io.FontDefault->Scale = 2;
+			io.FontGlobalScale = 2.0f;
 
-			auto &style = ImGui::GetStyle();
+			auto & style = ImGui::GetStyle();
 			style.WindowRounding = 0;
 			style.ScrollbarRounding = 0;
 			style.AntiAliasedLines = false;
+
+			style.Colors[ImGuiCol_WindowBg] = { 0, 0, 0, 0.67f };
 		}
 
 	private:

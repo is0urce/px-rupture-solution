@@ -99,7 +99,9 @@ namespace px {
 	private:
 		void add_usertypes() {
 			lua.new_usertype<script_unit>("unit"
+				, "mp", &script_unit::mp
 				, "damage", &script_unit::damage
+				, "deplete", &script_unit::deplete
 				, "is_alive", &script_unit::is_alive
 				, "is_enemy", &script_unit::is_enemy
 				, "is_valid", &script_unit::is_valid

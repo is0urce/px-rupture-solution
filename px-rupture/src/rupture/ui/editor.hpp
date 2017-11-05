@@ -285,6 +285,7 @@ namespace px::ui {
 				}
 			}
 
+			ImGui::SetWindowFontScale(0.5f);
 			ImGui::End();
 		}
 
@@ -832,7 +833,7 @@ namespace px::ui {
 					experience = body->experience();
 				}
 				if (auto deposit = current->query<deposite_component>()) {
-					deposit_dissolve = deposit->dissolving();
+					deposit_dissolve = deposit->is_dissolving();
 				}
 				if (auto door = current->query<door_component>()) {
 					door_open = door->is_opened();

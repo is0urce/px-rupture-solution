@@ -31,37 +31,64 @@ namespace px::ui {
 		{
 			if (!game) return;
 
-
-
 			transform_component * target = game->possessed();
 			if (target) {
 				if (auto skillset = target->qlink<character_component, body_component>()) {
 
-					const float screen_width = ImGui::GetIO().DisplaySize.x;
 					const float screen_height = ImGui::GetIO().DisplaySize.y;
-					//const float window_width = 250.0f;
-					//const float window_height = 100.0f;
-					ImGui::SetNextWindowPos({ 22, screen_height - 50 }, ImGuiCond_Always);
-					//ImGui::SetNextWindowSize({ window_width, window_height });
+					ImGui::SetNextWindowPos({ 16, screen_height - 50 }, ImGuiCond_Always);
 
 					ImGui::Begin("##skillset", nullptr
 						, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse
 						| ImGuiWindowFlags_AlwaysAutoResize);
 
+					//ImGui::PushStyleColor(ImGuiCol_Button, { 1, 0, 0, 1 });
+					//ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 1, 0, 0, 1 });
+					//ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1, 0, 0, 1 });
+
 					ImGui::NewLine();
-					for (size_t i = 0, size = skillset->size(); i != size; ++i) {
-						auto skill = skillset->get(i);
-						if (skill) {
-							auto const& state = skill->state();
+
+					transform_component * locked_pawn = game->target();
+					body_component * locked = locked_pawn ? locked_pawn->linked<body_component>() : nullptr;
+					body_component * user = target->linked<body_component>();
+					for (size_t i = 1, size = skillset->size(); i != size; ++i) {
+						skill * ability = skillset->get(i);
+						if (ability) {
+							auto const& state = ability->state();
 							ImGui::SameLine();
-							ImGui::Button((std::to_string(i) + ": " + state.name()).c_str());
+
+							ImVec4 color = { 0.5, 0.5, 0.5, 1 };
+
+							if (ability->is_targeted()) {
+								if (ability->useable(user, locked)) {
+									color = { 1.0, 0.5, 0.5, 1 };
+								}
+							}
+							else {
+								if (ability->useable(user, game->area())) {
+									color = { 1.0, 0.5, 0.5, 1 };
+								}
+							}
+							ImGui::PushStyleColor(ImGuiCol_Button, color);
+							ImGui::PushStyleColor(ImGuiCol_ButtonActive, color);
+							ImGui::PushStyleColor(ImGuiCol_ButtonHovered, color);
+							ImGui::Button(state.alias().c_str(), { 128, 32 });
+							ImGui::PopStyleColor(3);
+
 							if (ImGui::IsItemHovered()) {
 								ImGui::BeginTooltip();
-								ImGui::Text(state.name().c_str());
+								ImGui::Text("%d) %s", i, state.name().c_str());
 								ImGui::Separator();
-								ImGui::Text("%s", state.description().c_str());
-								ImGui::Text("cost %d", state.cost());
-								ImGui::Text("cd %d/%d", state.cooldown_remaining(), state.cooldown_duration());
+								ImGui::Text("%s",  state.description().c_str());
+								auto cost = state.cost();
+								auto cd = state.cooldown_duration();
+								if (cost != 0) {
+									ImGui::Text("cost: %d", cost);
+								} 
+								if (cd != 0) {
+									ImGui::Text("cooldown: %d/%d", state.cooldown_remaining(), cd);
+								}
+
 								ImGui::EndTooltip();
 							}
 						}
@@ -70,8 +97,6 @@ namespace px::ui {
 					ImGui::End();
 				}
 			}
-
-
 		}
 
 	private:

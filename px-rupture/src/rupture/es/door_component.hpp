@@ -6,8 +6,6 @@
 #include <px/es/link_dispatcher.hpp>
 #include <px/es/useable.hpp>
 
-#include <cstdint>
-
 namespace px {
 
 	class animator_component;

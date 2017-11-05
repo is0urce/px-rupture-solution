@@ -10,13 +10,13 @@
 
 namespace px {
 
-	deposite_component::~deposite_component()
-	{
-	}
 	deposite_component::deposite_component()
 		: dissolve(true)
 		, use_duration(1)
 	{
+	}
+
+	deposite_component::~deposite_component() {
 	}
 
 	// virtual
@@ -29,6 +29,7 @@ namespace px {
 		}
 		return false;
 	}
+
 	void deposite_component::use_useable(body_component * user, environment * environment) {
 		if (user && environment) {
 			auto dest = user->linked<container_component>();
@@ -59,12 +60,11 @@ namespace px {
 
 	// methods
 
-	void deposite_component::set_dissolve(bool should_destroy) noexcept
-	{
+	void deposite_component::set_dissolve(bool should_destroy) noexcept {
 		dissolve = should_destroy;
 	}
-	bool deposite_component::dissolving() const noexcept
-	{
+
+	bool deposite_component::is_dissolving() const noexcept {
 		return dissolve;
 	}
 }

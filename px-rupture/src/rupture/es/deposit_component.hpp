@@ -9,8 +9,6 @@
 #include <px/es/link_dispatcher.hpp>
 #include <px/es/useable.hpp>
 
-#include <cstdint>
-
 namespace px {
 
 	class body_component;
@@ -27,7 +25,7 @@ namespace px {
 	{
 	public:
 		void			set_dissolve(bool should_destroy) noexcept;
-		bool			dissolving() const noexcept;
+		bool			is_dissolving() const noexcept;
 
 		template <typename Archive>
 		void			serialize(Archive & archive) {
@@ -45,7 +43,7 @@ namespace px {
 		virtual void	use_useable(body_component * user, environment * environment) override;
 
 	private:
-		std::uint32_t	use_duration;
+		unsigned char	use_duration;
 		bool			dissolve;
 	};
 }

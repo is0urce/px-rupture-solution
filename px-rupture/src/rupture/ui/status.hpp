@@ -32,22 +32,25 @@ namespace px::ui {
 
 			const float screen_width = ImGui::GetIO().DisplaySize.x;
 			const float screen_height = ImGui::GetIO().DisplaySize.y;
-			const float window_width = 250.0f;
-			const float window_height = 100.0f;
-			ImGui::SetNextWindowPos({ 22, screen_height - window_height - 50 }, ImGuiCond_Always);
-			ImGui::SetNextWindowSize({ window_width, window_height });
+			const float window_width = 300.0f;
+			const float window_height = 125.0f;
+			const float window_padding_x = 16;
+			const float window_padding_y = 65;
 
 			transform_component * target = game->possessed();
 			if (target) {
 				auto body = target->linked<body_component>();
 
 				if (body) {
+
+					ImGui::SetNextWindowPos({ window_padding_x, screen_height - window_height - window_padding_y }, ImGuiCond_Always);
+					ImGui::SetNextWindowSize({ window_width, window_height });
+
 					ImGui::Begin("##status_inspector"
 						, nullptr
 						, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
 					ImGui::Text("%s", body->name().c_str());
-					ImGui::NewLine();
 
 					if (auto const& hp = body->health()) {
 						auto current = hp->current();
