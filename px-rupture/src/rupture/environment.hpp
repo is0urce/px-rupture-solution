@@ -38,7 +38,7 @@ namespace px {
 		point2								area() const noexcept;
 		void								focus(point2 offset);
 		void								start_turn();						// clear from previous turn
-		void								end_turn();							// end player turn and sart world processing
+		void								end_turn(unsigned int turns);		// end player turn and sart world processing
 		bool								turn_passed() const noexcept;		// true if it's the world processing stage
 		unsigned int						current_turn() const noexcept;		// returns turn number
 		void								return_turn();						// pass turn back to player

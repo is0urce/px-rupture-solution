@@ -9,6 +9,7 @@
 #include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
+#include "rupture/es/door_component.hpp"
 #include "rupture/es/light_component.hpp"
 #include "rupture/es/npc_component.hpp"
 #include "rupture/es/player_component.hpp"
@@ -61,6 +62,10 @@ namespace px {
 				else if (auto deposit = dynamic_cast<deposite_component const*>(raw)) {
 					archive(composition_element::deposit);
 					archive(*deposit);
+				}
+				else if (auto door = dynamic_cast<door_component const*>(raw)) {
+					archive(composition_element::door);
+					archive(*door);
 				}
 				else if (auto player = dynamic_cast<player_component const*>(raw)) {
 					archive(composition_element::player);
@@ -127,6 +132,10 @@ namespace px {
 				//}
 				case composition_element::deposit: {
 					archive(*factory.add_deposite());
+					break;
+				}
+				case composition_element::door: {
+					archive(*factory.add_door());
 					break;
 				}
 				case composition_element::player: {

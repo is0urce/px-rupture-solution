@@ -62,7 +62,7 @@ namespace px {
 				if (stage.is_traversable(destination, body->movement())) {
 					start_turn();
 					player->place(destination);
-					end_turn();
+					end_turn(1);
 				}
 			}
 		}
@@ -83,7 +83,7 @@ namespace px {
 							success = skill->try_use(body, target_area);
 						}
 						if (success) {
-							end_turn();
+							end_turn(1);
 						}
 					}
 				}
@@ -94,7 +94,7 @@ namespace px {
 		if (!player || turn_pass) return;
 
 		start_turn();
-		end_turn();
+		end_turn(1);
 	}
 	void environment::use(unsigned int /*mods*/)
 	{
@@ -233,13 +233,13 @@ namespace px {
 			}
 		});
 
-		++turn_number;
 		turn_pass = false;
 
 		lock_target();
 	}
-	void environment::end_turn()
+	void environment::end_turn(unsigned int turns)
 	{
+		turn_number += turns;
 		turn_pass = true;
 	}
 	void environment::popup(std::string text, color tint, point2 location) {

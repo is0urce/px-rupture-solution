@@ -178,6 +178,7 @@
     <ClCompile Include="src\rupture\es\builder.cpp" />
     <ClCompile Include="src\rupture\es\character_system.cpp" />
     <ClCompile Include="src\rupture\es\deposit_component.cpp" />
+    <ClCompile Include="src\rupture\es\door_component.cpp" />
     <ClCompile Include="src\rupture\es\light_system.cpp" />
     <ClCompile Include="src\rupture\es\notification_system.cpp" />
     <ClCompile Include="src\rupture\es\npc_system.cpp" />

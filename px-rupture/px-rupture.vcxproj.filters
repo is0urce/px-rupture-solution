@@ -608,6 +608,9 @@
     <ClCompile Include="src\rupture\es\deposit_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\rupture\es\door_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\config.json" />

@@ -1,5 +1,7 @@
 // name: editor.hpp
 // type: c++
+// auth: is0urce
+// desc: editor window
 
 #pragma once
 
@@ -13,6 +15,7 @@
 #include "rupture/es/character_component.hpp"
 #include "rupture/es/container_component.hpp"
 #include "rupture/es/deposit_component.hpp"
+#include "rupture/es/door_component.hpp"
 #include "rupture/es/light_component.hpp"
 #include "rupture/es/player_component.hpp"
 #include "rupture/es/npc_component.hpp"
@@ -111,11 +114,13 @@ namespace px::ui {
 				character_component * character = current->query<character_component>();
 				container_component * container = current->query<container_component>();
 
-				deposite_component * deposit = current->query<deposite_component>();
 				animator_component * animator = current->query<animator_component>();
 				player_component * player = current->query<player_component>();
 				npc_component * npc = current->query<npc_component>();
 				light_component * light = current->query<light_component>();
+
+				deposite_component * deposit = current->query<deposite_component>();
+				door_component * door = current->query<door_component>();
 
 				// composite
 
@@ -192,6 +197,7 @@ namespace px::ui {
 
 				// useables
 				combine_deposit(deposit);
+				combine_door(door);
 
 				// control
 				combine_player(player);
@@ -221,12 +227,14 @@ namespace px::ui {
 					if (!container && ImGui::MenuItem("container##add")) {
 						PX_BUILD(add_container());
 					}
-					if (!deposit) {
+					if (!deposit && !door) {
 						if (ImGui::BeginMenu("useables..##add")) {
 							if (ImGui::MenuItem("deposit##add")) {
 								PX_BUILD(add_deposite());
 							}
-							ImGui::MenuItem("door##add");
+							if (ImGui::MenuItem("door##add")) {
+								PX_BUILD(add_door());
+							}
 							ImGui::MenuItem("storage##add");
 							ImGui::EndMenu();
 						}
@@ -281,8 +289,7 @@ namespace px::ui {
 		}
 
 	private:
-		void combine_animator(animator_component * animator)
-		{
+		void combine_animator(animator_component * animator) {
 			if (!animator) return;
 
 			ImGui::Separator();
@@ -302,6 +309,9 @@ namespace px::ui {
 				PX_BUILD(remove_animator());
 			}
 			else {
+				if (!animator->linked<sprite_component>()) {
+					ImGui::Text("WARNING: no associated sprite!");
+				}
 				ImGui::InputText("##animator_name", animator_name.data(), animator_name.size(), ImGuiInputTextFlags_AutoSelectAll);
 				ImGui::SameLine();
 				if (ImGui::Button("set##set_animator")) {
@@ -316,8 +326,7 @@ namespace px::ui {
 				}
 			}
 		}
-		void combine_sprite(sprite_component * sprite)
-		{
+		void combine_sprite(sprite_component * sprite) {
 			if (!sprite) return;
 
 			ImGui::Separator();
@@ -349,8 +358,8 @@ namespace px::ui {
 				}
 			}
 		}
-		void combine_body(body_component * body)
-		{
+
+		void combine_body(body_component * body) {
 			if (!body) return;
 
 			ImGui::Separator();
@@ -463,18 +472,18 @@ namespace px::ui {
 				}
 			}
 		}
-		void combine_character(character_component * character)
-		{
+
+		void combine_character(character_component * character) {
 			if (!character) return;
 
-			size_t size = character->size();
+			size_t skills = character->size();
 
 			ImGui::Separator();
 			ImGui::Text("character");
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
 				ImGui::Text("book: %p", character->get_book());
-				ImGui::Text("size: %d", size);
+				ImGui::Text("skills: %d", skills);
 				ImGui::EndTooltip();
 			}
 			ImGui::SameLine();
@@ -482,7 +491,7 @@ namespace px::ui {
 				PX_BUILD(remove_character());
 			}
 			else {
-				for (size_t i = 0; i != size; ++i) {
+				for (size_t i = 0; i != skills; ++i) {
 					auto sk = character->get(i);
 					if (sk) {
 						auto & state = sk->state();
@@ -511,7 +520,7 @@ namespace px::ui {
 					character->learn(character_learn.data());
 					character_learn.fill(0);
 				}
-				if (size == 0) {
+				if (skills == 0) {
 					ImGui::Text("no skills");
 				}
 				else {
@@ -521,8 +530,8 @@ namespace px::ui {
 				}
 			}
 		}
-		void combine_container(container_component * container)
-		{
+
+		void combine_container(container_component * container) {
 			if (!container) return;
 
 			size_t size = container->size();
@@ -540,7 +549,6 @@ namespace px::ui {
 				PX_BUILD(remove_container());
 			}
 			else {
-
 				if (size != 0) {
 					for (size_t i = 0; i != size; ++i) {
 						rl::item * ptr = container->get(i);
@@ -604,8 +612,40 @@ namespace px::ui {
 				}
 			}
 		}
-		void combine_player(player_component * player)
-		{
+		void combine_door(door_component * door) {
+			if (!door) return;
+
+			ImGui::Separator();
+			ImGui::Text("door");
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("is opened:    %s", door->is_opened() ? "true" : "false");
+				ImGui::Text("use duration: %d", door->use_duration());
+				ImGui::Text("animator:     %p", door->linked<animator_component>());
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_door")) {
+				PX_BUILD(remove_door());
+			}
+			else {
+				animator_component * animator = door->linked<animator_component>();
+				if (!animator) {
+					ImGui::Text("WARNING: no animator!");
+				}
+				else if (animator->size() == 0) {
+					ImGui::Text("WARNING: animator has no animations!");
+				}
+				if (!door->linked<body_component>()) {
+					ImGui::Text("WARNING: no body!");
+				}
+
+				if (ImGui::Checkbox("opened##door_opened", &door_open)) {
+					door->set_open(door_open);
+				}
+			}
+		}
+		void combine_player(player_component * player) {
 			if (!player) return;
 
 			ImGui::Separator();
@@ -615,8 +655,7 @@ namespace px::ui {
 				PX_BUILD(remove_player());
 			}
 		}
-		void combine_npc(npc_component * npc)
-		{
+		void combine_npc(npc_component * npc) {
 			if (!npc) return;
 
 			ImGui::Separator();
@@ -795,6 +834,9 @@ namespace px::ui {
 				if (auto deposit = current->query<deposite_component>()) {
 					deposit_dissolve = deposit->dissolving();
 				}
+				if (auto door = current->query<door_component>()) {
+					door_open = door->is_opened();
+				}
 
 				// character
 				character_learn.fill(0);
@@ -858,6 +900,7 @@ namespace px::ui {
 		int							experience;
 
 		bool						deposit_dissolve;
+		bool						door_open;
 
 		std::array<char, 128>		animator_name;
 		bool						animator_playing;

@@ -6,6 +6,8 @@
 #include <px/es/link_dispatcher.hpp>
 #include <px/es/useable.hpp>
 
+#include <cstdint>
+
 namespace px {
 
 	class animator_component;
@@ -20,31 +22,29 @@ namespace px {
 		, public useable<body_component *, environment *>
 	{
 	public:
-		void open()
-		{
-			//if (!opened)
+		bool set_open(bool flag);
+		bool open();
+		bool close();
+		bool is_opened() const noexcept;
+		unsigned char use_duration() const noexcept;
+
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			archive(opened, open_duration);
 		}
 
 	public:
-		virtual ~door_component() = default;
-		door_component()
-			: opened(false)
-		{
-		}
+		virtual ~door_component();
+		door_component();
 		door_component(door_component const&) = delete;
 		door_component & operator=(door_component const&) = delete;
 
 	protected:
-		virtual bool can_use_useable(body_component *, environment *) const override
-		{
-			return !opened;
-		}
-		virtual void use_useable(body_component *, environment *) override
-		{
-			opened = true;
-		}
+		virtual bool can_use_useable(body_component *, environment *) const override;
+		virtual void use_useable(body_component *, environment *) override;
 
 	private:
-		bool opened;
+		unsigned char	open_duration;
+		bool			opened;
 	};
 }

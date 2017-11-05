@@ -35,6 +35,8 @@ namespace px {
 		begin();
 	}
 
+	// methods
+
 	sprite_component * builder::add_sprite(std::string const& name)
 	{
 		auto part = factory->sprites.make(name);
@@ -181,6 +183,10 @@ namespace px {
 		unit->remove<deposite_component>();
 		deposite = nullptr;
 	}
+	void builder::remove_door() {
+		unit->remove<door_component>();
+		door = nullptr;
+	}
 	void builder::remove_light()
 	{
 		unit->remove<light_component>();
@@ -197,20 +203,24 @@ namespace px {
 		player = nullptr;
 	}
 
-	void builder::link_components()
-	{
-		if (animator) {
-			animator->connect(sprite);
-		}
+	void builder::link_components() {
+
+		// presentation
+
 		if (transform) {
 			transform->connect(body);
 		}
 		if (sprite) {
 			sprite->connect(transform);
 		}
+		if (animator) {
+			animator->connect(sprite);
+		}
 		if (light) {
 			light->connect(transform);
 		}
+
+		// rpg
 
 		if (body) {
 			body->connect(transform);
@@ -224,13 +234,21 @@ namespace px {
 			if (workshop) body->assign_useable(workshop);
 		}
 
-		if (npc) {
-			npc->connect(transform);
-		}
+		// useables
 
 		if (deposite) {
 			deposite->connect(container);
 			deposite->connect(unit.get());
+		}
+		if (door) {
+			door->connect(animator);
+			door->connect(body);
+		}
+
+		// controls
+
+		if (npc) {
+			npc->connect(transform);
 		}
 
 		unit->connect(transform);

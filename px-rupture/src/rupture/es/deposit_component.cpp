@@ -15,6 +15,7 @@ namespace px {
 	}
 	deposite_component::deposite_component()
 		: dissolve(true)
+		, use_duration(1)
 	{
 	}
 
@@ -49,7 +50,9 @@ namespace px {
 					}
 				}
 
-				environment->end_turn();
+				if (use_duration != 0) {
+					environment->end_turn(use_duration);
+				}
 			}
 		}
 	}
