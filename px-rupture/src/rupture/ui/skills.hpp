@@ -79,7 +79,9 @@ namespace px::ui {
 								ImGui::BeginTooltip();
 								ImGui::Text("%d) %s", i, state.name().c_str());
 								ImGui::Separator();
-								ImGui::Text("%s",  state.description().c_str());
+								ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 500);
+								ImGui::TextWrapped("%s", state.description().c_str());
+								ImGui::PopTextWrapPos();
 								auto cost = state.cost();
 								auto cd = state.cooldown_duration();
 								if (cost != 0) {

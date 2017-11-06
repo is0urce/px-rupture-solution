@@ -72,12 +72,14 @@ namespace px::rl {
 		{
 			if (m_base) {
 				m_base->use(user, target);
+				use_instance();
 			}
 		}
 		virtual void use_skill(user_type user, area_type area) override
 		{
 			if (m_base) {
 				m_base->use(user, area);
+				use_instance();
 			}
 		}
 		virtual bool useable_skill(user_type user, target_type target) const override

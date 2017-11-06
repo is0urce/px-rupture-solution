@@ -73,14 +73,14 @@ namespace px {
 
 			if (auto body = player->linked<body_component>()) {
 				if (auto character = body->linked<character_component>()) {
-					if (auto skill = character->get(action_idx)) {
+					if (skill * ability = character->get(action_idx)) {
 						bool success = false;
 						start_turn();
-						if (skill->is_targeted()) {
-							success = skill->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
+						if (ability->is_targeted()) {
+							success = ability->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
 						}
 						else {
-							success = skill->try_use(body, target_area);
+							success = ability->try_use(body, target_area);
 						}
 						if (success) {
 							end_turn(1);
@@ -144,6 +144,7 @@ namespace px {
 		ch->learn("sk_v_melee");
 		ch->learn("sk_s_smite");
 		ch->learn("sk_s_rend");
+		ch->learn("sk_s_flurry");
 		ch->learn("sk_o_teleport");
 		cont = b.add_container();
 		auto weapon = make_uq<rl::item>();

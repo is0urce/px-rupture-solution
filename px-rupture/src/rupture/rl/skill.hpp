@@ -29,16 +29,14 @@ namespace px {
 		}
 
 	protected:
-		virtual bool useable_instance() const override
-		{
-			return !m_state.on_cooldown();
+		virtual bool useable_instance() const override {
+			return !state().on_cooldown();
 		}
-		virtual void use_instance() override
-		{
-			m_state.start_cooldown();
+		virtual void use_instance() override {
+			state().start_cooldown();
 		}
 
 	private:
-		state_type m_state;
+//		state_type m_state;
 	};
 }
