@@ -50,21 +50,24 @@ namespace px::rl {
 			loot.items.clear();
 		}
 
+		template <typename Op>
+		void sort(Op && comparator) {
+			std::sort(items.begin(), items.end(), std::forward<Op>(comparator));
+		}
+
 		size_t size() {
 			return items.size();
 		}
 
 		template <typename Op>
-		void enumerate(Op && fn)
-		{
+		void enumerate(Op && fn) {
 			for (item_ptr & ptr : items) {
 				fn(*ptr);
 			}
 		}
 
 		template <typename Op>
-		void enumerate(Op && fn) const
-		{
+		void enumerate(Op && fn) const {
 			for (item_ptr const& prt : items) {
 				fn(*ptr);
 			}
@@ -83,28 +86,9 @@ namespace px::rl {
 				archive(it);
 			}
 		}
-		//template <typename Archive>
-		//void save(Archive & archive) const {
-		//	size_t size = items.size();
-		//	archive(size);
-		//	for (size_t i = 0; i != size; ++i) {
-		//		archive(*items[i]);
-		//	}
-		//}
-		//template <typename Archive>
-		//void load(Archive & archive) {
-		//	size_t size;
-		//	archive(size);
-		//	items.resize(size);
-		//	for (size_t i = 0; i != size; ++i) {
-		//		items[i] = make_uq<rl::item>();
-		//		archive(*items[i]);
-		//	}
-		//}
 
 	public:
-		inventory()
-		{
+		inventory()	{
 		}
 
 	private:

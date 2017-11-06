@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace px::ui {
+namespace px {
 
 	inline bool name_getter(void * data, int n, const char** result) {
 		auto & vector = *static_cast<std::vector<std::string>*>(data);
@@ -40,45 +40,38 @@ namespace px::ui {
 		virtual void combine_panel() override
 		{
 			if (!game) return;
-
 			if (!*opened) return;
+			transform_component * target = game->possessed();
+			if (!target) return;
+			body_component * body = target->linked<body_component>();
+			if (!body) return;
+			container_component * cont = body->linked<container_component>();
+			if (!cont) return;
+
+			//cont->sort([](auto & a, auto & b) { return a->name() < b->name(); });
 
 			const float screen_width = ImGui::GetIO().DisplaySize.x;
 			const float screen_height = ImGui::GetIO().DisplaySize.y;
-			const float window_width = 330.0f;
-			const float window_height = 330.0f;
+			const float window_width = 350.0f;
+			const float window_height = 550.0f;
 			ImGui::SetNextWindowPos({ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 }, ImGuiCond_Always);
 			ImGui::SetNextWindowSize({ window_width, window_height });
-			ImGui::SetNextWindowCollapsed(true, ImGuiCond_Once);
 
-			transform_component * target = game->possessed();
-			if (target) {
-				auto body = target->linked<body_component>();
-				if (body) {
-					auto cont = body->linked<container_component>();
+			ImGui::Begin((body->name() + " inventory##inventory_panel").c_str()
+				, nullptr
+				, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-					if (cont) {
-						ImGui::Begin((body->name() + "##inventory").c_str()
-							, opened
-							, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse );
+			format_names(*cont);
+			int current_unselected = -1;
+			ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
+			ImGui::ListBox("##inventory_list", &current_unselected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15);
+			ImGui::PopItemWidth();
 
-						//ImGui::Text("%s", body->name().c_str());
-						//ImGui::NewLine();
-
-						format_names(*cont);
-						int current_unselected = -1;
-						ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-						ImGui::ListBox("##inventory_list", &current_unselected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 10);
-						ImGui::PopItemWidth();
-
-						if (ImGui::Button("close##close_inventory")) {
-							*opened = false;
-						}
-
-						ImGui::End();
-					}
-				}
+			if (ImGui::Button("close##close_inventory", { 334, 32 })) {
+				*opened = false;
 			}
+
+			ImGui::End();
 		}
 
 	private:

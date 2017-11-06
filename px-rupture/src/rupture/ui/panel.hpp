@@ -2,23 +2,19 @@
 
 #pragma once
 
-namespace px::ui {
-	class panel
-	{
+namespace px {
+
+	class panel	{
 	public:
-		void combine()
-		{
+		void combine() {
 			combine_panel();
 		}
 
 	public:
-		virtual ~panel()
-		{
-		}
+		virtual ~panel() = default;
 
 	protected:
-		virtual void combine_panel()
-		{
+		virtual void combine_panel() {
 		}
 	};
 }

@@ -11,10 +11,9 @@
 #include <px/rgl/rgl.hpp>
 #include <px/rgl/compilation.hpp>
 
-namespace px::ui {
+namespace px {
 
-	class director_works final
-	{
+	class director {
 	public:
 		void resize(unsigned int w, unsigned int h)
 		{
@@ -69,12 +68,12 @@ namespace px::ui {
 		}
 
 	public:
-		~director_works()
+		~director()
 		{
 			ImGui::Shutdown();
 			release_pipeline();
 		}
-		director_works(unsigned int w, unsigned int h)
+		director(unsigned int w, unsigned int h)
 		{
 			resize(w, h);
 			create_pipeline();

@@ -1,3 +1,6 @@
+// name: character_component.hpp
+// type: c++
+
 #pragma once
 
 #include <px/es/component.hpp>
@@ -26,8 +29,7 @@ namespace px {
 				traits.pop_back();
 			}
 		}
-		void clear_traits()
-		{
+		void clear_traits() {
 			traits.clear();
 		}
 		bool has_trait(std::string const& match) const noexcept {

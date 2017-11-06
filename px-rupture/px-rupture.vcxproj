@@ -193,6 +193,7 @@
     <ClCompile Include="src\rupture\rl\terrain.cpp" />
     <ClCompile Include="src\rupture\script\script.cpp" />
     <ClCompile Include="src\rupture\shell.cpp" />
+    <ClCompile Include="src\rupture\ui\menu.cpp" />
     <ClCompile Include="src\tests\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -341,7 +342,6 @@
     <ClInclude Include="src\rupture\io\serialization.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
-    <ClInclude Include="src\rupture\script\script_effect.hpp" />
     <ClInclude Include="src\rupture\script\script_environment.hpp" />
     <ClInclude Include="src\rupture\script\script.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
@@ -357,7 +357,7 @@
     <ClInclude Include="src\rupture\rl\tile.hpp" />
     <ClInclude Include="src\rupture\rl\tile_prototype.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
-    <ClInclude Include="src\rupture\ui\director_works.hpp" />
+    <ClInclude Include="src\rupture\ui\director.hpp" />
     <ClInclude Include="src\rupture\ui\panel.hpp" />
     <ClInclude Include="src\rupture\ui\performance.hpp" />
     <ClInclude Include="src\rupture\ui\skills.hpp" />

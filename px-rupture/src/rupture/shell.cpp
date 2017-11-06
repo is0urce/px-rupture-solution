@@ -127,8 +127,8 @@ namespace px {
 		if (ui.scroll(horisontal, vertical)) return;
 		renderer.zoom(horisontal + vertical > 0);
 	}
-	void shell::press(key action_index)
-	{
+
+	void shell::press(key action_index) {
 		if (!is_running() || turn_passed()) return;
 		if (ui.takes_input()) return;
 
@@ -146,6 +146,8 @@ namespace px {
 		case key::action5: action(5); break;
 
 		case key::action_use: use(0); break;
+
+		case key::panel_inventory: ui.toggle_inventory(); break;
 		}
 	}
 

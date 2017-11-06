@@ -3,88 +3,41 @@
 
 #pragma once
 
-#include "director_works.hpp"
 #include "panel.hpp"
-
-#include "editor.hpp"
-#include "inspector.hpp"
-#include "inventory.hpp"
-#include "performance.hpp"
-#include "status.hpp"
-#include "skills.hpp"
-
-#include <px/memory/memory.hpp>
+#include <px/memory/uq_ptr.hpp>
 
 #include <vector>
 
 namespace px {
 
-	class menu final
-	{
+	class container_component;
+	class director;
+	class environment;
+	class inventory;
+
+	class menu {
 	public:
-		void resize(unsigned int w, unsigned int h)
-		{
-			director.resize(w, h);
-		}
-		void draw(double delta_time)
-		{
-			director.begin(delta_time);
-			combine();
-			director.end();
-		}
-		bool click(unsigned int mouse_button, bool is_down)
-		{
-			return director.click(mouse_button, is_down);
-		}
-		bool text(unsigned int codepoint)
-		{
-			return director.text(codepoint);
-		}
-		bool hover(unsigned int x, unsigned int y)
-		{
-			return director.hover(x, y);
-		}
-		bool scroll(double horisontal, double vertical)
-		{
-			return director.scroll(horisontal, vertical);
-		}
-		bool takes_input()
-		{
-			return director.takes_input();
-		}
-		//void open_inventory(container_component * cont);
+		void resize(unsigned int w, unsigned int h);
+		void draw(double delta_time);
+		bool click(unsigned int mouse_button, bool is_down);
+		bool text(unsigned int codepoint);
+		bool hover(unsigned int x, unsigned int y);
+		bool scroll(double horisontal, double vertical);
+		bool takes_input();
+		void toggle_inventory();
 
 	public:
-		~menu()
-		{
-		}
-		menu(unsigned int w, unsigned int h, environment * game)
-			: director(w, h)
-			, inventory_open(true)
-		{
-			stack.emplace_back(make_uq<ui::skills>(game));
-			stack.emplace_back(make_uq<ui::status>(game));
-			stack.emplace_back(make_uq<ui::inspector>(game));
-
-			stack.emplace_back(make_uq<ui::performance>());
-			stack.emplace_back(make_uq<ui::editor>(game));
-			stack.emplace_back(make_uq<ui::inventory>(game, &inventory_open));
-			//inventory = stack.back().get();
-		}
+		~menu();
+		menu(unsigned int w, unsigned int h, environment * game);
 
 	private:
-		void combine()
-		{
-			for (auto & panel : stack) {
-				panel->combine();
-			}
-		}
+		void combine();
 
 	private:
-		ui::director_works				director;
-		std::vector<uq_ptr<ui::panel>>	stack;
+		uq_ptr<director>				nexus;
+		std::vector<uq_ptr<panel>>		stack;
 		environment *					game;
 		bool							inventory_open;
-		ui::inventory *					inventory;
+		inventory *						inventory_panel;
 	};
 }

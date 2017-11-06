@@ -38,15 +38,15 @@ namespace px {
 		, public link<container_component>
 		, public link_dispatcher<body_component>
 		, public rl::entity
-		, public rl::constitution<int32_t>
-		, public rl::standing<int32_t>
+		, public rl::constitution<std::int32_t>
+		, public rl::standing<std::int32_t>
 	{
 		friend class												body_works;
 	public:
 		typedef useable<body_component*, environment*>				useable_type;
 		typedef rl::mass<rl::traverse>								mass_type;
 		typedef rl::traverse_options<rl::traverse>					movement_type;
-		typedef rl::standing<int32_t>								standing_type;
+		typedef rl::standing<std::int32_t>							standing_type;
 		typedef rl::buff<rl::effect, std::int32_t, double>			buff_type;
 		typedef rl::enhancement<rl::effect, std::int32_t, double>	enhancement_type;
 

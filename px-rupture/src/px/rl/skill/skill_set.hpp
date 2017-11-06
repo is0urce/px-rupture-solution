@@ -10,11 +10,10 @@
 #include <string>
 #include <vector>
 
-namespace px::rl
-{
+namespace px::rl {
+
 	template <typename Skill>
-	class skill_set
-	{
+	class skill_set {
 	public:
 		typedef Skill skill_type;
 		typedef typename Skill::state_type state_type;
@@ -81,10 +80,9 @@ namespace px::rl
 		{
 			return index < m_skills.size() ? &m_skills[index] : nullptr;
 		}
-		void reduce_cooldown(unsigned int dt)
-		{
+		void reduce_cooldown(int timespan) {
 			for (auto & skill : m_skills) {
-				skill.state().reduce_cooldown(dt);
+				skill.state().reduce_cooldown(timespan);
 			}
 		}
 

@@ -11,6 +11,7 @@ namespace px {
 
 	class menu;
 	class environment;
+	class container_component;
 
 	class ui_system
 		: public system<delta>
@@ -22,6 +23,7 @@ namespace px {
 		bool scroll(double horisontal, double vertical);
 		void resize(unsigned int x, unsigned int y);
 		bool takes_input();
+		void toggle_inventory();
 
 	public:
 		virtual ~ui_system();

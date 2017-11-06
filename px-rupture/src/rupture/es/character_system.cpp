@@ -50,6 +50,6 @@ namespace px {
 
 	void character_system::turn_update_system(delta_type const& /*delta_time*/)
 	{
-		works->turn();
+		works->turn(1);
 	}
 }

@@ -119,6 +119,12 @@ namespace px {
 		{
 			m_timer = (m_timer < by_time) ? 0 : (m_timer - by_time);
 		}
+		void increase_cooldown(time_type time_span, bool clip) {
+			m_timer += time_span;
+			if (clip && m_timer > duration) {
+				m_clip = duration;
+			}
+		}
 
 		template <typename Archive>
 		void serialize(Archive & archive) {

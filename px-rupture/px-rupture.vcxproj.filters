@@ -372,9 +372,6 @@
     <ClInclude Include="src\rupture\ui\editor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\director_works.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\es\animator_component.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -531,7 +528,7 @@
     <ClInclude Include="src\px\rl\buff.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\script\script_effect.hpp">
+    <ClInclude Include="src\rupture\ui\director.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -612,6 +609,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\rupture\es\door_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rupture\ui\menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -150,6 +150,13 @@ namespace px {
 		auto weapon = make_uq<rl::item>();
 		weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6, 0));
 		cont->add(std::move(weapon));
+		for (int i = 0; i != 5; ++i) {
+			auto orb = make_uq<rl::item>();
+			orb->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6, 0));
+			orb->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<std::int32_t>(rl::equipment::hand)));
+			orb->set_name("weapon #" + std::to_string(i));
+			cont->add(std::move(orb));
+		}
 		auto pc = b.request();
 		pc->set_persistency(persistency::permanent);
 		auto & unit = stage.spawn(std::move(pc), nullptr);
@@ -163,7 +170,6 @@ namespace px {
 		cont = b.add_container();
 		
 		stage.spawn(b.request(), nullptr);
-
 
 		// set terrain
 

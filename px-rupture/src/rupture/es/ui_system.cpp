@@ -8,17 +8,25 @@
 
 namespace px {
 
-	ui_system::~ui_system()
-	{
-	}
 	ui_system::ui_system(unsigned int width, unsigned int height, environment * game)
 		: works(make_uq<menu>(width, height, game))
 	{
 	}
+	ui_system::~ui_system()
+	{
+	}
+
+	// virtual overloads
 
 	void ui_system::update_system(delta_type const& delta_time)
 	{
 		works->draw(delta_time.real_delta);
+	}
+
+	// methods
+
+	void ui_system::toggle_inventory() {
+		works->toggle_inventory();
 	}
 
 	void ui_system::resize(unsigned int w, unsigned int h)

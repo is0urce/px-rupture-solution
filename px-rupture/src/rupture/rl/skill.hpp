@@ -1,5 +1,3 @@
-#pragma once
-
 // name: skill_base.hpp
 // type: c++ header
 // auth: is0urce
@@ -18,7 +16,8 @@ namespace px {
 
 	class body_component;
 
-	class skill : public rl::skill_instance<skill_state<int32_t>, body_component *, body_component *, point2>
+	class skill
+		: public rl::skill_instance<skill_state<std::int32_t>, body_component *, body_component *, point2>
 	{
 	public:
 		virtual ~skill()
@@ -35,8 +34,5 @@ namespace px {
 		virtual void use_instance() override {
 			state().start_cooldown();
 		}
-
-	private:
-//		state_type m_state;
 	};
 }
