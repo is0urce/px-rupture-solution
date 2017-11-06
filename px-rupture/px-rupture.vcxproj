@@ -341,6 +341,7 @@
     <ClInclude Include="src\rupture\io\serialization.hpp" />
     <ClInclude Include="src\rupture\key.hpp" />
     <ClInclude Include="src\rupture\app\settings.hpp" />
+    <ClInclude Include="src\rupture\script\script_effect.hpp" />
     <ClInclude Include="src\rupture\script\script_environment.hpp" />
     <ClInclude Include="src\rupture\script\script.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
@@ -377,6 +378,7 @@
     <None Include="data\schemata\mobile.json" />
     <None Include="data\scripts\lib_rupture.lua" />
     <None Include="data\scripts\sk_o_teleport.lua" />
+    <None Include="data\scripts\sk_s_rend.lua" />
     <None Include="data\scripts\sk_s_smite.lua" />
     <None Include="data\scripts\sk_v_melee.lua" />
     <None Include="data\shaders\light.frag" />

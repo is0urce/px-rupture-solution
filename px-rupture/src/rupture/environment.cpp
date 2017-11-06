@@ -143,6 +143,7 @@ namespace px {
 		auto ch = b.add_character();
 		ch->learn("sk_v_melee");
 		ch->learn("sk_s_smite");
+		ch->learn("sk_s_rend");
 		ch->learn("sk_o_teleport");
 		cont = b.add_container();
 		auto weapon = make_uq<rl::item>();

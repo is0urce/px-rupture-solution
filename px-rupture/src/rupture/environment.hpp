@@ -46,7 +46,7 @@ namespace px {
 		int									distance(point2 const& a, point2 const& b) const;
 		rl::hit_result						hit(body_component const& source, body_component const& target) const;
 		std::tuple<int, rl::damage_type>	dps(body_component const& source) const;
-		void								damage(body_component & target, int damage, rl::damage_type);
+		void								damage(body_component & target, int damage, rl::damage_type dmg_type);
 
 	public:
 		virtual								~environment();

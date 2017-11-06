@@ -17,7 +17,7 @@ namespace px::rl {
 		, public rl::enhancement_collection<Effect, Integral, Real>
 	{
 	public:
-		bool is_expired() const {
+		bool is_expired() const noexcept {
 			return duration <= 0;
 		}
 		void set_duration(Integral remaining) noexcept
@@ -28,7 +28,7 @@ namespace px::rl {
 		{
 			duration -= timespan;
 		}
-		Integral duation() const noexcept
+		Integral timer() const noexcept
 		{
 			return duration;
 		}

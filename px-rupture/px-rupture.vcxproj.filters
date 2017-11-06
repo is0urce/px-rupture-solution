@@ -531,6 +531,9 @@
     <ClInclude Include="src\px\rl\buff.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\script\script_effect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -635,5 +638,6 @@
     <None Include="data\scripts\sk_v_melee.lua" />
     <None Include="data\scripts\sk_o_teleport.lua" />
     <None Include="data\scripts\sk_s_smite.lua" />
+    <None Include="data\scripts\sk_s_rend.lua" />
   </ItemGroup>
 </Project>

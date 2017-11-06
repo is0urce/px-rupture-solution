@@ -51,24 +51,25 @@ namespace px {
 		typedef rl::enhancement<rl::effect, std::int32_t, double>	enhancement_type;
 
 	public:
+		void														add(buff_type affect);
+		enhancement_type											accumulate(enhancement_type start) const;
 		void														assign_useable(useable_type * useable) noexcept;
-		bool														is_useable() const noexcept;
-		bool														can_use(body_component * user, environment * env) const;
-		void														use(body_component * user, environment * env);
-		bool														try_use(body_component * user, environment * env);
 		mass_type const&											blocking() const noexcept;
 		mass_type &													blocking() noexcept;
+		bool														can_use(body_component * user, environment * env) const;
+		void														equip(size_t idx);
+		rl::item *													equipment(rl::equipment slot) const;
+		std::uint32_t												experience() const;
+		bool														is_useable() const noexcept;
+		std::uint32_t												level() const;
 		movement_type const&										movement() const noexcept;
 		movement_type &												movement() noexcept;
-		void														equip(size_t idx);
-		void														unequip(rl::equipment slot);
-		rl::item *													equipment(rl::equipment slot) const;
-		enhancement_type											accumulate(enhancement_type start) const;
-		std::uint32_t												level() const;
-		std::uint32_t												experience() const;
 		void														set_level(std::uint32_t n);
 		void														set_experience(std::uint32_t n);
-		
+		bool														try_use(body_component * user, environment * env);
+
+		void														unequip(rl::equipment slot);
+		void														use(body_component * user, environment * env);
 
 		template <typename Archive>
 		void														serialize(Archive & archive) {

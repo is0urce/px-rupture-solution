@@ -1,4 +1,5 @@
-// name: unit.hpp
+// name: script_unit.hpp
+// type: c++
 
 #pragma once
 
@@ -10,6 +11,15 @@ namespace px {
 	class script_unit
 	{
 	public:
+		void add_effect(std::string name, int duration, int effect_id, int subtype, int i0, int i1, double v0, double v1) {
+			if (body) {
+				body_component::buff_type buff;
+				buff.set_name(name);
+				buff.set_duration(duration);
+				buff.add(body_component::enhancement_type::mixed(static_cast<rl::effect>(effect_id), subtype, i0, i1, v0, v1));
+				body->add(buff);
+			}
+		}
 		void damage(int amount) {
 			if (body) {
 				auto & hp = body->health();

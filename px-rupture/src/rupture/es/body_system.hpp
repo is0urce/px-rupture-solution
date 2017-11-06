@@ -11,11 +11,13 @@ namespace px {
 
 	class body_component;
 	class body_works;
+	class environment;
 
 	class body_system final
 		: public system<delta>
 	{
 	public:
+		void assign_environment(environment * env);
 		uq_ptr<body_component> make();
 
 	public:

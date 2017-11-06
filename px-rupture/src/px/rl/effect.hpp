@@ -4,6 +4,14 @@
 
 namespace px::rl {
 	enum class effect : unsigned char {
+		invalid = 0,
+
+		damage = 1,
+		dot = 2,
+		accuracy = 3,
+		critical = 4,
+		speed = 5,
+
 		power,
 		strength,
 		dexterity,
@@ -11,7 +19,6 @@ namespace px::rl {
 		vitality,
 
 		equipment,
-		damage,
 		armor,
 		resistance,
 		dodge,
@@ -20,11 +27,6 @@ namespace px::rl {
 		hp_regen,
 		mp_bonus,
 		mp_regen,
-
-		dot,
-		accuracy,
-		critical,
-		speed,
 
 		ingredient_power,
 		essence

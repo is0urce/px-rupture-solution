@@ -16,6 +16,10 @@ namespace px {
 
 	// methods
 
+	void body_component::add(buff_type affect) {
+		buffs.push_back(affect);
+	}
+
 	void body_component::assign_useable(useable_type * useable) noexcept
 	{
 		button = useable;

@@ -5,14 +5,38 @@
 #include "body_component.hpp"
 #include "composite_component.hpp"
 
+#include "rupture/environment.hpp"
+
 #include <px/common/pool_chain.hpp>
+
+#include <algorithm>
 
 namespace px {
 	class body_works final
 	{
 	public:
+		void assign_environment(environment * env) noexcept {
+			game = env;
+		}
 		void tick() {
-			pool.enumerate([](body_component & body) {
+			pool.enumerate([&](body_component & body) {
+
+				// dots
+				auto dot = body.accumulate(body_component::enhancement_type::zero(rl::effect::dot));
+				if (dot.magnitude0 > 0) {
+					if (auto & hp = body.health()) {
+						int dmg = static_cast<int>(dot.magnitude0);
+						game->damage(body, dmg, static_cast<rl::damage_type>(dot.sub));
+					}
+				}
+
+				// tick
+				for (auto & buff : body.buffs) {
+					buff.reduce_duration(1);
+				}
+				body.buffs.erase(std::remove_if(body.buffs.begin(), body.buffs.end(), [](auto & buff) { return buff.is_expired(); }), body.buffs.end());
+
+				// rip
 				if (composite_component * unit = body.linked<composite_component>()) {
 					switch (unit->lifetime()) {
 					case persistency::permanent: // skip
@@ -34,6 +58,7 @@ namespace px {
 		}
 
 	public:
-		pool_chain<body_component, 1024> pool;
+		pool_chain<body_component, 1024>	pool;
+		environment *						game;
 	};
 }

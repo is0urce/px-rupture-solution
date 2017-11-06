@@ -107,6 +107,7 @@ namespace px {
 				, "is_valid", &script_unit::is_valid
 				, "place", &script_unit::place
 				, "position", &script_unit::position
+				, "add_effect", &script_unit::add_effect
 				);
 
 			lua.new_usertype<point2>("point"

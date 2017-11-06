@@ -29,8 +29,11 @@ namespace px {
 
 	// methods
 
-	uq_ptr<body_component> body_system::make()
-	{
+	void body_system::assign_environment(environment * game) {
+		works->assign_environment(game);
+	}
+
+	uq_ptr<body_component> body_system::make() {
 		return works->make();
 	}
 }
