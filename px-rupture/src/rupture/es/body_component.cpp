@@ -62,8 +62,15 @@ namespace px {
 	}
 	void body_component::equip(size_t idx) {
 		if (container_component * cont = linked<container_component>()) {
+
+			auto selected_item = cont->get(idx);
+			auto enh = selected_item->accumulate(enhancement_type::zero(rl::effect::equipment));
+			rl::equipment slot = static_cast<rl::equipment>(enh.sub);
+
+			if (slot == rl::equipment::not_valid) return;
+
 			if (auto item_ptr = cont->remove(idx)) {
-				if (auto swap_ptr = mannequin.equip(rl::equipment::hand, std::move(item_ptr))) {
+				if (auto swap_ptr = mannequin.equip(slot, std::move(item_ptr))) {
 					cont->add(std::move(swap_ptr));
 				}
 			}

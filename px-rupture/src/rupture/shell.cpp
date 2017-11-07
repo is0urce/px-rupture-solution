@@ -13,9 +13,8 @@
 
 namespace px {
 
-	shell::~shell()
-	{
-	}
+	// ctor
+
 	shell::shell(unsigned int start_width, unsigned int start_height)
 		: renderer(start_width, start_height)
 		, ui(start_width, start_height, this)
@@ -27,19 +26,19 @@ namespace px {
 		register_systems();
 		start();
 	}
+	shell::~shell() {
+	}
 
 	// methods
 
-	void shell::resize(unsigned int screen_width, unsigned int screen_height)
-	{
+	void shell::resize(unsigned int screen_width, unsigned int screen_height) {
 		width = screen_width;
 		height = screen_height;
 		renderer.resize(width, height);
 		ui.resize(width, height);
 	}
 
-	void shell::connect_managers()
-	{
+	void shell::connect_managers() {
 		renderer.assign_sprite_data(sprites.data());
 		renderer.assign_lightmap_data(lights.current_data(), lights.last_data());
 		renderer.assigm_message_data(messages.data());
@@ -49,8 +48,8 @@ namespace px {
 		mashine.assign_environment(this);
 		bodies.assign_environment(this);
 	}
-	void shell::load_data()
-	{
+
+	void shell::load_data() {
 		auto document = document::load_document(settings::texture_path);
 		auto textures = document["textures"];
 		unsigned int texture_id = 0;
@@ -67,8 +66,7 @@ namespace px {
 		animators.load(&sprites);
 	}
 
-	void shell::register_systems()
-	{
+	void shell::register_systems() {
 		engine.add(&animators);
 		engine.add(&sprites);
 		engine.add(&renderer);
@@ -83,8 +81,7 @@ namespace px {
 		engine.add(&messages);
 	}
 
-	void shell::frame(double timer)
-	{
+	void shell::frame(double timer) {
 		if (is_running()) {
 			time.advance(timer);
 			if (turn_passed()) {
@@ -95,21 +92,18 @@ namespace px {
 			engine.update(time);
 		}
 	}
-	void shell::text(unsigned int codepoint)
-	{
+	void shell::text(unsigned int codepoint) {
 		if (!is_running() || turn_passed()) return;
 		ui.text(codepoint);
 	}
-	void shell::click(int mouse_button, bool is_down)
-	{
+	void shell::click(int mouse_button, bool is_down) {
 		if (!is_running() || turn_passed()) return;
 		if (ui.click(mouse_button, is_down)) return;
 		if (mouse_button == 0 && is_down) {
 			advance();
 		}
 	}
-	void shell::hover(int x, int y)
-	{
+	void shell::hover(int x, int y) {
 		if (!is_running() || turn_passed()) return;
 		if (ui.hover(x, y)) return;
 		
@@ -121,8 +115,7 @@ namespace px {
 		position += { 0.5, 0.5 };					// tile center offset
 		focus(position.floor());
 	}
-	void shell::scroll(double horisontal, double vertical)
-	{
+	void shell::scroll(double horisontal, double vertical) {
 		if (!is_running() || turn_passed()) return;
 		if (ui.scroll(horisontal, vertical)) return;
 		renderer.zoom(horisontal + vertical > 0);
@@ -151,8 +144,7 @@ namespace px {
 		}
 	}
 
-	void shell::add_texture(const char * name)
-	{
+	void shell::add_texture(const char * name) {
 		std::vector<unsigned char> bits;
 		unsigned int texture_width;
 		unsigned int texture_height;
@@ -161,8 +153,7 @@ namespace px {
 		renderer.add_texture(texture_width, texture_height, bits.data());
 	}
 
-	void shell::add_atlas(const char * name, unsigned int texture_index)
-	{
+	void shell::add_atlas(const char * name, unsigned int texture_index) {
 		auto document = document::load_document(name);
 		sprites.load_atlas(document, texture_index, true);
 	}
