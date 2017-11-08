@@ -1,4 +1,7 @@
 // name: body_component.hpp
+// type: c++ header
+// auth: is0urce
+// desc: class declaration
 
 #pragma once
 

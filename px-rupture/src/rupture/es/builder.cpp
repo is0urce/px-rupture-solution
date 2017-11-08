@@ -197,10 +197,13 @@ namespace px {
 		unit->remove<npc_component>();
 		npc = nullptr;
 	}
-	void builder::remove_player()
-	{
+	void builder::remove_player() {
 		unit->remove<player_component>();
 		player = nullptr;
+	}
+	void builder::remove_workshop() {
+		unit->remove<workshop_component>();
+		workshop = nullptr;
 	}
 
 	void builder::link_components() {

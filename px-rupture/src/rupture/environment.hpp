@@ -12,6 +12,7 @@
 #include <px/memory/uq_ptr.hpp>
 #include <px/rl/damage_type.hpp>
 #include <px/rl/hit_result.hpp>
+#include <px/rl/workshop.hpp>
 
 #include <string>
 
@@ -47,6 +48,8 @@ namespace px {
 		rl::hit_result						hit(body_component const& source, body_component const& target) const;
 		std::tuple<int, rl::damage_type>	dps(body_component const& source) const;
 		void								damage(body_component & target, int damage, rl::damage_type dmg_type);
+		bool								has_access(rl::workshop station) const noexcept;
+		void								access_workshop(rl::workshop station);
 
 	public:
 		virtual								~environment();
@@ -65,9 +68,10 @@ namespace px {
 		repository							directory;
 		bool								run;
 		unsigned int						turn_number;
-		bool								turn_pass;		// true if it's the world processing stage
-		point2								target_hover;	// offset of target area
-		point2								target_area;	// target area in world coordinates
-		transform_component *				target_unit;	// targeted unit
+		bool								turn_pass;			// true if it's the world processing stage
+		point2								target_hover;		// offset of target area
+		point2								target_area;		// target area in world coordinates
+		transform_component *				target_unit;		// targeted unit
+		rl::workshop						opened_workshop;
 	};
 }

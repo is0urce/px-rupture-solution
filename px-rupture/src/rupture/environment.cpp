@@ -26,9 +26,7 @@ namespace px {
 
 	// ctor & dtor
 
-	environment::~environment()
-	{
-	}
+	environment::~environment() = default;
 	environment::environment()
 		: turn_number(0)
 		, turn_pass(true)
@@ -36,6 +34,7 @@ namespace px {
 		, target_unit(nullptr)
 		, target_area(0, 0)
 		, target_hover(0, 0)
+		, opened_workshop(rl::workshop::none)
 		, run(true)
 		, directory("data/save/current", nullptr)
 	{
@@ -276,5 +275,12 @@ namespace px {
 				popup(std::to_string(damage), pawn == player ? 0xff0000 : 0xffff00, pawn->position());
 			}
 		}
+	}
+
+	bool environment::has_access(rl::workshop station) const noexcept {
+		return opened_workshop == station;
+	}
+	void environment::access_workshop(rl::workshop station) {
+		opened_workshop = station;
 	}
 }

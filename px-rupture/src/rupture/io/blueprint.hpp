@@ -1,3 +1,5 @@
+// name: blueprint.hpp
+
 #pragma once
 
 #include "rupture/es/builder.hpp"
@@ -15,6 +17,7 @@
 #include "rupture/es/player_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 #include "rupture/es/transform_component.hpp"
+#include "rupture/es/workshop_component.hpp"
 
 namespace px {
 
@@ -66,6 +69,10 @@ namespace px {
 				else if (auto door = dynamic_cast<door_component const*>(raw)) {
 					archive(composition_element::door);
 					archive(*door);
+				}
+				else if (workshop_component const* workshop = dynamic_cast<workshop_component const*>(raw)) {
+					archive(composition_element::workshop);
+					archive(*workshop);
 				}
 				else if (auto player = dynamic_cast<player_component const*>(raw)) {
 					archive(composition_element::player);
@@ -136,6 +143,10 @@ namespace px {
 				}
 				case composition_element::door: {
 					archive(*factory.add_door());
+					break;
+				}
+				case composition_element::workshop: {
+					archive(*factory.add_workshop());
 					break;
 				}
 				case composition_element::player: {

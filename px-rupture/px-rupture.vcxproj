@@ -187,6 +187,7 @@
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
     <ClCompile Include="src\rupture\es\transform_system.cpp" />
     <ClCompile Include="src\rupture\es\ui_system.cpp" />
+    <ClCompile Include="src\rupture\es\workshop_component.cpp" />
     <ClCompile Include="src\rupture\main.cpp" />
     <ClCompile Include="src\rupture\main_extras.cpp" />
     <ClCompile Include="src\rupture\rl\scene.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="src\px\rl\equipment.hpp" />
     <ClInclude Include="src\px\rl\hit_result.hpp" />
     <ClInclude Include="src\px\rl\stack.hpp" />
+    <ClInclude Include="src\px\rl\workshop.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />
     <ClInclude Include="src\rupture\rl\item.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />

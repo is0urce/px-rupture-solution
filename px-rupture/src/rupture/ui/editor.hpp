@@ -21,14 +21,15 @@
 #include "rupture/es/npc_component.hpp"
 #include "rupture/es/sprite_component.hpp"
 #include "rupture/es/transform_component.hpp"
+#include "rupture/es/workshop_component.hpp"
 #include "rupture/io/schema.hpp"
 #include "rupture/io/blueprint.hpp"
 #include "rupture/io/serialization.hpp"
 #include "rupture/environment.hpp"
 
-#include <imgui/imgui.h>
-
 #include <px/memory/memory.hpp>
+
+#include <imgui/imgui.h>
 
 #include <algorithm>
 #include <array>
@@ -59,9 +60,7 @@ namespace px::ui {
 		: public panel
 	{
 	public:
-		virtual ~editor()
-		{
-		}
+		virtual ~editor() = default;
 		editor(environment * env)
 			: game(env)
 		{
@@ -69,8 +68,7 @@ namespace px::ui {
 		}
 
 	protected:
-		virtual void combine_panel() override
-		{
+		virtual void combine_panel() override {
 			if (!game) return;
 
 			transform_component * camera = game->possessed();
@@ -121,6 +119,7 @@ namespace px::ui {
 
 				deposite_component * deposit = current->query<deposite_component>();
 				door_component * door = current->query<door_component>();
+				workshop_component * workshop = current->query<workshop_component>();
 
 				// composite
 
@@ -198,6 +197,7 @@ namespace px::ui {
 				// useables
 				combine_deposit(deposit);
 				combine_door(door);
+				combine_workshop(workshop);
 
 				// control
 				combine_player(player);
@@ -227,13 +227,16 @@ namespace px::ui {
 					if (!container && ImGui::MenuItem("container##add")) {
 						PX_BUILD(add_container());
 					}
-					if (!deposit && !door) {
+					if (!deposit && !door && !workshop) {
 						if (ImGui::BeginMenu("useables..##add")) {
 							if (ImGui::MenuItem("deposit##add")) {
 								PX_BUILD(add_deposite());
 							}
 							if (ImGui::MenuItem("door##add")) {
 								PX_BUILD(add_door());
+							}
+							if (ImGui::MenuItem("workshop##add")) {
+								PX_BUILD(add_workshop());
 							}
 							ImGui::MenuItem("storage##add");
 							ImGui::EndMenu();
@@ -597,8 +600,7 @@ namespace px::ui {
 				}
 			}
 		}
-		void combine_deposit(deposite_component * deposit)
-		{
+		void combine_deposit(deposite_component * deposit) {
 			if (!deposit) return;
 
 			ImGui::Separator();
@@ -712,6 +714,26 @@ namespace px::ui {
 				}
 			}
 		}
+		void combine_workshop(workshop_component * workshop) {
+			if (!workshop) return;
+
+			ImGui::Separator();
+			ImGui::Text("workshop");
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::Text("variant: %d", static_cast<std::underlying_type<rl::workshop>::type>(workshop->variant()));
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("x##remove_workshop")) {
+				PX_BUILD(remove_workshop());
+			}
+			else {
+				if (ImGui::InputInt("variant##workshop_variant", &workshop_variant)) {
+					workshop->set_variant(static_cast<rl::workshop>(workshop_variant));
+				}
+			}
+		}
 		void combine_entity(rl::entity const& subject) {
 			ImGui::Text("tag:         '%s'", subject.tag().c_str());
 			ImGui::Text("name:        '%s'", subject.name().c_str());
@@ -732,16 +754,14 @@ namespace px::ui {
 				ImGui::EndTooltip();
 			}
 		}
-		void load_schema(std::string const& schema_name)
-		{
+		void load_schema(std::string const& schema_name) {
 			if (!game) return;
 
 			builder factory(game);
 			current = schema::load(document::load_document(settings::schemata_path + schema_name), factory);
 			update_props();
 		}
-		void load_blueprint(std::string const& blueprint_name)
-		{
+		void load_blueprint(std::string const& blueprint_name) {
 			if (!game) return;
 
 			builder factory(game);
@@ -749,18 +769,15 @@ namespace px::ui {
 			current = blueprint::assemble(SAVE_INPUT_ARCHIVE(input), factory);
 			update_props();
 		}
-		void export_composite()
-		{
+		void export_composite() {
 			auto output = output_stream(settings::blueprints_path + current->name() + ".dat");
 			blueprint::store(SAVE_OUTPUT_ARCHIVE(output), *current);
 		}
-		void refresh_template_items()
-		{
+		void refresh_template_items() {
 			load_items(blueprint_selected, blueprints, settings::blueprints_path);
 			load_items(schema_selected, schemata, settings::schemata_path);
 		}
-		static void load_items(int & selected, std::vector<std::string> & names, std::string const& path)
-		{
+		static void load_items(int & selected, std::vector<std::string> & names, std::string const& path) {
 			namespace fs = std::experimental::filesystem;
 
 			selected = -1;
@@ -771,20 +788,17 @@ namespace px::ui {
 				}
 			}
 		}
-		void load_current_schema()
-		{
+		void load_current_schema() {
 			if (schema_selected >= 0) {
 				load_schema(schemata[schema_selected]);
 			}
 		}
-		void load_current_blueprint()
-		{
+		void load_current_blueprint() {
 			if (blueprint_selected >= 0) {
 				load_blueprint(blueprints[blueprint_selected]);
 			}
 		}
-		void update_props()
-		{
+		void update_props() {
 			if (current) {
 				current->enable();
 
@@ -838,6 +852,9 @@ namespace px::ui {
 				if (auto door = current->query<door_component>()) {
 					door_open = door->is_opened();
 				}
+				if (auto workshop = current->query<workshop_component>()) {
+					workshop_variant = static_cast<int>(workshop->variant());
+				}
 
 				// character
 				character_learn.fill(0);
@@ -864,10 +881,9 @@ namespace px::ui {
 				item_essence = 0;
 			}
 		}
-		template <size_t max>
-		void copy_str(std::string str, std::array<char, max> & ar)
-		{
-			static_assert(max > 1);
+		template <size_t Max>
+		void copy_str(std::string str, std::array<char, Max> & ar) {
+			static_assert(Max > 1);
 			ar.fill(0);
 			std::copy(str.cbegin(), str.cbegin() + std::min(str.length(), ar.size() - 2), ar.begin()); // reserve extra zero for end of a string
 		}
@@ -929,5 +945,7 @@ namespace px::ui {
 		float						light_elevation;
 		bool						light_on;
 		int							light_type;
+
+		int							workshop_variant;
 	};
 }

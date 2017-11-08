@@ -57,6 +57,7 @@ namespace px {
 		void						remove_player();
 		void						remove_sprite();
 		void						remove_transform();
+		void						remove_workshop();
 		uq_ptr<composite_component>	request();
 
 	public:

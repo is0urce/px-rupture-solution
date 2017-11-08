@@ -14,13 +14,15 @@
 
 namespace px {
 
-	class core
-	{
+	class builder;
+
+	class core {
+		friend class builder;
 	public:
 		virtual ~core();
 		core();
 
-	public:
+	protected:
 		script				mashine;
 
 		animator_system		animators;
