@@ -348,7 +348,9 @@
     <ClInclude Include="src\rupture\script\script.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
     <ClInclude Include="src\rupture\script\script_unit.hpp" />
+    <ClInclude Include="src\rupture\ui\craft.hpp" />
     <ClInclude Include="src\rupture\ui\editor.hpp" />
+    <ClInclude Include="src\rupture\ui\common.hpp" />
     <ClInclude Include="src\rupture\ui\inspector.hpp" />
     <ClInclude Include="src\rupture\ui\inventory.hpp" />
     <ClInclude Include="src\rupture\ui\menu.hpp" />

@@ -32,6 +32,14 @@ namespace px::rl {
 			}
 			return false;
 		}
+		bool has_effect(Effect efx, Integral sub) const {
+			for (enhancement_type const& element : container) {
+				if (element.main == efx && element.sub == sub) {
+					return true;
+				}
+			}
+			return false;
+		}
 		int find_subtype(Effect efx, int or_else) const {
 			for (enhancement_type const& element : container) {
 				if (element.main == efx) {

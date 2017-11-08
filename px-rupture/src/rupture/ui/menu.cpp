@@ -6,6 +6,7 @@
 #include "director.hpp"
 #include "panel.hpp"
 
+#include "craft.hpp"
 #include "editor.hpp"
 #include "inspector.hpp"
 #include "inventory.hpp"
@@ -17,23 +18,35 @@
 
 namespace px {
 
+	// aux
+
+	namespace {
+		template <typename M, typename ... Args>
+		M * make_panel(std::vector<uq_ptr<panel>> & c, Args... args) {
+			auto p = make_uq<M>(std::forward<Args>(args)...);
+			M * ptr = p.get();
+			c.emplace_back(std::move(p));
+			return ptr;
+		}
+	}
+
 	// ctor
 
 	menu::menu(unsigned int w, unsigned int h, environment * game)
 		: nexus(make_uq<director>(w, h))
 		, inventory_open(false)
+		, inventory_panel(nullptr)
+		, craft_panel(nullptr)
 	{
+		make_panel<ui::skills>(stack, game);
+		make_panel<ui::status>(stack, game);
+		make_panel<ui::inspector>(stack, game);
 
-		stack.emplace_back(make_uq<ui::skills>(game));
-		stack.emplace_back(make_uq<ui::status>(game));
-		stack.emplace_back(make_uq<ui::inspector>(game));
+		make_panel<ui::performance>(stack);
+		make_panel<ui::editor>(stack, game);
 
-		stack.emplace_back(make_uq<ui::performance>());
-		stack.emplace_back(make_uq<ui::editor>(game));
-
-		auto inv = make_uq<inventory>(game, &inventory_open);
-		inventory_panel = inv.get();
-		stack.emplace_back(std::move(inv));
+		inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
+		craft_panel = make_panel<craft>(stack, game);
 	}
 
 	// dtor
@@ -73,5 +86,9 @@ namespace px {
 		for (auto & ptr : stack) {
 			ptr->combine();
 		}
+	}
+	void menu::rollback() {
+		inventory_open = false;
+		craft_panel->rollback();
 	}
 }

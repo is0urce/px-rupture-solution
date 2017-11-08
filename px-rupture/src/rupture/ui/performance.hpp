@@ -13,9 +13,7 @@ namespace px::ui {
 		: public panel
 	{
 	public:
-		virtual ~performance()
-		{
-		}
+		virtual ~performance() = default;
 		performance()
 			: metrics(false)
 			, dbg(false)

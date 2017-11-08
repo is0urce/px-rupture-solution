@@ -18,9 +18,7 @@ namespace px::ui {
 		: public panel
 	{
 	public:
-		virtual ~skills()
-		{
-		}
+		virtual ~skills() = default;
 		skills(environment * env)
 			: game(env)
 		{

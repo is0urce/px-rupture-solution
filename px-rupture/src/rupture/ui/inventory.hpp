@@ -3,9 +3,13 @@
 
 #pragma once
 
+#include "common.hpp"
 #include "panel.hpp"
 
 #include "rupture/environment.hpp"
+#include "rupture/es/transform_component.hpp"
+#include "rupture/es/body_component.hpp"
+#include "rupture/es/container_component.hpp"
 
 #include <imgui/imgui.h>
 
@@ -14,22 +18,11 @@
 
 namespace px {
 
-	inline bool name_getter(void * data, int n, const char** result) {
-		auto & vector = *static_cast<std::vector<std::string>*>(data);
-		if (n >= 0 && n < static_cast<int>(vector.size())) {
-			*result = vector[n].c_str();
-			return true;
-		}
-		return false;
-	}
-
 	class inventory final
 		: public panel
 	{
 	public:
-		virtual ~inventory()
-		{
-		}
+		virtual ~inventory() = default;
 		inventory(environment * env, bool * p_open)
 			: game(env)
 			, opened(p_open)
@@ -62,12 +55,13 @@ namespace px {
 				, nullptr
 				, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-			format_names(*container);
+			format_names(*container, names);
 			selected = -1;
 			ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 			if (ImGui::ListBox("##inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
 				body->equip(selected);
 				sort(*container);
+				selected = -1;
 			}
 			ImGui::PopItemWidth();
 
@@ -96,15 +90,15 @@ namespace px {
 			inspector_position.y += 64;
 
 			rl::item * inspect = nullptr;
-			if (selected_slot) inspect = selected_slot;
 			if (selected != -1) {
 				inspect = container->get(selected);
 			}
+			if (selected_slot) inspect = selected_slot;
 			combine_inspector(inspect, inspector_position);
 		}
 
 	private:
-		void combine_slot(std::string const& name, ImVec2 position, ImVec2 size, body_component & body, rl::equipment slot) {
+		void combine_slot(std::string const& name, ImVec2 const& position, ImVec2 const& size, body_component & body, rl::equipment slot) {
 			ImGui::SetNextWindowPos(position, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(size);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
@@ -134,7 +128,7 @@ namespace px {
 			ImGui::End();
 			ImGui::PopStyleVar(2);
 		}
-		void combine_inspector(rl::item * ptr, ImVec2 position) {
+		void combine_inspector(rl::item * ptr, ImVec2 const& position) {
 			if (!ptr) return;
 
 			ImGui::SetNextWindowPos(position, ImGuiCond_Always);
@@ -156,17 +150,6 @@ namespace px {
 			ImGui::Text("Quantity: %d", ptr->count());
 
 			ImGui::End();
-		}
-		void format_names(container_component & container) {
-			names.clear();
-			container.enumerate([&](rl::item const& item) {
-				names.push_back(item.name());
-			});
-		}
-		void sort(container_component & container) {
-			container.sort([](auto & a, auto & b) { return a->name() < b->name(); });
-			selected_slot = nullptr;
-			selected = -1;
 		}
 
 	private:

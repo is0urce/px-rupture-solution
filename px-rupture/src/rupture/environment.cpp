@@ -42,19 +42,18 @@ namespace px {
 
 	// methods
 
-	bool environment::is_running() const noexcept
-	{
+	bool environment::is_running() const noexcept {
 		return run;
 	}
-	void environment::incarnate(transform_component * camera)
-	{
+
+	void environment::incarnate(transform_component * camera) {
 		player = camera;
 		sprites.target(camera);
 		lights.target(camera);
 		messages.target(camera);
 	}
-	void environment::step(point2 const& movement)
-	{
+
+	void environment::step(point2 const& movement) {
 		if (player) {
 			if (body_component * body = player->linked<body_component>()) {
 				point2 destination = player->position() + movement;
@@ -66,8 +65,8 @@ namespace px {
 			}
 		}
 	}
-	void environment::action(unsigned int action_idx)
-	{
+
+	void environment::action(unsigned int action_idx) {
 		if (!player || turn_pass) return;
 
 			if (auto body = player->linked<body_component>()) {
@@ -88,15 +87,13 @@ namespace px {
 				}
 			}
 	}
-	void environment::advance()
-	{
+	void environment::advance() {
 		if (!player || turn_pass) return;
 
 		start_turn();
 		end_turn(1);
 	}
-	void environment::use(unsigned int /*mods*/)
-	{
+	void environment::use(unsigned int /*mods*/) {
 		if (!player || turn_pass) return;
 
 		if (target_unit) {
@@ -186,8 +183,7 @@ namespace px {
 		turn_pass = true;
 	}
 
-	uq_ptr<composite_component>	& environment::spawn(uq_ptr<composite_component> unit, transform_component * hint)
-	{
+	uq_ptr<composite_component>	& environment::spawn(uq_ptr<composite_component> unit, transform_component * hint) {
 		return stage.spawn(std::move(unit), hint);
 	}
 
@@ -208,20 +204,20 @@ namespace px {
 		target_hover = offset;
 		lock_target();
 	}
-	void environment::lock_target()
-	{
+
+	void environment::lock_target() {
 		target_area = target_hover + (player ? player->position() : point2(0, 0));
 		body_component * body = stage.anybody(target_area);
 		target_unit = body ? body->linked<transform_component>() : nullptr;
 	}
 
-	void environment::start_turn()
-	{
+	void environment::start_turn() {
 		transforms.store();
 		animators.finish_animations();
+		opened_workshop = rl::workshop::none;
 	}
-	void environment::return_turn()
-	{
+
+	void environment::return_turn() {
 		// rip
 		stage.discard([&](uq_ptr<composite_component> & composite) {
 			if (!composite) return;
@@ -280,7 +276,10 @@ namespace px {
 	bool environment::has_access(rl::workshop station) const noexcept {
 		return opened_workshop == station;
 	}
-	void environment::access_workshop(rl::workshop station) {
+	void environment::open_workshop(rl::workshop station) {
 		opened_workshop = station;
+	}
+	void environment::close_workshop() {
+		opened_workshop = rl::workshop::none;
 	}
 }

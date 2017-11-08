@@ -18,7 +18,7 @@ namespace px {
 	}
 	void workshop_component::use_useable(body_component * /*body*/, environment * context) {
 		if (context) {
-			context->access_workshop(station);
+			context->open_workshop(station);
 		}
 	}
 

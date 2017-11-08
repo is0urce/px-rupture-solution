@@ -17,9 +17,7 @@ namespace px::ui {
 		: public panel
 	{
 	public:
-		virtual ~status()
-		{
-		}
+		virtual ~status() = default;
 		status(environment * env)
 			: game(env)
 		{

@@ -14,6 +14,7 @@ namespace px {
 	class director;
 	class environment;
 	class inventory;
+	class craft;
 
 	class menu {
 	public:
@@ -25,6 +26,7 @@ namespace px {
 		bool scroll(double horisontal, double vertical);
 		bool takes_input();
 		void toggle_inventory();
+		void rollback(); // close active inventory trasfers
 
 	public:
 		~menu();
@@ -39,5 +41,6 @@ namespace px {
 		environment *					game;
 		bool							inventory_open;
 		inventory *						inventory_panel;
+		craft *							craft_panel;
 	};
 }

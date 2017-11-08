@@ -49,7 +49,8 @@ namespace px {
 		std::tuple<int, rl::damage_type>	dps(body_component const& source) const;
 		void								damage(body_component & target, int damage, rl::damage_type dmg_type);
 		bool								has_access(rl::workshop station) const noexcept;
-		void								access_workshop(rl::workshop station);
+		void								open_workshop(rl::workshop station);
+		void								close_workshop();
 
 	public:
 		virtual								~environment();
