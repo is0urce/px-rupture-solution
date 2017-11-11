@@ -38,10 +38,8 @@ namespace px {
 			}
 		}
 		void rollback() {
-
 		}
 		void commit() {
-
 		}
 
 	public:

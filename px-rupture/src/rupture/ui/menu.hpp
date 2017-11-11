@@ -36,6 +36,7 @@ namespace px {
 		void combine();
 
 	private:
+		environment	*					context;
 		uq_ptr<director>				nexus;
 		std::vector<uq_ptr<panel>>		stack;
 		environment *					game;

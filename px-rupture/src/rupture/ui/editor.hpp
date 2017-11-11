@@ -575,11 +575,14 @@ namespace px::ui {
 				ImGui::InputText("name##create_item", item_name.data(), item_name.size(), ImGuiInputTextFlags_AutoSelectAll);
 				ImGui::InputText("description##create_item", item_description.data(), item_description.size());
 
-				//ImGui::InputFloat("power##create_item", &item_power);
+				ImGui::InputInt("stack##item_stack_limits", &item_stack);
+				ImGui::InputInt("maximum##item_stack_limit", &item_maximum);
+
+				ImGui::InputFloat("power##create_item", &item_power);
 				ImGui::InputFloat("damage##create_item", &item_damage);
 				//ImGui::InputFloat("hp##create_item", &item_hp_bonus);
-				ImGui::InputFloat("ore power##create_item", &item_ore_power);
-				ImGui::InputInt("essence##create_item", &item_essence);
+				ImGui::InputFloat("ingredient power##create_item", &item_reagent_power);
+				ImGui::InputInt("ingredient essence##create_item", &item_reagent_essence);
 
 				if (ImGui::Button("+ weapon##item")) {
 					auto & item = container->add(make_uq<rl::item>());
@@ -588,6 +591,9 @@ namespace px::ui {
 					item->set_description(item_description.data());
 
 					item->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+
+					item->set_maximum_stack(item_maximum);
+					item->set_current_stack(item_stack);
 				}
 				if (ImGui::Button("+ ore##item")) {
 					auto & item = container->add(make_uq<rl::item>());
@@ -595,8 +601,11 @@ namespace px::ui {
 					item->set_name(item_name.data());
 					item->set_description(item_description.data());
 
-					item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, 0, item_power, 0));
-					item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, item_essence, 0));
+					item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, 1, item_reagent_power));
+					item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, item_reagent_essence));
+
+					item->set_maximum_stack(item_maximum);
+					item->set_current_stack(item_stack);
 				}
 			}
 		}
@@ -877,8 +886,10 @@ namespace px::ui {
 				item_hp_bonus = 0;
 				item_accuracy = 0;
 				item_critical = 0;
-				item_ore_power = 0;
-				item_essence = 0;
+				item_reagent_power = 0;
+				item_reagent_essence = 0;
+				item_stack = 1;
+				item_maximum = -1;
 			}
 		}
 		template <size_t Max>
@@ -933,13 +944,15 @@ namespace px::ui {
 		std::array<char, 128>		item_tag;
 		std::array<char, 128>		item_name;
 		std::array<char, 1024>		item_description;
+		int							item_stack;
+		int							item_maximum;
 		float						item_power;
 		float						item_damage;
 		float						item_hp_bonus;
 		float						item_accuracy;
 		float						item_critical;
-		float						item_ore_power;
-		int							item_essence;
+		float						item_reagent_power;
+		int							item_reagent_essence;
 
 		float						light_tint[4];
 		float						light_elevation;

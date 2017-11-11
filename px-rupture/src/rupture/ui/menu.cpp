@@ -33,7 +33,8 @@ namespace px {
 	// ctor
 
 	menu::menu(unsigned int w, unsigned int h, environment * game)
-		: nexus(make_uq<director>(w, h))
+		: context(game)
+		, nexus(make_uq<director>(w, h))
 		, inventory_open(false)
 		, inventory_panel(nullptr)
 		, craft_panel(nullptr)
@@ -51,8 +52,7 @@ namespace px {
 
 	// dtor
 
-	menu::~menu() {
-	}
+	menu::~menu() = default;
 
 	// methods
 

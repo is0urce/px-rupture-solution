@@ -27,6 +27,12 @@ namespace px::rl {
 		}
 
 	public:
+		static enhancement mixed(Effect main, Integral sub, Integral i0, Integral i1, Real v0, Real v1) {
+			return enhancement{ main, sub, i0, i1, v0, v1 };
+		}
+		static enhancement mixed(Effect main, Integral sub, Integral i, Real v) {
+			return mixed(main, sub, i, i, v, v);
+		}
 		static enhancement zero(Effect main) {
 			return zero(main, 0);
 		}
@@ -44,9 +50,6 @@ namespace px::rl {
 		}
 		static enhancement real(Effect main, Integral sub, Real v) {
 			return mixed(main, sub, 0, 0, v, v);
-		}
-		static enhancement mixed(Effect main, Integral sub, Integral i0, Integral i1, Real v0, Real v1) {
-			return enhancement{ main, sub, i0, i1, v0, v1 };
 		}
 	};
 }
