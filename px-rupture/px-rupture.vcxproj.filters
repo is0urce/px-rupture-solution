@@ -652,5 +652,6 @@
     <None Include="data\scripts\sk_s_smite.lua" />
     <None Include="data\scripts\sk_s_rend.lua" />
     <None Include="data\scripts\sk_s_flurry.lua" />
+    <None Include="lua53.dll" />
   </ItemGroup>
 </Project>

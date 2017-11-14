@@ -27,7 +27,7 @@ namespace px {
 	{
 	public:
 		bool								is_running() const noexcept;
-		uq_ptr<composite_component>	&		spawn(uq_ptr<composite_component> unit, transform_component * hint);
+		uq_ptr<composite_component>	&		spawn(uq_ptr<composite_component> unit);
 		uq_ptr<composite_component> &		spawn(std::string const& blueprint, point2 const& position);
 		void								step(point2 const& movement);		// move player
 		void								advance();							// move player to target
@@ -51,6 +51,8 @@ namespace px {
 		bool								has_access(rl::workshop station) const noexcept;
 		void								open_workshop(rl::workshop station);
 		void								close_workshop();
+		bool								save(std::string const& name);
+		bool								load(std::string const& name);
 
 	public:
 		virtual								~environment();
@@ -59,6 +61,8 @@ namespace px {
 	private:
 		void								incarnate(transform_component * target);
 		void								lock_target();
+		void								save_main();
+		void								load_main();
 
 	protected:
 		notification_system					messages;

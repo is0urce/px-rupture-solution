@@ -22,29 +22,31 @@ namespace px {
 
 	template <typename T> class qtree;
 
-	class scene final
-	{
+	class scene final {
 	public:
-		bool is_transparent(point2 const& location) const;
-		bool is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const;
+		void							assign_sprites(sprite_system * system);
+		bool							is_transparent(point2 const& location) const;
+		bool							is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const;
 
-		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location);
-		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform);
+		uq_ptr<composite_component> &	spawn(uq_ptr<composite_component> && ptr, point2 const& location);
+		uq_ptr<composite_component> &	spawn(uq_ptr<composite_component> && ptr);
 
-		void assign_sprites(sprite_system * system);
-		void pset(std::uint32_t block_id, point2 const& location);
-		qtree<transform_component*> * space() noexcept;
+		void							pset(std::uint32_t block_id, point2 const& location);
+		qtree<transform_component*> *	space() noexcept;
 
-		transform_component * any(point2 const& location) const;
-		body_component * anybody(point2 const& location) const;
+		transform_component *			any(point2 const& location) const;
+		body_component *				anybody(point2 const& location) const;
 
-		void discard(std::function<void(uq_ptr<composite_component> &)> msg_fn);
+		void							discard(std::function<void(composite_component&)> msg_fn);
+		void							clear();
+		size_t							size() const;
+		void							enumerate(std::function<void(composite_component&)>);
 
 	public:
 		~scene();
 		scene();
 
 	private:
-		uq_ptr<scene_internal> works;
+		uq_ptr<scene_internal>			works;
 	};
 }

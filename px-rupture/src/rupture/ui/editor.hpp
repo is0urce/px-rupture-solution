@@ -262,14 +262,14 @@ namespace px::ui {
 				if (transform) {
 
 					if (ImGui::Button("spawn##spawn_at_transform")) {
-						game->spawn(std::move(current), transform);
+						game->spawn(std::move(current));
 					}
 
 					if (camera) {
 						ImGui::SameLine();
 						if (ImGui::Button("here##spawn_here")) {
 							transform->place(camera->position());
-							game->spawn(std::move(current), transform);
+							game->spawn(std::move(current));
 						}
 					}
 				}

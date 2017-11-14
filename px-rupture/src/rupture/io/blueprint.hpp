@@ -25,7 +25,7 @@ namespace px {
 	public:
 
 		template <typename Archive>
-		static void store(Archive && archive, composite_component & unit) {
+		static void store(Archive && archive, composite_component const& unit) {
 			size_t total_components = unit.size();
 			archive(total_components);
 			unit.enumerate_components([&](auto const& component_ptr) {
@@ -59,9 +59,6 @@ namespace px {
 					archive(composition_element::character);
 					archive(*character);
 				}
-				//else if (auto storage = dynamic_cast<storage_component const*>(raw)) {
-				//	archive(composition_element::storage);
-				//}
 				else if (auto deposit = dynamic_cast<deposite_component const*>(raw)) {
 					archive(composition_element::deposit);
 					archive(*deposit);
@@ -133,10 +130,6 @@ namespace px {
 					archive(*factory.add_character());
 					break;
 				}
-				//case composition_element::storage: {
-				//	factory.add_storage();
-				//	break;
-				//}
 				case composition_element::deposit: {
 					archive(*factory.add_deposite());
 					break;

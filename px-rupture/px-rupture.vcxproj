@@ -399,6 +399,7 @@
     <None Include="data\skills.json" />
     <None Include="data\textures.json" />
     <None Include="data\tiles.json" />
+    <None Include="lua53.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

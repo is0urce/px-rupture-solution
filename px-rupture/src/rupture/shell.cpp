@@ -126,6 +126,9 @@ namespace px {
 		if (ui.takes_input()) return;
 
 		switch (action_index) {
+
+		case key::quick_save: save("quicksave"); break;
+		case key::quick_load: load("quicksave"); break;
 		case key::move_east: step({ 1, 0 }); break;
 		case key::move_west: step({ -1, 0 }); break;
 		case key::move_north: step({ 0, 1 }); break;

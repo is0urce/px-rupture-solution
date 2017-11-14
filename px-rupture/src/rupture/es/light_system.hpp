@@ -25,6 +25,7 @@ namespace px {
 		lightmap_data const*	current_data() noexcept;
 		lightmap_data const*	last_data() noexcept;
 		void					clear_lightmap();
+		void					recalculate();
 
 	public:
 		virtual ~light_system();

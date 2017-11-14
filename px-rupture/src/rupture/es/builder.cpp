@@ -31,12 +31,20 @@ namespace px {
 	}
 	builder::builder(core * production_factory)
 		: factory(production_factory)
+		, last_player(nullptr)
 	{
 		begin();
 	}
 
 	// methods
 
+	transform_component * builder::created_player() const {
+		return last_player;
+	}
+
+	transform_component * builder::get_transform() const {
+		return transform;
+	}
 	sprite_component * builder::add_sprite(std::string const& name)
 	{
 		auto part = factory->sprites.make(name);
@@ -253,6 +261,9 @@ namespace px {
 		if (npc) {
 			npc->connect(transform);
 		}
+		if (player) {
+			last_player = transform;
+		}
 
 		unit->connect(transform);
 	}
@@ -304,5 +315,8 @@ namespace px {
 		else {
 			begin();
 		}
+	}
+	bool builder::has_player() const noexcept {
+		return player;
 	}
 }

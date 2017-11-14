@@ -5,6 +5,7 @@
 
 #include "environment.hpp"
 
+#include "app/settings.hpp"
 #include "draw/message.hpp"
 
 #include "es/animator_component.hpp"
@@ -36,7 +37,7 @@ namespace px {
 		, target_hover(0, 0)
 		, opened_workshop(rl::workshop::none)
 		, run(true)
-		, directory("data/save/current", nullptr)
+		, directory(std::string(settings::save_path) + "current", nullptr)
 	{
 	}
 
@@ -51,6 +52,7 @@ namespace px {
 		sprites.target(camera);
 		lights.target(camera);
 		messages.target(camera);
+		lights.recalculate();
 	}
 
 	void environment::step(point2 const& movement) {
@@ -157,7 +159,7 @@ namespace px {
 		}
 		auto pc = b.request();
 		pc->set_persistency(persistency::permanent);
-		auto & unit = stage.spawn(std::move(pc), nullptr);
+		auto & unit = stage.spawn(std::move(pc));
 		unit->query<body_component>()->equip(0);
 
 		b.add_sprite("i_cheese");
@@ -167,7 +169,7 @@ namespace px {
 		body->health().emplace(10);
 		cont = b.add_container();
 		
-		stage.spawn(b.request(), nullptr);
+		stage.spawn(b.request());
 
 		// set terrain
 
@@ -183,8 +185,8 @@ namespace px {
 		turn_pass = true;
 	}
 
-	uq_ptr<composite_component>	& environment::spawn(uq_ptr<composite_component> unit, transform_component * hint) {
-		return stage.spawn(std::move(unit), hint);
+	uq_ptr<composite_component>	& environment::spawn(uq_ptr<composite_component> unit) {
+		return stage.spawn(std::move(unit));
 	}
 
 	transform_component	* environment::possessed() noexcept
@@ -219,9 +221,8 @@ namespace px {
 
 	void environment::return_turn() {
 		// rip
-		stage.discard([&](uq_ptr<composite_component> & composite) {
-			if (!composite) return;
-			if (transform_component * pawn = composite->linked<transform_component>()) {
+		stage.discard([&](composite_component & composite) {
+			if (transform_component * pawn = composite.linked<transform_component>()) {
 				if (body_component * body = pawn->linked<body_component>()) {
 					if (container_component * loot = body->linked<container_component>()) {
 

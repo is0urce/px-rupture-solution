@@ -13,9 +13,19 @@
 
 namespace px {
 
-	class scene_internal
-	{
+	class scene_internal {
 	public:
+		void assign_sprites(sprite_system * system) {
+			terrain.assign_sprites(system);
+		}
+
+		void clear() {
+			units.clear();
+		}
+		size_t size() const {
+			return units.size();
+		}
+
 		bool is_transparent(point2 const& location) const
 		{
 			if (!terrain.is_transparent(location)) return false;
@@ -57,21 +67,21 @@ namespace px {
 			});
 			return found;
 		}
-		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform, point2 const& location)
+		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, point2 const& location)
 		{
-			if (!transform) transform = ptr->query<transform_component>();
-			if (transform) {
-				transform->place(location);
-				transform->store();
-				transform->incarnate(&space);
+			transform_component * pawn = ptr->linked<transform_component>();
+			if (pawn) {
+				pawn->place(location);
+				pawn->store();
+				pawn->incarnate(&space);
 			}
 			return insert(std::forward<uq_ptr<composite_component>>(ptr));
 		}
-		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr, transform_component * transform)
+		uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr)
 		{
-			if (!transform) transform = ptr->query<transform_component>();
-			if (transform) {
-				transform->incarnate(&space);
+			transform_component * pawn = ptr->linked<transform_component>();
+			if (pawn) {
+				pawn->incarnate(&space);
 			}
 			return insert(std::forward<uq_ptr<composite_component>>(ptr));
 		}
@@ -80,21 +90,17 @@ namespace px {
 		{
 			return &space;
 		}
-		void assign_sprites(sprite_system * system)
-		{
-			terrain.assign_sprites(system);
-		}
 		void pset(std::uint32_t block_id, point2 const& location)
 		{
 			terrain.pset(block_id, location);
 		}
 		template <typename Operator>
-		void discard(Operator && msg) {
+		void discard(Operator && message_function) {
 			size_t i = 0;
 			size_t size = units.size();
 			while (i != size) {
 				if (units[i]->decayed()) {
-					msg(units[i]);
+					message_function(*units[i]);
 					units[i] = std::move(units.back());
 					units.pop_back();
 					--size;
@@ -104,14 +110,25 @@ namespace px {
 				}
 			}
 		}
+		template <typename Operator>
+		void enumerate(Operator && function) const {
+			for (uq_ptr<composite_component> const& unit : units) {
+				function(*unit);
+			}
+		}
+		template <typename Operator>
+		void enumerate(Operator && function) {
+			for (uq_ptr<composite_component> & unit : units) {
+				function(*unit);
+			}
+		}
 
 	public:
 		scene_internal()
 			: space(64)
 		{
 		}
-		uq_ptr<composite_component> & insert(uq_ptr<composite_component> && ptr)
-		{
+		uq_ptr<composite_component> & insert(uq_ptr<composite_component> && ptr) {
 			ptr->enable();
 			units.push_back(std::move(ptr));
 			return units.back();

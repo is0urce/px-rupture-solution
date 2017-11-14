@@ -28,8 +28,7 @@ namespace px {
 	class transform_component;
 	class workshop_component;
 
-	class builder final
-	{
+	class builder final {
 	public:
 		animator_component *		add_animator(std::string const& name);
 		body_component *			add_body();
@@ -46,6 +45,8 @@ namespace px {
 		workshop_component *		add_workshop();
 		void						begin();
 		void						begin(uq_ptr<composite_component> strip);
+		transform_component *		get_transform() const;
+		bool						has_player() const noexcept;
 		void						remove_animator();
 		void						remove_body();
 		void						remove_character();
@@ -59,6 +60,7 @@ namespace px {
 		void						remove_transform();
 		void						remove_workshop();
 		uq_ptr<composite_component>	request();
+		transform_component *		created_player() const;
 
 	public:
 		~builder();
@@ -83,5 +85,6 @@ namespace px {
 		storage_component *			storage;
 		transform_component *		transform;
 		workshop_component *		workshop;
+		transform_component *		last_player;
 	};
 }

@@ -18,6 +18,7 @@ namespace px {
 			const static char *const scripts_path;
 			const static char *const skills_path;
 			const static char *const log_path;
+			const static char *const save_path;
 		};
 
 		const char *const settings::application_name = "px-rupture";
@@ -30,5 +31,6 @@ namespace px {
 		const char *const settings::schemata_path = "data/schemata/";
 		const char *const settings::blueprints_path = "data/blueprints/";
 		const char *const settings::scripts_path = "data/scripts/";
+		const char *const settings::save_path = "data/save/";
 	}
 }

@@ -17,25 +17,20 @@ namespace fs = std::experimental::filesystem;
 
 namespace px {
 
-	class repository final
-	{
+	class repository final {
 	public:
-		bool exists() const
-		{
+		bool exists() const {
 			return fs::exists(name);
 		}
-		void remove()
-		{
+		void remove() {
 			fs::remove_all(name);
 		}
-		void create()
-		{
+		void create() {
 			if (!exists()) {
 				fs::create_directory(name);
 			}
 		}
-		void reset()
-		{
+		void clear() {
 			// fs::create_directory sometime fails after fs::remove_all
 
 			if (!exists()) {
@@ -48,12 +43,10 @@ namespace px {
 			}
 		}
 
-		void save(repository & destination) const
-		{
+		void save(repository & destination) const{
 			copy(*this, destination);
 		}
-		void load(repository const& destination)
-		{
+		void load(repository const& destination) {
 			if (!destination.exists()) throw std::runtime_error("repository not exists");
 
 			copy(destination, *this);
@@ -61,42 +54,33 @@ namespace px {
 
 		// data
 
-		std::string depot_scene(point2 const& cell) const
-		{
+		std::string depot_scene(point2 const& cell) const {
 			return query("scene_" + to_string(cell));
 		}
-		std::string depot_main() const
-		{
+		std::string depot_main() const {
 			return query("main");
 		}
-		std::string depot_meta() const
-		{
+		std::string depot_meta() const {
 			return query("meta");
 		}
 
-		bool has_scene(std::string const& scene_name) const
-		{
+		bool has_scene(std::string const& scene_name) const {
 			return exists(scene_name);
 		}
-		bool has_main() const
-		{
+		bool has_main() const {
 			return exists("main");
 		}
-		bool has_meta() const
-		{
+		bool has_meta() const {
 			return exists("meta");
 		}
 
-		bool clear_scene(std::string const& scene_name)
-		{
+		bool clear_scene(std::string const& scene_name) {
 			return clear(scene_name);
 		}
-		bool clear_main()
-		{
+		bool clear_main() {
 			return clear("main");
 		}
-		bool clear_meta()
-		{
+		bool clear_meta() {
 			return clear("meta");
 		}
 
@@ -109,6 +93,12 @@ namespace px {
 				create();
 			}
 		}
+		repository(std::string const& name)
+			: repository(name, nullptr)
+		{
+		}
+		repository(repository const&) = delete;
+		repository & operator=(repository const&) = delete;
 
 	private:
 		std::string record_path(std::string const& record_name) const
@@ -136,30 +126,26 @@ namespace px {
 			}
 			return false;
 		}
-		bool exists(std::string const& record_name) const
-		{
+		bool exists(std::string const& record_name) const {
 			return fs::exists(record_path(record_name));
 		}
-		bool clear(std::string const& record_name) const
-		{
+		bool clear(std::string const& record_name) const {
 			return fs::remove(record_path(record_name));
 		}
-		static void move(repository & source, repository & destination)
-		{
-			destination.reset();
+		static void move(repository & source, repository & destination) {
+			destination.clear();
 
 			for (auto const& entry : fs::directory_iterator(source.name)) {
 				fs::path const& path = entry.path();
 				fs::rename(path, destination.name / path.filename());
 			}
 		}
-		static void copy(repository const& source, repository & destination)
-		{
-			destination.reset();
+		static void copy(repository const& source, repository & destination) {
+			destination.clear();
 
 			for (auto const& entry : fs::directory_iterator(source.name)) {
 				fs::path const& path = entry.path();
-				fs::copy_file(path, destination.name / path.filename(), fs::copy_options::overwrite_existing);
+				fs::copy(path, destination.name / path.filename());
 			}
 		}
 		static std::string to_string(point2 const& location)
@@ -168,8 +154,8 @@ namespace px {
 		}
 
 	private:
-		static const int coordinate_bias = 0;
-		fs::path name;
-		repository const* parent;
+		static const int	coordinate_bias = 0;
+		fs::path			name;
+		repository const*	parent;
 	};
 }

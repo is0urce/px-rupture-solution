@@ -27,6 +27,10 @@ namespace px {
 
 	// methrods
 
+	void light_system::recalculate()
+	{
+		works->calculate_lights();
+	}
 	void light_system::assign_scene(scene const* stage) noexcept
 	{
 		works->assign_scene(stage);
