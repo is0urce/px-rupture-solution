@@ -25,9 +25,9 @@ namespace px {
 		return works->is_traversable(location, opts);
 	}
 
-	uq_ptr<composite_component> & scene::spawn(uq_ptr<composite_component> && ptr, point2 const& location) {
-		return works->spawn(std::forward<uq_ptr<composite_component>>(ptr), location);
-	}
+	//uq_ptr<composite_component> & scene::spawn(uq_ptr<composite_component> && ptr, point2 const& location) {
+	//	return works->spawn(std::forward<uq_ptr<composite_component>>(ptr), location);
+	//}
 	uq_ptr<composite_component> & scene::spawn(uq_ptr<composite_component> && ptr) {
 		return works->spawn(std::forward<uq_ptr<composite_component>>(ptr));
 	}

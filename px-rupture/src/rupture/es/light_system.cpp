@@ -9,10 +9,7 @@ namespace px {
 
 	// ctors
 
-	light_system::~light_system()
-	{
-
-	}
+	light_system::~light_system() = default;
 	light_system::light_system()
 		: works(make_uq<light_works>(20))
 	{
@@ -20,29 +17,26 @@ namespace px {
 
 	// virtual overload
 
-	void light_system::turn_update_system(delta_type const& /*delta_time*/)
-	{
+	void light_system::turn_update_system(delta_type const& /*delta_time*/) {
 		works->calculate_lights();
 	}
 
 	// methrods
 
-	void light_system::recalculate()
-	{
-		works->calculate_lights();
-	}
-	void light_system::assign_scene(scene const* stage) noexcept
-	{
+	void light_system::assign_scene(scene const* stage) noexcept {
 		works->assign_scene(stage);
 	}
 
-	uq_ptr<light_component> light_system::make()
-	{
+	void light_system::recalculate() {
+		works->clear_lightmap();
+		works->calculate_lights();
+	}
+
+	uq_ptr<light_component> light_system::make() {
 		return works->make();
 	}
 
-	void light_system::clear_lightmap()
-	{
+	void light_system::clear_lightmap() {
 		works->clear_lightmap();
 	}
 	void light_system::target(transform_component const* camera) noexcept

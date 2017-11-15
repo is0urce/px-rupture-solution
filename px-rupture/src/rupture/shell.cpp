@@ -15,6 +15,7 @@ namespace px {
 
 	// ctor
 
+	shell::~shell() = default;
 	shell::shell(unsigned int start_width, unsigned int start_height)
 		: renderer(start_width, start_height)
 		, ui(start_width, start_height, this)
@@ -25,8 +26,6 @@ namespace px {
 		load_data();
 		register_systems();
 		start();
-	}
-	shell::~shell() {
 	}
 
 	// methods
@@ -113,7 +112,7 @@ namespace px {
 		position *= { 2.0, -2.0 * height / width };	// account aspect
 		position /= renderer.get_scale();
 		position += { 0.5, 0.5 };					// tile center offset
-		focus(position.floor());
+		target(position.floor());
 	}
 	void shell::scroll(double horisontal, double vertical) {
 		if (!is_running() || turn_passed()) return;

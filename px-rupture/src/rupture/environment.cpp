@@ -7,6 +7,7 @@
 
 #include "app/settings.hpp"
 #include "draw/message.hpp"
+#include "io/repository.hpp"
 
 #include "es/animator_component.hpp"
 #include "es/body_component.hpp"
@@ -19,9 +20,9 @@
 #include "es/builder.hpp"
 
 #include <px/fn/ant_generator.hpp>
-#include <random>
-
 #include <px/memory/memory.hpp>
+
+#include <random>
 
 namespace px {
 
@@ -37,8 +38,9 @@ namespace px {
 		, target_hover(0, 0)
 		, opened_workshop(rl::workshop::none)
 		, run(true)
-		, directory(std::string(settings::save_path) + "current", nullptr)
 	{
+		parent = make_uq<repository>(std::string(settings::save_path) + "base");
+		current = make_uq<repository>(std::string(settings::save_path) + "current", parent.get());
 	}
 
 	// methods
@@ -50,20 +52,20 @@ namespace px {
 	void environment::incarnate(transform_component * camera) {
 		player = camera;
 		sprites.target(camera);
-		lights.target(camera);
 		messages.target(camera);
+		lights.target(camera);
 		lights.recalculate();
 	}
 
 	void environment::step(point2 const& movement) {
-		if (player) {
-			if (body_component * body = player->linked<body_component>()) {
-				point2 destination = player->position() + movement;
-				if (stage.is_traversable(destination, body->movement())) {
-					start_turn();
-					player->place(destination);
-					end_turn(1);
-				}
+		if (!player) return;
+
+		if (body_component * body = player->linked<body_component>()) {
+			point2 destination = player->position() + movement;
+			if (stage.is_traversable(destination, body->movement())) {
+				start_turn();
+				player->place(destination);
+				end_turn(1);
 			}
 		}
 	}
@@ -71,23 +73,23 @@ namespace px {
 	void environment::action(unsigned int action_idx) {
 		if (!player || turn_pass) return;
 
-			if (auto body = player->linked<body_component>()) {
-				if (auto character = body->linked<character_component>()) {
-					if (skill * ability = character->get(action_idx)) {
-						bool success = false;
-						start_turn();
-						if (ability->is_targeted()) {
-							success = ability->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
-						}
-						else {
-							success = ability->try_use(body, target_area);
-						}
-						if (success) {
-							end_turn(1);
-						}
+		if (auto body = player->linked<body_component>()) {
+			if (auto character = body->linked<character_component>()) {
+				if (skill * ability = character->get(action_idx)) {
+					bool success = false;
+					start_turn();
+					if (ability->is_targeted()) {
+						success = ability->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
+					}
+					else {
+						success = ability->try_use(body, target_area);
+					}
+					if (success) {
+						end_turn(1);
 					}
 				}
 			}
+		}
 	}
 	void environment::advance() {
 		if (!player || turn_pass) return;
@@ -107,17 +109,14 @@ namespace px {
 			}
 		}
 	}
-	unsigned int environment::current_turn() const noexcept
-	{
+	unsigned int environment::current_turn() const noexcept {
 		return turn_number;
 	}
-	bool environment::turn_passed() const noexcept
-	{
+	bool environment::turn_passed() const noexcept {
 		return turn_pass;
 	}
 
-	void environment::start()
-	{
+	void environment::start() {
 		builder b(this);
 
 		light_component * light = nullptr;
@@ -168,7 +167,7 @@ namespace px {
 		body->blocking().make_transparent();
 		body->health().emplace(10);
 		cont = b.add_container();
-		
+
 		stage.spawn(b.request());
 
 		// set terrain
@@ -189,20 +188,16 @@ namespace px {
 		return stage.spawn(std::move(unit));
 	}
 
-	transform_component	* environment::possessed() noexcept
-	{
+	transform_component	* environment::possessed() noexcept {
 		return player;
 	}
-	transform_component	* environment::target() noexcept
-	{
+	transform_component	* environment::target() noexcept {
 		return target_unit;
 	}
-	point2 environment::area() const noexcept
-	{
+	point2 environment::area() const noexcept {
 		return target_area;
 	}
-	void environment::focus(point2 offset)
-	{
+	void environment::target(point2 offset)	{
 		target_hover = offset;
 		lock_target();
 	}

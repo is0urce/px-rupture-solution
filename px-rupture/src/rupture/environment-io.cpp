@@ -8,6 +8,7 @@
 #include "app/settings.hpp"
 
 #include "io/blueprint.hpp"
+#include "io/repository.hpp"
 #include "io/serialization.hpp"
 
 namespace px {
@@ -28,8 +29,8 @@ namespace px {
 		save_main();
 
 		// copy directory
-		repository save_directory(std::string(settings::save_path) + name);
-		directory.save(save_directory);
+		repository directory(std::string(settings::save_path) + name);
+		current->save(directory);
 
 		return true;
 	}
@@ -37,9 +38,9 @@ namespace px {
 	bool environment::load(std::string const& name) {
 
 		// copy directory
-		repository save_directory(std::string(settings::save_path) + name);
-		if (!save_directory.has_main()) return false;
-		directory.load(save_directory);
+		repository directory(std::string(settings::save_path) + name);
+		if (!directory.has_main()) return false;
+		current->load(directory);
 
 		load_main();
 
@@ -47,7 +48,7 @@ namespace px {
 	}
 
 	void environment::save_main() {
-		auto ostream = output_stream(directory.depot_main());
+		auto ostream = output_stream(current->depot_main());
 		SAVE_OUTPUT_ARCHIVE archive(ostream);
 
 		// save units
@@ -58,7 +59,7 @@ namespace px {
 		});
 	}
 	void environment::load_main() {
-		auto istream = input_stream(directory.depot_main());
+		auto istream = input_stream(current->depot_main());
 		SAVE_INPUT_ARCHIVE archive(istream);
 
 		builder factory(this);

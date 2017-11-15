@@ -53,25 +53,27 @@ namespace px {
 				double elevation2 = light.elevation * light.elevation;
 				std::fill(painted_flags.begin(), painted_flags.end(), false);
 
-				switch (light.source)
-				{
+				switch (light.source) {
 				case light_source::ambient: {
 					double inv_distance = 1 / (1 + distance2(light_x - camera->position().x(), light_y - camera->position().y(), elevation2));
 					if (inv_distance > ambient_inv_distance) {
 						ambient_inv_distance = inv_distance;
 						ambient = light.tint;
 					}
-				}
 					break;
-				case light_source::point:
+				}
+				case light_source::point: {
 					recursive_shadowcasting::light(light_x, light_y, radius, [&](int x, int y) { return is_transparent(x, y); }, [&]
 					(int x, int y) {
 						double distance = std::sqrt(distance2(light_x - x, light_y - y, elevation2));
 						distance = std::max(distance, 1.0);
 						illuminate(x, y, light.tint / (distance * distance));
 					});
+					break;
 				}
-
+				default:
+					break;
+				}
 			});
 
 			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & c) {
@@ -115,19 +117,15 @@ namespace px {
 			set_offsets();
 			move_ligtmaps();
 		}
-		lightmap_data const* current() noexcept
-		{
+		lightmap_data const* current() noexcept {
 			return &current_data;
 		}
-		lightmap_data const* last() noexcept
-		{
+		lightmap_data const* last() noexcept {
 			return &last_data;
 		}
 
 	public:
-		~light_works()
-		{
-		}
+		~light_works() = default;
 		light_works(unsigned int start_radius)
 			: camera(nullptr)
 			, stage(nullptr)

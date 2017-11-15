@@ -8,7 +8,7 @@
 #include <px/rl/traverse_options.hpp>
 #include <px/rl/traverse.hpp>
 
-#include <cstdint> // uint32_t block_id
+#include <cstdint>
 #include <functional>
 
 namespace px {
@@ -28,19 +28,17 @@ namespace px {
 		bool							is_transparent(point2 const& location) const;
 		bool							is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const;
 
-		uq_ptr<composite_component> &	spawn(uq_ptr<composite_component> && ptr, point2 const& location);
-		uq_ptr<composite_component> &	spawn(uq_ptr<composite_component> && ptr);
-
 		void							pset(std::uint32_t block_id, point2 const& location);
 		qtree<transform_component*> *	space() noexcept;
 
 		transform_component *			any(point2 const& location) const;
 		body_component *				anybody(point2 const& location) const;
 
-		void							discard(std::function<void(composite_component&)> msg_fn);
-		void							clear();
-		size_t							size() const;
-		void							enumerate(std::function<void(composite_component&)>);
+		uq_ptr<composite_component> &	spawn(uq_ptr<composite_component> && ptr);					// add object
+		void							clear();													// remove all objects
+		size_t							size() const;												// objects count
+		void							enumerate(std::function<void(composite_component&)>);		// enumerate objects
+		void							discard(std::function<void(composite_component&)> msg_fn);	// remove destroyed objects
 
 	public:
 		~scene();
