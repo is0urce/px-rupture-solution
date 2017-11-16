@@ -126,12 +126,22 @@ namespace px {
 
 		switch (action_index) {
 
-		case key::quick_save: save("quicksave"); break;
-		case key::quick_load: load("quicksave"); break;
+		case key::quick_save: {
+			ui.rollback();
+			save("quicksave");
+			break;
+		}
+		case key::quick_load: {
+			ui.rollback();
+			load("quicksave");
+			break;
+		}
 		case key::move_east: step({ 1, 0 }); break;
 		case key::move_west: step({ -1, 0 }); break;
 		case key::move_north: step({ 0, 1 }); break;
 		case key::move_south: step({ 0, -1 }); break;
+
+		case key::action_use: use(0); break;
 
 		case key::action0: action(0); break;
 		case key::action1: action(1); break;
@@ -140,9 +150,9 @@ namespace px {
 		case key::action4: action(4); break;
 		case key::action5: action(5); break;
 
-		case key::action_use: use(0); break;
-
 		case key::panel_inventory: ui.toggle_inventory(); break;
+
+		case key::function_edit: function_edit(0); break;
 		}
 	}
 

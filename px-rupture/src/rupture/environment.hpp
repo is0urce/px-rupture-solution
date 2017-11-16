@@ -16,6 +16,7 @@
 #include <px/rl/hit_result.hpp>
 #include <px/rl/workshop.hpp>
 
+#include <cstdint>
 #include <string>
 
 namespace px {
@@ -37,6 +38,7 @@ namespace px {
 		void								advance();							// move player to target
 		void								action(unsigned int action_idx);	// use skill
 		void								use(unsigned int mods);				// use object
+		void								function_edit(std::uint32_t idx);
 		void								start();
 		transform_component	*				possessed() noexcept;
 		void								start_turn();						// clear from previous turn

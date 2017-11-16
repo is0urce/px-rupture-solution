@@ -21,8 +21,11 @@ namespace px {
 		static const size_t terrain_len = 50;
 
 	public:
+		void save_terrain() {
+
+		}
 		void assign_sprites(sprite_system * system) {
-			terrain.assign_sprites(system);
+			sprites = system;
 		}
 
 		void clear() {
@@ -31,9 +34,21 @@ namespace px {
 		size_t size() const {
 			return units.size();
 		}
+		void focus(point2 const& world) {
+			surface.focus(world);
+			surface.enumerate([&](point2 const& cell, auto & ptr) {
+				if (!ptr) {
+					ptr = make_uq<stream<terrain_patch<terrain_len, terrain_len>>>();
+					ptr->load([&](auto & chunk) {
+						chunk.assign_sprites(sprites);
+						chunk.assign_cell(cell);
+					});
+				}
+			});
+		}
 
 		bool is_transparent(point2 const& location) const {
-			if (!terrain.is_transparent(location)) return false;
+			if (!surface.is_transparent(location)) return false;
 
 			bool transparent = true;
 			space.find(location, [&](transform_component * pawn) {
@@ -44,7 +59,7 @@ namespace px {
 			return transparent;
 		}
 		bool is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const {
-			if (!terrain.is_traversable(location, opts)) return false;
+			if (!surface.is_traversable(location, opts)) return false;
 
 			bool traversable = true;
 			space.find(location, [&](transform_component * pawn) {
@@ -81,7 +96,7 @@ namespace px {
 			return &space;
 		}
 		void pset(std::uint32_t block_id, point2 const& location) {
-			terrain.pset(block_id, location);
+			surface.pset(block_id, location);
 		}
 		template <typename Operator>
 		void discard(Operator && message_function) {
@@ -125,7 +140,8 @@ namespace px {
 
 	private:
 		qtree<transform_component*>					space;
-		terrain_patch<terrain_len, terrain_len>		terrain;
 		std::vector<uq_ptr<composite_component>>	units;
+		terrain_surface<terrain_len, 1>				surface;
+		sprite_system *								sprites;
 	};
 }

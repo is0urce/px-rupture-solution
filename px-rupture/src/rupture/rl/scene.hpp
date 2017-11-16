@@ -25,6 +25,7 @@ namespace px {
 	class scene final {
 	public:
 		void							assign_sprites(sprite_system * system);
+		void							focus(point2 const& location);
 		bool							is_transparent(point2 const& location) const;
 		bool							is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const;
 

@@ -29,8 +29,10 @@ namespace px {
 			block.block_id = prototype.block_id;
 			block.mass = prototype.mass;
 			block.sprite = sprites->make(prototype.name);
-			block.sprite->connect(&block.transform);
-			block.sprite->activate();
+			if (block.sprite) {
+				block.sprite->connect(&block.transform);
+				block.sprite->activate();
+			}
 		}
 		void setup(tile & block) {
 			setup(block.block_id, block);

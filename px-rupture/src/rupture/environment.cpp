@@ -172,6 +172,8 @@ namespace px {
 
 		// set terrain
 
+		stage.focus({ 0, 0 });
+
 		auto map = fn::ant_generator::generate(std::mt19937{}, 50, 50, 50 * 50 * 100 / 61);
 		map.enumerate([this](size_t x, size_t y, unsigned char tile) {
 			stage.pset(tile == 0 ? 1 : 2, point2(static_cast<int>(x), static_cast<int>(y)));
@@ -241,6 +243,7 @@ namespace px {
 		turn_number += turns;
 		turn_pass = true;
 	}
+
 	void environment::popup(std::string text, color tint, point2 location) {
 		messages.send({ text, tint, 1.0 }, location);
 	}
@@ -277,5 +280,9 @@ namespace px {
 	}
 	void environment::close_workshop() {
 		opened_workshop = rl::workshop::none;
+	}
+
+	void environment::function_edit(std::uint32_t /*idx*/) {
+		stage.pset(3, player->position());
 	}
 }

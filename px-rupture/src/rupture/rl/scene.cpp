@@ -18,6 +18,10 @@ namespace px {
 
 	// methods
 
+	void scene::focus(point2 const& location) {
+		works->focus(location);
+	}
+
 	bool scene::is_transparent(point2 const& location) const {
 		return works->is_transparent(location);
 	}
@@ -25,9 +29,6 @@ namespace px {
 		return works->is_traversable(location, opts);
 	}
 
-	//uq_ptr<composite_component> & scene::spawn(uq_ptr<composite_component> && ptr, point2 const& location) {
-	//	return works->spawn(std::forward<uq_ptr<composite_component>>(ptr), location);
-	//}
 	uq_ptr<composite_component> & scene::spawn(uq_ptr<composite_component> && ptr) {
 		return works->spawn(std::forward<uq_ptr<composite_component>>(ptr));
 	}

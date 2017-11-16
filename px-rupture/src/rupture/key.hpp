@@ -52,6 +52,9 @@ namespace px {
 		panel_inventory = 502,
 		panel_journal = 503,
 		panel_map = 504,
-		panel_options = 505
+		panel_options = 505,
+
+		function_help = 800,
+		function_edit = 804
 	};
 }

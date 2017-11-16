@@ -25,6 +25,10 @@ namespace px {
 
 	// methods
 
+	void ui_system::rollback() {
+		works->rollback();
+	}
+
 	void ui_system::toggle_inventory() {
 		works->toggle_inventory();
 	}

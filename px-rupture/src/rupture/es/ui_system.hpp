@@ -24,6 +24,7 @@ namespace px {
 		void resize(unsigned int x, unsigned int y);
 		bool takes_input();
 		void toggle_inventory();
+		void rollback();
 
 	public:
 		virtual ~ui_system();

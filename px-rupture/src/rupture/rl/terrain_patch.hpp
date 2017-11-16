@@ -18,6 +18,18 @@ namespace px {
 		void assign_sprites(sprite_system * system) {
 			library.assign_sprites(system);
 		}
+		void assign_cell(point2 cell) {
+			grid_cell = cell;
+			point2 start = grid_cell * point2(W, H);
+			tiles.enumerate([&](size_t x, size_t y, tile & block) {
+				block.block_id = 0;
+				block.transform.place(start + point2(static_cast<int>(x), static_cast<int>(y)));
+				block.transform.store();
+			});
+		}
+		point2 cell() const {
+			return grid_cell;
+		}
 		bool is_transparent(point2 const& location) const {
 			return tiles.get_or(border, location).mass.is_transparent();
 		}
@@ -43,6 +55,7 @@ namespace px {
 
 			tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
 				in_stream >> block.block_id;
+				library(block);
 			});
 
 			return true;
@@ -55,20 +68,21 @@ namespace px {
 		void enumerate(Operator && function) const {
 			tiles.enumerate(std::forward<Operator>(function));
 		}
+		void invalidate() {
+			tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
+				library(block);
+			});
+		}
 
 	public:
 		terrain_patch()
 		{
-			tiles.enumerate([&](size_t x, size_t y, tile & block) {
-				block.block_id = 0;
-				block.transform.place({ static_cast<int>(x), static_cast<int>(y) });
-				block.transform.store();
-			});
 		}
 
 	private:
 		matrix2<tile, W, H>					tiles;
 		tile								border;
 		tile_library						library;
+		point2								grid_cell;
 	};
 }

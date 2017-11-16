@@ -80,6 +80,7 @@ namespace px {
 		return nexus->takes_input();
 	}
 	void menu::toggle_inventory() {
+		craft_panel->rollback();
 		inventory_open = !inventory_open;
 	}
 	void menu::combine() {
@@ -88,7 +89,7 @@ namespace px {
 		}
 	}
 	void menu::rollback() {
-		inventory_open = false;
 		craft_panel->rollback();
+		inventory_open = false;
 	}
 }

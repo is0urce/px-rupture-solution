@@ -48,22 +48,22 @@ namespace px {
 			});
 		}
 		data_type const* operator->() const {
-			return &m_data;
+			return &userdata;
 		}
 		data_type * operator->() {
-			return &m_data;
+			return &userdata;
 		}
 		data_type const* get() const {
-			return &m_data;
+			return &userdata;
 		}
 		data_type * get() {
-			return &m_data;
+			return &userdata;
 		}
 		data_type const& data() const {
-			return m_data;
+			return userdata;
 		}
 		data_type & data() {
-			return m_data;
+			return userdata;
 		}
 
 	public:
@@ -79,10 +79,10 @@ namespace px {
 
 	private:
 		void finish_loading() {
-			if (m_thread.joinable()) {
-				m_thread.join();
+			if (thread.joinable()) {
+				thread.join();
 			}
-			m_loaded = true;
+			loaded = true;
 		}
 		void exception_check() const {
 			if (exc_ptr) {
