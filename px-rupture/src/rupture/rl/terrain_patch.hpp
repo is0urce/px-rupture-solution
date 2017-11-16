@@ -27,7 +27,7 @@ namespace px {
 				block.transform.store();
 			});
 		}
-		point2 cell() const {
+		point2 grid() const {
 			return grid_cell;
 		}
 		bool is_transparent(point2 const& location) const {
@@ -39,22 +39,22 @@ namespace px {
 		void pset(std::uint32_t block_id, point2 const& location) {
 			library.setup(block_id, tiles.at(location));
 		}
-		bool save(std::string const& path) const {
-			std::ofstream out_stream(path);
+		bool write(std::string const& path) const {
+			std::ofstream out_stream(path, std::ios_base::binary);
 			if (!out_stream.is_open()) return false;
 
 			tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile const& block) {
-				out_stream << block.block_id;
+				out_stream.write(reinterpret_cast<char const*>(&block.block_id), sizeof block.block_id);
 			});
 
 			return true;
 		}
-		bool load(std::string const& path) {
-			std::ifstream in_stream(path);
+		bool read(std::string const& path) {
+			std::ifstream in_stream(path, std::ios_base::binary);
 			if (!in_stream.is_open()) return false;
 
 			tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
-				in_stream >> block.block_id;
+				in_stream.read(reinterpret_cast<char*>(&block.block_id), sizeof block.block_id);
 				library(block);
 			});
 

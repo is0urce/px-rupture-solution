@@ -240,8 +240,7 @@ namespace px {
 		messages.send({ text, tint, 1.0 }, location);
 	}
 
-	int	environment::distance(point2 const& a, point2 const& b) const
-	{
+	int	environment::distance(point2 const& a, point2 const& b) const {
 		return a.king_distance(b);
 	}
 
@@ -275,6 +274,6 @@ namespace px {
 	}
 
 	void environment::function_edit(std::uint32_t /*idx*/) {
-		stage.pset(3, player->position());
+		stage.pset(3, area());
 	}
 }

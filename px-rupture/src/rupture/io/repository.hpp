@@ -1,7 +1,7 @@
-// name: save.hpp
+// name: repository.hpp
 // type: c++
 // auth: is0urce
-// desc: load documents
+// desc: save / load serialization folder management
 
 #pragma once
 
@@ -145,7 +145,7 @@ namespace px {
 
 			for (auto const& entry : fs::directory_iterator(source.name)) {
 				fs::path const& path = entry.path();
-				fs::copy(path, destination.name / path.filename());
+				fs::copy_file(path, destination.name / path.filename());
 			}
 		}
 		static std::string to_string(point2 const& location)

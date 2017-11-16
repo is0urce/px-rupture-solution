@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "rupture/app/settings.hpp"
+
 #include "terrain_patch.hpp"
 #include "tile_library.hpp"
 
