@@ -1,3 +1,8 @@
+// name: memory.hpp
+// type: c++ header
+// auth: is0urce
+// desc: make_uq template function
+
 #pragma once
 
 #include <px/memory/uq_ptr.hpp>
@@ -8,18 +13,14 @@
 namespace px {
 
 	template <typename T, typename... Args>
-	uq_ptr<T> make_uq(Args &&... args)
-	{
+	uq_ptr<T> make_uq(Args &&... args) {
 		typedef T element_type;
-		class join_block final
-		{
+		class join_block final {
 		public:
-			element_type * get_value() noexcept
-			{
+			element_type * get_value() noexcept {
 				return &element;
 			}
-			abstract_release_block * get_control() noexcept
-			{
+			abstract_release_block * get_control() noexcept {
 				return &ctrl;
 			}
 

@@ -11,21 +11,82 @@
 
 #include <px/common/qtree.hpp>
 #include <px/memory/uq_ptr.hpp>
+#include <px/memory/abstract_release_block.hpp>
 
+#include <px/fn/ant_generator.hpp>
+
+#include <random>
 #include <vector>
 
 namespace px {
 
 	class scene_internal {
-	private:
-		static const size_t terrain_len = 50;
+	public:
+		static const size_t terrain_len = 20;
+		typedef terrain_surface<terrain_len, 1> surface_type;
+		typedef typename surface_type::stream_type stream_type;
+
+		// nested
+		class join_block;
+		class terrain_release_block final
+			: public abstract_release_block
+		{
+		public:
+			terrain_release_block(join_block * raw, scene_internal * current)
+				: original(raw)
+				, scene(current)
+			{
+			}
+
+		protected:
+			virtual void release_block() noexcept override {
+				scene->leave(original->get_value()->data().cell());
+				delete original;
+			}
+
+		private:
+			join_block *		original;
+			scene_internal *	scene;
+		};
+
+		// nested
+		class join_block final {
+		public:
+			stream_type * get_value() noexcept {
+				return &stream;
+			}
+			abstract_release_block * get_control() noexcept {
+				return &ctrl;
+			}
+
+		public:
+			join_block(scene_internal * scene)
+				: ctrl(this, scene)
+			{
+			}
+		private:
+			stream_type				stream;
+			terrain_release_block	ctrl;
+		};
 
 	public:
 		void save_terrain() {
-
 		}
 		void assign_sprites(sprite_system * system) {
 			sprites = system;
+		}
+		void leave(point2 const& /*cell*/) {
+
+		}
+		void enter(point2 const& grid) {
+
+			point2 start = point2(terrain_len, terrain_len) * grid;
+
+			auto map = fn::ant_generator::generate(std::mt19937{}, terrain_len, terrain_len, terrain_len * terrain_len * 100 / 61);
+			map.enumerate([&](size_t x, size_t y, unsigned char tile) {
+				point2 relative = point2(static_cast<int>(x), static_cast<int>(y));
+				pset(tile == 0 ? 1 : 2, start + relative);
+			});
 		}
 
 		void clear() {
@@ -38,11 +99,15 @@ namespace px {
 			surface.focus(world);
 			surface.enumerate([&](point2 const& cell, auto & ptr) {
 				if (!ptr) {
-					ptr = make_uq<stream<terrain_patch<terrain_len, terrain_len>>>();
+					join_block * join = new join_block(this);
+					ptr.reset(join->get_value(), join->get_control());
+
 					ptr->load([&](auto & chunk) {
 						chunk.assign_sprites(sprites);
 						chunk.assign_cell(cell);
 					});
+
+					enter(cell);
 				}
 			});
 		}
@@ -141,7 +206,7 @@ namespace px {
 	private:
 		qtree<transform_component*>					space;
 		std::vector<uq_ptr<composite_component>>	units;
-		terrain_surface<terrain_len, 1>				surface;
+		surface_type								surface;
 		sprite_system *								sprites;
 	};
 }

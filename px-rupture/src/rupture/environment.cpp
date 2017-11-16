@@ -19,10 +19,7 @@
 
 #include "es/builder.hpp"
 
-#include <px/fn/ant_generator.hpp>
 #include <px/memory/memory.hpp>
-
-#include <random>
 
 namespace px {
 
@@ -55,6 +52,10 @@ namespace px {
 		messages.target(camera);
 		lights.target(camera);
 		lights.recalculate();
+
+		if (camera) {
+			stage.focus(camera->position());
+		}
 	}
 
 	void environment::step(point2 const& movement) {
@@ -62,6 +63,7 @@ namespace px {
 
 		if (body_component * body = player->linked<body_component>()) {
 			point2 destination = player->position() + movement;
+			stage.focus(destination);
 			if (stage.is_traversable(destination, body->movement())) {
 				start_turn();
 				player->place(destination);
@@ -132,7 +134,7 @@ namespace px {
 		body->join_faction(1);
 		b.add_player();
 		b.add_sprite("m_gnome_mage");
-		incarnate(b.add_transform({ 25, 25 }));
+		incarnate(b.add_transform({ 15, 15 }));
 		light = b.add_light();
 		light->tint = color(0.3, 0.3, 0.05, 1);
 		light->elevation = 0.5;
@@ -162,7 +164,7 @@ namespace px {
 		unit->query<body_component>()->equip(0);
 
 		b.add_sprite("i_cheese");
-		b.add_transform({ 21, 24 });
+		b.add_transform({ 11, 14 });
 		body = b.add_body();
 		body->blocking().make_transparent();
 		body->health().emplace(10);
@@ -170,18 +172,8 @@ namespace px {
 
 		stage.spawn(b.request());
 
-		// set terrain
-
-		stage.focus({ 0, 0 });
-
-		auto map = fn::ant_generator::generate(std::mt19937{}, 50, 50, 50 * 50 * 100 / 61);
-		map.enumerate([this](size_t x, size_t y, unsigned char tile) {
-			stage.pset(tile == 0 ? 1 : 2, point2(static_cast<int>(x), static_cast<int>(y)));
-		});
-
 		// set environment variables
 
-		lights.clear_lightmap();
 		turn_number = 0;
 		turn_pass = true;
 	}

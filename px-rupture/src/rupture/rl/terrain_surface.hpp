@@ -23,7 +23,8 @@ namespace px {
 
 	public:
 		typedef terrain_patch<L, L>					patch_type;
-		typedef uq_ptr<stream<terrain_patch<L, L>>>	stream_ptr;
+		typedef stream<terrain_patch<L, L>>			stream_type;
+		typedef uq_ptr<stream_type>					stream_ptr;
 		typedef matrix2<stream_ptr, range, range>	container_type;
 
 	public:
@@ -155,6 +156,5 @@ namespace px {
 	private:
 		container_type	terrain;
 		point2			current_cell;
-		tile			border;
 	};
 }

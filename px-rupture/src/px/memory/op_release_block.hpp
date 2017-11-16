@@ -14,9 +14,7 @@ namespace px {
 		: public abstract_release_block
 	{
 	public:
-		virtual ~op_release_block()
-		{
-		}
+		virtual ~op_release_block() = default;
 		op_release_block(T * raw, Operator fn)
 			: original(raw)
 			, op(fn)
@@ -28,8 +26,7 @@ namespace px {
 		}
 
 	protected:
-		virtual void release_block() noexcept override
-		{
+		virtual void release_block() noexcept override {
 			op(original);
 		}
 
@@ -37,5 +34,4 @@ namespace px {
 		T * original;
 		Operator op;
 	};
-
 }

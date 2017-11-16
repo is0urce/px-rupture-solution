@@ -14,17 +14,14 @@ namespace px {
 		: public abstract_release_block
 	{
 	public:
-		virtual ~delete_release_block()
-		{
-		}
+		virtual ~delete_release_block() = default;
 		delete_release_block(T * raw)
 			: original(raw)
 		{
 		}
 
 	protected:
-		virtual void release_block() noexcept override
-		{
+		virtual void release_block() noexcept override {
 			delete original;
 		}
 
