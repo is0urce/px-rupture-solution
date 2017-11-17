@@ -24,7 +24,7 @@ namespace px {
 
 	class scene_internal {
 	public:
-		static const size_t terrain_len = 20;
+		static const size_t terrain_len = 25;
 
 	public:
 		typedef terrain_surface<terrain_len, 1>		surface_type;
@@ -58,6 +58,7 @@ namespace px {
 					on_enter(grid_cell, *ptr);
 				}
 			});
+			//export_terrain();
 		}
 
 		void pset(std::uint32_t block_id, point2 const& location) {

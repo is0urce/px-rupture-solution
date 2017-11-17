@@ -134,7 +134,7 @@ namespace px {
 		body->join_faction(1);
 		b.add_player();
 		b.add_sprite("m_gnome_mage");
-		incarnate(b.add_transform({ 15, 15 }));
+		incarnate(b.add_transform({ 1960, 856 }));
 		light = b.add_light();
 		light->tint = color(0.3, 0.3, 0.05, 1);
 		light->elevation = 0.5;
