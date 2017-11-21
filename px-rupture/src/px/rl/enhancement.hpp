@@ -5,8 +5,8 @@ namespace px::rl {
 	template <typename Effect, typename Integral = int, typename Real = double>
 	class enhancement {
 	public:
-		typedef Integral integer_type;
-		typedef Real real_type;
+		using real_type = Real;
+		using integer_type = Integral;
 
 	public:
 		Effect		main;

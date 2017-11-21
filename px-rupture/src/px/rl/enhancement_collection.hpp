@@ -9,10 +9,9 @@
 namespace px::rl {
 
 	template <typename Effect, typename Integral = int, typename Real = double>
-	class enhancement_collection
-	{
+	class enhancement_collection {
 	public:
-		typedef enhancement<Effect, Integral, Real> enhancement_type;
+		using enhancement_type = enhancement<Effect, Integral, Real>;
 
 	public:
 		enhancement_type accumulate(enhancement_type accumulator) const {

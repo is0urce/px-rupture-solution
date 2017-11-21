@@ -730,7 +730,7 @@ namespace px::ui {
 			ImGui::Text("workshop");
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
-				ImGui::Text("variant: %d", static_cast<std::underlying_type<rl::craft_activity>::type>(workshop->activity()));
+				ImGui::Text("variant: %d", static_cast<std::underlying_type_t<rl::craft_activity>>(workshop->activity()));
 				ImGui::EndTooltip();
 			}
 			ImGui::SameLine();
@@ -791,7 +791,7 @@ namespace px::ui {
 
 			selected = -1;
 			names.clear();
-			for (fs::directory_entry const& entry : fs::directory_iterator(path)) {
+			for (auto const& entry : fs::directory_iterator(path)) {
 				if (fs::is_regular_file(entry.path())) {
 					names.push_back(entry.path().filename().string());
 				}

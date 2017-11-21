@@ -14,6 +14,7 @@
 #include <px/rl/craft_activity.hpp>
 #include <px/rl/craft_recipe.hpp>
 #include "rupture/rl/craft_task.hpp"
+#include "rupture/rl/craft_result.hpp"
 
 #include <imgui/imgui.h>
 
@@ -41,18 +42,50 @@ namespace px {
 		bool is_open() const {
 			return game && game->has_access(rl::craft_activity::blacksmith);
 		}
-		void select() {
-			rollback();
+		void select_recipe(size_t recipe_idx) {
+			release_items();
+
+			if (recipe_idx < recipes.size()) {
+				recipe_current = &recipes[recipe_idx];
+				task.reset(recipe_current->reagent_count);
+			}
 		}
-		void rollback() {
+		void close_recipe() {
+			release_items();
+			recipe_current = nullptr;
+			task.erase();
 		}
-		void commit() {
+		void release_items() {
+			if (!container) return;
+
+			auto item = task.remove();
+			while (item) {
+				container->add(std::move(item));
+				item = task.remove();
+			}
+		}
+		bool execute_craft() {
+			if (!container) return false;
+
+			if (task.is_complete() && recipe_current) {
+				auto essence = task.calculate_essence();
+				auto power = task.calculate_power();
+				double raw = power.magnitude0 * recipe_current->power_raw;
+				double enh = power.magnitude0 * recipe_current->power_enhancement;
+
+				container->add(rl::craft_result::create_weapon(recipe_current->name, "it_crft", essence, raw, enh));
+				task.erase();
+				return true;
+			}
+			return false;
 		}
 
 	public:
 		virtual ~craft() = default;
 		craft(environment * env)
 			: game(env)
+			, container(nullptr)
+			, recipe_current(nullptr)
 		{
 			fill_recipes();
 		}
@@ -66,7 +99,7 @@ namespace px {
 			if (!target) return;
 			body_component * body = target->linked<body_component>();
 			if (!body) return;
-			container_component * container = body->linked<container_component>();
+			container = body->linked<container_component>();
 			if (!container) return;
 
 			const float screen_width = ImGui::GetIO().DisplaySize.x;
@@ -90,8 +123,11 @@ namespace px {
 			ImGui::Begin("recipes##recipes_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 			ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-			if (ImGui::ListBox("##recipes_list", &current_recipe, recipe_name_getter, static_cast<void*>(&recipes), static_cast<int>(recipes.size()), 15)) {
-				select();
+			static int recipe_select = -1;
+			if (ImGui::ListBox("##recipes_list", &recipe_select, recipe_name_getter, static_cast<void*>(&recipes), static_cast<int>(recipes.size()), 16)) {
+				if (recipe_select >= 0) {
+					select_recipe(recipe_select);
+				}
 			}
 			ImGui::PopItemWidth();
 
@@ -102,20 +138,37 @@ namespace px {
 			ImGui::SetNextWindowSize(window_size);
 			ImGui::Begin("craft##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-			if (current_recipe >= 0) {
-
-				if (ImGui::Button("CRAFT##execute_craft", { 334, 32 })) {
-					commit();
-					game->close_workshop();
+			ImGui::BeginGroup();
+			ImGui::BeginChild("slots view", ImVec2(0, - 2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us
+			if (recipe_current) {
+				ImGui::Text(recipe_current->name.c_str());
+				ImGui::Separator();
+				for (size_t size = task.reagent_count(), idx = 0; idx != size; ++idx) {
+					auto item_ptr = task[idx];
+					if (item_ptr) {
+						ImGui::Text(item_ptr->name().c_str());
+					}
+					else {
+						ImGui::TextDisabled("-- empty --");
+					}
 				}
-				if (ImGui::Button("close##close_craft", { 334, 32 })) {
-					rollback();
+			}
+			ImGui::EndChild();
+			ImGui::BeginChild("buttons");
+			if (ImGui::Button("craft", { 334, 32 })) {
+				if (task.is_complete() && recipe_current) {
+					execute_craft();
+					close_recipe();
 					game->close_workshop();
 				}
 			}
-			else {
-
+			if (ImGui::Button("close", { 334, 32 })) {
+				close_recipe();
+				game->close_workshop();
 			}
+			ImGui::EndChild();
+			ImGui::EndGroup();
+
 			ImGui::End();
 		}
 		void combine_inventory(ImVec2 const& window_position, ImVec2 const& window_size) {
@@ -142,8 +195,9 @@ namespace px {
 	private:
 		environment *					game;
 
-		std::vector<uq_ptr<rl::item>>	slots;
 		std::vector<rl::craft_recipe>	recipes;
-		int								current_recipe;
+		rl::craft_recipe const*			recipe_current;
+		rl::craft_task					task;
+		container_component *			container;
 	};
 }
