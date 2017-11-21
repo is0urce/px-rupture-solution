@@ -40,7 +40,7 @@ namespace px::rl {
 			}
 			return false;
 		}
-		int find_subtype(Effect efx, int or_else) const {
+		Integral find_subtype(Effect efx, Integral or_else) const {
 			for (enhancement_type const& element : container) {
 				if (element.main == efx) {
 					return element.sub;
@@ -48,12 +48,10 @@ namespace px::rl {
 			}
 			return or_else;
 		}
-		void add(enhancement_type val)
-		{
+		void add(enhancement_type val) {
 			container.push_back(val);
 		}
-		size_t size() const
-		{
+		size_t size() const {
 			return container.size();
 		}
 

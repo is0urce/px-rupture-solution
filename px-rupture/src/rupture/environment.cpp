@@ -33,7 +33,7 @@ namespace px {
 		, target_unit(nullptr)
 		, target_area(0, 0)
 		, target_hover(0, 0)
-		, opened_workshop(rl::workshop::none)
+		, opened_workshop(rl::craft_activity::none)
 		, run(true)
 	{
 		parent = make_uq<repository>(std::string(settings::save_path) + "base");
@@ -134,7 +134,7 @@ namespace px {
 		body->join_faction(1);
 		b.add_player();
 		b.add_sprite("m_gnome_mage");
-		incarnate(b.add_transform({ 1960, 856 }));
+		incarnate(b.add_transform({ 1962, 856 }));
 		light = b.add_light();
 		light->tint = color(0.3, 0.3, 0.05, 1);
 		light->elevation = 0.5;
@@ -205,7 +205,7 @@ namespace px {
 	void environment::start_turn() {
 		transforms.store();
 		animators.finish_animations();
-		opened_workshop = rl::workshop::none;
+		opened_workshop = rl::craft_activity::none;
 	}
 
 	void environment::return_turn() {
@@ -263,14 +263,14 @@ namespace px {
 		}
 	}
 
-	bool environment::has_access(rl::workshop station) const noexcept {
+	bool environment::has_access(rl::craft_activity station) const noexcept {
 		return opened_workshop == station;
 	}
-	void environment::open_workshop(rl::workshop station) {
+	void environment::open_workshop(rl::craft_activity station) {
 		opened_workshop = station;
 	}
 	void environment::close_workshop() {
-		opened_workshop = rl::workshop::none;
+		opened_workshop = rl::craft_activity::none;
 	}
 
 	void environment::function_edit(std::uint32_t /*idx*/) {

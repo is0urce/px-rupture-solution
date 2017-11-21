@@ -8,7 +8,7 @@ namespace px {
 
 	workshop_component::~workshop_component() = default;
 	workshop_component::workshop_component()
-		: station(rl::workshop::none) {
+		: activity_variant(rl::craft_activity::none) {
 	}
 
 	// overrides
@@ -18,16 +18,16 @@ namespace px {
 	}
 	void workshop_component::use_useable(body_component * /*body*/, environment * context) {
 		if (context) {
-			context->open_workshop(station);
+			context->open_workshop(activity_variant);
 		}
 	}
 
 	// methods
 
-	rl::workshop workshop_component::variant() const noexcept {
-		return station;
+	rl::craft_activity workshop_component::activity() const noexcept {
+		return activity_variant;
 	}
-	void workshop_component::set_variant(rl::workshop variant) {
-		station = variant;
+	void workshop_component::set_activity(rl::craft_activity variant) {
+		activity_variant = variant;
 	}
 }

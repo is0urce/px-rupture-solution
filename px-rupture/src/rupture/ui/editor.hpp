@@ -730,7 +730,7 @@ namespace px::ui {
 			ImGui::Text("workshop");
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
-				ImGui::Text("variant: %d", static_cast<std::underlying_type<rl::workshop>::type>(workshop->variant()));
+				ImGui::Text("variant: %d", static_cast<std::underlying_type<rl::craft_activity>::type>(workshop->activity()));
 				ImGui::EndTooltip();
 			}
 			ImGui::SameLine();
@@ -739,7 +739,7 @@ namespace px::ui {
 			}
 			else {
 				if (ImGui::InputInt("variant##workshop_variant", &workshop_variant)) {
-					workshop->set_variant(static_cast<rl::workshop>(workshop_variant));
+					workshop->set_activity(static_cast<rl::craft_activity>(workshop_variant));
 				}
 			}
 		}
@@ -862,7 +862,7 @@ namespace px::ui {
 					door_open = door->is_opened();
 				}
 				if (auto workshop = current->query<workshop_component>()) {
-					workshop_variant = static_cast<int>(workshop->variant());
+					workshop_variant = static_cast<std::underlying_type<rl::craft_activity>::type>(workshop->activity());
 				}
 
 				// character
