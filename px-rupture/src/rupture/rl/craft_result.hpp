@@ -3,6 +3,7 @@
 #pragma once
 
 #include "item.hpp"
+#include "craft_recipe.hpp"
 
 #include <px/memory/uq_ptr.hpp>
 #include <px/memory/memory.hpp>
@@ -18,14 +19,31 @@ namespace px::rl {
 		using real_type = enhancement_type::real_type;
 
 	public:
-		static uq_ptr<rl::item> create_weapon(std::string tag, std::string name, integer_type essence, real_type raw_power, real_type enh_power) {
+		static uq_ptr<rl::item> create_weapon(rl::craft_recipe const& recipe, integer_type essence, real_type power) {
 			auto result = make_uq<rl::item>();
-			result->set_name(name);
-			result->set_tag(tag);
-			result->add(rl::item::enhancement_type::real(rl::effect::damage, 0, raw_power));
-			result->add(rl::item::enhancement_type::real(rl::effect::critical, 0, enh_power));
-			result->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, essence));
+			setup_text(*result, recipe);
+			setup_enhancements(*result, recipe, essence, power);
+			result->add(enhancement_type::real(rl::effect::damage, 0, power * recipe.power_raw));
 			return result;
+		}
+		static uq_ptr<rl::item> create_armor(rl::craft_recipe const& recipe, integer_type essence, real_type power) {
+			auto result = make_uq<rl::item>();
+			setup_text(*result, recipe);
+			setup_enhancements(*result, recipe, essence, power);
+			result->add(enhancement_type::real(rl::effect::armor, 0, power * recipe.power_raw));
+			return result;
+		}
+
+	private:
+		static void setup_text(rl::item & item, rl::craft_recipe const& recipe) {
+			item.set_name(recipe.name);
+			item.set_tag(recipe.tag);
+			item.set_description(recipe.description);
+		}
+		static void setup_enhancements(rl::item & item, rl::craft_recipe const& recipe, integer_type essence, real_type power) {
+			item.add(enhancement_type::zero(rl::effect::equipment, static_cast<integer_type>(recipe.equipment_slot)));
+			item.add(enhancement_type::integral(rl::effect::essence, 0, essence));
+			item.add(enhancement_type::real(rl::effect::critical, 0, power * recipe.power_enhancement));
 		}
 	};
 }

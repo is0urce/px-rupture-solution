@@ -12,7 +12,7 @@
 #include "rupture/es/container_component.hpp"
 
 #include <px/rl/craft_activity.hpp>
-#include <px/rl/craft_recipe.hpp>
+#include "rupture/rl/craft_recipe.hpp"
 #include "rupture/rl/craft_task.hpp"
 #include "rupture/rl/craft_result.hpp"
 
@@ -44,6 +44,7 @@ namespace px {
 		}
 		void select_recipe(size_t recipe_idx) {
 			release_items();
+			task.close();
 
 			if (recipe_idx < recipes.size()) {
 				recipe_current = &recipes[recipe_idx];
@@ -52,15 +53,17 @@ namespace px {
 		}
 		void close_recipe() {
 			release_items();
+			task.close();
 			recipe_current = nullptr;
-			task.erase();
 		}
 		void release_items() {
 			if (!container) return;
 
-			auto item = task.remove();
+			uq_ptr<rl::item> item;
+			goto query;
 			while (item) {
 				container->add(std::move(item));
+			query:
 				item = task.remove();
 			}
 		}
@@ -68,13 +71,9 @@ namespace px {
 			if (!container) return false;
 
 			if (task.is_complete() && recipe_current) {
-				auto essence = task.calculate_essence();
-				auto power = task.calculate_power();
-				double raw = power.magnitude0 * recipe_current->power_raw;
-				double enh = power.magnitude0 * recipe_current->power_enhancement;
 
-				container->add(rl::craft_result::create_weapon(recipe_current->name, "it_crft", essence, raw, enh));
-				task.erase();
+				container->add(rl::craft_result::create_weapon(*recipe_current, task.calculate_essence(), task.calculate_power().magnitude0));
+				task.close();
 				return true;
 			}
 			return false;
@@ -139,7 +138,7 @@ namespace px {
 			ImGui::Begin("craft##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 			ImGui::BeginGroup();
-			ImGui::BeginChild("slots view", ImVec2(0, - 2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us
+			ImGui::BeginChild("slots view", ImVec2(0, -2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us
 			if (recipe_current) {
 				ImGui::Text(recipe_current->name.c_str());
 				ImGui::Separator();
@@ -152,6 +151,9 @@ namespace px {
 						ImGui::TextDisabled("-- empty --");
 					}
 				}
+			}
+			else {
+				ImGui::Text("select recipe");
 			}
 			ImGui::EndChild();
 			ImGui::BeginChild("buttons");
@@ -176,20 +178,38 @@ namespace px {
 			ImGui::SetNextWindowSize(window_size);
 			ImGui::Begin("inventory##inv_craft_resources", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-			//format_names(*container, names, [&](rl::item const& item) {
-			//	return item.has_effect(rl::effect::ingredient_power, subtype_filter);
-			//});
-			//selected = -1;
-			//ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-			//if (ImGui::ListBox("##craft_inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
-			//}
-			//ImGui::PopItemWidth();
+			if (recipe_current) {
+				const auto filter = [&](rl::item const& item) {
+					return item.has_effect(rl::effect::ingredient_power, static_cast<rl::item::enhancement_type::integer_type>(recipe_current->activity));
+				};
+
+				format_names(*container, inventory_names, filter);
+
+				int selected = -1;
+				ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
+				if (ImGui::ListBox("##craft_inventory_list", &selected, name_getter, static_cast<void*>(&inventory_names), static_cast<int>(inventory_names.size()), 16)) {
+					size_t current_idx = 0;
+					size_t absolute_idx = 0;
+					size_t relative_idx = 0;
+					container->enumerate([&](rl::item & item) {
+						if (filter(item)) {
+							if (relative_idx == selected) {
+								absolute_idx = current_idx;
+							}
+							++relative_idx;
+						}
+						++current_idx;
+					});
+					task.add(container->remove(absolute_idx));
+				}
+				ImGui::PopItemWidth();
+			}
 
 			ImGui::End();
 		}
 		void fill_recipes() {
-			recipes.push_back({ "sword", "", rl::craft_activity::blacksmith, 4, 1.0, 1.0 });
-			recipes.push_back({ "armor", "", rl::craft_activity::blacksmith, 6, 1.0, 1.0 });
+			recipes.push_back({ "sword", "it_sword", "", rl::craft_activity::blacksmith, rl::equipment::hand, 4, 1.0, 1.0 });
+			recipes.push_back({ "armor", "it_armor", "", rl::craft_activity::blacksmith, rl::equipment::chest, 6, 1.0, 1.0 });
 		}
 
 	private:
@@ -199,5 +219,6 @@ namespace px {
 		rl::craft_recipe const*			recipe_current;
 		rl::craft_task					task;
 		container_component *			container;
+		std::vector<std::string>		inventory_names;
 	};
 }

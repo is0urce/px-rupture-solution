@@ -11,10 +11,9 @@
 
 namespace px::rl {
 
-	class inventory
-	{
+	class inventory {
 	public:
-		typedef uq_ptr<item> item_ptr;
+		using item_ptr = uq_ptr<item>;
 
 	public:
 		item_ptr & add(item_ptr item) {

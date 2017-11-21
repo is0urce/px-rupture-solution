@@ -47,6 +47,14 @@ namespace px::rl {
 			}
 			return or_else;
 		}
+		enhancement_type find(enhancement_type or_else) const {
+			for (enhancement_type const& element : container) {
+				if (element.main == or_else.main) {
+					return element;
+				}
+			}
+			return or_else;
+		}
 		void add(enhancement_type val) {
 			container.push_back(val);
 		}

@@ -136,19 +136,19 @@ namespace px {
 			load("quicksave");
 			break;
 		}
-		case key::move_east: step({ 1, 0 }); break;
-		case key::move_west: step({ -1, 0 }); break;
-		case key::move_north: step({ 0, 1 }); break;
-		case key::move_south: step({ 0, -1 }); break;
+		case key::move_east: ui.rollback(); step({ 1, 0 }); break;
+		case key::move_west: ui.rollback(); step({ -1, 0 }); break;
+		case key::move_north: ui.rollback(); step({ 0, 1 }); break;
+		case key::move_south: ui.rollback(); step({ 0, -1 }); break;
 
-		case key::action_use: use(0); break;
+		case key::action_use: ui.rollback(); use(0); break;
 
-		case key::action0: action(0); break;
-		case key::action1: action(1); break;
-		case key::action2: action(2); break;
-		case key::action3: action(3); break;
-		case key::action4: action(4); break;
-		case key::action5: action(5); break;
+		case key::action0: ui.rollback(); action(0); break;
+		case key::action1: ui.rollback(); action(1); break;
+		case key::action2: ui.rollback(); action(2); break;
+		case key::action3: ui.rollback(); action(3); break;
+		case key::action4: ui.rollback(); action(4); break;
+		case key::action5: ui.rollback(); action(5); break;
 
 		case key::panel_inventory: ui.toggle_inventory(); break;
 

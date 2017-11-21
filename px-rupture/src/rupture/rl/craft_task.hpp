@@ -12,11 +12,10 @@ namespace px::rl {
 
 	class craft_task {
 	public:
-		void erase() {
+		void close() {
 			slots.clear();
 		}
 		void reset(size_t n) {
-			erase();
 			slots.resize(n);
 		}
 		size_t reagent_count() const noexcept {
@@ -25,10 +24,10 @@ namespace px::rl {
 		void sort() {
 			std::sort(slots.begin(), slots.end(), [](auto const& a, auto const& b) { return a.get() > b.get(); });
 		}
-		bool add(uq_ptr<rl::item> itm) {
+		bool add(uq_ptr<rl::item> reagent) {
 			for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
 				if (!slots[idx]) {
-					slots[idx] = std::move(itm);
+					slots[idx] = std::move(reagent);
 					sort();
 					return true;
 				}
@@ -40,21 +39,30 @@ namespace px::rl {
 			if (idx < slots.size()) {
 				result = std::move(slots[idx]);
 				slots[idx] = std::move(slots.back());
-				slots.pop_back();
+				sort();
+			}
+			return result;
+		}
+		template <size_t Index>
+		uq_ptr<rl::item> remove() {
+			uq_ptr<rl::item> result;
+			if (Index < slots.size()) {
+				result = std::move(slots[Index]);
+				slots[Index] = std::move(slots.back());
 				sort();
 			}
 			return result;
 		}
 		uq_ptr<rl::item> remove() {
-			return remove(0);
+			return remove<0>();
 		}
-		bool is_empty() const {
+		bool is_empty() const noexcept {
 			for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
 				if (slots[idx]) return false;
 			}
 			return true;
 		}
-		bool is_complete() const {
+		bool is_complete() const noexcept {
 			for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
 				if (!slots[idx]) return false;
 			}
@@ -65,8 +73,9 @@ namespace px::rl {
 
 			for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
 				if (slots[idx]) {
-					auto essence = slots[idx]->find_subtype(rl::effect::essence, 0);
-					if (denominator % essence != 0) {
+					auto enhancement = slots[idx]->find(rl::item::enhancement_type::zero(rl::effect::essence));
+					auto essence = enhancement.value0;
+					if (essence != 0 && denominator % essence != 0) {
 						denominator *= essence;
 					}
 				}

@@ -546,13 +546,13 @@
     <ClInclude Include="src\px\rl\craft_activity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\px\rl\craft_recipe.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\rl\craft_task.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\rl\craft_result.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\rl\craft_recipe.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

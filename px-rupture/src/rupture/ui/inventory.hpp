@@ -128,7 +128,7 @@ namespace px {
 			ImGui::End();
 			ImGui::PopStyleVar(2);
 		}
-		void combine_inspector(rl::item * ptr, ImVec2 const& position) {
+		void combine_inspector(rl::item const* ptr, ImVec2 const& position) {
 			if (!ptr) return;
 
 			ImGui::SetNextWindowPos(position, ImGuiCond_Always);
