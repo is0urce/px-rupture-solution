@@ -320,8 +320,8 @@ namespace px {
 				branch->insert(x, y, e);
 			}
 		}
-		bool erase(int x, int y, element_type e)
-		{
+
+		bool erase(int x, int y, element_type e) {
 			if (m_bucket) {
 				if (!m_bucket->match(x, y)) throw std::runtime_error("px::qtree::remove - bucket coordinates not match");
 				if (!m_bucket->remove(e)) throw std::runtime_error("px::qtree::remove - item not found");

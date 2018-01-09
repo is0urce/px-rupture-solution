@@ -200,6 +200,7 @@
     <ClInclude Include="src\px\algorithm\a_star.hpp" />
     <ClInclude Include="src\px\algorithm\fov.hpp" />
     <ClInclude Include="src\px\algorithm\recursive_shadowcasting.hpp" />
+    <ClInclude Include="src\px\common\b_uint.hpp" />
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\color.hpp" />
     <ClInclude Include="src\px\common\coordinate.hpp" />
@@ -370,6 +371,7 @@
     <ClInclude Include="src\rupture\ui\performance.hpp" />
     <ClInclude Include="src\rupture\ui\skills.hpp" />
     <ClInclude Include="src\rupture\ui\status.hpp" />
+    <ClInclude Include="src\tests\case\common\bigint_test.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />

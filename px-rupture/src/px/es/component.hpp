@@ -9,22 +9,18 @@
 
 namespace px {
 
-	class component
-	{
+	class component {
 	public:
-		bool is_active() const noexcept
-		{
+		bool is_active() const noexcept {
 			return active;
 		}
-		void activate()
-		{
+		void activate() {
 			if (!active) {
 				activate_component();
 				active = true;
 			}
 		}
-		void deactivate()
-		{
+		void deactivate() {
 			if (active) {
 				deactivate_component();
 				active = false;
@@ -32,8 +28,7 @@ namespace px {
 		}
 
 	public:
-		virtual ~component()
-		{
+		virtual ~component() {
 			deactivate();
 		}
 		component() noexcept
@@ -42,11 +37,9 @@ namespace px {
 		}
 
 	protected:
-		virtual void activate_component()
-		{
+		virtual void activate_component() {
 		}
-		virtual void deactivate_component()
-		{
+		virtual void deactivate_component() {
 		}
 
 	private:

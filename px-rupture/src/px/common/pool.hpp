@@ -185,8 +185,7 @@ namespace px {
 		{
 			new (&item) T(std::forward<Args>(args)...);
 		}
-		void destroy(T & item)
-		{
+		void destroy(T & item) {
 			item.~T();
 			//item; // 'item': unreferenced formal parameter if there is no destructor -> referencing
 		}

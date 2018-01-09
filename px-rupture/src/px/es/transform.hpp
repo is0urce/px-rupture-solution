@@ -1,4 +1,5 @@
-// transform.hpp
+// name: transform.hpp
+// type: c++ header
 
 #pragma once
 
@@ -6,31 +7,22 @@
 
 namespace px {
 
-	class transform
-	{
+	class transform {
 	public:
-		point2 const& position() const noexcept
-		{
+		point2 const& position() const noexcept {
 			return current;
 		}
-		point2 const& last() const noexcept
-		{
+
+		point2 const& last() const noexcept {
 			return prev;
 		}
-		void store()
-		{
+
+		void store() noexcept {
 			prev = current;
 		}
-		void store(point2 previous_step)
-		{
-			prev = previous_step;
-		}
 
-		// space is not serizlized
-		template <typename Archive>
-		void serialize(Archive & archive)
-		{
-			archive(current, prev);
+		void store(point2 previous_step) {
+			prev = previous_step;
 		}
 
 	public:

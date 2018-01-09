@@ -30,7 +30,7 @@ namespace px {
 		tile & operator=(tile const&) = delete;
 		tile(tile && that) noexcept
 			: sprite(std::move(that.sprite))
-			, transform(std::move(that.transform))
+			, transform(that.transform.position())
 			, mass(std::move(that.mass))
 			, block_id(std::move(that.block_id))
 		{

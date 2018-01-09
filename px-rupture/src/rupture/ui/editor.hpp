@@ -164,10 +164,9 @@ namespace px::ui {
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
 						ImGui::Text("space: %p", transform->world());
+						ImGui::Text("static: %s", transform->is_static() ? "yes" : "no");
 						ImGui::Text("current: (%d, %d)", transform->position().x(), transform->position().y());
 						ImGui::Text("last: (%d, %d)", transform->last().x(), transform->last().y());
-						//ImGui::Separator();
-						//ImGui::Text("adress: %p", transform);
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
@@ -175,6 +174,10 @@ namespace px::ui {
 						PX_BUILD(remove_transform());
 					}
 					else {
+						if (ImGui::Checkbox("static##tranform_flag", &transform_static)) {
+							transform->set_static(transform_static);
+						}
+
 						bool place = false;
 						ImGui::Text("x"); ImGui::SameLine(); place |= ImGui::InputInt("##transform_x", &transform_x);
 						ImGui::Text("y"); ImGui::SameLine(); place |= ImGui::InputInt("##transform_y", &transform_y);
@@ -818,6 +821,7 @@ namespace px::ui {
 					auto pos = transform->position();
 					transform_x = pos.x();
 					transform_y = pos.y();
+					transform_static = transform->is_static();
 				}
 				if (auto sprite = current->query<sprite_component>()) {
 					copy_str(sprite->name, sprite_name);
@@ -913,6 +917,7 @@ namespace px::ui {
 
 		int							transform_x;
 		int							transform_y;
+		bool						transform_static;
 
 		std::array<char, 128>		sprite_name;
 

@@ -11,6 +11,7 @@
 #include "case/common/qtree_test.hpp"
 #include "case/common/matrix_test.hpp"
 #include "case/common/memory_test.hpp"
+#include "case/common/bigint_test.hpp"
 
 #include "case/rl/traverse_test.hpp"
 
@@ -30,6 +31,7 @@ namespace px {
 		test_link();
 		test_matrix();
 		test_memory();
+		test_bigint();
 
 		test_traverse();
 		test::print();

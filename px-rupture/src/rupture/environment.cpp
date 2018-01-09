@@ -172,9 +172,6 @@ namespace px {
 
 		stage.spawn(b.request());
 
-		spawn("forge", { 1962, 857 });
-		for (int i =0 ; i!= 20; ++i)
-		spawn("copper_vein", { 1962, 855 -i });
 		// set environment variables
 
 		turn_number = 0;

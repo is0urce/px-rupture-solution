@@ -59,8 +59,7 @@ namespace px {
 		}
 
 	public:
-		virtual ~composite_component()
-		{
+		virtual ~composite_component() {
 		}
 		composite_component()
 			: endurance(persistency::serialized)
@@ -71,12 +70,10 @@ namespace px {
 		composite_component& operator=(composite_component const&) = delete;
 
 	protected:
-		virtual void activate_component() override
-		{
+		virtual void activate_component() override {
 			enable();
 		}
-		virtual void deactivate_component() override
-		{
+		virtual void deactivate_component() override {
 			disable();
 		}
 

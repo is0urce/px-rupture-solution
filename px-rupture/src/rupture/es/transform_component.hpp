@@ -1,11 +1,14 @@
 // name: transform_component.hpp
+// type: c++ header
+// auth: is0urce
+// desc: class declaration
+
+#pragma once
 
 #include <px/es/component.hpp>
 #include <px/es/link_dispatcher.hpp>
 
 #include <px/es/transform.hpp>
-
-#pragma once
 
 namespace px {
 
@@ -24,7 +27,10 @@ namespace px {
 		void							move(point2 const& direction);					// move by offset
 		void							place(point2 destination);						// place into specified location
 		qtree<transform_component*> *	world() const noexcept;							// get current space
-		void							swap(transform_component & that);
+		void							make_static();
+		void							make_dynamic();
+		void							set_static(bool is_static);
+		bool							is_static() const noexcept;
 
 	public:
 		virtual ~transform_component();
@@ -32,8 +38,11 @@ namespace px {
 		transform_component(point2 position) noexcept;
 		transform_component(transform_component const&) noexcept = delete;
 		transform_component & operator=(transform_component const&) noexcept = delete;
-		transform_component (transform_component && that) noexcept;
-		transform_component & operator=(transform_component && that) noexcept;
+
+		template <typename Archive>
+		void serialize(Archive & archive) {
+			archive(current, prev, background);
+		}
 
 	protected:
 		virtual void					activate_component() override;
@@ -42,8 +51,11 @@ namespace px {
 	private:
 		void							insert();
 		void							retract();
+		void							project(point2 destination);
+		void							swap(transform_component & that);
 
 	private:
-		qtree<transform_component*> *	space;
+		qtree<transform_component*> *	space;											// space partitioning it's in
+		bool							background;										// is static
 	};
 }
