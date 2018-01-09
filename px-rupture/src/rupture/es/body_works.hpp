@@ -12,22 +12,20 @@
 #include <algorithm>
 
 namespace px {
-	class body_works final
-	{
+	class body_works final {
 	public:
 		void assign_environment(environment * env) noexcept {
 			game = env;
 		}
+
 		void tick() {
 			pool.enumerate([&](body_component & body) {
 
 				// dots
 				auto dot = body.accumulate(body_component::enhancement_type::zero(rl::effect::dot));
 				if (dot.magnitude0 > 0) {
-					if (auto & hp = body.health()) {
-						int dmg = static_cast<int>(dot.magnitude0);
-						game->damage(body, dmg, static_cast<rl::damage_type>(dot.sub));
-					}
+					auto damage = static_cast<int>(dot.magnitude0);
+					game->damage(body, damage, static_cast<rl::damage_type>(dot.sub));
 				}
 
 				// tick
@@ -53,11 +51,18 @@ namespace px {
 				}
 			});
 		}
+
 		uq_ptr<body_component> make() {
 			return pool.make_uq();
 		}
 
 	public:
+		body_works()
+			: game(nullptr)
+		{
+		}
+
+	private:
 		pool_chain<body_component, 1024>	pool;
 		environment *						game;
 	};

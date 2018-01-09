@@ -10,20 +10,17 @@ namespace px {
 
 	// ctor & dtor
 
-	body_system::~body_system()
-	{
-
+	body_system::~body_system() {
 	}
+
 	body_system::body_system()
 		: works(make_uq<body_works>())
 	{
-
 	}
 
 	// virtual overrides
 
-	void body_system::turn_update_system(delta_type const& /*delta_time*/)
-	{
+	void body_system::turn_update_system(delta_type const& /*delta_time*/) {
 		works->tick();
 	}
 

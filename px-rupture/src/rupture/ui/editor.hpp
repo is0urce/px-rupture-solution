@@ -594,6 +594,7 @@ namespace px::ui {
 					item->set_description(item_description.data());
 
 					item->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+					item->add(rl::item::enhancement_type::zero(rl::effect::equipment, static_cast<rl::item::enhancement_type::integer_type>(rl::equipment::hand)));
 
 					item->set_maximum_stack(item_maximum);
 					item->set_current_stack(item_stack);

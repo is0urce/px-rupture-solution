@@ -29,7 +29,6 @@ namespace px {
 
 	public:
 		virtual ~component() {
-			deactivate();
 		}
 		component() noexcept
 			: active(false)

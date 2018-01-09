@@ -21,24 +21,19 @@ namespace px {
 		, public link_dispatcher<composite_component>
 	{
 	public:
-		persistency lifetime() const noexcept
-		{
+		persistency lifetime() const noexcept {
 			return endurance;
 		}
-		void set_persistency(persistency lifetime) noexcept
-		{
+		void set_persistency(persistency lifetime) noexcept {
 			endurance = lifetime;
 		}
-		std::string name()
-		{
+		std::string name() {
 			return source;
 		}
-		void set_name(std::string resource_name)
-		{
+		void set_name(std::string resource_name) {
 			source = resource_name;
 		}
-		void destroy(unsigned char time) noexcept
-		{
+		void destroy(unsigned char time) noexcept {
 			endurance = persistency::destroying;
 			decay_timer = time;
 		}
@@ -60,6 +55,7 @@ namespace px {
 
 	public:
 		virtual ~composite_component() {
+			deactivate();
 		}
 		composite_component()
 			: endurance(persistency::serialized)

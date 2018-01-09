@@ -1,4 +1,7 @@
 // name: transform_component.cpp
+// type: c++
+// auth: is0urce
+// desc: class methods implementation
 
 #include "transform_component.hpp"
 
@@ -9,6 +12,9 @@ namespace px {
 	// ctor / dtor
 
 	transform_component::~transform_component() {
+		if (is_active() && !background) {
+			retract();
+		}
 	}
 
 	transform_component::transform_component() noexcept

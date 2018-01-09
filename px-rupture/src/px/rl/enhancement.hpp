@@ -37,11 +37,11 @@ namespace px::rl {
 		static enhancement mixed(Effect main, Integral sub, Integral i, Real v) {
 			return mixed(main, sub, i, i, v, v);
 		}
+		static enhancement zero(Effect main, Integral subtype_value) {
+			return mixed(main, subtype_value, 0, 0, 0, 0);
+		}
 		static enhancement zero(Effect main) {
 			return zero(main, 0);
-		}
-		static enhancement zero(Effect main, Integral sub) {
-			return mixed(main, sub, 0, 0, 0, 0);
 		}
 		static enhancement integral(Effect main, Integral sub, Integral i0, Integral i1) {
 			return mixed(main, sub, i0, i1, 0, 0);

@@ -141,6 +141,11 @@ namespace px {
 		case key::move_north: ui.rollback(); step({ 0, 1 }); break;
 		case key::move_south: ui.rollback(); step({ 0, -1 }); break;
 
+		case key::move_northeast: ui.rollback(); step({ 1, 1 }); break;
+		case key::move_northwest: ui.rollback(); step({ -1, 1 }); break;
+		case key::move_southeast: ui.rollback(); step({ 1, -1 }); break;
+		case key::move_southwest: ui.rollback(); step({ -1, -1 }); break;
+
 		case key::action_use: ui.rollback(); use(0); break;
 
 		case key::action0: ui.rollback(); action(0); break;
@@ -161,7 +166,7 @@ namespace px {
 		unsigned int texture_width;
 		unsigned int texture_height;
 		auto error = lodepng::decode(bits, texture_width, texture_height, name);
-		if (error) throw std::runtime_error("add_texture error while loading image, path=" + std::string(name));
+		if (error) throw std::runtime_error("add_texture(name) error while loading image, path=" + std::string(name));
 		renderer.add_texture(texture_width, texture_height, bits.data());
 	}
 
