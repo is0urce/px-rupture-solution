@@ -1,4 +1,5 @@
 // name: terrain_surface.hpp
+// type: c++ header
 
 #pragma once
 
@@ -24,10 +25,10 @@ namespace px {
 		static const size_t range = R * 2 + 1;
 
 	public:
-		typedef terrain_patch<L, L>					patch_type;
-		typedef stream<terrain_patch<L, L>>			stream_type;
-		typedef uq_ptr<stream_type>					stream_ptr;
-		typedef matrix2<stream_ptr, range, range>	container_type;
+		using patch_type = terrain_patch<L, L>;
+		using stream_type = stream<terrain_patch<L, L>>;
+		using stream_ptr = uq_ptr<stream_type>;
+		using container_type = matrix2<stream_ptr, range, range>;
 
 	public:
 		bool is_transparent(point2 const& world) const {

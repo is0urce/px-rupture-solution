@@ -14,7 +14,7 @@ namespace px {
 
 	template <typename T, typename... Args>
 	uq_ptr<T> make_uq(Args &&... args) {
-		typedef T element_type;
+		using element_type = T;
 		class join_block final {
 		public:
 			element_type * get_value() noexcept {

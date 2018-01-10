@@ -9,10 +9,9 @@
 namespace px::rl {
 
 	template <typename I>
-	class constitution
-	{
+	class constitution {
 	public:
-		typedef std::optional<bar<I>> resource_type;
+		using resource_type = std::optional<bar<I>>;
 
 	public:
 		bool is_dead() const

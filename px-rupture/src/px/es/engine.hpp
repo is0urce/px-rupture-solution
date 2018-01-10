@@ -14,11 +14,10 @@
 namespace px {
 
 	template <typename Delta>
-	class engine
-	{
+	class engine {
 	public:
-		typedef Delta delta_type;
-		typedef system<delta_type> system_type;
+		using delta_type = Delta;
+		using system_type = system<delta_type>;
 
 	public:
 		void add(system_type * system)

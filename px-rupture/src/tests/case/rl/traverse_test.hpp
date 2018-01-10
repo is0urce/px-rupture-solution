@@ -11,8 +11,8 @@ using namespace px;
 
 using namespace px::rl;
 
-typedef traverse_options<traverse> opts;
-typedef mass<traverse> ms;
+using opts = traverse_options<traverse>;
+using ms = mass<traverse>;
 
 void test_traverse()
 {

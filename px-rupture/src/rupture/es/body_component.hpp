@@ -46,12 +46,12 @@ namespace px {
 	{
 		friend class												body_works;
 	public:
-		typedef useable<body_component*, environment*>				useable_type;
-		typedef rl::mass<rl::traverse>								mass_type;
-		typedef rl::traverse_options<rl::traverse>					movement_type;
-		typedef rl::standing<std::int32_t>							standing_type;
-		typedef rl::buff<rl::effect, std::int32_t, double>			buff_type;
-		typedef rl::enhancement<rl::effect, std::int32_t, double>	enhancement_type;
+		using useable_type = useable<body_component*, environment*>;
+		using mass_type = rl::mass<rl::traverse>;
+		using movement_type = rl::traverse_options<rl::traverse>;
+		using standing_type = rl::standing<std::int32_t>;
+		using buff_type = rl::buff<rl::effect, std::int32_t, double>;
+		using enhancement_type = rl::enhancement<rl::effect, std::int32_t, double>;
 
 	public:
 		void														add(buff_type affect);

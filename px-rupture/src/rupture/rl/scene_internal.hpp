@@ -1,4 +1,5 @@
 // name: scene_internal.hpp
+// type: c++
 
 #pragma once
 
@@ -27,9 +28,9 @@ namespace px {
 		static const size_t terrain_len = 25;
 
 	public:
-		typedef terrain_surface<terrain_len, 1>		surface_type;
-		typedef typename surface_type::patch_type	patch_type;
-		typedef typename surface_type::stream_type	stream_type;
+		using surface_type = terrain_surface<terrain_len, 1>;
+		using patch_type = typename surface_type::patch_type;
+		using stream_type = typename surface_type::stream_type;
 
 	private:
 		class										join_release_block;

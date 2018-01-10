@@ -17,44 +17,36 @@ namespace px::rl {
 	class bar
 	{
 	public:
-		typedef T value_type;
+		using value_type = T;
 
 	public:
 		// querry
 
-		T current() const noexcept
-		{
+		T current() const noexcept {
 			return m_current;
 		}
-		T maximum() const noexcept
-		{
+		T maximum() const noexcept {
 			return m_max;
 		}
-		bool empty() const noexcept
-		{
+		bool empty() const noexcept {
 			return m_current <= 0;
 		}
-		bool full() const noexcept
-		{
+		bool full() const noexcept {
 			return m_current == m_max;
 		}
 
 		// restore value to maximum
 
-		void restore() noexcept
-		{
+		void restore() noexcept {
 			m_current = m_max;
 		}
-		void restore(T magnitude) noexcept
-		{
+		void restore(T magnitude) noexcept {
 			m_current = cap(m_current + magnitude);
 		}
-		void modify(T magnitude) noexcept
-		{
+		void modify(T magnitude) noexcept {
 			m_current = cap(m_current + magnitude);
 		}
-		void damage(T magnitude) noexcept
-		{
+		void damage(T magnitude) noexcept {
 			m_current = cap(m_current - magnitude);
 		}
 

@@ -20,8 +20,8 @@ namespace px {
 		: public rl::entity
 	{
 	public:
-		typedef Integer time_type;
-		typedef Integer range_type;
+		using time_type = Integer;
+		using range_type = Integer;
 
 	public:
 

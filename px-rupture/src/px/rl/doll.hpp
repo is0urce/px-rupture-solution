@@ -12,9 +12,9 @@ namespace px::rl {
 	template <typename Equipment, typename Item>
 	class doll {
 	public:
-		typedef Item item_type;
-		typedef uq_ptr<item_type> item_ptr;
-		typedef typename item_type::enhancement_type enhancement_type;
+		using item_type = Item;
+		using item_ptr = uq_ptr<item_type>;
+		using enhancement_type = typename item_type::enhancement_type;
 
 	public:
 		// returns swapped item

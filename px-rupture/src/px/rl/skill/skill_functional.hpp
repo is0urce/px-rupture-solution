@@ -16,22 +16,15 @@ namespace px::rl {
 		: public skill_impact<User, Target, Area>
 	{
 	public:
-		typedef std::function<void(user_type, target_type)> target_fn;
-		typedef std::function<bool(user_type, target_type)> target_predicate;
-		typedef std::function<void(user_type, area_type)> area_fn;
-		typedef std::function<bool(user_type, area_type)> area_predicate;
-		enum class v_targeted
-		{
-			mark
-		};
-		enum class v_area
-		{
-			mark
-		};
+		using target_fn = std::function<void(user_type, target_type)>;
+		using target_predicate = std::function<bool(user_type, target_type)>;
+		using area_fn = std::function<void(user_type, area_type)>;
+		using area_predicate = std::function<bool(user_type, area_type)>;
+		enum class v_targeted { mark };
+		enum class v_area { mark };
 
 	public:
-		virtual ~skill_functional()
-		{
+		virtual ~skill_functional()	{
 		}
 		skill_functional()
 			: m_targeted(false)

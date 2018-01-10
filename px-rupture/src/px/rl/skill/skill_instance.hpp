@@ -17,8 +17,8 @@ namespace px::rl {
 		: public skill_impact<User, Target, Area>
 	{
 	public:
-		typedef State state_type;
-		typedef skill_impact<User, Target, Area> impact_type;
+		using state_type = State;
+		using impact_type = skill_impact<User, Target, Area>;
 
 	public:
 		void assign_impact(impact_type * base_impact)

@@ -15,10 +15,10 @@ namespace px::rl {
 	template <typename Skill>
 	class skill_set {
 	public:
-		typedef Skill skill_type;
-		typedef typename Skill::state_type state_type;
-		typedef typename Skill::impact_type impact_type;
-		typedef std::map<std::string, std::tuple<state_type, impact_type *>> book_type;
+		using skill_type = Skill;
+		using state_type = typename skill_type::state_type;
+		using impact_type = typename skill_type::impact_type;
+		using book_type = std::map<std::string, std::tuple<state_type, impact_type *>>;
 
 	public:
 		void assign_book(book_type const* book)

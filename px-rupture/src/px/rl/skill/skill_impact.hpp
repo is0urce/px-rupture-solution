@@ -13,13 +13,12 @@ namespace px::rl {
 		class skill_impact
 		{
 		public:
-			typedef User user_type;
-			typedef Target target_type;
-			typedef Area area_type;
+			using user_type = User;
+			using target_type = Target;
+			using area_type = Area;
 
 		public:
-			bool is_targeted() const
-			{
+			bool is_targeted() const {
 				return is_targeted_skill();
 			}
 

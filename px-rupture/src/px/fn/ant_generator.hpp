@@ -8,7 +8,7 @@ namespace px::fn {
 	class ant_generator
 	{
 	public:
-		typedef unsigned char block_type;
+		using block_type = unsigned char;
 
 	public:
 		template <typename Random>

@@ -12,7 +12,7 @@ namespace px::rl {
 	template <typename UInteger>
 	class stack {
 	public:
-		typedef UInteger int_t;
+		using int_t = UInteger;
 
 	public:
 		// returns number of items failed to stack (due max stack size restrictions)

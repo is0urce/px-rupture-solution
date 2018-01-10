@@ -12,11 +12,10 @@
 namespace px::rl
 {
 	template <typename E, size_t Size = static_cast<size_t>(E::max_value)>
-	class traverse_options
-	{
+	class traverse_options {
 	public:
-		typedef E enumeration_type;
-		typedef std::bitset<Size> bitset_type;
+		using enumeration_type = E;
+		using bitset_type = std::bitset<Size>;
 
 	public:
 		static const size_t traverse_layers = Size;

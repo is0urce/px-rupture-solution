@@ -8,10 +8,9 @@
 namespace px::rl {
 
 	template <typename Faction>
-	class standing
-	{
+	class standing {
 	public:
-		typedef Faction faction_type;
+		using faction_type = Faction;
 		// reputation
 
 		Faction current_faction() const noexcept

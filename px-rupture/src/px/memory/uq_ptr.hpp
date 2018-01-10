@@ -14,7 +14,7 @@ namespace px {
 	class uq_ptr final
 	{
 	public:
-		typedef T element_type;
+		using element_type = T;
 
 	public:
 		void reset() noexcept
