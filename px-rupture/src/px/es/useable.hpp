@@ -3,9 +3,9 @@
 #pragma once
 
 namespace px {
+
 	template <typename User, typename Environment>
-	class useable
-	{
+	class useable {
 	public:
 		bool can_use(User user, Environment environment) const
 		{

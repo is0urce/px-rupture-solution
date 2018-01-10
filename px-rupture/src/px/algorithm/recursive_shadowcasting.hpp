@@ -7,8 +7,7 @@
 
 namespace px {
 
-	class recursive_shadowcasting final
-	{
+	class recursive_shadowcasting final {
 	public:
 		template <typename Predicate, typename Light>
 		static void light(int center_x, int center_y, unsigned int radius_size, Predicate && predicate_fn, Light && light_op)

@@ -17,7 +17,7 @@ namespace px {
 	class matrix2<Element>
 	{
 	public:
-		typedef Element element_type;
+		using element_type = Element;
 
 	public:
 		size_t width() const noexcept

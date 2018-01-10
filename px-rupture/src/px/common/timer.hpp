@@ -14,8 +14,8 @@ namespace px {
 	private:
 		QueryOperator m_query;
 	public:
-		typedef QueryOperator query_type;
-		typedef decltype(m_query()) precision_type;
+		using query_type = QueryOperator;
+		using precision_type = decltype(m_query());
 
 	public:
 		timer()

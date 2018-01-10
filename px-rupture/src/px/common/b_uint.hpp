@@ -15,9 +15,10 @@
 namespace px {
 
 	class b_uint {
-		typedef std::uint8_t I;
-		typedef std::uint16_t D;
-		typedef std::vector<I> container_t;
+	public:
+		using I = std::uint8_t;
+		using D = std::uint16_t;
+		using container_t = std::vector<I>;
 
 	public:
 		b_uint static zero() {

@@ -20,8 +20,8 @@ namespace px {
 	class qtree
 	{
 	public:
-		typedef T element_type;
-		typedef std::unique_ptr<qtree> ptr;
+		using element_type = T;
+		using ptr = std::unique_ptr<qtree>;
 		class bucket;
 
 	public:

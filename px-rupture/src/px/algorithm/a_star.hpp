@@ -20,7 +20,7 @@ namespace px
 	{
 	private:
 		class coord;
-		typedef std::shared_ptr<coord> coord_ptr;
+		using coord_ptr = std::shared_ptr<coord>;
 		class coord
 			: public point2
 		{

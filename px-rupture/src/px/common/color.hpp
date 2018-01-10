@@ -15,7 +15,7 @@ namespace px {
 	class color
 	{
 	public:
-		typedef double component;
+		using component = double;
 
 		// attributes
 	public:

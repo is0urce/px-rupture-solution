@@ -18,8 +18,7 @@ namespace {
 
 namespace px {
 
-	class string
-	{
+	class string {
 	public:
 		static bool is_roman(unsigned int codepoint) noexcept
 		{

@@ -12,44 +12,40 @@
 namespace px {
 
 	template <typename Component, size_t Dim>
-	class coordinate
-	{
+	class coordinate {
 	public:
 		static const size_t depth = Dim;
-		typedef Component component;
+		using component = Component;
 
 	public:
-		component const& operator[](size_t i) const
-		{
+		component const& operator[](size_t i) const {
 			return m_array[i];
 		}
-		component & operator[](size_t i)
-		{
+
+		component & operator[](size_t i) {
 			return m_array[i];
 		}
-		component & at(size_t i)
-		{
+
+		component & at(size_t i) {
 			return m_array.at(i);
 		}
-		component const& at(size_t i) const
-		{
+
+		component const& at(size_t i) const	{
 			return m_array.at(i);
 		}
+
 		template <size_t Index>
-		constexpr component get() const noexcept
-		{
+		constexpr component get() const noexcept {
 			static_assert(Index < Dim, "Index < Dim");
 			return m_array[Index];
 		}
 		template <size_t Index>
-		void set(component val) noexcept
-		{
+		void set(component val) noexcept {
 			static_assert(Index < Dim, "Index < Dim");
 			m_array[Index] = val;
 		}
 
-		bool empty() const noexcept
-		{
+		bool empty() const noexcept {
 			bool result = true;
 			for (size_t i = 0; i != Dim; ++i) {
 				result &= m_array[i] == 0;

@@ -21,9 +21,9 @@ namespace px {
 	class pool
 	{
 	public:
-		typedef T element_type;
-		typedef T* pointer;
-		typedef uq_ptr<T> uq_ptr;
+		using element_type = T;
+		using pointer = T *;
+		using uq_ptr = uq_ptr<T>;
 		
 	public:
 		struct links;
@@ -32,8 +32,7 @@ namespace px {
 	public:
 		// returns nullptr if all object in pool were requested, full() returns true
 		template <typename... Args>
-		T * request(Args... args)
-		{
+		T * request(Args ...args) {
 			T * result = nullptr;
 			links * rec = m_free;
 			if (rec) {
@@ -60,8 +59,7 @@ namespace px {
 
 		// pointer must be in correct range and alignment of pool
 		// it's safe to release already released objects - it's an nop
-		bool release(T * ptr)
-		{
+		bool release(T * ptr) {
 			bool flag = false;
 			auto index = to_index(ptr);
 			if (index >= 0 && index < Size)	{
@@ -92,76 +90,63 @@ namespace px {
 		}
 
 		template <typename... Args>
-		uq_ptr make_uq(Args ... args)
-		{
+		uq_ptr make_uq(Args ... args) {
 			T * ptr = request(std::forward<Args>(args)...);
 			return { ptr, &m_links[to_index(ptr)].ctrl };
 		}
 
-		size_t size() const noexcept
-		{
+		size_t size() const noexcept {
 			return m_current;
 		}
-		bool full() const noexcept
-		{
+		bool full() const noexcept {
 			return m_current == Size;
 		}
-		bool empty() const noexcept
-		{
+		bool empty() const noexcept {
 			return m_current == 0;
 		}
-		constexpr static size_t max_size() noexcept
-		{
+		constexpr static size_t max_size() noexcept {
 			return Size;
 		}
 
 		// checks only range of pointer, not correctness (i.e alignment etc)
-		bool can_contain(T const* ptr) const noexcept
-		{
+		bool can_contain(T const* ptr) const noexcept {
 			return ptr >= reinterpret_cast<T const*>(&m_pool[0])
 				&& ptr <= reinterpret_cast<T const*>(&m_pool[(Size - 1) * sizeof(T)]);
 		}
-		bool contains(T const* ptr) const noexcept
-		{
+		bool contains(T const* ptr) const noexcept {
 			return can_contain(ptr) && m_links[to_index(ptr)].live;
 		}
 
 		template <typename UnaryFunction>
-		void enumerate(UnaryFunction && func)
-		{
+		void enumerate(UnaryFunction && func) {
 			for (links * i = m_live; i != nullptr; i = i->next_live)	{
 				func(reinterpret_cast<T&>(m_pool[(i - &m_links[0]) * sizeof(T)]));
 			}
 		}
 		template <typename UnaryFunction >
-		void enumerate(UnaryFunction && func) const
-		{
+		void enumerate(UnaryFunction && func) const {
 			for (links const* i = m_live; i != nullptr; i = i->next_live) {
 				func(reinterpret_cast<T const&>(m_pool[(i - &m_links[0]) * sizeof(T)]));
 			}
 		}
 
-		void clear()
-		{
+		void clear() {
 			destroy_existing();
 			startup();
 		}
 
 	public:
-		~pool()
-		{
+		~pool() {
 			destroy_existing();
 		}
-		pool()
-		{
+		pool() {
 			startup();
 		}
 		pool(pool const&) = delete;
 		pool & operator=(pool const&) = delete;
 
 	private:
-		void destroy_existing()
-		{
+		void destroy_existing() {
 			for (links * i = m_live; i != nullptr; i = i->next_live)	{
 				destroy(reinterpret_cast<T&>(m_pool[(i - &m_links[0]) * sizeof(T)]));
 			}

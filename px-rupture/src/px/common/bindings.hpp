@@ -12,24 +12,20 @@
 namespace px {
 
 	template <typename SK, typename VK>
-	class bindings final
-	{
+	class bindings final {
 	public:
-		typedef SK sys_key;
-		typedef VK v_key;
+		using sys_key = SK;
+		using v_key = VK;
 
 	public:
-		~bindings()
-		{
+		~bindings() {
 		}
-		bindings()
-		{
+		bindings() {
 		}
 
 	public:
 		template <typename Document>
-		static bindings from_document(Document && document)
-		{
+		static bindings from_document(Document && document) {
 			bindings result;
 			result.load(std::forward<Document>(document));
 			return result;
@@ -37,8 +33,7 @@ namespace px {
 
 	public:
 		template <typename Document>
-		void load(Document && document)
-		{
+		void load(Document && document) {
 			try	{
 				for (auto const& action_entry : document) {
 					long long action_index = action_entry["action"];
@@ -54,12 +49,12 @@ namespace px {
 				throw std::runtime_error("px::bindings::load(document) - error while loading bindings, unhandled exception");
 			}
 		}
-		void bind(SK key, VK vkey)
-		{
+
+		void bind(SK key, VK vkey) {
 			m_bindings[key] = vkey;
 		}
-		bool find(SK key, VK & vkey) const
-		{
+
+		bool find(SK key, VK & vkey) const {
 			auto it = m_bindings.find(key);
 			if (it != m_bindings.end()) {
 				vkey = it->second;
@@ -67,22 +62,22 @@ namespace px {
 			}
 			return false;
 		}
-		std::optional<VK> find(SK key) const noexcept
-		{
+
+		std::optional<VK> find(SK key) const noexcept {
 			auto it = m_bindings.find(key);
 			return it == m_bindings.end() ? {} : it->second;
 		}
-		VK get_or(SK key, VK or_else) const
-		{
+
+		VK get_or(SK key, VK or_else) const {
 			find(key, or_else);
 			return or_else;
 		}
-		VK operator[](SK key) const noexcept
-		{
+
+		VK operator[](SK key) const noexcept {
 			return m_bindings[key];
 		}
-		VK at(SK key) const
-		{
+
+		VK at(SK key) const {
 			return m_bindings.at(key);
 		}
 

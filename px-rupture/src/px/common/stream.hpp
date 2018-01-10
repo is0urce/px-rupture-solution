@@ -13,7 +13,7 @@ namespace px {
 	template <typename Data>
 	class stream {
 	public:
-		typedef Data data_type;
+		using data_type = Data;
 
 	public:
 		bool is_loaded() const noexcept {

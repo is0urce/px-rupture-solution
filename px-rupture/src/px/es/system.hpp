@@ -13,7 +13,7 @@ namespace px {
 	class system abstract
 	{
 	public:
-		typedef Delta delta_type;
+		using delta_type = Delta;
 
 	public:
 		void update(delta_type const& delta)

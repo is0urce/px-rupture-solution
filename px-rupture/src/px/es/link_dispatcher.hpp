@@ -12,8 +12,7 @@
 namespace px {
 
 	template <typename C>
-	class link_dispatcher
-	{
+	class link_dispatcher {
 	public:
 		template <typename T>
 		void connect(T * x) noexcept

@@ -13,10 +13,9 @@
 namespace px {
 
 	template <typename Element, size_t W, size_t H>
-	class matrix2<Element, W, H>
-	{
+	class matrix2<Element, W, H> {
 	public:
-		typedef Element element_type;
+		using element_type = Element;
 
 	public:
 		static constexpr size_t width() noexcept

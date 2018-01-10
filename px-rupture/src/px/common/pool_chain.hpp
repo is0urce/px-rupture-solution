@@ -15,17 +15,15 @@
 namespace px {
 
 	template <typename T, size_t Size>
-	class pool_chain
-	{
+	class pool_chain {
 	public:
-		typedef T element_type;
-		typedef T * pointer;
-		typedef pool<T, Size> pool_type;
-		typedef typename pool_type::uq_ptr uq_ptr; // our
+		using element_type = T;
+		using pointer = T *;
+		using pool_type = pool<T, Size>;
+		using uq_ptr = typename pool_type::uq_ptr;
 
 	public:
-		class node
-		{
+		class node {
 		public:
 			pool_type chunk;
 			std::unique_ptr<node> next;

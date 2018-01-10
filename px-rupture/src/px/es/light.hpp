@@ -11,8 +11,7 @@
 
 namespace px {
 
-	class light
-	{
+	class light {
 	public:
 		color			tint;
 		double			elevation;

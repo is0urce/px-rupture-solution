@@ -19,7 +19,7 @@ namespace px {
 	class composition
 	{
 	public:
-		typedef uq_ptr<component> component_ptr;
+		using component_ptr = uq_ptr<component>;
 
 	public:
 		component_ptr & add(component_ptr && component)
