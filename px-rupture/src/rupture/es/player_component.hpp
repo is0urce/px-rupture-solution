@@ -19,32 +19,23 @@ namespace px {
 		std::uint32_t get_seed() const noexcept {
 			return seed;
 		}
-		void set_seed(std::uint32_t seed_value) {
+		void set_seed(std::uint32_t seed_value) noexcept {
 			seed = seed_value;
-		}
-
-		void give_experience(std::uint32_t experience) {
-			experience_pool += experience;
-		}
-		void set_experience(std::uint32_t experience) {
-			experience_pool = experience;
 		}
 
 		template <typename Archive>
 		void serialize(Archive & archive) {
-			archive(seed, experience_pool);
+			archive(seed);
 		}
 
 	public:
 		virtual ~player_component() = default;
 		player_component()
 			: seed(0)
-			, experience_pool(0)
 		{
 		}
 
 	private:
 		std::uint32_t	seed;
-		std::uint32_t	experience_pool;
 	};
 }

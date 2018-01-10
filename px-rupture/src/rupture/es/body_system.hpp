@@ -24,9 +24,6 @@ namespace px {
 	public:
 		void					assign_environment(environment * env);	// bind system to an environment
 		uq_ptr<body_component>	make();
-		int						get_experience() const;					// get experience accumulated in experience pool
-		void					clear_experience();						// clear experience pool
-		int						acquire_experience();					// get experience and clear pool
 
 	public:
 		virtual					~body_system();

@@ -67,8 +67,8 @@ namespace px {
 		std::uint32_t												level() const;
 		movement_type const&										movement() const noexcept;
 		movement_type &												movement() noexcept;
-		void														set_level(std::uint32_t n);
-		void														set_experience(std::uint32_t n);
+		void														set_level(std::uint32_t lvl);
+		void														set_experience(std::uint32_t exp);
 		bool														try_use(body_component * user, environment * env);
 
 		void														unequip(rl::equipment slot);

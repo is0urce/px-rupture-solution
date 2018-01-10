@@ -42,7 +42,7 @@ namespace px {
 				// death of units
 				if (composite_component * unit = body.linked<composite_component>()) {
 					switch (unit->lifetime()) {
-					case persistency::permanent:	// skip for permanent entitys
+					case persistency::permanent:	// skip for permanent entities
 						break;
 					case persistency::destroying:
 						unit->decay(1);
@@ -62,26 +62,14 @@ namespace px {
 			});
 		}
 
-		// get experience accumulated in experience pool
-		int get_experience() const noexcept {
-			return experience_pool;
-		}
-
-		// clear experience accumulated in experience pool
-		void clear_experience() noexcept {
-			experience_pool = 0;
-		}
-
 	public:
 		body_works()
 			: game(nullptr)
-			, experience_pool(0)
 		{
 		}
 
 	private:
 		pool_chain<body_component, 1024>	pool;
 		environment *						game;
-		int									experience_pool;
 	};
 }

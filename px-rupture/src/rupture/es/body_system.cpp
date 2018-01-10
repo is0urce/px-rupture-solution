@@ -32,18 +32,4 @@ namespace px {
 	uq_ptr<body_component> body_system::make() {
 		return works->make();
 	}
-
-	int body_system::get_experience() const {
-		return works->get_experience();
-	}
-
-	void body_system::clear_experience() {
-		works->clear_experience();
-	}
-
-	int body_system::acquire_experience() {
-		auto exp = get_experience();
-		clear_experience();
-		return exp;
-	}
 }

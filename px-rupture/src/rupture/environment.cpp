@@ -192,7 +192,7 @@ namespace px {
 	point2 environment::area() const noexcept {
 		return target_area;
 	}
-	void environment::target(point2 offset)	{
+	void environment::target(point2 offset) {
 		target_hover = offset;
 		lock_target();
 	}
@@ -248,23 +248,22 @@ namespace px {
 	int	environment::distance(point2 const& a, point2 const& b) const {
 		return a.king_distance(b);
 	}
-	
-	void environment::give_experience(int experience, int level) {
-		if (player && experience != 0) {
+
+	// give experience to current player
+	void environment::give_experience(int exp, int source_level) {
+		if (player && exp != 0) {
 			if (auto body = player->linked<body_component>()) {
-				if (auto composite = body->linked<composite_component>()) {
-					if (auto pc = composite->query<player_component>()) {
+				if (!body->is_dead()) {
 
-						int lvl = body->level();
+					int lvl = body->level();
 
-						// softcap
-						if (lvl == level + 1) experience /= 2;
-						else if (lvl == level + 2) experience /= 10;
-						else if (lvl >= level + 3) experience = 1;
+					// apply softcap
+					if (lvl == source_level + 1) exp /= 2;
+					else if (lvl == source_level + 2) exp /= 10;
+					else if (lvl >= source_level + 3) exp = 1;
 
-						pc->give_experience(experience);
-						popup("+ " + std::to_string(experience) + " exp", color(0.8, 0, 0.9), player->position());
-					}
+					body->set_experience(exp + body->experience());
+					popup("+ " + std::to_string(exp) + " exp", color(0.8, 0, 0.9), player->position());
 				}
 			}
 		}
