@@ -73,11 +73,11 @@ namespace px {
 
 		// order is important
 		engine.add(&transforms);
-		engine.add(&characters);	// cooldowns
+		engine.add(&characters);	// skill cooldowns
 		engine.add(&npcs);			// ai
-		engine.add(&bodies);		// effects ticks
+		engine.add(&bodies);		// effects ticks, deaths, exp gains
 		engine.add(&lights);		// make shadowmap
-		engine.add(&messages);
+		engine.add(&messages);		// popups
 	}
 
 	void shell::frame(double timer) {

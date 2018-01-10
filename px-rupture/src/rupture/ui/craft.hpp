@@ -1,5 +1,6 @@
 // name: craft.hpp
 // type: c++
+// auth: is0urce
 
 #pragma once
 

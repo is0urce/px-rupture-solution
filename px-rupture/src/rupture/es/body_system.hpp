@@ -1,6 +1,11 @@
 // name: body_system.hpp
+// type: c++ header
+// auth: is0urce
+// desc: class declaration
 
 #pragma once
+
+// body system handles effect ticks, dying, experience splashes
 
 #include <px/es/system.hpp>
 #include <px/es/delta.hpp>
@@ -17,17 +22,20 @@ namespace px {
 		: public system<delta>
 	{
 	public:
-		void assign_environment(environment * env);
-		uq_ptr<body_component> make();
+		void					assign_environment(environment * env);	// bind system to an environment
+		uq_ptr<body_component>	make();
+		int						get_experience() const;					// get experience accumulated in experience pool
+		void					clear_experience();						// clear experience pool
+		int						acquire_experience();					// get experience and clear pool
 
 	public:
-		virtual ~body_system();
+		virtual					~body_system();
 		body_system();
 
 	protected:
-		virtual void turn_update_system(delta_type const& delta_time) override;
+		virtual void			turn_update_system(delta_type const& delta_time) override;
 
 	private:
-		uq_ptr<body_works> works;
+		uq_ptr<body_works>		works;
 	};
 }

@@ -15,6 +15,7 @@
 #include "es/composite_component.hpp"
 #include "es/container_component.hpp"
 #include "es/light_component.hpp"
+#include "es/player_component.hpp"
 #include "es/transform_component.hpp"
 
 #include "es/builder.hpp"
@@ -208,13 +209,16 @@ namespace px {
 		opened_workshop = rl::craft_activity::none;
 	}
 
+	// execute after npc turn
 	void environment::return_turn() {
-		// rip
+
+		// death of units
 		stage.discard([&](composite_component & composite) {
 			if (transform_component * pawn = composite.linked<transform_component>()) {
 				if (body_component * body = pawn->linked<body_component>()) {
 					if (container_component * loot = body->linked<container_component>()) {
 
+						// loot drop
 						if (loot->size() != 0) {
 							auto & bag = spawn("bag", pawn->position());
 							if (container_component * drop = bag->qlink<container_component, body_component, transform_component>()) {
@@ -226,12 +230,13 @@ namespace px {
 			}
 		});
 
-		turn_pass = false;
-
+		// select hovered unit
 		lock_target();
+
+		turn_pass = false;
 	}
-	void environment::end_turn(unsigned int turns)
-	{
+
+	void environment::end_turn(unsigned int turns) {
 		turn_number += turns;
 		turn_pass = true;
 	}
@@ -242,6 +247,27 @@ namespace px {
 
 	int	environment::distance(point2 const& a, point2 const& b) const {
 		return a.king_distance(b);
+	}
+	
+	void environment::give_experience(int experience, int level) {
+		if (player && experience != 0) {
+			if (auto body = player->linked<body_component>()) {
+				if (auto composite = body->linked<composite_component>()) {
+					if (auto pc = composite->query<player_component>()) {
+
+						int lvl = body->level();
+
+						// softcap
+						if (lvl == level + 1) experience /= 2;
+						else if (lvl == level + 2) experience /= 10;
+						else if (lvl >= level + 3) experience = 1;
+
+						pc->give_experience(experience);
+						popup("+ " + std::to_string(experience) + " exp", color(0.8, 0, 0.9), player->position());
+					}
+				}
+			}
+		}
 	}
 
 	rl::hit_result environment::hit(body_component const& /*source*/, body_component const& /*target*/) const {

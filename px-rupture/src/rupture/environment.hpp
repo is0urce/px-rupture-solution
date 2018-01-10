@@ -51,6 +51,7 @@ namespace px {
 		rl::hit_result						hit(body_component const& source, body_component const& target) const;
 		std::tuple<int, rl::damage_type>	dps(body_component const& source) const;
 		void								damage(body_component & target, int damage, rl::damage_type dmg_type);
+		void								give_experience(int experience, int level);
 		bool								has_access(rl::craft_activity station) const noexcept;
 		void								open_workshop(rl::craft_activity station);
 		void								close_workshop();
