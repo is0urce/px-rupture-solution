@@ -79,10 +79,10 @@ namespace px {
 				// expand
 				enum_neighbours(*current, [&](point2 const& neighbor) {
 					if (!predicate(neighbor) && neighbor != finish) return;	// traversable callback
-					if (closed.find(&neighbor) != closed.end()) return;			// already in closed list
+					if (closed.find(&neighbor) != closed.end()) return;		// already in closed list
 
 					auto it = open.cbegin(), last = open.cend();
-					while (it != last && **it != neighbor) ++it; // check is point in open list
+					while (it != last && **it != neighbor) ++it;			// check is point in open list
 
 					auto score = current->g_score + distance(*current, neighbor);
 					if (it == last) {
