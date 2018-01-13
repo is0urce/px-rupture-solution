@@ -40,6 +40,8 @@ namespace px {
 		void								use(unsigned int mods);				// use object
 		void								function_edit(std::uint32_t idx);
 		void								start();
+		void								end();
+		void								clear();
 		transform_component	*				possessed() noexcept;
 		void								start_turn();						// clear from previous turn
 		void								end_turn(unsigned int turns);		// end player turn and sart world processing

@@ -64,14 +64,14 @@ namespace px {
 			return query("meta");
 		}
 
-		bool has_scene(std::string const& scene_name) const {
-			return exists(scene_name);
+		bool has_scene(point2 const& cell) const {
+			return record_exists("scene_" + to_string(cell));
 		}
 		bool has_main() const {
-			return exists("main");
+			return record_exists("main");
 		}
 		bool has_meta() const {
-			return exists("meta");
+			return record_exists("meta");
 		}
 
 		bool clear_scene(std::string const& scene_name) {
@@ -101,32 +101,29 @@ namespace px {
 		repository & operator=(repository const&) = delete;
 
 	private:
-		std::string record_path(std::string const& record_name) const
-		{
+		std::string record_path(std::string const& record_name) const {
 			fs::path filename(record_name);
 			filename.replace_extension(".sav");
 			return (name / filename).string();
 		}
-		std::string query(std::string const& record_name) const
-		{
+		std::string query(std::string const& record_name) const {
 			auto current_path = record_path(record_name);
 
 			// fallback to base
-			if (parent && !exists(current_path)) {
+			if (!record_exists(record_name) && parent && parent->record_exists(record_name)) {
 				pull(current_path, record_name, *parent);
 			}
 
 			return current_path;
 		}
-		bool pull(std::string const& current_path, std::string const& record_name, repository const& base) const
-		{
-			if (base.exists(record_name)) {
-				fs::copy(base.record_path(record_name), current_path);
+		bool pull(std::string const& dest_path, std::string const& record_name, repository const& base) const {
+			if (base.record_exists(record_name)) {
+				fs::copy(base.record_path(record_name), dest_path);
 				return true;
 			}
 			return false;
 		}
-		bool exists(std::string const& record_name) const {
+		bool record_exists(std::string const& record_name) const {
 			return fs::exists(record_path(record_name));
 		}
 		bool clear(std::string const& record_name) const {
@@ -148,8 +145,7 @@ namespace px {
 				fs::copy_file(path, destination.name / path.filename());
 			}
 		}
-		static std::string to_string(point2 const& location)
-		{
+		static std::string to_string(point2 const& location) {
 			return std::to_string(location.x() + coordinate_bias) + "_" + std::to_string(location.y() + coordinate_bias);
 		}
 

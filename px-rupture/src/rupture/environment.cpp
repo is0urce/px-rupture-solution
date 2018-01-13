@@ -26,7 +26,9 @@ namespace px {
 
 	// ctor & dtor
 
-	environment::~environment() = default;
+	environment::~environment() {
+		clear();
+	}
 	environment::environment()
 		: turn_number(0)
 		, turn_pass(true)
@@ -42,6 +44,8 @@ namespace px {
 
 		stage.set_leave_event([&](point2 const& cell) { save_scene(cell); });
 		stage.set_enter_event([&](point2 const& cell) { load_scene(cell); });
+
+		clear();
 	}
 
 	// methods
@@ -51,15 +55,16 @@ namespace px {
 	}
 
 	void environment::incarnate(transform_component * camera) {
+
+		if (camera) {
+			stage.focus(camera->position());
+		}
+
 		player = camera;
 		sprites.target(camera);
 		messages.target(camera);
 		lights.target(camera);
 		lights.recalculate();
-
-		if (camera) {
-			stage.focus(camera->position());
-		}
 	}
 
 	void environment::step(point2 const& movement) {
@@ -123,13 +128,16 @@ namespace px {
 	}
 
 	void environment::start() {
+		// clear repository and reset environment variables
+		clear();
+
+		// create player
+
 		builder b(this);
 
 		light_component * light = nullptr;
 		body_component * body = nullptr;
 		container_component * cont = nullptr;
-
-		// create player
 
 		body = b.add_body();
 		body->movement().make_traversable(rl::traverse::floor);
@@ -161,9 +169,23 @@ namespace px {
 		body->equip(0);
 		composite->set_persistency(persistency::permanent);
 		stage.spawn(std::move(composite));
+	}
 
-		// set environment variables
+	void environment::end() {
+		clear();
+	}
 
+	void environment::clear() {
+		stage.unload();
+		stage.clear_units();
+		current->clear();
+
+		player = nullptr;
+		target_unit = nullptr;
+		target_area = { 0, 0 };
+		target_hover = { 0, 0 };
+		opened_workshop = rl::craft_activity::none;
+		run = true;
 		turn_number = 0;
 		turn_pass = true;
 	}

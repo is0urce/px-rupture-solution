@@ -32,17 +32,22 @@ namespace px {
 		save_main();
 
 		// copy directory
-		repository directory(std::string(settings::save_path) + name);
-		current->save(directory);
+		repository save_directory(std::string(settings::save_path) + name);
+		save_directory.clear();
+		current->save(save_directory);
 
+		load(name);
 		return true;
 	}
 
 	bool environment::load(std::string const& name) {
 
+		end();
+
 		// copy directory
 		repository directory(std::string(settings::save_path) + name);
 		if (!directory.has_main()) return false;
+		current->clear();
 		current->load(directory);
 
 		load_main();
@@ -98,7 +103,10 @@ namespace px {
 		}
 	}
 	void environment::load_scene(point2 const& cell) {
-		auto istream = input_stream(current->depot_scene(cell));
+		auto name = current->depot_scene(cell);
+		if (!current->has_scene(cell)) return;
+
+		auto istream = input_stream(name);
 		SAVE_INPUT_ARCHIVE archive(istream);
 
 		builder factory(this);
