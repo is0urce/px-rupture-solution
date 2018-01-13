@@ -39,6 +39,9 @@ namespace px {
 	{
 		parent = make_uq<repository>(std::string(settings::save_path) + "base");
 		current = make_uq<repository>(std::string(settings::save_path) + "current", parent.get());
+
+		stage.set_leave_event([&](point2 const& cell) { save_scene(cell); });
+		stage.set_enter_event([&](point2 const& cell) { load_scene(cell); });
 	}
 
 	// methods
@@ -126,6 +129,8 @@ namespace px {
 		body_component * body = nullptr;
 		container_component * cont = nullptr;
 
+		// create player
+
 		body = b.add_body();
 		body->movement().make_traversable(rl::traverse::floor);
 		body->blocking().make_transparent();
@@ -135,9 +140,9 @@ namespace px {
 		body->join_faction(1);
 		b.add_player();
 		b.add_sprite("m_gnome_mage");
-		incarnate(b.add_transform({ 1962, 856 }));
+		incarnate(b.add_transform({ 1966, 860 }));
 		light = b.add_light();
-		light->tint = color(0.3, 0.3, 0.05, 1);
+		light->tint = color(0.3, 0.3, 0.3);
 		light->elevation = 0.5;
 		light->is_on = true;
 		auto ch = b.add_character();
@@ -152,26 +157,10 @@ namespace px {
 		weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<std::int32_t>(rl::equipment::hand)));
 		weapon->set_name("Sword");
 		cont->add(std::move(weapon));
-		for (int i = 0; i != 5; ++i) {
-			auto orb = make_uq<rl::item>();
-			orb->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6));
-			orb->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<std::int32_t>(rl::equipment::hand)));
-			orb->set_name("Weapon #" + std::to_string(i));
-			cont->add(std::move(orb));
-		}
-		auto pc = b.request();
-		pc->set_persistency(persistency::permanent);
-		auto & unit = stage.spawn(std::move(pc));
-		unit->query<body_component>()->equip(0);
-
-		b.add_sprite("i_cheese");
-		b.add_transform({ 11, 14 });
-		body = b.add_body();
-		body->blocking().make_transparent();
-		body->health().emplace(10);
-		cont = b.add_container();
-
-		stage.spawn(b.request());
+		auto composite = b.request();
+		body->equip(0);
+		composite->set_persistency(persistency::permanent);
+		stage.spawn(std::move(composite));
 
 		// set environment variables
 
@@ -214,14 +203,14 @@ namespace px {
 
 		// death of units
 		stage.discard([&](composite_component & composite) {
-			if (transform_component * pawn = composite.linked<transform_component>()) {
-				if (body_component * body = pawn->linked<body_component>()) {
-					if (container_component * loot = body->linked<container_component>()) {
+			if (auto pawn = composite.linked<transform_component>()) {
+				if (auto body = pawn->linked<body_component>()) {
+					if (auto loot = body->linked<container_component>()) {
 
 						// loot drop
 						if (loot->size() != 0) {
 							auto & bag = spawn("bag", pawn->position());
-							if (container_component * drop = bag->qlink<container_component, body_component, transform_component>()) {
+							if (auto drop = bag->qlink<container_component, body_component, transform_component>()) {
 								drop->take(*loot);
 							}
 						}
@@ -288,12 +277,17 @@ namespace px {
 		}
 	}
 
+	// check if workshop activity available
 	bool environment::has_access(rl::craft_activity station) const noexcept {
 		return opened_workshop == station;
 	}
+
+	// start workshop activity
 	void environment::open_workshop(rl::craft_activity station) {
 		opened_workshop = station;
 	}
+
+	// finish any workshop activity
 	void environment::close_workshop() {
 		opened_workshop = rl::craft_activity::none;
 	}

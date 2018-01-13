@@ -54,13 +54,26 @@ namespace px {
 	void scene::discard(std::function<void(composite_component&)> fn) {
 		works->discard(fn);
 	}
+
 	size_t scene::size() const {
 		return works->size();
 	}
-	void scene::clear() {
-		works->clear();
+	void scene::clear_units() {
+		works->clear_units();
+	}
+	void scene::set_enter_event(std::function<void(point2 const&)> evt) {
+		works->set_enter_event(evt);
+	}
+	void scene::set_leave_event(std::function<void(point2 const&)> evt) {
+		works->set_leave_event(evt);
 	}
 	void scene::enumerate(std::function<void(composite_component&)> fn) {
 		works->enumerate(fn);
+	}
+	void scene::unload() {
+		works->unload();
+	}
+	void scene::pull(point2 const& cell, std::function<void(uq_ptr<composite_component>)> fn) {
+		works->pull(cell, fn);
 	}
 }

@@ -17,6 +17,7 @@
 
 #include <px/fn/ant_generator.hpp>
 
+#include <functional>
 #include <random>
 #include <string>
 #include <vector>
@@ -31,6 +32,7 @@ namespace px {
 		using surface_type = terrain_surface<terrain_len, 1>;
 		using patch_type = typename surface_type::patch_type;
 		using stream_type = typename surface_type::stream_type;
+		using patch_event = std::function<void(point2 const&)>;
 
 	private:
 		class										join_release_block;
@@ -41,8 +43,17 @@ namespace px {
 			sprites = system;
 		}
 
-		void clear() {
+		void clear_units() {
 			units.clear();
+		}
+		void unload() {
+			surface.clear();
+		}
+		void set_enter_event(patch_event evt) {
+			enter_fn = evt;
+		}
+		void set_leave_event(patch_event evt) {
+			leave_fn = evt;
 		}
 
 		size_t size() const {
@@ -59,7 +70,6 @@ namespace px {
 					on_enter(grid_cell, *ptr);
 				}
 			});
-			//export_terrain();
 		}
 
 		void pset(std::uint32_t block_id, point2 const& location) {
@@ -142,6 +152,7 @@ namespace px {
 				}
 			}
 		}
+
 		template <typename Operator>
 		void enumerate(Operator && function) const {
 			for (uq_ptr<composite_component> const& unit : units) {
@@ -155,6 +166,24 @@ namespace px {
 			}
 		}
 
+		template <typename Operator>
+		void pull(point2 const& cell, Operator && function) {
+			size_t i = 0;
+			size_t size = units.size();
+			while (i != size) {
+				auto tr = units[i]->linked<transform_component>();
+				if (tr && in_cell(tr->position(), cell) && units[i]->lifetime() != persistency::permanent) {
+					function(std::move(units[i]));
+					units[i] = std::move(units.back());
+					units.pop_back();
+					--size;
+				}
+				else {
+					++i;
+				}
+			}
+		}
+
 	public:
 		scene_internal()
 			: space(64)
@@ -165,7 +194,10 @@ namespace px {
 		std::string depot_name(point2 const& grid) const {
 			return settings::terrrain_path + std::to_string(grid.x()) + "_" + std::to_string(grid.y()) + ".dat";
 		}
-		void on_leave(point2 const& /*grid*/, stream_type & /*terrain*/) {
+		void on_leave(point2 const& grid_cell, stream_type & /*terrain*/) {
+			if (leave_fn) {
+				leave_fn(grid_cell);
+			}
 		}
 		void on_enter(point2 const& grid_cell, stream_type & terrain) {
 			terrain.load([&](patch_type & chunk) {
@@ -173,6 +205,12 @@ namespace px {
 				chunk.assign_cell(grid_cell);
 				chunk.read(depot_name(grid_cell));
 			});
+			if (enter_fn) {
+				enter_fn(grid_cell);
+			}
+		}
+		bool in_cell(point2 const& pos, point2 cell) const {
+			return surface_type::get_cell(pos) == cell;
 		}
 
 	private:
@@ -180,6 +218,8 @@ namespace px {
 		std::vector<uq_ptr<composite_component>>	units;
 		surface_type								surface;
 		sprite_system *								sprites;
+		std::function<void(point2 const&)>			enter_fn;
+		std::function<void(point2 const&)>			leave_fn;
 
 		// nested class
 		class terrain_release_block final

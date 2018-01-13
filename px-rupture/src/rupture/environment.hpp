@@ -69,6 +69,8 @@ namespace px {
 		void								lock_target();
 		void								save_main();
 		void								load_main();
+		void								save_scene(point2 const& cell);
+		void								load_scene(point2 const& cell);
 
 	protected:
 		notification_system					messages;

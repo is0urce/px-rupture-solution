@@ -26,6 +26,9 @@ namespace px {
 	}
 
 	bool environment::save(std::string const& name) {
+
+		stage.unload();
+
 		save_main();
 
 		// copy directory
@@ -58,13 +61,14 @@ namespace px {
 			blueprint::store(archive, unit);
 		});
 	}
+
 	void environment::load_main() {
 		auto istream = input_stream(current->depot_main());
 		SAVE_INPUT_ARCHIVE archive(istream);
 
 		builder factory(this);
 
-		stage.clear();
+		stage.clear_units();
 
 		size_t count;
 		archive(count);
@@ -74,5 +78,36 @@ namespace px {
 		}
 
 		incarnate(factory.created_player());
+	}
+
+	void environment::save_scene(point2 const& cell) {
+
+		auto ostream = output_stream(current->depot_scene(cell));
+		SAVE_OUTPUT_ARCHIVE archive(ostream);
+
+		std::vector<uq_ptr<composite_component>> tmp;
+		stage.pull(cell, [&](uq_ptr<composite_component> unit) {
+			tmp.push_back(std::move(unit));
+		});
+
+		// save units
+		size_t count = tmp.size();
+		archive(count);
+		for (auto & ptr : tmp) {
+			blueprint::store(archive, *ptr);
+		}
+	}
+	void environment::load_scene(point2 const& cell) {
+		auto istream = input_stream(current->depot_scene(cell));
+		SAVE_INPUT_ARCHIVE archive(istream);
+
+		builder factory(this);
+
+		size_t count;
+		archive(count);
+		for (size_t i = 0; i != count; ++i) {
+			auto & unit = stage.spawn(blueprint::assemble(archive, factory));
+			unit->activate();
+		}
 	}
 }

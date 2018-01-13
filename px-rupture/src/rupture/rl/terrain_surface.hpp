@@ -79,7 +79,7 @@ namespace px {
 			});
 		}
 		void clear() {
-			terrain.enumerate([&](size_t /*ox*/, size_t /*oy*/, , stream_ptr & ptr) {
+			terrain.enumerate([&](size_t /*ox*/, size_t /*oy*/, stream_ptr & ptr) {
 				ptr.reset();
 			});
 		}
@@ -95,6 +95,9 @@ namespace px {
 				function(index_to_cell(ox, oy), ptr);
 			});
 		}
+		static point2 get_cell(point2 const& world) {
+			return (vector2(world) / vector2(L, L)).floor();
+		}
 
 	public:
 		terrain_surface()
@@ -103,9 +106,6 @@ namespace px {
 		}
 
 	private:
-		static point2 get_cell(point2 const& world) {
-			return (vector2(world) / vector2(L, L)).floor();
-		}
 		static std::tuple<point2, point2> divide(point2 const& a, point2 const& b) {
 			point2 div = (vector2(a) / b).floor();
 			point2 mod = a - div * b;
