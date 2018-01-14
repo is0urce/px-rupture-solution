@@ -255,6 +255,11 @@ namespace px {
 	void environment::popup(std::string text, color tint, point2 location) {
 		messages.send({ text, tint, 1.0 }, location);
 	}
+	void environment::popup(std::string text, color tint) {
+		if (player) {
+			messages.send({ text, tint, 1.0 }, player->position());
+		}
+	}
 
 	int	environment::distance(point2 const& a, point2 const& b) const {
 		return a.king_distance(b);

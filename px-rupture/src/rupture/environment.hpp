@@ -49,6 +49,7 @@ namespace px {
 		unsigned int						current_turn() const noexcept;		// returns turn number
 		void								return_turn();						// pass turn back to player
 		void								popup(std::string, color tint, point2 location);
+		void								popup(std::string, color tint);
 		int									distance(point2 const& a, point2 const& b) const;
 		rl::hit_result						hit(body_component const& source, body_component const& target) const;
 		std::tuple<int, rl::damage_type>	dps(body_component const& source) const;

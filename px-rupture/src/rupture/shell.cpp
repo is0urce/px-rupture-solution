@@ -128,12 +128,14 @@ namespace px {
 
 		case key::quick_save: {
 			ui.rollback();
+			//popup("quicksave...", { 1, 1, 1 });
 			save("quicksave");
 			break;
 		}
 		case key::quick_load: {
 			ui.rollback();
 			load("quicksave");
+			//popup("quickload", { 1, 1, 1 });
 			time.advance_turn(current_turn());
 			break;
 		}
