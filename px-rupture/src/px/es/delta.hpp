@@ -1,4 +1,4 @@
-// name: basic_delta.hpp
+// name: delta.hpp
 // type: c++ header
 // desc: pod struct
 // auth: is0urce
@@ -7,28 +7,24 @@
 
 namespace px {
 
-	struct delta
-	{
-	public:
-		double real_current;
-		double real_last;
-		double real_delta;
+	struct delta {
+		double			real_current;
+		double			real_last;
+		double			real_delta;
 
-		double turn_start;
-		double turn_duration;
-		unsigned int turn_number;
+		double			turn_start;
+		double			turn_duration;
+		unsigned int	turn_number;
 
 	public:
-		void advance(double current_time) noexcept
-		{
+		void advance(double current_time) noexcept {
 			real_last = real_current;
 			real_delta = current_time - real_current;
 			real_current = current_time;
 
 			turn_duration = real_current - turn_start;
 		}
-		void advance_turn(unsigned int current_turn) noexcept
-		{
+		void advance_turn(unsigned int current_turn) noexcept {
 			turn_number = current_turn;
 			turn_start = real_current;
 			turn_duration = 0;

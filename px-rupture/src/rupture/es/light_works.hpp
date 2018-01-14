@@ -19,20 +19,16 @@ namespace px {
 	class light_works
 	{
 	public:
-		void assign_scene(scene const* blocking) noexcept
-		{
+		void assign_scene(scene const* blocking) noexcept {
 			stage = blocking;
 		}
-		uq_ptr<light_component> make()
-		{
+		uq_ptr<light_component> make() {
 			return lights.make_uq();
 		}
-		void target(transform_component const* target)
-		{
+		void target(transform_component const* target) {
 			camera = target;
 		}
-		void calculate_lights()
-		{
+		void calculate_lights() {
 			if (!camera) return;
 
 			set_offsets();
@@ -76,8 +72,9 @@ namespace px {
 				}
 			});
 
-			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & c) {
-				c += ambient;
+			// add ambient
+			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & clr) {
+				clr += ambient;
 			});
 
 			move_ligtmaps(); 
@@ -88,8 +85,7 @@ namespace px {
 				pen += 4;
 			});
 		}
-		void set_radius(unsigned int new_radius)
-		{
+		void set_radius(unsigned int new_radius) {
 			radius = new_radius;
 
 			width = radius * 2 + 1;
@@ -109,8 +105,7 @@ namespace px {
 			last_data.raw = last_texels.data();
 			last_data.version = 0;
 		}
-		void clear_lightmap()
-		{
+		void clear_lightmap() {
 			std::fill(current_texels.begin(), current_texels.end(), 0.0f);
 			std::fill(last_texels.begin(), last_texels.end(), 0.0f);
 
@@ -136,44 +131,37 @@ namespace px {
 		light_works & operator=(light_works const&) = delete;
 
 	private:
-		void set_offsets()
-		{
+		void set_offsets() {
 			if (camera) {
 				ox = camera->position().x() - radius;
 				oy = camera->position().y() - radius;
 			}
 		}
 		// store current into last
-		void move_ligtmaps()
-		{
+		void move_ligtmaps() {
 			last_data = current_data; // update export data structure
 
 			current_data.ox = ox;
 			current_data.oy = oy;
-			current_data.version = current_data.version + 1;
+			current_data.version++;
 			current_data.raw = (last_data.raw == current_texels.data() ? last_texels : current_texels).data(); // alternate
 		}
-		double distance2(double dx, double dy, double elevation2)
-		{
+		double distance2(double dx, double dy, double elevation2) {
 			return std::sqrt(dx * dx + dy * dy + elevation2);
 		}
-		bool contains(int x, int y) const
-		{
+		bool contains(int x, int y) const {
 			return x >= 0 && y >= 0 && map.contains(static_cast<size_t>(x), static_cast<size_t>(y));
 		}
-		bool is_transparent(int x, int y) const
-		{
+		bool is_transparent(int x, int y) const {
 			return stage && stage->is_transparent({ x, y });
 		}
-		void illuminate(int x, int y, color c)
-		{
+		void illuminate(int x, int y, color c) {
 			if (is_transparent(x, y)) {
 				pset(x - ox, y - oy, c);
 			}
 		}
 		// add to point color
-		void pset(int x, int y, color c)
-		{
+		void pset(int x, int y, color c) {
 			if (contains(x, y)) {
 				if (!painted_flags[y * width + x]) {
 					painted_flags[y * width + x] = true;

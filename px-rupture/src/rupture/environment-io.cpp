@@ -32,9 +32,9 @@ namespace px {
 		save_main();
 
 		// copy directory
-		repository save_directory(std::string(settings::save_path) + name);
-		save_directory.clear();
-		current->save(save_directory);
+		repository out_directory(std::string(settings::save_path) + name);
+		out_directory.clear();
+		current->save(out_directory);
 
 		load(name);
 		return true;
@@ -45,12 +45,14 @@ namespace px {
 		end();
 
 		// copy directory
-		repository directory(std::string(settings::save_path) + name);
-		if (!directory.has_main()) return false;
+		repository in_directory(std::string(settings::save_path) + name);
+		if (!in_directory.has_main()) return false;
 		current->clear();
-		current->load(directory);
+		current->load(in_directory);
 
 		load_main();
+
+		return_turn();
 
 		return true;
 	}

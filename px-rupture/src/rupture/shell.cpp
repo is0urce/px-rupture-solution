@@ -134,6 +134,7 @@ namespace px {
 		case key::quick_load: {
 			ui.rollback();
 			load("quicksave");
+			time.advance_turn(current_turn());
 			break;
 		}
 		case key::move_east: ui.rollback(); step({ 1, 0 }); break;
