@@ -21,37 +21,33 @@ namespace px {
 		, public link_dispatcher<npc_component>
 	{
 	public:
-		rl::ai_state get_state() const noexcept
-		{
+		rl::ai_state get_state() const noexcept {
 			return state;
 		}
-		std::uint32_t get_range() const noexcept
-		{
+		std::uint32_t get_range() const noexcept {
 			return state == rl::ai_state::idle ? range_idle : range_alert;
 		}
-		std::tuple<std::uint32_t, std::uint32_t> get_ranges() const noexcept
-		{
+		std::tuple<std::uint32_t, std::uint32_t> get_ranges() const noexcept {
 			return { range_idle, range_alert };
 		}
-		//void set_state(rl::ai_state current) noexcept
-		//{
-		//	state = current;
-		//}
-		void set_range(std::uint32_t idle, std::uint32_t alert) noexcept
-		{
+		void set_state(rl::ai_state current) noexcept {
+			state = current;
+		}
+
+		void set_range(std::uint32_t idle, std::uint32_t alert) noexcept {
 			range_idle = idle;
 			range_alert = alert;
 		}
-		point2 & destination()
-		{
+
+		point2 & destination() {
 			return waypoint;
 		}
-		bool is_idle() const noexcept
-		{
+
+		bool is_idle() const noexcept {
 			return state == rl::ai_state::idle;
 		}
-		void alert()
-		{
+
+		void alert() {
 			state = rl::ai_state::alert;
 		}
 

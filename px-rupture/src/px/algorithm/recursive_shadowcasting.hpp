@@ -10,8 +10,7 @@ namespace px {
 	class recursive_shadowcasting final {
 	public:
 		template <typename Predicate, typename Light>
-		static void light(int center_x, int center_y, unsigned int radius_size, Predicate && predicate_fn, Light && light_op)
-		{
+		static void light(int center_x, int center_y, unsigned int radius_size, Predicate && predicate_fn, Light && light_op) {
 			// octants
 			static const int oct[4][8] = {
 				{ 1, 0, 0, -1, -1, 0, 0, 1 },
@@ -20,7 +19,10 @@ namespace px {
 				{ 1, 0, 0, 1, -1, 0, 0, -1 }
 			};
 
+			if (radius_size == 0) return;
+
 			light_op(center_x, center_y);
+
 			for (unsigned int i = 0; i != 8; ++i) {
 				octant(center_x, center_y, radius_size, 1, 1.0, 0.0, oct[0][i], oct[1][i], oct[2][i], oct[3][i], predicate_fn, light_op); // calculate every octant
 			}
@@ -28,8 +30,7 @@ namespace px {
 
 	private:
 		template <typename Predicate, typename Light>
-		static void octant(int start_x, int start_y, unsigned int radius, unsigned int row, float start, float end, int xx, int xy, int yx, int yy, Predicate && predicate, Light && light_op)
-		{
+		static void octant(int start_x, int start_y, unsigned int radius, unsigned int row, float start, float end, int xx, int xy, int yx, int yy, Predicate && predicate, Light && light_op) {
 			if (start < end) return;
 
 			float next_start_slope = start;

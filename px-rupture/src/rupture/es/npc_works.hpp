@@ -52,7 +52,7 @@ namespace px {
 				}
 
 				// select enemy in range
-				auto range = npc.get_range();
+				unsigned int range = npc.get_range();
 				observed.calculate(pawn->position(), range, [&](int x, int y) { return stage->is_transparent({ x, y }); });
 				transform_component * target = lock_target(pawn->position(), *body, observed);
 				if (target) {
