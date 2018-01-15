@@ -7,6 +7,7 @@
 
 #include "app/settings.hpp"
 #include "draw/message.hpp"
+#include "draw/visual.hpp"
 #include "io/repository.hpp"
 
 #include "es/animator_component.hpp"
@@ -16,6 +17,7 @@
 #include "es/container_component.hpp"
 #include "es/light_component.hpp"
 #include "es/player_component.hpp"
+#include "es/sprite_component.hpp"
 #include "es/transform_component.hpp"
 
 #include "es/builder.hpp"
@@ -29,16 +31,7 @@ namespace px {
 	environment::~environment() {
 		clear();
 	}
-	environment::environment()
-		: turn_number(0)
-		, turn_pass(true)
-		, player(nullptr)
-		, target_unit(nullptr)
-		, target_area(0, 0)
-		, target_hover(0, 0)
-		, opened_workshop(rl::craft_activity::none)
-		, run(true)
-	{
+	environment::environment() {
 		parent = make_uq<repository>(std::string(settings::save_path) + "base");
 		current = make_uq<repository>(std::string(settings::save_path) + "current", parent.get());
 
@@ -218,6 +211,7 @@ namespace px {
 		transforms.store();
 		animators.finish_animations();
 		opened_workshop = rl::craft_activity::none;
+		vfx.clear();
 	}
 
 	// execute after npc turn
@@ -321,5 +315,17 @@ namespace px {
 
 	void environment::function_edit(std::uint32_t /*idx*/) {
 		stage.pset(3, area());
+	}
+
+	void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component * track) {
+		auto sprite = sprites.make(name);
+		auto tr = make_uq<transform_component>();
+		tr->store(start);
+		tr->place(finish);
+
+		sprite->connect<transform_component>(track ? track : tr.get());
+		sprite->activate();
+
+		vfx.push_back({ start, finish, std::move(tr), std::move(sprite), nullptr });
 	}
 }

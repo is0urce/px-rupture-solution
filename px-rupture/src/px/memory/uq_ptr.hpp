@@ -62,8 +62,7 @@ namespace px {
 
 		// ownership released (transferred to returned value) after call
 		template <typename U>
-		uq_ptr<U> downcast() noexcept
-		{
+		uq_ptr<U> downcast() noexcept {
 			U * obj = static_cast<U*>(ptr);
 			ptr = nullptr;
 			return uq_ptr<U>(obj, ctrl);
@@ -72,8 +71,7 @@ namespace px {
 		// ownership released (transferred to returned value) after call
 		// object released, if cast not succeed
 		template <typename U>
-		uq_ptr<U> upcast() noexcept
-		{
+		uq_ptr<U> upcast() noexcept {
 			U * obj = dynamic_cast<U*>(ptr);
 			if (!obj) release(); // cast unsuccessful, obect destructed here
 			ptr = nullptr;

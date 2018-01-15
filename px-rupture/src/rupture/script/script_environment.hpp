@@ -22,7 +22,7 @@ namespace px {
 			return game->distance(a, b);
 		}
 
-		void popup(std::string text, int rgba, point2 location)	{
+		void popup(std::string text, int rgba, point2 location) {
 			game->popup(text, color(rgba), location);
 		}
 		//void emit_vfx(point2 location, std::string const& tag)
@@ -42,7 +42,11 @@ namespace px {
 		//	m_environment->visual(tag, target.last_position(), target.position(), target.transform());
 		//}
 
-		// 
+		void vfx(std::string img, point2 start, point2 finish, script_unit & track) {
+			game->emit_visual(img, start, finish, track.get_transform());
+		}
+
+		// simulate melee hit event ang get it results
 		std::tuple<int, int, bool, bool> hit(script_unit const& attacker, script_unit const& target) {
 			body_component const* user_body = attacker.get_body();
 			body_component const* target_body = target.get_body();
@@ -55,8 +59,7 @@ namespace px {
 			if (user_body && target_body) {
 				rl::hit_result hit = game->hit(*user_body, *target_body);
 				std::tie(damage, damage_type) = game->dps(*user_body);
-				switch (hit)
-				{
+				switch (hit) {
 				case rl::hit_result::connects:
 				case rl::hit_result::critical:
 					connects = true;
@@ -75,12 +78,6 @@ namespace px {
 			auto & composite = game->spawn(blueprint_tag, location);
 			return script_unit(composite ? composite->qlink<body_component, transform_component>() : nullptr);
 		}
-
-		//void pset(uint32_t tile_index, point2 const& location)
-		//{
-		//	px_assert(m_environment);
-		//	game->->terrain().pset(location, tile_index);
-		//}
 
 		void damage(script_unit & target, int damage, int damage_type) {
 			if (auto * body = target.get_body()) {

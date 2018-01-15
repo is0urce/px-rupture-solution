@@ -121,7 +121,7 @@ namespace px {
 				, "damage", &script_environment::damage
 				, "distance", &script_environment::distance
 				, "popup", &script_environment::popup
-				//, "vfx", &script_environment::emit_vfx
+				, "vfx", &script_environment::vfx
 				//, "vfx_projectile", &script_environment::emit_projectile
 				//, "vfx_missile", &script_environment::emit_missile
 				//, "vfx_decal", &script_environment::emit_decal

@@ -561,6 +561,9 @@
     <ClInclude Include="src\px\common\b_uint.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\draw\visual.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -671,5 +674,6 @@
     <None Include="data\scripts\sk_s_rend.lua" />
     <None Include="data\scripts\sk_s_flurry.lua" />
     <None Include="lua53.dll" />
+    <None Include="data\scripts\sk_v_disease.lua" />
   </ItemGroup>
 </Project>

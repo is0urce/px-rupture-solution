@@ -18,6 +18,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 namespace px {
 
@@ -25,6 +26,8 @@ namespace px {
 	class transform_component;
 	class composite_component;
 	class repository;
+
+	struct visual;
 
 	class environment
 		: public core
@@ -62,6 +65,7 @@ namespace px {
 		bool								load(std::string const& name);
 		uq_ptr<composite_component>	&		spawn(uq_ptr<composite_component> unit);
 		uq_ptr<composite_component> &		spawn(std::string const& blueprint, point2 const& position);
+		void								emit_visual(std::string const& name, point2 start, point2 finish, transform_component * track);
 
 	public:
 		virtual								~environment();
@@ -90,5 +94,6 @@ namespace px {
 		point2								target_area;		// target area in world coordinates
 		transform_component *				target_unit;		// targeted unit
 		rl::craft_activity					opened_workshop;
+		std::vector<visual>					vfx;
 	};
 }
