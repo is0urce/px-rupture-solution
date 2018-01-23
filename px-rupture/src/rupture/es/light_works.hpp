@@ -191,14 +191,6 @@ namespace px {
 				}
 			}
 		}
-		void reset(int x, int y) {
-			if (contains(x, y)) {
-				if (!painted_flags[y * width + x]) {
-					painted_flags[y * width + x] = true;
-					map.at(x, y) = 0;
-				}
-			}
-		}
 
 	private:
 		transform_component const*			camera;
