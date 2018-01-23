@@ -26,6 +26,7 @@ namespace px {
 		lightmap_data const*	last_data() noexcept;
 		void					clear_lightmap();
 		void					recalculate();
+		void					set_fov_cropping(bool do_cropping) noexcept;
 
 	public:
 		virtual ~light_system();

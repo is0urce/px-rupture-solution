@@ -9,8 +9,7 @@
 
 namespace px {
 
-	enum class key : unsigned int
-	{
+	enum class key : unsigned int {
 		not_valid = 0,
 
 		move_southwest = 1,

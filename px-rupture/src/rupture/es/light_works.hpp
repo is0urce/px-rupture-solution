@@ -1,6 +1,11 @@
 // name: light_works.hpp
+// type: c++ header
+// auth: is0urce
+// desc: class
 
 #pragma once
+
+// implementation of light works
 
 #include "transform_component.hpp"
 
@@ -10,14 +15,14 @@
 #include "rupture/rl/scene.hpp"
 
 #include <px/algorithm/recursive_shadowcasting.hpp>
+#include <px/algorithm/fov.hpp>
 #include <px/common/matrix.hpp>
 #include <px/common/color.hpp>
 #include <px/common/pool_chain.hpp>
 
 namespace px {
 
-	class light_works
-	{
+	class light_works {
 	public:
 		void assign_scene(scene const* blocking) noexcept {
 			stage = blocking;
@@ -27,6 +32,9 @@ namespace px {
 		}
 		void target(transform_component const* target) {
 			camera = target;
+		}
+		void set_fov_cropping(bool do_cropping) noexcept {
+			crop_fov = do_cropping;
 		}
 		void calculate_lights() {
 			if (!camera) return;
@@ -77,8 +85,21 @@ namespace px {
 				clr += ambient;
 			});
 
+			// only light field-of-view
+			if (crop_fov) {
+				fov perception;
+				perception.calculate(camera->position(), radius, [&](int x, int y) { return is_transparent(x, y); });
+				map.enumerate([&](size_t x, size_t y, color & clr) {
+					if (!perception.contains({ static_cast<int>(x) + ox, static_cast<int>(y) + oy })) {
+						clr = 0;
+					}
+				});
+			}
+
+			// rotate data
 			move_ligtmaps(); 
 			
+			// dump colors to texture bitmap
 			float * pen = current_data.raw;
 			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & c) {
 				c.write(pen);
@@ -124,6 +145,7 @@ namespace px {
 		light_works(unsigned int start_radius)
 			: camera(nullptr)
 			, stage(nullptr)
+			, crop_fov(true)
 		{
 			set_radius(start_radius);
 		}
@@ -169,6 +191,14 @@ namespace px {
 				}
 			}
 		}
+		void reset(int x, int y) {
+			if (contains(x, y)) {
+				if (!painted_flags[y * width + x]) {
+					painted_flags[y * width + x] = true;
+					map.at(x, y) = 0;
+				}
+			}
+		}
 
 	private:
 		transform_component const*			camera;
@@ -185,8 +215,10 @@ namespace px {
 		std::vector<float>					current_texels;
 		std::vector<float>					last_texels;
 
-		std::vector<bool>					painted_flags;
+		std::vector<bool>					painted_flags;	// exclude diagonals hack
 		int									ox;
 		int									oy;
+
+		bool								crop_fov;
 	};
 }

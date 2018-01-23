@@ -39,16 +39,20 @@ namespace px {
 	void light_system::clear_lightmap() {
 		works->clear_lightmap();
 	}
-	void light_system::target(transform_component const* camera) noexcept
-	{
+
+	void light_system::target(transform_component const* camera) noexcept {
 		works->target(camera);
 	}
-	lightmap_data const* light_system::current_data() noexcept
-	{
+
+	lightmap_data const* light_system::current_data() noexcept {
 		return works->current();
 	}
-	lightmap_data const* light_system::last_data() noexcept
-	{
+
+	lightmap_data const* light_system::last_data() noexcept	{
 		return works->last();
+	}
+
+	void light_system::set_fov_cropping(bool do_cropping) noexcept {
+		works->set_fov_cropping(do_cropping);
 	}
 }
