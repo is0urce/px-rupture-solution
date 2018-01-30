@@ -134,7 +134,7 @@ namespace px {
 		void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
 			ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(window_size);
-			ImGui::Begin("craft##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+			ImGui::Begin("blacksmith##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 			ImGui::BeginGroup();
 			ImGui::BeginChild("slots view", ImVec2(0, -2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us

@@ -27,17 +27,6 @@
 
 namespace px {
 
-	namespace {
-		bool recipe_name_getter(void * data, int n, const char** result) {
-			auto & vector = *static_cast<std::vector<rl::craft_recipe>*>(data);
-			if (n >= 0 && n < static_cast<int>(vector.size())) {
-				*result = vector[n].name.c_str();
-				return true;
-			}
-			return false;
-		}
-	}
-
 	class craft_alchemy final
 		: public panel
 	{
@@ -98,7 +87,7 @@ namespace px {
 		void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
 			ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(window_size);
-			ImGui::Begin("craft##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+			ImGui::Begin("alchemy##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 			ImGui::BeginGroup();
 			ImGui::BeginChild("slots view", ImVec2(0, -2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us

@@ -15,6 +15,7 @@ namespace px {
 	class environment;
 	class inventory;
 	class craft_smith;
+	class craft_alchemy;
 
 	class menu {
 	public:
@@ -43,5 +44,6 @@ namespace px {
 		bool							inventory_open;
 		inventory *						inventory_panel;
 		craft_smith *					smith_panel;
+		craft_alchemy *					alchemy_panel;
 	};
 }

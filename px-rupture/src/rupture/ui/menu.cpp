@@ -7,6 +7,7 @@
 #include "panel.hpp"
 
 #include "craft_smith.hpp"
+#include "craft_alchemy.hpp"
 #include "editor.hpp"
 #include "inspector.hpp"
 #include "inventory.hpp"
@@ -39,6 +40,7 @@ namespace px {
 		, inventory_open(false)
 		, inventory_panel(nullptr)
 		, smith_panel(nullptr)
+		, alchemy_panel(nullptr)
 	{
 		make_panel<ui::skills>(stack, game);
 		make_panel<ui::status>(stack, game);
@@ -49,6 +51,7 @@ namespace px {
 
 		inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
 		smith_panel = make_panel<craft_smith>(stack, game);
+		alchemy_panel = make_panel<craft_alchemy>(stack, game);
 	}
 
 	// methods
