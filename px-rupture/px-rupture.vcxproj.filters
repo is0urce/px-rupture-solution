@@ -525,12 +525,6 @@
     <ClInclude Include="src\rupture\ui\director.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\craft.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rupture\ui\common.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\rl\terrain_surface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -562,6 +556,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\draw\visual.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\craft_common.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\craft_smith.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\craft_alchemy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

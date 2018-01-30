@@ -11,52 +11,45 @@
 namespace px {
 
 	template <typename T>
-	class uq_ptr final
-	{
+	class uq_ptr final {
 	public:
 		using element_type = T;
 
 	public:
-		void reset() noexcept
-		{
+		void reset() noexcept {
 			uq_ptr().swap(*this);
 		}
-		void reset(element_type * pointer, abstract_release_block * control_block) noexcept
-		{
+
+		void reset(element_type * pointer, abstract_release_block * control_block) noexcept {
 			uq_ptr(pointer, control_block).swap(*this);
 		}
-		void swap(uq_ptr & other) noexcept
-		{
+
+		void swap(uq_ptr & other) noexcept {
 			std::swap(ptr, other.ptr);
 			std::swap(ctrl, other.ctrl);
 		}
-		// instant memory leak
-		void release()
-		{
-			ptr = nullptr;
-		}
-		element_type * get() const noexcept
-		{
+
+		element_type * get() const noexcept {
 			return ptr;
 		}
-		abstract_release_block * control() const noexcept
-		{
+
+		abstract_release_block * control() const noexcept {
 			return ctrl;
 		}
-		explicit operator bool() const noexcept
-		{
+
+		explicit operator bool() const noexcept {
 			return ptr != nullptr;
 		}
-		element_type * operator->() const noexcept
-		{
+
+		element_type * operator->() const noexcept {
 			return ptr;
 		}
-		T const& operator*() const
-		{
+
+		T const& operator*() const {
 			return *ptr;
 		}
-		T & operator*()
-		{
+
+		T & operator*() {
 			return *ptr;
 		}
 
@@ -79,8 +72,7 @@ namespace px {
 		}
 
 	public:
-		~uq_ptr()
-		{
+		~uq_ptr() {
 			if (ptr) {
 				ctrl->release();
 			}
@@ -108,8 +100,7 @@ namespace px {
 		{
 			other.swap(*this);
 		}
-		uq_ptr & operator=(uq_ptr && other)
-		{
+		uq_ptr & operator=(uq_ptr && other) {
 			other.swap(*this);
 			return *this;
 		}
@@ -132,5 +123,4 @@ namespace px {
 	template<typename T, typename U> inline bool operator==(T const* a, uq_ptr<U> const& b) { return a == b.get(); }
 	template<typename T, typename U> inline bool operator!=(T const* a, uq_ptr<U> const& b) { return a != b.get(); }
 	template<typename T> inline bool operator<(uq_ptr<T> const& a, uq_ptr<T> const& b) { return std::less<T*>()(a.get(), b.get()); }
-
 }

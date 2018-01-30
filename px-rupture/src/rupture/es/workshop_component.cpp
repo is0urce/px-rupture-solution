@@ -13,10 +13,10 @@ namespace px {
 
 	// overrides
 
-	bool workshop_component::can_use_useable(body_component * /*body*/, environment * /*context*/) const {
+	bool workshop_component::can_use_useable(body_component * /*user*/, environment * /*context*/) const {
 		return true;
 	}
-	void workshop_component::use_useable(body_component * /*body*/, environment * context) {
+	void workshop_component::use_useable(body_component * /*user*/, environment * context) {
 		if (context) {
 			context->open_workshop(activity_variant);
 		}

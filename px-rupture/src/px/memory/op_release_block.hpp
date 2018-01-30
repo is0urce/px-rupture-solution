@@ -31,7 +31,7 @@ namespace px {
 		}
 
 	private:
-		T * original;
-		Operator op;
+		T *			original;
+		Operator	op;
 	};
 }

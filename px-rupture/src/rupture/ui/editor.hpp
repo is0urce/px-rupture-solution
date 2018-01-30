@@ -745,6 +745,14 @@ namespace px::ui {
 				if (ImGui::InputInt("variant##workshop_variant", &workshop_variant)) {
 					workshop->set_activity(static_cast<rl::craft_activity>(workshop_variant));
 				}
+				if (ImGui::Button("blacksmith##set_workshop")) {
+					workshop_variant = static_cast<int>(rl::craft_activity::blacksmith);
+					workshop->set_activity(rl::craft_activity::blacksmith);
+				}
+				if (ImGui::Button("alchemy##set_workshop")) {
+					workshop_variant = static_cast<int>(rl::craft_activity::alchemy);
+					workshop->set_activity(rl::craft_activity::alchemy);
+				}
 			}
 		}
 		void combine_entity(rl::entity const& subject) {

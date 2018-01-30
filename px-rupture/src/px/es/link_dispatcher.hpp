@@ -35,7 +35,7 @@ namespace px {
 			return l->get_link();
 		}
 
-		// quick link variadic template
+		// quick chain link with variadic template
 		// qlink<last, ..., first>()
 		template <typename T, typename ... Args>
 		T * qlink() const noexcept

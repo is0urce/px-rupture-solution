@@ -1,11 +1,13 @@
-// name: craft.hpp
+// name: craft_smith.hpp
 // type: c++
 // auth: is0urce
+// desc: class
 
 #pragma once
 
-#include "common.hpp"
 #include "panel.hpp"
+
+#include "craft_common.hpp"
 
 #include "rupture/environment.hpp"
 #include "rupture/es/transform_component.hpp"
@@ -36,7 +38,7 @@ namespace px {
 		}
 	}
 
-	class craft final
+	class craft_smith final
 		: public panel
 	{
 	public:
@@ -81,9 +83,9 @@ namespace px {
 		}
 
 	public:
-		virtual ~craft() = default;
-		craft(environment * env)
-			: game(env)
+		virtual ~craft_smith() = default;
+		craft_smith(environment * context)
+			: game(context)
 			, container(nullptr)
 			, recipe_current(nullptr)
 		{
@@ -92,14 +94,10 @@ namespace px {
 
 	protected:
 		virtual void combine_panel() override {
-			if (!game) return;
-			if (!game->has_access(rl::craft_activity::blacksmith)) return;
+			if (!game || !game->has_access(rl::craft_activity::blacksmith)) return;
 
-			transform_component * target = game->possessed();
-			if (!target) return;
-			body_component * body = target->linked<body_component>();
-			if (!body) return;
-			container = body->linked<container_component>();
+			container = game->possessed()->qlink<container_component, body_component>();
+
 			if (!container) return;
 
 			const float screen_width = ImGui::GetIO().DisplaySize.x;
@@ -158,7 +156,7 @@ namespace px {
 			}
 			ImGui::EndChild();
 			ImGui::BeginChild("buttons");
-			if (ImGui::Button("craft", { 334, 32 })) {
+			if (ImGui::Button("smith", { 334, 32 })) {
 				if (task.is_complete() && recipe_current) {
 					execute_craft();
 					close_recipe();
@@ -214,12 +212,11 @@ namespace px {
 		}
 
 	private:
-		environment *					game;
-
-		std::vector<rl::craft_recipe>	recipes;
-		rl::craft_recipe const*			recipe_current;
-		rl::craft_task					task;
-		container_component *			container;
-		std::vector<std::string>		inventory_names;
+		environment *					game;				// game context
+		container_component *			container;			// user inventory
+		rl::craft_task					task;				// current selected ingredients
+		std::vector<rl::craft_recipe>	recipes;			// recipe list
+		rl::craft_recipe const*			recipe_current;		// selected recipe
+		std::vector<std::string>		inventory_names;	// inventory item names cashe
 	};
 }

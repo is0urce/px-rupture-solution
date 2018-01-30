@@ -138,9 +138,9 @@ namespace px {
 		body->health().emplace(100);
 		body->energy().emplace(50);
 		body->set_name("Gnome");
-		body->join_faction(1);
+		//body->join_faction(1);
 		b.add_player();
-		b.add_sprite("m_gnome_mage");
+		b.add_sprite("m_zwerg");
 		incarnate(b.add_transform({ 1966, 860 }));
 		light = b.add_light();
 		light->tint = color(0.3, 0.3, 0.3);

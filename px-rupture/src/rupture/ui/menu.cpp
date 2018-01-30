@@ -6,7 +6,7 @@
 #include "director.hpp"
 #include "panel.hpp"
 
-#include "craft.hpp"
+#include "craft_smith.hpp"
 #include "editor.hpp"
 #include "inspector.hpp"
 #include "inventory.hpp"
@@ -30,14 +30,15 @@ namespace px {
 		}
 	}
 
-	// ctor
+	// ctor & dtor
 
+	menu::~menu() = default;
 	menu::menu(unsigned int w, unsigned int h, environment * game)
 		: context(game)
 		, nexus(make_uq<director>(w, h))
 		, inventory_open(false)
 		, inventory_panel(nullptr)
-		, craft_panel(nullptr)
+		, smith_panel(nullptr)
 	{
 		make_panel<ui::skills>(stack, game);
 		make_panel<ui::status>(stack, game);
@@ -47,12 +48,8 @@ namespace px {
 		make_panel<ui::editor>(stack, game);
 
 		inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
-		craft_panel = make_panel<craft>(stack, game);
+		smith_panel = make_panel<craft_smith>(stack, game);
 	}
-
-	// dtor
-
-	menu::~menu() = default;
 
 	// methods
 
@@ -80,7 +77,7 @@ namespace px {
 		return nexus->takes_input();
 	}
 	void menu::toggle_inventory() {
-		craft_panel->close_recipe();
+		smith_panel->close_recipe();
 		inventory_open = !inventory_open;
 	}
 	void menu::combine() {
@@ -89,7 +86,7 @@ namespace px {
 		}
 	}
 	void menu::rollback() {
-		craft_panel->close_recipe();
+		smith_panel->close_recipe();
 		inventory_open = false;
 	}
 }

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "common.hpp"
+//#include "cfcommon.hpp"
 #include "panel.hpp"
 
 #include "rupture/environment.hpp"
