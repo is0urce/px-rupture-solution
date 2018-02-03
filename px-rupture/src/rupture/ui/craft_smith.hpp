@@ -71,9 +71,7 @@ namespace px {
 			}
 		}
 		bool execute_craft() {
-			if (!container) return false;
-
-			if (task.is_complete() && recipe_current) {
+			if (container && task.is_complete() && recipe_current) {
 
 				container->add(rl::craft_result::create_weapon(*recipe_current, task.calculate_essence(), task.calculate_power().magnitude0));
 				task.close();

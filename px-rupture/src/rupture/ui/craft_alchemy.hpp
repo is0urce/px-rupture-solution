@@ -48,9 +48,9 @@ namespace px {
 		}
 
 		bool execute_craft() {
-			if (!container) return false;
-			if (task.is_complete()) {
-				//
+			if (container && task.is_complete()) {
+				container->add(rl::craft_result::create_potion(0, 0));
+				return true;
 			}
 			return false;
 		}
@@ -61,6 +61,7 @@ namespace px {
 			: game(context)
 			, container(nullptr)
 		{
+			task.reset(3); // three reagent recipes
 		}
 
 	protected:

@@ -24,6 +24,10 @@ namespace px::rl {
 		item * get(size_t idx) {
 			return idx >= items.size() ? nullptr : items[idx].get();
 		}
+		template <size_t Index>
+		item * get() {
+			return Index >= items.size() ? nullptr : items[Index].get();
+		}
 
 		item_ptr remove(size_t idx) {
 			if (idx >= items.size()) return nullptr;

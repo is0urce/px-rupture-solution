@@ -19,18 +19,22 @@ namespace px::rl {
 		using real_type = enhancement_type::real_type;
 
 	public:
-		static uq_ptr<rl::item> create_weapon(rl::craft_recipe const& recipe, integer_type essence, real_type power) {
+		static auto create_weapon(rl::craft_recipe const& recipe, integer_type essence, real_type power) {
 			auto result = make_uq<rl::item>();
 			setup_text(*result, recipe);
 			setup_enhancements(*result, recipe, essence, power);
 			result->add(enhancement_type::real(rl::effect::damage, 0, power * recipe.power_raw));
 			return result;
 		}
-		static uq_ptr<rl::item> create_armor(rl::craft_recipe const& recipe, integer_type essence, real_type power) {
+		static auto create_armor(rl::craft_recipe const& recipe, integer_type essence, real_type power) {
 			auto result = make_uq<rl::item>();
 			setup_text(*result, recipe);
 			setup_enhancements(*result, recipe, essence, power);
 			result->add(enhancement_type::real(rl::effect::armor, 0, power * recipe.power_raw));
+			return result;
+		}
+		static uq_ptr<rl::item> create_potion(integer_type /*essence*/, real_type /*power*/) {
+			auto result = make_uq<rl::item>();
 			return result;
 		}
 
@@ -41,7 +45,9 @@ namespace px::rl {
 			item.set_description(recipe.description);
 		}
 		static void setup_enhancements(rl::item & item, rl::craft_recipe const& recipe, integer_type essence, real_type power) {
-			item.add(enhancement_type::zero(rl::effect::equipment, static_cast<integer_type>(recipe.equipment_slot)));
+			if (recipe.equipment_slot != rl::equipment::not_valid) {
+				item.add(enhancement_type::zero(rl::effect::equipment, static_cast<integer_type>(recipe.equipment_slot)));
+			}
 			item.add(enhancement_type::integral(rl::effect::essence, 0, essence));
 			item.add(enhancement_type::real(rl::effect::critical, 0, power * recipe.power_enhancement));
 		}

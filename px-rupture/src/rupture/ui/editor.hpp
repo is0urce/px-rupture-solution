@@ -556,6 +556,37 @@ namespace px::ui {
 				PX_BUILD(remove_container());
 			}
 			else {
+
+				ImGui::InputText("tag##create_item", item_tag.data(), item_tag.size(), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_CharsNoBlank);
+				ImGui::InputText("name##create_item", item_name.data(), item_name.size(), ImGuiInputTextFlags_AutoSelectAll);
+				ImGui::InputText("description##create_item", item_description.data(), item_description.size());
+				ImGui::InputInt("stack##item_stack_limits", &item_stack);
+				ImGui::InputInt("maximum##item_stack_limit", &item_maximum);
+
+				ImGui::InputFloat("damage##create_item", &item_damage);
+				ImGui::InputFloat("ingredient power##create_item", &item_reagent_power);
+				ImGui::InputInt("ingredient essence##create_item", &item_reagent_essence);
+
+				if (ImGui::Button("+ item##create_item")) {
+					auto & item = container->add(make_uq<rl::item>());
+					setup_item(*item);
+				}
+				if (ImGui::Button("+ weapon##create_item")) {
+					auto & item = container->add(make_uq<rl::item>());
+					setup_item(*item);
+
+					item->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+					item->add(rl::item::enhancement_type::zero(rl::effect::equipment, static_cast<rl::item::enhancement_type::integer_type>(rl::equipment::hand)));
+				}
+				if (ImGui::Button("+ ore##create_item")) {
+					auto & item = container->add(make_uq<rl::item>());
+					setup_item(*item);
+
+					item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, 1, item_reagent_power));
+					item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, item_reagent_essence));
+				}
+
+				// print contained items
 				if (size != 0) {
 					for (size_t i = 0; i != size; ++i) {
 						rl::item * ptr = container->get(i);
@@ -574,42 +605,22 @@ namespace px::ui {
 					}
 				}
 
-				ImGui::InputText("tag##create_item", item_tag.data(), item_tag.size(), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_CharsNoBlank);
-				ImGui::InputText("name##create_item", item_name.data(), item_name.size(), ImGuiInputTextFlags_AutoSelectAll);
-				ImGui::InputText("description##create_item", item_description.data(), item_description.size());
+				// add item props to last item
+				auto it = container->get<0>();
+				if (it) {
+					if (!it->has_effect(rl::effect::damage)) {
+						if (ImGui::Button("+ damage##add_item_prop")) {
+							it->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+						}
+					}
 
-				ImGui::InputInt("stack##item_stack_limits", &item_stack);
-				ImGui::InputInt("maximum##item_stack_limit", &item_maximum);
+					ImGui::InputInt("effect##item_prop", &item_effect);
+					ImGui::InputInt("subtype##item_prop", &item_effect_subtype);
+					ImGui::InputFloat("value##item_prop", &item_effect_value);
 
-				ImGui::InputFloat("power##create_item", &item_power);
-				ImGui::InputFloat("damage##create_item", &item_damage);
-				//ImGui::InputFloat("hp##create_item", &item_hp_bonus);
-				ImGui::InputFloat("ingredient power##create_item", &item_reagent_power);
-				ImGui::InputInt("ingredient essence##create_item", &item_reagent_essence);
-
-				if (ImGui::Button("+ weapon##item")) {
-					auto & item = container->add(make_uq<rl::item>());
-					item->set_tag(item_tag.data());
-					item->set_name(item_name.data());
-					item->set_description(item_description.data());
-
-					item->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
-					item->add(rl::item::enhancement_type::zero(rl::effect::equipment, static_cast<rl::item::enhancement_type::integer_type>(rl::equipment::hand)));
-
-					item->set_maximum_stack(item_maximum);
-					item->set_current_stack(item_stack);
-				}
-				if (ImGui::Button("+ ore##item")) {
-					auto & item = container->add(make_uq<rl::item>());
-					item->set_tag(item_tag.data());
-					item->set_name(item_name.data());
-					item->set_description(item_description.data());
-
-					item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, 1, item_reagent_power));
-					item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, item_reagent_essence));
-
-					item->set_maximum_stack(item_maximum);
-					item->set_current_stack(item_stack);
+					if (ImGui::Button("+ prop##add_item_prop")) {
+						it->add(rl::item::enhancement_type::real(static_cast<rl::effect>(item_effect), item_effect_subtype, item_effect_value));
+					}
 				}
 			}
 		}
@@ -766,12 +777,22 @@ namespace px::ui {
 				ImGui::BeginTooltip();
 				combine_entity(item);
 				ImGui::Text("stack:     [%d/%d]", item.count(), item.maximum());
-				ImGui::Text("size:      %d", item.size());
-				ImGui::Text("power:     %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::power)).magnitude0);
-				ImGui::Text("damage:    %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::damage)).magnitude0);
-				ImGui::Text("hp bonus:  %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::hp_bonus)).magnitude0);
-				ImGui::Text("ore power: %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::ingredient_power)).magnitude0);
-				ImGui::Text("essence:   %d", item.accumulate(rl::item::enhancement_type::zero(rl::effect::essence)).value0);
+				ImGui::Text("props size:      %d", item.size());
+				if (item.has_effect(rl::effect::power)) {
+					ImGui::Text("power:     %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::power)).magnitude0);
+				}
+				if (item.has_effect(rl::effect::damage)) {
+					ImGui::Text("damage:    %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::damage)).magnitude0);
+				}
+				if (item.has_effect(rl::effect::hp_bonus)) {
+					ImGui::Text("hp bonus:  %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::hp_bonus)).magnitude0);
+				}
+				if (item.has_effect(rl::effect::ingredient_power)) {
+					ImGui::Text("ingredient power: %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::ingredient_power)).magnitude0);
+				}
+				if (item.has_effect(rl::effect::essence)) {
+					ImGui::Text("essence:   %d", item.accumulate(rl::item::enhancement_type::zero(rl::effect::essence)).value0);
+				}
 				ImGui::EndTooltip();
 			}
 		}
@@ -894,17 +915,27 @@ namespace px::ui {
 				item_tag.fill(0);
 				item_description.fill(0);
 				item_name.fill(0);
-				item_power = 0;
-				item_damage = 0;
-				item_hp_bonus = 0;
-				item_accuracy = 0;
-				item_critical = 0;
-				item_reagent_power = 0;
-				item_reagent_essence = 0;
 				item_stack = 1;
 				item_maximum = -1;
+				item_effect = 0;
+				item_effect_subtype = 0;
+				item_effect_value = 0;
+				item_damage = 0;
+				item_reagent_power = 0;
+				item_reagent_essence = 0;
 			}
 		}
+
+		// assign basic values of an item
+		void setup_item(rl::item & it) {
+			it.set_tag(item_tag.data());
+			it.set_name(item_name.data());
+			it.set_description(item_description.data());
+			it.set_maximum_stack(item_maximum);
+			it.set_current_stack(item_stack);
+		}
+
+		// copy string to char array
 		template <size_t Max>
 		void copy_str(std::string str, std::array<char, Max> & ar) {
 			static_assert(Max > 1);
@@ -960,11 +991,11 @@ namespace px::ui {
 		std::array<char, 1024>		item_description;
 		int							item_stack;
 		int							item_maximum;
-		float						item_power;
+
 		float						item_damage;
-		float						item_hp_bonus;
-		float						item_accuracy;
-		float						item_critical;
+		int							item_effect;
+		int							item_effect_subtype;
+		float						item_effect_value;
 		float						item_reagent_power;
 		int							item_reagent_essence;
 
