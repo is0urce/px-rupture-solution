@@ -7,6 +7,7 @@
 namespace px {
 
 	workshop_component::~workshop_component() = default;
+
 	workshop_component::workshop_component()
 		: activity_variant(rl::craft_activity::none) {
 	}

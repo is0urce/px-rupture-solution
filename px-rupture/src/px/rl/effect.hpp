@@ -9,32 +9,36 @@ namespace px::rl {
 	enum class effect : std::uint32_t {
 		invalid				= 0,
 
-		damage				= 10,
-		dot					= 11,
+		weight				= 10,
+		value				= 11,
+		duration			= 12,
 
-		accuracy			= 20,
-		critical			= 21,
-		speed				= 22,
+		equipment			= 20,
+		useable				= 21,
 
-		power				= 30,
-		strength			= 31,
-		dexterity			= 32,
-		intelligence		= 33,
-		vitality			= 34,
+		damage				= 30,
+		dot					= 31,
 
-		equipment			= 40,
-		useable				= 41,
+		accuracy			= 40,
+		critical			= 41,
+		speed				= 42,
 
-		armor				= 51,
-		resistance			= 52,
-		dodge				= 53,
+		power				= 50,
+		strength			= 51,
+		dexterity			= 52,
+		intelligence		= 53,
+		vitality			= 54,
 
-		hp_bonus			= 60,
-		hp_regen			= 61,
-		mp_bonus			= 62,
-		mp_regen			= 63,
+		armor				= 61,
+		resistance			= 62,
+		dodge				= 63,
 
-		essence				= 70,
+		hp_bonus			= 70,
+		hp_regen			= 71,
+		mp_bonus			= 72,
+		mp_regen			= 73,
+
+		essence				= 80,
 		ingredient_power	= 81
 	};
 }

@@ -1,9 +1,10 @@
 // name: inventory.hpp
 // type: c++
+// auth: is0urce
+// desc: class
 
 #pragma once
 
-//#include "cfcommon.hpp"
 #include "panel.hpp"
 
 #include "rupture/environment.hpp"
@@ -33,8 +34,8 @@ namespace px {
 
 	protected:
 		virtual void combine_panel() override {
-			if (!game) return;
-			if (!*opened) return;
+			if (!game || !(*opened)) return;
+
 			transform_component * target = game->possessed();
 			if (!target) return;
 			body_component * body = target->linked<body_component>();
@@ -49,52 +50,65 @@ namespace px {
 			ImVec2 inventory_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
 			ImVec2 inventory_size{ window_width, window_height };
 
-			// items list
-			ImGui::SetNextWindowPos(inventory_position, ImGuiCond_Always);
-			ImGui::SetNextWindowSize(inventory_size);
-			ImGui::Begin((body->name() + " inventory##inventory_panel").c_str()
+			ImVec2 slot_position = inventory_position;
+			ImVec2 slot_size{ 200, 32 };
+			slot_position.x -= slot_size.x + 32;
+			slot_position.y += 64;
+
+			ImVec2 inspector_position = inventory_position;
+			inspector_position.x += inventory_size.x + 32;
+			inspector_position.y += 64;
+
+			combine_list(inventory_position, inventory_size, *body, *container);
+
+			selected_slot = nullptr; // reset hovered equipment slot
+
+			combine_slot("hands", slot_position, slot_size, *body, *container, rl::equipment::hand);
+			slot_position.y += slot_size.y;
+
+			slot_position.y += 8;
+			combine_slot("head", slot_position, slot_size, *body, *container, rl::equipment::head);
+			slot_position.y += slot_size.y;
+
+			rl::item const* inspect = nullptr;
+			if (selected >= 0) inspect = container->get(selected);
+			if (selected_slot) inspect = selected_slot;
+
+			if (inspect) {
+				combine_inspector(*inspect, inspector_position);
+			}
+		}
+
+	private:
+
+		// inventory list window draw
+		void combine_list(ImVec2 const& position, ImVec2 const& size, body_component & body, container_component & container) {
+			ImGui::SetNextWindowPos(position, ImGuiCond_Always);
+			ImGui::SetNextWindowSize(size);
+			ImGui::Begin((body.name() + " inventory##inventory_panel").c_str()
 				, nullptr
 				, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-			format_names(*container, names);
+			format_names(container, names);
 			selected = -1;
 			ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 			if (ImGui::ListBox("##inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
-
 				if (selected >= 0) {
-					auto it = container->get(selected);
-					if (it) {
+					if (auto ptr = container.get(selected)) {
 
 						// equipment
-						if (it->has_effect(rl::effect::equipment)) {
-							body->equip(selected);
+						if (ptr->has_effect(rl::effect::equipment)) {
+							body.equip(selected);
 						}
 
 						// useables
-						if (it->has_effect(rl::effect::useable)) {
-							auto useable = it->accumulate({ rl::effect::useable });
+						if (ptr->has_effect(rl::effect::useable)) {
+							auto useable = ptr->accumulate({ rl::effect::useable });
 							if (useable.sub == 0) {
-
-								// hp restore
-								if (it->has_effect(rl::effect::hp_bonus)) {
-									if (auto hp = body->health()) {
-										hp->restore(static_cast<body_component::resource_value_type>(it->accumulate({ rl::effect::hp_bonus }).magnitude0));
-									}
-								}
-
-								// hp regen
-								if (it->has_effect(rl::effect::hp_regen)) {
-									auto regen = it->accumulate({ rl::effect::hp_regen });
-									body_component::buff_type hp_regen;
-									hp_regen.set_name("regeneration");
-									hp_regen.set_tag("b_hp_regen");
-									hp_regen.set_duration(regen.value0);
-									hp_regen.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0, regen.magnitude0));
-									body->add(hp_regen);
-								}
+								use_potion(*ptr, body);
 							}
 						}
 
-						sort(*container);
+						sort(container);
 					}
 				}
 				selected = -1;
@@ -106,35 +120,10 @@ namespace px {
 			}
 
 			ImGui::End();
-
-			ImVec2 slot_position = inventory_position;
-			ImVec2 slot_size{ 200, 32 };
-			slot_position.x -= slot_size.x + 32;
-			slot_position.y += 64;
-
-			selected_slot = nullptr;
-
-			combine_slot("hands", slot_position, slot_size, *body, rl::equipment::hand);
-			slot_position.y += slot_size.y;
-
-			slot_position.y += 8;
-			combine_slot("head", slot_position, slot_size, *body, rl::equipment::head);
-			slot_position.y += slot_size.y;
-
-			ImVec2 inspector_position = inventory_position;
-			inspector_position.x += inventory_size.x + 32;
-			inspector_position.y += 64;
-
-			rl::item * inspect = nullptr;
-			if (selected != -1) {
-				inspect = container->get(selected);
-			}
-			if (selected_slot) inspect = selected_slot;
-			combine_inspector(inspect, inspector_position);
 		}
 
-	private:
-		void combine_slot(std::string const& name, ImVec2 const& position, ImVec2 const& size, body_component & body, rl::equipment slot) {
+		// equipment slots drawing
+		void combine_slot(std::string const& name, ImVec2 const& position, ImVec2 const& size, body_component & body, container_component & container, rl::equipment slot) {
 			ImGui::SetNextWindowPos(position, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(size);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
@@ -144,16 +133,14 @@ namespace px {
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-			rl::item * ptr = body.equipment(slot);
-			if (ptr) {
+			if (rl::item * ptr = body.equipment(slot)) {
 				ImGui::PushID(ptr);
 				if (ImGui::Button(ptr->name().c_str(), size)) {
 					body.unequip(slot);
-					sort(*body.linked<container_component>());
+					sort(container);
 				}
-				if (ImGui::IsItemHovered()) {
+				else if (ImGui::IsItemHovered()) {
 					selected_slot = ptr;
-					selected = -1;
 				}
 				ImGui::PopID();
 			}
@@ -164,32 +151,95 @@ namespace px {
 			ImGui::End();
 			ImGui::PopStyleVar(2);
 		}
-		void combine_inspector(rl::item const* ptr, ImVec2 const& position) {
-			if (!ptr) return;
 
+		// item inspector window draw
+		void combine_inspector(rl::item const& item, ImVec2 const& position) {
 			ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-			ImGui::Begin((ptr->name() + "##item_inspector_title").c_str(),
+			ImGui::Begin((item.name() + "##item_inspector_title").c_str(),
 				nullptr,
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-			ImGui::Text(ptr->name().c_str());
-			ImGui::Text(ptr->description().c_str());
+			ImGui::Text(item.name().c_str());
+			ImGui::Text(item.description().c_str());
 
-			body_component::enhancement_type enhancement;
-			enhancement = ptr->accumulate(body_component::enhancement_type::zero(rl::effect::damage));
-			if (enhancement.magnitude0 > 0) {
-				int dmg = static_cast<int>(enhancement.magnitude0);
-				ImGui::Text("Damage: %d", dmg);
+			if (item.has_effect(rl::effect::equipment)) {
+				ImGui::Text("Equipment");
+			}
+			if (item.has_effect(rl::effect::useable)) {
+				ImGui::Text("Useable");
+			}
+			if (item.has_effect(rl::effect::ingredient_power)) {
+				switch (static_cast<rl::craft_activity>(item.find_subtype(rl::effect::ingredient_power, 0))) {
+				case rl::craft_activity::blacksmith:
+					ImGui::Text("Reagent: Blacksmith");
+					break;
+				case rl::craft_activity::alchemy:
+					ImGui::Text("Reagent: Alchemy");
+					break;
+				default:
+					ImGui::Text("Reagent");
+					break;
+				}
 			}
 
-			ImGui::Text("Quantity: %d", ptr->count());
+			if (item.has_effect(rl::effect::damage)) {
+				ImGui::Text("Damage: %.0f", item.accumulate({ rl::effect::damage }).magnitude0);
+			}
+
+			if (item.has_effect(rl::effect::hp_bonus)) {
+				ImGui::Text("Heal: %.0f", item.accumulate({ rl::effect::hp_bonus }).magnitude0);
+			}
+			if (item.has_effect(rl::effect::hp_regen)) {
+				auto effect = item.accumulate({ rl::effect::hp_regen });
+				ImGui::Text("Regenerate: %.0f for %d", effect.magnitude0, effect.value0);
+			}
+
+			ImGui::Text("Quantity: %d", item.count());
 
 			ImGui::End();
 		}
 
+		void use_potion(rl::item const& item, body_component & body) {
+			// hp restore
+			if (item.has_effect(rl::effect::hp_bonus)) {
+				if (auto hp = body.health()) {
+					hp->restore(static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::hp_bonus }).magnitude0));
+				}
+			}
+
+			// hp regen
+			if (item.has_effect(rl::effect::hp_regen)) {
+				auto effect = item.accumulate({ rl::effect::hp_regen });
+				body_component::buff_type regen;
+				regen.set_name("regeneration");
+				regen.set_tag("b_hp_regen");
+				regen.set_duration(effect.value0);
+				regen.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0, effect.magnitude0));
+				body.add(regen);
+			}
+
+			// mp restore
+			if (item.has_effect(rl::effect::mp_bonus)) {
+				if (auto mp = body.energy()) {
+					mp->restore(static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::mp_bonus }).magnitude0));
+				}
+			}
+
+			// mp regen
+			if (item.has_effect(rl::effect::mp_regen)) {
+				auto effect = item.accumulate({ rl::effect::mp_regen });
+				body_component::buff_type regen;
+				regen.set_name("invigoration");
+				regen.set_tag("b_mp_regen");
+				regen.set_duration(effect.value0);
+				regen.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0, effect.magnitude0));
+				body.add(regen);
+			}
+		}
+
 	private:
-		environment *				game;
+		environment *				game;			// context
 		std::vector<std::string>	names;
 		bool *						opened;
 		int							selected;		// hovered item in container list
