@@ -20,16 +20,16 @@ namespace px::rl {
 		bool is_expired() const noexcept {
 			return duration <= 0;
 		}
-		void set_duration(Integral remaining) noexcept
-		{
+
+		void set_duration(Integral remaining) noexcept {
 			duration = remaining;
 		}
-		void reduce_duration(Integral timespan) noexcept
-		{
+
+		void reduce_duration(Integral timespan) noexcept {
 			duration -= timespan;
 		}
-		Integral timer() const noexcept
-		{
+
+		Integral timer() const noexcept {
 			return duration;
 		}
 
@@ -41,9 +41,7 @@ namespace px::rl {
 		}
 
 	public:
-		buff()
-		{
-		}
+		buff() = default;
 
 	private:
 		Integral duration;

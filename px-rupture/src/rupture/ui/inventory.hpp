@@ -48,19 +48,55 @@ namespace px {
 			const float window_height = 538.0f;
 			ImVec2 inventory_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
 			ImVec2 inventory_size{ window_width, window_height };
+
+			// items list
 			ImGui::SetNextWindowPos(inventory_position, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(inventory_size);
-
 			ImGui::Begin((body->name() + " inventory##inventory_panel").c_str()
 				, nullptr
 				, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
 			format_names(*container, names);
 			selected = -1;
 			ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 			if (ImGui::ListBox("##inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
-				body->equip(selected);
-				sort(*container);
+
+				if (selected >= 0) {
+					auto it = container->get(selected);
+					if (it) {
+
+						// equipment
+						if (it->has_effect(rl::effect::equipment)) {
+							body->equip(selected);
+						}
+
+						// useables
+						if (it->has_effect(rl::effect::useable)) {
+							auto useable = it->accumulate({ rl::effect::useable });
+							if (useable.sub == 0) {
+
+								// hp restore
+								if (it->has_effect(rl::effect::hp_bonus)) {
+									if (auto hp = body->health()) {
+										hp->restore(static_cast<body_component::resource_value_type>(it->accumulate({ rl::effect::hp_bonus }).magnitude0));
+									}
+								}
+
+								// hp regen
+								if (it->has_effect(rl::effect::hp_regen)) {
+									auto regen = it->accumulate({ rl::effect::hp_regen });
+									body_component::buff_type hp_regen;
+									hp_regen.set_name("regeneration");
+									hp_regen.set_tag("b_hp_regen");
+									hp_regen.set_duration(regen.value0);
+									hp_regen.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0, regen.magnitude0));
+									body->add(hp_regen);
+								}
+							}
+						}
+
+						sort(*container);
+					}
+				}
 				selected = -1;
 			}
 			ImGui::PopItemWidth();

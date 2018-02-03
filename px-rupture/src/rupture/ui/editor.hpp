@@ -606,8 +606,7 @@ namespace px::ui {
 				}
 
 				// add item props to last item
-				auto it = container->get<0>();
-				if (it) {
+				if (auto it = container->get<0>()) {
 					if (!it->has_effect(rl::effect::damage)) {
 						if (ImGui::Button("+ damage##add_item_prop")) {
 							it->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
@@ -616,10 +615,11 @@ namespace px::ui {
 
 					ImGui::InputInt("effect##item_prop", &item_effect);
 					ImGui::InputInt("subtype##item_prop", &item_effect_subtype);
-					ImGui::InputFloat("value##item_prop", &item_effect_value);
+					ImGui::InputInt("value##item_prop", &item_effect_value);
+					ImGui::InputFloat("magnitude##item_prop", &item_effect_magnitude);
 
 					if (ImGui::Button("+ prop##add_item_prop")) {
-						it->add(rl::item::enhancement_type::real(static_cast<rl::effect>(item_effect), item_effect_subtype, item_effect_value));
+						it->add(rl::item::enhancement_type::mixed(static_cast<rl::effect>(item_effect), item_effect_subtype, item_effect_value, item_effect_magnitude));
 					}
 				}
 			}
@@ -920,6 +920,7 @@ namespace px::ui {
 				item_effect = 0;
 				item_effect_subtype = 0;
 				item_effect_value = 0;
+				item_effect_magnitude = 0;
 				item_damage = 0;
 				item_reagent_power = 0;
 				item_reagent_essence = 0;
@@ -995,7 +996,8 @@ namespace px::ui {
 		float						item_damage;
 		int							item_effect;
 		int							item_effect_subtype;
-		float						item_effect_value;
+		int							item_effect_value;
+		float						item_effect_magnitude;
 		float						item_reagent_power;
 		int							item_reagent_essence;
 

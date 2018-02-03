@@ -23,16 +23,18 @@ namespace px::rl {
 		vitality			= 34,
 
 		equipment			= 40,
-		armor				= 41,
-		resistance			= 42,
-		dodge				= 43,
+		useable				= 41,
 
-		hp_bonus			= 50,
-		hp_regen			= 51,
-		mp_bonus			= 52,
-		mp_regen			= 53,
+		armor				= 51,
+		resistance			= 52,
+		dodge				= 53,
 
-		essence				= 60,
-		ingredient_power	= 61
+		hp_bonus			= 60,
+		hp_regen			= 61,
+		mp_bonus			= 62,
+		mp_regen			= 63,
+
+		essence				= 70,
+		ingredient_power	= 81
 	};
 }

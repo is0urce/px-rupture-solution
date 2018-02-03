@@ -52,6 +52,7 @@ namespace px {
 		using standing_type = rl::standing<std::int32_t>;
 		using buff_type = rl::buff<rl::effect, std::int32_t, double>;
 		using enhancement_type = rl::enhancement<rl::effect, std::int32_t, double>;
+		using resource_value_type = resource_type::value_type::value_type;
 
 	public:
 		void														add(buff_type affect);
