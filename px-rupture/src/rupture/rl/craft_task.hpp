@@ -18,7 +18,7 @@ namespace px::rl {
 		void reset(size_t n) {
 			slots.resize(n);
 		}
-		size_t reagent_count() const noexcept {
+		size_t size() const noexcept {
 			return slots.size();
 		}
 		void sort() {

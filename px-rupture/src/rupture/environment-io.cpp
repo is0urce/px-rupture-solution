@@ -121,7 +121,7 @@ namespace px {
 			unit->activate();
 		}
 	}
-	void environment::update_blueprints(std::string const& /*out_path*/, std::string const& /*blueprint*/) {
 
+	void environment::update_blueprints(std::string const& /*out_path*/, std::string const& /*blueprint*/) {
 	}
 }

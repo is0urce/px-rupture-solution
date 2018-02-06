@@ -80,7 +80,8 @@ namespace px {
 		return nexus->takes_input();
 	}
 	void menu::toggle_inventory() {
-		smith_panel->close_recipe();
+		smith_panel->cancel_task();
+		alchemy_panel->cancel_task();
 		inventory_open = !inventory_open;
 	}
 	void menu::combine() {
@@ -89,7 +90,8 @@ namespace px {
 		}
 	}
 	void menu::rollback() {
-		smith_panel->close_recipe();
+		smith_panel->cancel_task();
+		alchemy_panel->cancel_task();
 		inventory_open = false;
 	}
 }

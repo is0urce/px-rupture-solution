@@ -153,15 +153,20 @@ namespace px {
 		auto container = unit_builder.add_container();
 		auto weapon = make_uq<rl::item>();
 		weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6));
-		weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<std::int32_t>(rl::equipment::hand)));
+		weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
 		weapon->set_name("Sword");
 		container->add(std::move(weapon));
 		for (int i = 0; i != 10; ++i) {
 			auto item = make_uq<rl::item>();
-			item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, 0, 1));
+			item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::alchemy), 1));
 			item->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
 			item->set_name("petal");
 			container->add(std::move(item));
+			auto ore = make_uq<rl::item>();
+			ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
+			ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
+			ore->set_name("ore");
+			container->add(std::move(ore));
 		}
 
 		// spawn as player
@@ -175,6 +180,7 @@ namespace px {
 	}
 
 	void environment::prewarm() {
+		spawn("anvil", { 1966, 861 });
 		spawn("alchemy", { 1967, 861 });
 	}
 

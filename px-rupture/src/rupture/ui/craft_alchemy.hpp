@@ -6,70 +6,32 @@
 #pragma once
 
 #include "panel.hpp"
+#include "craft_station.hpp"
 
-#include "craft_common.hpp"
-
-#include "rupture/environment.hpp"
-#include "rupture/es/transform_component.hpp"
-#include "rupture/es/body_component.hpp"
-#include "rupture/es/container_component.hpp"
-
-#include <px/rl/craft_activity.hpp>
-#include "rupture/rl/craft_recipe.hpp"
-#include "rupture/rl/craft_task.hpp"
 #include "rupture/rl/craft_result.hpp"
-
-#include <imgui/imgui.h>
-
-#include <string>
-#include <type_traits>
-#include <vector>
 
 namespace px {
 
 	class craft_alchemy final
-		: public panel
+		: public craft_station<rl::craft_activity::alchemy>
 	{
 	public:
-		bool is_open() const {
-			return game && game->has_access(rl::craft_activity::alchemy);
-		}
-
-		void release_items() {
-			if (!container) return;
-
-			uq_ptr<rl::item> item;
-			goto query;
-			while (item) {
-				container->add(std::move(item));
-			query:
-				item = task.remove();
-			}
-		}
-
-		bool execute_craft() {
-			if (container && task.is_complete()) {
-				container->add(rl::craft_result::create_potion(0, 0));
-				return true;
-			}
-			return false;
+		void cancel_task() {
+			release_items();
 		}
 
 	public:
 		virtual ~craft_alchemy() = default;
 		craft_alchemy(environment * context)
-			: game(context)
-			, container(nullptr)
+			: craft_station(context)
 		{
-			task.reset(3); // three reagent recipes
+			reset_recipe();
 		}
 
 	protected:
 		virtual void combine_panel() override {
-			if (!game || !game->has_access(rl::craft_activity::alchemy)) return;
-
+			if (!is_open()) return;
 			container = game->possessed()->qlink<container_component, body_component>();
-
 			if (!container) return;
 
 			const float screen_width = ImGui::GetIO().DisplaySize.x;
@@ -85,31 +47,38 @@ namespace px {
 		}
 
 	private:
+		void reset_recipe() {
+			task.reset(3); // three reagent recipes
+		}
+		rl::item const* execute_craft() {
+			rl::item const* result = nullptr;
+			if (container && task.is_complete()) {
+				auto item = rl::craft_result::create_potion(0, 0);
+				result = item.get();
+				container->add(std::move(item));
+				sort(*container);
+				consume_items();
+				reset_recipe();
+			}
+			return result;
+		}
 		void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
 			ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(window_size);
 			ImGui::Begin("alchemy##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
 			ImGui::BeginGroup();
+
 			ImGui::BeginChild("slots view", ImVec2(0, -2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us
-
-			for (size_t size = task.reagent_count(), idx = 0; idx != size; ++idx) {
-				auto item_ptr = task[idx];
-				if (item_ptr) {
-					ImGui::Text(item_ptr->name().c_str());
-				}
-				else {
-					ImGui::TextDisabled("-- empty --");
-				}
-			}
-
+			combine_reagents();
 			ImGui::EndChild();
+
 			ImGui::BeginChild("buttons");
 			if (ImGui::Button("brew", { 334, 32 })) {
 				if (task.is_complete()) {
-					execute_craft();
-					release_items();
+					auto item = execute_craft();
 					game->close_workshop();
+					game->popup("+ " + item->name(), { 1, 1, 1 });
+					game->end_turn(1);
 				}
 			}
 			if (ImGui::Button("close", { 334, 32 })) {
@@ -118,46 +87,7 @@ namespace px {
 			}
 			ImGui::EndChild();
 			ImGui::EndGroup();
-
 			ImGui::End();
 		}
-		void combine_inventory(ImVec2 const& window_position, ImVec2 const& window_size) {
-			ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
-			ImGui::SetNextWindowSize(window_size);
-			ImGui::Begin("inventory##inv_craft_resources", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-			const auto filter = [&](rl::item const& item) {
-				return item.has_effect(rl::effect::ingredient_power, static_cast<rl::item::enhancement_type::integer_type>(rl::craft_activity::alchemy));
-			};
-
-			format_names(*container, inventory_names, filter);
-
-			int selected = -1;
-			ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-			if (ImGui::ListBox("##craft_inventory_list", &selected, name_getter, static_cast<void*>(&inventory_names), static_cast<int>(inventory_names.size()), 16)) {
-				size_t current_idx = 0;
-				size_t absolute_idx = 0;
-				size_t relative_idx = 0;
-				container->enumerate([&](rl::item & item) {
-					if (filter(item)) {
-						if (relative_idx == selected) {
-							absolute_idx = current_idx;
-						}
-						++relative_idx;
-					}
-					++current_idx;
-				});
-				task.add(container->remove(absolute_idx));
-			}
-			ImGui::PopItemWidth();
-
-			ImGui::End();
-		}
-
-	private:
-		environment *					game;				// game context
-		container_component *			container;			// user inventory
-		rl::craft_task					task;				// ingredient selected
-		std::vector<std::string>		inventory_names;	// inventory items names cashe
 	};
 }

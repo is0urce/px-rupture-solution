@@ -33,8 +33,12 @@ namespace px::rl {
 			result->add(enhancement_type::real(rl::effect::armor, 0, power * recipe.power_raw));
 			return result;
 		}
-		static uq_ptr<rl::item> create_potion(integer_type /*essence*/, real_type /*power*/) {
+		static uq_ptr<rl::item> create_potion(integer_type essence, real_type power) {
+			return create_solution("potion", essence, power);
+		}
+		static uq_ptr<rl::item> create_solution(std::string const& name, integer_type /*essence*/, real_type /*power*/) {
 			auto result = make_uq<rl::item>();
+			result->set_name(name);
 			return result;
 		}
 
