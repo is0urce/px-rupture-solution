@@ -104,6 +104,7 @@ namespace px {
 			blueprint::store(archive, *ptr);
 		}
 	}
+
 	void environment::load_scene(point2 const& cell) {
 		auto name = current->depot_scene(cell);
 		if (!current->has_scene(cell)) return;
@@ -119,5 +120,8 @@ namespace px {
 			auto & unit = stage.spawn(blueprint::assemble(archive, factory));
 			unit->activate();
 		}
+	}
+	void environment::update_blueprints(std::string const& /*out_path*/, std::string const& /*blueprint*/) {
+
 	}
 }

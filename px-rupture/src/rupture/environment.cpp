@@ -124,44 +124,58 @@ namespace px {
 		// clear repository and reset environment variables
 		clear();
 
-		// create player
+		create_player();
+		prewarm();
+	}
 
-		builder b(this);
+	void environment::create_player() {
+		builder unit_builder(this);
 
-		light_component * light = nullptr;
-		body_component * body = nullptr;
-		container_component * cont = nullptr;
+		// appearance
+		unit_builder.add_sprite("m_zwerg");
+		auto light = unit_builder.add_light();
+		light->tint = color(0.3, 0.3, 0.3);
+		light->elevation = 0.5;
+		light->is_on = true;
 
-		body = b.add_body();
+		// stats
+		auto body = unit_builder.add_body();
 		body->movement().make_traversable(rl::traverse::floor);
 		body->blocking().make_transparent();
 		body->health().emplace(100);
 		body->energy().emplace(50);
 		body->set_name("Gnome");
 		//body->join_faction(1);
-		b.add_player();
-		b.add_sprite("m_zwerg");
-		incarnate(b.add_transform({ 1966, 860 }));
-		light = b.add_light();
-		light->tint = color(0.3, 0.3, 0.3);
-		light->elevation = 0.5;
-		light->is_on = true;
-		auto ch = b.add_character();
-		ch->learn("sk_v_melee");
-		ch->learn("sk_s_smite");
-		ch->learn("sk_s_rend");
-		ch->learn("sk_s_flurry");
-		ch->learn("sk_o_teleport");
-		cont = b.add_container();
+		auto character = unit_builder.add_character();
+		character->learn("sk_v_melee", "sk_s_smite", "sk_s_rend", "sk_s_flurry");
+
+		// inventory
+		auto container = unit_builder.add_container();
 		auto weapon = make_uq<rl::item>();
 		weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6));
 		weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<std::int32_t>(rl::equipment::hand)));
 		weapon->set_name("Sword");
-		cont->add(std::move(weapon));
-		auto composite = b.request();
-		body->equip(0);
+		container->add(std::move(weapon));
+		for (int i = 0; i != 10; ++i) {
+			auto item = make_uq<rl::item>();
+			item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, 0, 1));
+			item->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
+			item->set_name("petal");
+			container->add(std::move(item));
+		}
+
+		// spawn as player
+		unit_builder.add_player();
+		incarnate(unit_builder.add_transform({ 1966, 860 }));
+
+		auto composite = unit_builder.request();
+		body->equip(0); // after linking equipment and body
 		composite->set_persistency(persistency::permanent);
 		stage.spawn(std::move(composite));
+	}
+
+	void environment::prewarm() {
+		spawn("alchemy", { 1967, 861 });
 	}
 
 	void environment::end() {

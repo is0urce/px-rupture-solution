@@ -61,7 +61,7 @@ namespace px {
 		mass_type const&											blocking() const noexcept;
 		mass_type &													blocking() noexcept;
 		bool														can_use(body_component * user, environment * env) const;
-		void														equip(size_t idx);
+		bool														equip(size_t idx);
 		rl::item *													equipment(rl::equipment slot) const;
 		std::uint32_t												experience() const;
 		bool														is_useable() const noexcept;

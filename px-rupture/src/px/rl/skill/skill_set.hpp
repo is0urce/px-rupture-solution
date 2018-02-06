@@ -21,16 +21,13 @@ namespace px::rl {
 		using book_type = std::map<std::string, std::tuple<state_type, impact_type *>>;
 
 	public:
-		void assign_book(book_type const* book)
-		{
+		void assign_book(book_type const* book) {
 			m_book = book;
 		}
-		book_type const* get_book() const noexcept
-		{
+		book_type const* get_book() const noexcept {
 			return m_book;
 		}
-		void learn(std::string const& tag)
-		{
+		bool learn(std::string const& tag) {
 			if (m_book) {
 				auto const& it = m_book->find(tag);
 				if (it != m_book->end()) {
@@ -38,46 +35,48 @@ namespace px::rl {
 					m_skills.emplace_back();
 					m_skills.back().state() = std::get<0>(record);
 					m_skills.back().assign_impact(std::get<1>(record));
+					return true;
 				}
 			}
+			return false;
 		}
-		void invalidate()
-		{
+		template <typename ...Args>
+		void learn(std::string const& tag1, std::string const& tag2, Args ...args) {
+			learn(tag1);
+			learn(tag2, args...);
+		}
+
+		void invalidate() {
 			for (size_t i = 0, size = m_skills.size(); i != size; ++i) {
 				invalidate(m_skills[i].state().tag(), i);
 			}
 		}
-		void remove(size_t idx)
-		{
+		bool remove(size_t idx) {
 			if (idx < m_skills.size()) {
 				m_skills[idx] = std::move(m_skills.back());
 				m_skills.pop_back();
+				return true;
 			}
+			return false;
 		}
-		void clear()
-		{
+		void clear() {
 			m_skills.clear();
 		}
-		size_t size() const
-		{
+		size_t size() const {
 			return m_skills.size();
 		}
 
-		skill_type & at(size_t slot)
-		{
+		skill_type & at(size_t slot) {
 			return m_skills.at(slot);
 		}
 		template <size_t Slot>
-		skill_type & at()
-		{
+		skill_type & at() {
 			return m_skills.at(Slot);
 		}
-		skill_type * get(size_t index)
-		{
+		skill_type * get(size_t index) {
 			return index < m_skills.size() ? &m_skills[index] : nullptr;
 		}
-		skill_type const* get(size_t index) const
-		{
+		skill_type const* get(size_t index) const {
 			return index < m_skills.size() ? &m_skills[index] : nullptr;
 		}
 		void reduce_cooldown(int timespan) {
@@ -93,9 +92,7 @@ namespace px::rl {
 		}
 
 	public:
-		~skill_set()
-		{
-		}
+		~skill_set() = default;
 		skill_set()
 			: m_book(nullptr)
 		{
@@ -108,13 +105,12 @@ namespace px::rl {
 		skill_set & operator=(skill_set const&) = delete;
 
 	private:
-		void invalidate(std::string const& tag, size_t slot)
-		{
+		void invalidate(std::string const& tag, size_t slot) {
 			if (m_book) {
 				auto const& it = m_book->find(tag);
 				if (it != m_book->end()) {
 					auto const& record = it->second;
-					// do not modify state, so cooldowns not affected by serialization
+					// do not modify state, so it's not affected by serialization
 					m_skills[slot].assign_impact(std::get<1>(record));
 				}
 			}
