@@ -236,7 +236,7 @@
     <ClInclude Include="src\rupture\draw\visual.hpp" />
     <ClInclude Include="src\rupture\rl\craft_recipe.hpp" />
     <ClInclude Include="src\rupture\rl\craft_result.hpp" />
-    <ClInclude Include="src\rupture\rl\craft_task.hpp" />
+    <ClInclude Include="src\px\rl\craft_task.hpp" />
     <ClInclude Include="src\px\rl\damage_type.hpp" />
     <ClInclude Include="src\px\rl\doll.hpp" />
     <ClInclude Include="src\px\rl\effect.hpp" />

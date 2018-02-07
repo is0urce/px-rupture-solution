@@ -1,8 +1,11 @@
 // name: craft_task
+// type: c++
+// auth: is0urce
+// desc: template class
 
 #pragma once
 
-#include "item.hpp"
+// reagents aggregated for crafting
 
 #include <px/memory/uq_ptr.hpp>
 
@@ -11,10 +14,11 @@
 
 namespace px::rl {
 
+	template <typename Item>
 	class craft_task {
 	public:
-		using item_type = rl::item;
-		using ptr = uq_ptr<item>;
+		using item_type = Item;
+		using ptr = uq_ptr<item_type>;
 
 	public:
 		void close() {
@@ -25,11 +29,6 @@ namespace px::rl {
 		}
 		size_t size() const noexcept {
 			return slots.size();
-		}
-
-		// sort empty slots
-		void sort() {
-			std::sort(slots.begin(), slots.end(), [](auto const& a, auto const& b) { return !b.get() && a.get(); });
 		}
 
 		bool add(ptr reagent) {
@@ -76,30 +75,6 @@ namespace px::rl {
 			}
 			return true;
 		}
-		auto calculate_essence() const {
-			auto denominator = static_cast<rl::item::enhancement_type::integer_type>(1);
-
-			for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
-				if (slots[idx]) {
-					auto enhancement = slots[idx]->find(rl::item::enhancement_type::zero(rl::effect::essence));
-					auto essence = enhancement.value0;
-					if (essence != 0 && denominator % essence != 0) {
-						denominator *= essence;
-					}
-				}
-			}
-			return denominator;
-		}
-		auto calculate_power() const {
-			auto power = rl::item::enhancement_type::zero(rl::effect::ingredient_power);
-
-			for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
-				if (slots[idx]) {
-					power = slots[idx]->accumulate(power);
-				}
-			}
-			return power;
-		}
 
 		template <typename Operator>
 		void enumerate(Operator && function) const {
@@ -112,6 +87,12 @@ namespace px::rl {
 
 		item_type const* operator[](size_t idx) const {
 			return slots[idx].get();
+		}
+
+	private:
+		// sort out empty slots
+		void sort() {
+			std::sort(slots.begin(), slots.end(), [](auto const& a, auto const& b) { return !b && a; });
 		}
 
 	private:

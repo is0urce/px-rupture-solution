@@ -47,6 +47,8 @@ namespace px::rl {
 			}
 			return or_else;
 		}
+
+		// returns first enhancement by maintype, or prototype if it's not there
 		enhancement_type find(enhancement_type or_else) const {
 			for (enhancement_type const& element : container) {
 				if (element.main == or_else.main) {
@@ -55,6 +57,7 @@ namespace px::rl {
 			}
 			return or_else;
 		}
+
 		void add(enhancement_type val) {
 			container.push_back(val);
 		}

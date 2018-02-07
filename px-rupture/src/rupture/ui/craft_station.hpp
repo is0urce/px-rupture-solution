@@ -13,7 +13,7 @@
 #include "rupture/es/container_component.hpp"
 
 #include <px/rl/craft_activity.hpp>
-#include "rupture/rl/craft_task.hpp"
+#include <px/rl/craft_task.hpp>
 
 #include <imgui/imgui.h>
 
@@ -104,7 +104,7 @@ namespace px {
 	protected:
 		environment *					game;				// game context
 		container_component *			container;			// user inventory
-		rl::craft_task					task;				// ingredient selected
+		rl::craft_task<rl::item>		task;				// ingredient selected
 
 	private:
 		std::vector<std::string>		inventory_names;	// inventory items names cashe

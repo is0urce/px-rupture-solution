@@ -53,7 +53,7 @@ namespace px {
 		rl::item const* execute_craft() {
 			rl::item const* result = nullptr;
 			if (container && task.is_complete()) {
-				auto item = rl::craft_result::create_potion(1, 2.0);
+				auto item = rl::craft_result::create_potion(rl::craft_result::calculate_essence(task), rl::craft_result::calculate_power(task).magnitude0);
 				result = item.get();
 				container->add(std::move(item));
 				sort(*container);
