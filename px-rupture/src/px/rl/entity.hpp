@@ -35,9 +35,12 @@ namespace px::rl {
 			return m_tag == et.m_tag;
 		}
 		void setup_entity(std::string const& entity_name, std::string const resource_name, std::string const& entity_description) {
-			m_name = entity_name;
-			m_tag = resource_name;
-			m_description = entity_description;
+			setup_entity(entity_name, resource_name);
+			set_description(entity_description);
+		}
+		void setup_entity(std::string const& entity_name, std::string const resource_name) {
+			set_name(entity_name);
+			set_tag(resource_name);
 		}
 
 		template <typename Archive>
