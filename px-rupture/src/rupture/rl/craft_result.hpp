@@ -9,7 +9,6 @@
 #include "craft_recipe.hpp"
 #include <px/rl/craft_task.hpp>
 
-#include <px/memory/uq_ptr.hpp>
 #include <px/memory/memory.hpp>
 
 #include <functional>	// for hash
@@ -24,7 +23,6 @@ namespace px::rl {
 		using real_type = enhancement_type::real_type;
 
 	public:
-
 		// origin essence common denominator
 		static integer_type calculate_essence(craft_task<item> const& task) {
 			integer_type denominator = 1;
@@ -54,6 +52,7 @@ namespace px::rl {
 			item->add(enhancement_type::real(rl::effect::damage, 0, power * recipe.power_raw));
 			return item;
 		}
+
 		static auto create_armor(craft_recipe const& recipe, integer_type essence, real_type power) {
 			auto item = make_uq<rl::item>();
 
@@ -61,12 +60,14 @@ namespace px::rl {
 			item->add(enhancement_type::real(rl::effect::armor, 0, power * recipe.power_raw));
 			return item;
 		}
+
 		static uq_ptr<rl::item> create_potion(integer_type essence, real_type power) {
 			return create_solution("potion", essence, power);
 		}
+
 		static uq_ptr<rl::item> create_solution(std::string const& name, integer_type essence, real_type power) {
 			auto item = make_uq<rl::item>();
-			item->setup_entity(name, "i_potion#" + std::to_string(essence));
+			item->setup_entity(name, "i_potion#" + std::to_string(essence) + "#" + std::to_string(power));
 			item->make_stacking();
 
 			item->add(enhancement_type::zero(effect::useable));
@@ -86,8 +87,8 @@ namespace px::rl {
 				break;
 			}
 
-
-			item->add(enhancement_type::integral(effect::essence, 0, essence)); // store essence origin
+			// store essence origin
+			item->add(enhancement_type::integral(effect::essence, 0, essence));
 
 			return item;
 		}
@@ -111,14 +112,13 @@ namespace px::rl {
 				break;
 			}
 
-
-			item.add(enhancement_type::integral(effect::essence, 0, essence)); // store essence origin
+			// store essence origin
+			item.add(enhancement_type::integral(effect::essence, 0, essence));
 		}
 
-		// slightly biased in both hash and modulo, but we don't need much accuracy
+		// biased in both hash and modulo, but we don't need much accuracy
 		static unsigned int hash_mod(unsigned int x, unsigned int modulo) {
 			return std::hash<unsigned int>{}(x) % modulo;
 		}
-
 	};
 }

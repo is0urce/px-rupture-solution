@@ -91,8 +91,7 @@ namespace px::rl {
 		}
 
 	public:
-		inventory()	{
-		}
+		inventory() = default;
 
 	private:
 		std::vector<uq_ptr<item>> items;

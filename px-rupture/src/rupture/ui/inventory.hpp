@@ -80,7 +80,6 @@ namespace px {
 		}
 
 	private:
-
 		// inventory list window draw
 		void combine_list(ImVec2 const& position, ImVec2 const& size, body_component & body, container_component & container) {
 			ImGui::SetNextWindowPos(position, ImGuiCond_Always);
@@ -98,17 +97,20 @@ namespace px {
 						// equipment
 						if (ptr->has_effect(rl::effect::equipment)) {
 							body.equip(selected);
+							sort(container);
+							game->end_turn(1);
 						}
 
 						// useables
 						if (ptr->has_effect(rl::effect::useable)) {
-							auto useable = ptr->accumulate({ rl::effect::useable });
+							auto useable = ptr->find({ rl::effect::useable });
 							if (useable.sub == 0) {
 								use_potion(*ptr, body);
+								container.remove(selected);
+								sort(container);
+								game->end_turn(1);
 							}
 						}
-
-						sort(container);
 					}
 				}
 				selected = -1;
@@ -160,15 +162,19 @@ namespace px {
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
+			// main props
 			ImGui::Text(item.name().c_str());
 			ImGui::Text(item.description().c_str());
 
+			// generic props
 			if (item.has_effect(rl::effect::equipment)) {
 				ImGui::Text("Equipment");
 			}
 			if (item.has_effect(rl::effect::useable)) {
 				ImGui::Text("Useable");
 			}
+
+			// ingredient props
 			if (item.has_effect(rl::effect::ingredient_power)) {
 				switch (static_cast<rl::craft_activity>(item.find_subtype(rl::effect::ingredient_power, 0))) {
 				case rl::craft_activity::blacksmith:
@@ -183,18 +189,28 @@ namespace px {
 				}
 			}
 
+			// equipment props
 			if (item.has_effect(rl::effect::damage)) {
 				ImGui::Text("Damage: %.0f", item.accumulate({ rl::effect::damage }).magnitude0);
 			}
 
+			// potion props
 			if (item.has_effect(rl::effect::hp_bonus)) {
 				ImGui::Text("Heal: %.0f", item.accumulate({ rl::effect::hp_bonus }).magnitude0);
+			}
+			if (item.has_effect(rl::effect::mp_bonus)) {
+				ImGui::Text("Innervate: %.0f", item.accumulate({ rl::effect::mp_bonus }).magnitude0);
 			}
 			if (item.has_effect(rl::effect::hp_regen)) {
 				auto effect = item.accumulate({ rl::effect::hp_regen });
 				ImGui::Text("Regenerate: %.0f for %d", effect.magnitude0, effect.value0);
 			}
+			if (item.has_effect(rl::effect::mp_regen)) {
+				auto effect = item.accumulate({ rl::effect::mp_regen });
+				ImGui::Text("Invigorate: %.0f for %d", effect.magnitude0, effect.value0);
+			}
 
+			// item status
 			ImGui::Text("Quantity: %d", item.count());
 
 			ImGui::End();
@@ -204,7 +220,11 @@ namespace px {
 			// hp restore
 			if (item.has_effect(rl::effect::hp_bonus)) {
 				if (auto hp = body.health()) {
-					hp->restore(static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::hp_bonus }).magnitude0));
+					auto heal = static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::hp_bonus }).magnitude0);
+					hp->restore(heal);
+
+					// notify
+					game->popup("+ " + std::to_string(heal), { 0, 1, 0 });
 				}
 			}
 
@@ -217,12 +237,19 @@ namespace px {
 				regen.set_duration(effect.value0);
 				regen.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0, effect.magnitude0));
 				body.add(regen);
+
+				// notify
+				game->popup("+ " + regen.name(), { 0, 1, 0 });
 			}
 
 			// mp restore
 			if (item.has_effect(rl::effect::mp_bonus)) {
 				if (auto mp = body.energy()) {
-					mp->restore(static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::mp_bonus }).magnitude0));
+					auto bonus = static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::mp_bonus }).magnitude0);
+					mp->restore(bonus);
+
+					// notify
+					game->popup("+ " + std::to_string(bonus), { 0, 0, 1 });
 				}
 			}
 
@@ -235,6 +262,9 @@ namespace px {
 				regen.set_duration(effect.value0);
 				regen.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0, effect.magnitude0));
 				body.add(regen);
+
+				// notify
+				game->popup("+ " + regen.name(), { 0, 1, 0 });
 			}
 		}
 
