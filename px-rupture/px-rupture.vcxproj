@@ -394,8 +394,11 @@
     <None Include="data\scripts\sk_s_flurry.lua" />
     <None Include="data\scripts\sk_s_rend.lua" />
     <None Include="data\scripts\sk_s_smite.lua" />
+    <None Include="data\scripts\sk_v_bite.lua" />
     <None Include="data\scripts\sk_v_disease.lua" />
     <None Include="data\scripts\sk_v_melee.lua" />
+    <None Include="data\scripts\sk_v_sting.lua" />
+    <None Include="data\scripts\sk_v_swipe.lua" />
     <None Include="data\shaders\light.frag" />
     <None Include="data\shaders\light.vert" />
     <None Include="data\shaders\process.frag" />

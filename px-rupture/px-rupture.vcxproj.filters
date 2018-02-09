@@ -681,5 +681,8 @@
     <None Include="data\scripts\sk_s_flurry.lua" />
     <None Include="lua53.dll" />
     <None Include="data\scripts\sk_v_disease.lua" />
+    <None Include="data\scripts\sk_v_bite.lua" />
+    <None Include="data\scripts\sk_v_sting.lua" />
+    <None Include="data\scripts\sk_v_swipe.lua" />
   </ItemGroup>
 </Project>

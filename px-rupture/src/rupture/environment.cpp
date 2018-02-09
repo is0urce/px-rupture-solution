@@ -31,6 +31,7 @@ namespace px {
 	environment::~environment() {
 		clear();
 	}
+
 	environment::environment() {
 		parent = make_uq<repository>(std::string(settings::save_path) + "base");
 		current = make_uq<repository>(std::string(settings::save_path) + "current", parent.get());
@@ -61,9 +62,9 @@ namespace px {
 	}
 
 	void environment::step(point2 const& movement) {
-		if (!player) return;
+		if (!player || turn_pass) return;
 
-		if (body_component * body = player->linked<body_component>()) {
+		if (auto body = player->linked<body_component>()) {
 			point2 destination = player->position() + movement;
 			stage.focus(destination);
 			if (stage.is_traversable(destination, body->movement())) {
@@ -124,15 +125,18 @@ namespace px {
 		// clear repository and reset environment variables
 		clear();
 
-		create_player();
+		incarnate(create_player());
 		prewarm();
 	}
 
-	void environment::create_player() {
+	transform_component * environment::create_player() {
 		builder unit_builder(this);
 
+		// position
+		auto pawn = unit_builder.add_transform({ 1966, 860 });
+
 		// appearance
-		unit_builder.add_sprite("m_zwerg");
+		unit_builder.add_sprite("m_gnome_warrior");
 		auto light = unit_builder.add_light();
 		light->tint = color(0.3, 0.3, 0.3);
 		light->elevation = 0.5;
@@ -145,7 +149,7 @@ namespace px {
 		body->health().emplace(100);
 		body->energy().emplace(50);
 		body->set_name("Gnome");
-		//body->join_faction(1);
+		body->join_faction(1);
 		auto character = unit_builder.add_character();
 		character->learn("sk_v_melee", "sk_s_smite", "sk_s_rend", "sk_s_flurry");
 
@@ -169,14 +173,17 @@ namespace px {
 			container->add(std::move(ore));
 		}
 
-		// spawn as player
+		// as player
 		unit_builder.add_player();
-		incarnate(unit_builder.add_transform({ 1966, 860 }));
 
+		// compose unit
 		auto composite = unit_builder.request();
-		body->equip(0); // after linking equipment and body
 		composite->set_persistency(persistency::permanent);
+
+		body->equip(0); // after linking equipment and body
 		stage.spawn(std::move(composite));
+
+		return pawn;
 	}
 
 	void environment::prewarm() {
@@ -347,5 +354,22 @@ namespace px {
 		sprite->activate();
 
 		vfx.push_back({ start, finish, std::move(tr), std::move(sprite), nullptr });
+	}
+
+	void environment::emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component * track) {
+		auto sprite = sprites.make("e_empty");
+		auto animation = animators.make(name);
+		auto tr = make_uq<transform_component>();
+		tr->store(start);
+		tr->place(finish);
+
+		sprite->connect<transform_component>(track ? track : tr.get());
+		sprite->activate();
+
+		animation->connect<sprite_component>(sprite.get());
+		animation->activate();
+		animation->play(clip_id);
+
+		vfx.push_back({ start, finish, std::move(tr), std::move(sprite), std::move(animation) });
 	}
 }

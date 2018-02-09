@@ -66,6 +66,7 @@ namespace px {
 		uq_ptr<composite_component>	&		spawn(uq_ptr<composite_component> unit);
 		uq_ptr<composite_component> &		spawn(std::string const& blueprint, point2 const& position);
 		void								emit_visual(std::string const& name, point2 start, point2 finish, transform_component * track);
+		void								emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component * track);
 		void								update_blueprints(std::string const& out_path, std::string const& blueprint);
 
 	public:
@@ -80,7 +81,7 @@ namespace px {
 		void								save_scene(point2 const& cell);
 		void								load_scene(point2 const& cell);
 		void								prewarm();							// start routine
-		void								create_player();					// start routine
+		transform_component *				create_player();					// start routine
 
 	protected:
 		notification_system					messages;

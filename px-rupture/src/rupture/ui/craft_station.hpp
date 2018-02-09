@@ -18,6 +18,7 @@
 #include <imgui/imgui.h>
 
 #include <string>
+#include <vector>
 
 namespace px {
 

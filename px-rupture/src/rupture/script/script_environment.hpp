@@ -18,32 +18,25 @@ namespace px {
 
 	class script_environment {
 	public:
+
+		// distance in game units
 		int distance(point2 const& a, point2 const& b) {
 			return game->distance(a, b);
 		}
 
+		// emit notification text
 		void popup(std::string text, int rgba, point2 location) {
 			game->popup(text, color(rgba), location);
 		}
-		//void emit_vfx(point2 location, std::string const& tag)
-		//{
-		//	m_environment->visual(tag, location, location, nullptr);
-		//}
-		//void emit_projectile(point2 start, point2 end, std::string const& tag)
-		//{
-		//	m_environment->visual(tag, start, end, nullptr);
-		//}
-		//void emit_missile(point2 start, script_unit & target, std::string const& tag)
-		//{
-		//	m_environment->visual(tag, start, target.position(), target.transform());
-		//}
-		//void emit_decal(script_unit & target, std::string const& tag)
-		//{
-		//	m_environment->visual(tag, target.last_position(), target.position(), target.transform());
-		//}
 
-		void vfx(std::string img, point2 start, point2 finish, script_unit & track) {
-			game->emit_visual(img, start, finish, track.get_transform());
+		// emit visual effect
+		void vfx(std::string const& name, point2 start, point2 finish, script_unit & track) {
+			game->emit_visual(name, start, finish, track.get_transform());
+		}
+
+		// emit animated clip
+		void clip(std::string const& name, unsigned int clip_id, point2 start, point2 finish, script_unit & track) {
+			game->emit_animation(name, clip_id, start, finish, track.get_transform());
 		}
 
 		// simulate melee hit event ang get it results

@@ -9,8 +9,6 @@
 
 #include "craft_station.hpp"
 
-#include "craft_common.hpp"
-
 #include "rupture/environment.hpp"
 #include "rupture/es/transform_component.hpp"
 #include "rupture/es/body_component.hpp"
@@ -18,8 +16,6 @@
 
 #include "rupture/rl/craft_recipe.hpp"
 #include "rupture/rl/craft_result.hpp"
-
-#include <vector>
 
 namespace px {
 

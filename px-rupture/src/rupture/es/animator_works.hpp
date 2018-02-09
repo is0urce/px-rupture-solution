@@ -1,3 +1,5 @@
+// name: animator_works.hpp
+
 #pragma once
 
 #include "animator_component.hpp"
@@ -18,11 +20,9 @@
 
 namespace px {
 
-	class animator_works
-	{
+	class animator_works final {
 	public:
-		uq_ptr<animator_component> make(std::string const& name)
-		{
+		uq_ptr<animator_component> make(std::string const& name) {
 			auto kv_it = animations.find(name);
 			if (kv_it != animations.end()) {
 				auto animator = pool.make_uq();
@@ -38,8 +38,8 @@ namespace px {
 			}
 			return nullptr;
 		}
-		void update(double time)
-		{
+
+		void update(double time) {
 			pool.enumerate([&](animator_component & animator) {
 				if (!animator.is_active()) return;
 				if (!animator.is_playing()) return;
@@ -54,8 +54,8 @@ namespace px {
 				}
 			});
 		}
-		void finish_animations()
-		{
+
+		void finish_animations() {
 			pool.enumerate([&](animator_component & animator) {
 				if (!animator.is_active()) return;
 				if (!animator.is_playing()) return;
@@ -73,8 +73,8 @@ namespace px {
 				animator.stop();
 			});
 		}
-		void load(sprite_system const* sprites)
-		{
+
+		void load(sprite_system const* sprites) {
 			if (sprites == nullptr) throw std::runtime_error("px::animator_works::load(sprites) - sprites is null");
 
 			auto document = document::load_document("data/animations.json");
@@ -107,12 +107,8 @@ namespace px {
 		}
 
 	public:
-		~animator_works()
-		{
-		}
-		animator_works()
-		{
-		}
+		~animator_works() = default;
+		animator_works() = default;
 
 	private:
 		pool_chain<animator_component, 1024>			pool;

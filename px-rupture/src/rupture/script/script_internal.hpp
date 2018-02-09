@@ -122,7 +122,7 @@ namespace px {
 				, "distance", &script_environment::distance
 				, "popup", &script_environment::popup
 				, "vfx", &script_environment::vfx
-				//, "vfx_projectile", &script_environment::emit_projectile
+				, "clip", &script_environment::clip
 				//, "vfx_missile", &script_environment::emit_missile
 				//, "vfx_decal", &script_environment::emit_decal
 				//, "mass_export", &script_environment::mass_export

@@ -10,7 +10,11 @@
 #include <px/memory/memory.hpp>
 
 namespace px {
+
+	// ctor & dtor
+
 	script::~script() = default;
+
 	script::script()
 		: works(make_uq<script_internal>())
 	{
