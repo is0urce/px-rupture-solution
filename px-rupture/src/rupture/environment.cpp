@@ -48,6 +48,16 @@ namespace px {
 		return run;
 	}
 
+	bool environment::has_control() const {
+		if (turn_pass) return false;
+		if (!player) return false;
+		auto body = player->linked<body_component>();
+		if (!body) return false;
+		auto hp = body->health();
+		if (!hp) return false;
+		return !hp->empty();
+	}
+
 	void environment::incarnate(transform_component * camera) {
 
 		if (camera) {
@@ -61,8 +71,9 @@ namespace px {
 		lights.recalculate();
 	}
 
+	// player move action
 	void environment::step(point2 const& movement) {
-		if (!player || turn_pass) return;
+		if (!has_control()) return;
 
 		if (auto body = player->linked<body_component>()) {
 			point2 destination = player->position() + movement;
@@ -75,8 +86,9 @@ namespace px {
 		}
 	}
 
+	// player ability use action
 	void environment::action(unsigned int action_idx) {
-		if (!player || turn_pass) return;
+		if (!has_control()) return;
 
 		if (auto body = player->linked<body_component>()) {
 			if (auto character = body->linked<character_component>()) {
@@ -96,14 +108,16 @@ namespace px {
 			}
 		}
 	}
+
 	void environment::advance() {
-		if (!player || turn_pass) return;
+		if (!has_control()) return;
 
 		start_turn();
 		end_turn(1);
 	}
+
 	void environment::use(unsigned int /*mods*/) {
-		if (!player || turn_pass) return;
+		if (!has_control()) return;
 
 		if (target_unit) {
 			auto useable = target_unit->linked<body_component>();
@@ -114,6 +128,7 @@ namespace px {
 			}
 		}
 	}
+
 	unsigned int environment::current_turn() const noexcept {
 		return turn_number;
 	}
@@ -180,7 +195,7 @@ namespace px {
 		auto composite = unit_builder.request();
 		composite->set_persistency(persistency::permanent);
 
-		body->equip(0); // after linking equipment and body
+		body->equip(0); // equip after linking equipment and body
 		stage.spawn(std::move(composite));
 
 		return pawn;

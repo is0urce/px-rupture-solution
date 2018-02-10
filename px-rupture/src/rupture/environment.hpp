@@ -82,6 +82,7 @@ namespace px {
 		void								load_scene(point2 const& cell);
 		void								prewarm();							// start routine
 		transform_component *				create_player();					// start routine
+		bool								has_control() const;				// returns true if player can act now
 
 	protected:
 		notification_system					messages;
@@ -93,10 +94,10 @@ namespace px {
 		uq_ptr<repository>					parent;
 		bool								run;
 		unsigned int						turn_number;
-		bool								turn_pass;			// true if it's the world processing stage
-		point2								target_hover;		// offset of target area
-		point2								target_area;		// target area in world coordinates
-		transform_component *				target_unit;		// targeted unit
+		bool								turn_pass;							// true if it's the world processing stage
+		point2								target_hover;						// offset of target area
+		point2								target_area;						// target area in world coordinates
+		transform_component *				target_unit;						// targeted unit
 		rl::craft_activity					opened_workshop;
 		std::vector<visual>					vfx;
 	};
