@@ -28,10 +28,13 @@ void test_row() {
 		test::require(x.size() == 2);
 		test::require(x.at(1) == 2);
 		test::require_throw([&]() {x.at(2) = 3; });
-	}
 
-	test::section("copy");
-	{
-
+		test::section("copy");
+		{
+			row<int, 3> y(std::move(x));
+			test::require(y.size() == 2);
+			test::require(y[0] == 1);
+			test::require(y[1] == 2);
+		}
 	}
 }

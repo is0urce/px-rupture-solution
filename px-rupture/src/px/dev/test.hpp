@@ -22,8 +22,8 @@ namespace px {
 				fn();
 				write_fail();
 			}
-			catch (...)
-			{
+			catch (...) {
+				++total;
 			}
 		}
 

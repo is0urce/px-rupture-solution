@@ -1,6 +1,12 @@
+// name: row.hpp
+// type: c++ template class
+// auth: is0urce
+// desc: array container with fixed max length
+
 #pragma once
 
-#include <stdexcept>
+#include <stdexcept>	// exception
+#include <utility>		// move
 
 namespace px {
 
@@ -116,18 +122,12 @@ namespace px {
 		row(row const& that)
 			: row()
 		{
-			T * arr = reinterpret();
-			for (auto i = that.begin(), e = that.end(); i != e; ++i) {
-				new (&arr[cursor++]) T(*i);
-			}
+			*this = that;
 		}
 		row(row && that)
 			: row()
 		{
-			T * arr = reinterpret();
-			for (auto i = that.begin(), e = that.end(); i != e; ++i) {
-				new (&arr[cursor++]) T(std::move(*i));
-			}
+			*this = std::move(that);
 		}
 		row & operator=(row const& that) {
 			clear();
