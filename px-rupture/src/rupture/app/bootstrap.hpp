@@ -12,9 +12,10 @@
 #if PX_RUN_TESTS
 
 namespace px {
+
 	void run_tests();
-	inline void bootstrap()
-	{
+
+	inline void bootstrap() {
 		run_tests();
 	}
 }
@@ -22,8 +23,8 @@ namespace px {
 #else
 
 namespace px {
-	inline void bootstrap()
-	{
+
+	inline void bootstrap() {
 	}
 }
 

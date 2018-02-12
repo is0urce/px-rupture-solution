@@ -12,6 +12,7 @@
 #include "case/common/matrix_test.hpp"
 #include "case/common/memory_test.hpp"
 #include "case/common/bigint_test.hpp"
+#include "case/common/row_test.hpp"
 
 #include "case/rl/traverse_test.hpp"
 
@@ -32,6 +33,7 @@ namespace px {
 		test_matrix();
 		test_memory();
 		test_bigint();
+		test_row();
 
 		test_traverse();
 		test::print();

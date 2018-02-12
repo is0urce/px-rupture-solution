@@ -378,6 +378,7 @@
     <ClInclude Include="src\tests\case\common\bigint_test.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />
+    <ClInclude Include="src\tests\case\common\row_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />
     <ClInclude Include="src\tests\case\common\pool_test.hpp" />
     <ClInclude Include="src\tests\case\common\qtree_test.hpp" />

@@ -7,25 +7,31 @@
 
 namespace px {
 
-	class test final
-	{
+	class test final {
 	public:
-		static void require(bool result)
-		{
+		static void require(bool result) {
 			++total;
 			if (!result) {
-				++fails;
-				if (lastmsg != nullptr) {
-					std::cout << "TEST FAIL, section " << std::string(lastmsg) << std::endl;
-				}
+				write_fail();
 			}
 		}
-		static void section(const char* section_name)
-		{
+
+		template <typename Operation>
+		static void require_throw(Operation && fn) {
+			try {
+				fn();
+				write_fail();
+			}
+			catch (...)
+			{
+			}
+		}
+
+		static void section(const char* section_name) {
 			lastmsg = section_name;
 		}
-		static void print()
-		{
+
+		static void print() {
 			unsigned int success = total - fails;
 			if (fails == 0) {
 				std::cout << "ALL " << std::to_string(success) << " TESTS PASS ";
@@ -35,6 +41,14 @@ namespace px {
 				std::cout << "TEST FAILS " << std::to_string(fails) << ", " << std::to_string(success) << "/" << std::to_string(total) << " TESTS PASS ";
 			}
 			std::cout << std::endl;
+		}
+
+	private:
+		static void write_fail() {
+			++fails;
+			if (lastmsg != nullptr) {
+				std::cout << "TEST FAIL, section " << std::string(lastmsg) << std::endl;
+			}
 		}
 
 	public:
