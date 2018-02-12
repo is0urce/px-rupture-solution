@@ -213,6 +213,7 @@
     <ClInclude Include="src\px\common\pool.hpp" />
     <ClInclude Include="src\px\common\pool_chain.hpp" />
     <ClInclude Include="src\px\common\qtree.hpp" />
+    <ClInclude Include="src\px\common\row.hpp" />
     <ClInclude Include="src\px\common\stream.hpp" />
     <ClInclude Include="src\px\common\string.hpp" />
     <ClInclude Include="src\px\common\timer.hpp" />

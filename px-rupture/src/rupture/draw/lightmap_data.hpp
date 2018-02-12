@@ -5,14 +5,15 @@
 
 namespace px {
 
-	class lightmap_data
-	{
+	class lightmap_data {
 	public:
 		int				ox;
 		int				oy;
 		size_t			width;
 		size_t			height;
 		float *			raw;
+		float			luminance_total;
+		float			luminance_max;
 		unsigned int	version;
 		
 	public:
@@ -22,6 +23,8 @@ namespace px {
 			, width(0)
 			, height(0)
 			, raw(nullptr)
+			, luminance_total(0)
+			, luminance_max(0)
 			, version(0)
 		{
 		}

@@ -27,15 +27,19 @@ namespace px {
 		void assign_scene(scene const* blocking) noexcept {
 			stage = blocking;
 		}
+
 		uq_ptr<light_component> make() {
 			return lights.make_uq();
 		}
+
 		void target(transform_component const* target) {
 			camera = target;
 		}
+
 		void set_fov_cropping(bool do_cropping) noexcept {
 			crop_fov = do_cropping;
 		}
+
 		void calculate_lights() {
 			if (!camera) return;
 
@@ -99,13 +103,23 @@ namespace px {
 			// rotate data
 			move_ligtmaps(); 
 			
-			// dump colors to texture bitmap
+			// write data to struct
 			float * pen = current_data.raw;
-			map.enumerate([&](size_t /*x*/, size_t /*y*/, color & c) {
-				c.write(pen);
+			color total_luminance = 0;
+			color max_luminance = 0;
+			map.enumerate([&](size_t /*x*/, size_t /*y*/, color const& tint) {
+				// exposure values
+				total_luminance += tint;
+				max_luminance = color::max(max_luminance, tint);
+
+				// dump colors to texture bitmap
+				tint.write(pen);
 				pen += 4;
 			});
+			current_data.luminance_total = static_cast<float>(total_luminance.luminance());
+			current_data.luminance_max = static_cast<float>(max_luminance.luminance());
 		}
+
 		void set_radius(unsigned int new_radius) {
 			radius = new_radius;
 
@@ -126,6 +140,7 @@ namespace px {
 			last_data.raw = last_texels.data();
 			last_data.version = 0;
 		}
+
 		void clear_lightmap() {
 			std::fill(current_texels.begin(), current_texels.end(), 0.0f);
 			std::fill(last_texels.begin(), last_texels.end(), 0.0f);
@@ -133,10 +148,12 @@ namespace px {
 			set_offsets();
 			move_ligtmaps();
 		}
-		lightmap_data const* current() noexcept {
+
+		lightmap_data const* current() const noexcept {
 			return &current_data;
 		}
-		lightmap_data const* last() noexcept {
+
+		lightmap_data const* last() const noexcept {
 			return &last_data;
 		}
 

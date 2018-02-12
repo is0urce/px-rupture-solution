@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <cmath> // sin, cos for colorspace transforms
+#include <algorithm>	// max
+#include <cmath>		// sin, cos for colorspace transforms
 
 namespace px {
 
-	class color
-	{
+	class color {
 	public:
 		using component = double;
 
@@ -55,13 +55,13 @@ namespace px {
 
 		// operators
 
-		color operator-() const noexcept { return color(-R, -G, -B, A); };
+		constexpr color operator-() const noexcept { return color(-R, -G, -B, A); };
 		color& operator+=(color const& rh) noexcept { R += rh.R; G += rh.G; B += rh.B; A += rh.A; return *this; };
 		color& operator-=(color const& rh) noexcept { R -= rh.R; G -= rh.G; B -= rh.B; A -= rh.A; return *this; };
 		color& operator*=(color const& rh) noexcept { R *= rh.R, G *= rh.G, B *= rh.B, A *= rh.A; return *this; };
 
-		bool operator==(color const& rh) const noexcept { return R == rh.R && G == rh.G && B == rh.B && A == rh.A; }
-		bool operator!=(color const& rh) const noexcept { return !(*this == rh); }
+		constexpr bool operator==(color const& rh) const noexcept { return R == rh.R && G == rh.G && B == rh.B && A == rh.A; }
+		constexpr bool operator!=(color const& rh) const noexcept { return !(*this == rh); }
 		color operator+(color c) const noexcept { c += *this; return c; }
 		color operator-(color c) const noexcept { c -= *this; return c; }
 		color operator*(color c) const noexcept { c *= *this; return c; }
@@ -88,8 +88,7 @@ namespace px {
 		// hsv transformation
 		// hue - hue shift (in degrees) in hardcoded 'default' colorspace preset
 		// saturation - saturation multiplier (scalar), v - value multiplier (scalar)
-		static color transform_hsv(color const& in, double hue, double saturation, double V)
-		{
+		static color transform_hsv(color const& in, double hue, double saturation, double V) {
 			double VSU = V * saturation * std::cos(hue);
 			double VSW = V * saturation * std::sin(hue);
 
@@ -106,8 +105,8 @@ namespace px {
 
 			return ret;
 		}
-		static color transform_hue(color const& in, double angle)
-		{
+
+		static color transform_hue(color const& in, double angle) {
 			double U = std::cos(angle);
 			double W = std::sin(angle);
 
@@ -127,33 +126,30 @@ namespace px {
 
 		// i-o, we have dedicated repeat function arguments to compliment structures like solid-tinted polygons
 		template <typename Memory>
-		void write(Memory * memory) const
-		{
+		void write(Memory * memory) const {
 			memory[0] = static_cast<Memory>(R);
 			memory[1] = static_cast<Memory>(G);
 			memory[2] = static_cast<Memory>(B);
 			memory[3] = static_cast<Memory>(A);
 		};
+
 		template <typename Memory>
-		void write(Memory *memory, size_t repeat) const
-		{
-			for (size_t i = 0; i < repeat; ++i)
-			{
+		void write(Memory * memory, size_t repeat) const {
+			for (size_t i = 0; i < repeat; ++i) {
 				write(memory);
 				memory += sizeof(*this) / sizeof(component); // plus num of components
 			}
 		}
-		void write(component *memory) const
-		{
+
+		void write(component * memory) const {
 			memory[0] = R;
 			memory[1] = G;
 			memory[2] = B;
 			memory[3] = A;
 		}
-		void write(component *memory, size_t repeat) const
-		{
-			for (size_t i = 0; i < repeat; ++i)
-			{
+
+		void write(component * memory, size_t repeat) const {
+			for (size_t i = 0; i < repeat; ++i) {
 				write(memory);
 				memory += sizeof(*this) / sizeof(component); // plus num of components
 			}
@@ -161,8 +157,7 @@ namespace px {
 
 		// space is not serizlized
 		template <typename Archive>
-		void serialize(Archive & archive)
-		{
+		void serialize(Archive & archive) {
 			archive(R, G, B, A);
 		}
 
@@ -170,7 +165,7 @@ namespace px {
 		static color average(color const& a, color const& b) { return (a + b) / 2; }
 		static color average(color const& a, color const& b, color const& c) { return (a + b + c) / 3; }
 		static color average(color const& a, color const& b, color const& c, color const& d) { return (a + b + c + d) / 4; }
-
-		static const color blue;
+		static color min(color const& a, color const& b) { return color(std::min(a.R, b.R), std::min(a.G, b.G), std::min(a.B, b.B), std::min(a.A, b.A)); }
+		static color max(color const& a, color const& b) { return color(std::max(a.R, b.R), std::max(a.G, b.G), std::max(a.B, b.B), std::max(a.A, b.A)); }
 	};
 }
