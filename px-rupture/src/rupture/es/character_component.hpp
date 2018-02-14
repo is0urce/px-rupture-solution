@@ -23,15 +23,18 @@ namespace px {
 		void add_trait(std::string trait) {
 			traits.push_back(trait);
 		}
+
 		void remove_trait(size_t idx) {
 			if (idx < traits.size()) {
 				traits[idx] = traits.back();
 				traits.pop_back();
 			}
 		}
+
 		void clear_traits() {
 			traits.clear();
 		}
+
 		bool has_trait(std::string const& match) const noexcept {
 			for (std::string const& trait : traits) {
 				if (trait == match) return true;

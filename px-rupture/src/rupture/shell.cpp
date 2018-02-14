@@ -1,4 +1,7 @@
 // name: shell.cpp
+// type: c++
+// auth: is0urce
+// type: class methods implementation
 
 #include "shell.hpp"
 
@@ -13,9 +16,10 @@
 
 namespace px {
 
-	// ctor
+	// ctor & dtor
 
 	shell::~shell() = default;
+
 	shell::shell(unsigned int start_width, unsigned int start_height)
 		: renderer(start_width, start_height)
 		, ui(start_width, start_height, this)
@@ -25,8 +29,6 @@ namespace px {
 		connect_managers();
 		load_data();
 		register_systems();
-
-		//start();
 	}
 
 	// methods

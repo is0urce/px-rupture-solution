@@ -15,6 +15,7 @@
 #include "status.hpp"
 #include "skills.hpp"
 #include "title.hpp"
+#include "levelup.hpp"
 
 #include "rupture/app/bootstrap.hpp"
 
@@ -26,7 +27,7 @@ namespace px {
 
 	namespace {
 		template <typename M, typename ... Args>
-		M * make_panel(std::vector<uq_ptr<panel>> & c, Args... args) {
+		M * make_panel(std::vector<uq_ptr<panel>> & c, Args && ...args) {
 			auto p = make_uq<M>(std::forward<Args>(args)...);
 			M * ptr = p.get();
 			c.emplace_back(std::move(p));
@@ -50,6 +51,7 @@ namespace px {
 		make_panel<ui::status>(stack, game);
 		make_panel<ui::inspector>(stack, game);
 		make_panel<ui::title>(stack, game);
+		make_panel<ui::levelup>(stack, game);
 
 #if PX_INGAME_PERFORMANCE_TEST == 1
 		make_panel<ui::performance>(stack);

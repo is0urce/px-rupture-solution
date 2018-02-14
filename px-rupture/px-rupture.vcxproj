@@ -248,6 +248,8 @@
     <ClInclude Include="src\px\rl\equipment.hpp" />
     <ClInclude Include="src\px\rl\hit_result.hpp" />
     <ClInclude Include="src\px\rl\stack.hpp" />
+    <ClInclude Include="src\rupture\rl\trait.hpp" />
+    <ClInclude Include="src\rupture\rl\traits.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />
     <ClInclude Include="src\rupture\rl\item.hpp" />
     <ClInclude Include="src\px\rl\mass.hpp" />
@@ -377,6 +379,7 @@
     <ClInclude Include="src\rupture\ui\skills.hpp" />
     <ClInclude Include="src\rupture\ui\status.hpp" />
     <ClInclude Include="src\rupture\ui\title.hpp" />
+    <ClInclude Include="src\rupture\ui\levelup.hpp" />
     <ClInclude Include="src\tests\case\common\bigint_test.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />

@@ -1,7 +1,7 @@
 // name: bootstrap.hpp
 // type: c++
 // auth: is0urce
-// desc: macro setup
+// desc: application execution setup
 
 #pragma once
 
