@@ -1,13 +1,11 @@
 // name: bootstrap.hpp
+// type: c++
+// auth: is0urce
+// desc: macro setup
 
 #pragma once
 
-#ifdef NDEBUG
-#define PX_RUN_TESTS 0
-#else
-#define PX_RUN_TESTS 1
-#endif // NDEBUG
-
+#include "macro.hpp"
 
 #if PX_RUN_TESTS
 

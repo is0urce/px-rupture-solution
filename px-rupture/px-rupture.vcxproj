@@ -234,6 +234,7 @@
     <ClInclude Include="src\px\rl\buff.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\craft_activity.hpp" />
+    <ClInclude Include="src\rupture\app\macro.hpp" />
     <ClInclude Include="src\rupture\draw\visual.hpp" />
     <ClInclude Include="src\rupture\rl\craft_recipe.hpp" />
     <ClInclude Include="src\rupture\rl\craft_result.hpp" />
@@ -375,6 +376,7 @@
     <ClInclude Include="src\rupture\ui\performance.hpp" />
     <ClInclude Include="src\rupture\ui\skills.hpp" />
     <ClInclude Include="src\rupture\ui\status.hpp" />
+    <ClInclude Include="src\rupture\ui\title.hpp" />
     <ClInclude Include="src\tests\case\common\bigint_test.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />

@@ -14,6 +14,7 @@ namespace px::ui {
 	{
 	public:
 		virtual ~performance() = default;
+
 		performance()
 			: metrics(false)
 			, dbg(false)
@@ -21,15 +22,15 @@ namespace px::ui {
 		}
 
 	protected:
-		virtual void combine_panel() override
-		{
+		virtual void combine_panel() override {
+#if PX_INGAME_PERFORMANCE_TEST == 1
 			ImGui::SetNextWindowSize({ 150, 100 });
 			ImGui::SetNextWindowPos({ 50, 50 });
 			ImGui::Begin("performance", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-			if (ImGui::Button("dear imgui metrics")) {
+			if (ImGui::Button("metrics")) {
 				metrics = !metrics;
 			}
-			if (ImGui::Button("test window")) {
+			if (ImGui::Button("test")) {
 				dbg = !dbg;
 			}
 			ImGui::SetWindowFontScale(0.5f);
@@ -41,6 +42,7 @@ namespace px::ui {
 			if (dbg) {
 				ImGui::ShowTestWindow();
 			}
+#endif
 		}
 
 	private:

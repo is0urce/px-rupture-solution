@@ -25,7 +25,8 @@ namespace px {
 		connect_managers();
 		load_data();
 		register_systems();
-		start();
+
+		//start();
 	}
 
 	// methods

@@ -14,6 +14,9 @@
 #include "performance.hpp"
 #include "status.hpp"
 #include "skills.hpp"
+#include "title.hpp"
+
+#include "rupture/app/bootstrap.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -34,6 +37,7 @@ namespace px {
 	// ctor & dtor
 
 	menu::~menu() = default;
+
 	menu::menu(unsigned int w, unsigned int h, environment * game)
 		: context(game)
 		, nexus(make_uq<director>(w, h))
@@ -45,9 +49,14 @@ namespace px {
 		make_panel<ui::skills>(stack, game);
 		make_panel<ui::status>(stack, game);
 		make_panel<ui::inspector>(stack, game);
+		make_panel<ui::title>(stack, game);
 
+#if PX_INGAME_PERFORMANCE_TEST == 1
 		make_panel<ui::performance>(stack);
+#endif
+#if PX_INGAME_EDITOR == 1
 		make_panel<ui::editor>(stack, game);
+#endif
 
 		inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
 		smith_panel = make_panel<craft_smith>(stack, game);

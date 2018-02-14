@@ -24,8 +24,7 @@ namespace px {
 	unsigned int test::fails = 0;
 	const char * test::lastmsg = "not specified";
 
-	void run_tests()
-	{
+	void run_tests() {
 		test_coordinate();
 		test_pool();
 		test_qtree();

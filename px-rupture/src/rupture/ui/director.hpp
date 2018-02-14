@@ -15,8 +15,7 @@ namespace px {
 
 	class director {
 	public:
-		void resize(unsigned int w, unsigned int h)
-		{
+		void resize(unsigned int w, unsigned int h) {
 			width = w;
 			height = h;
 
@@ -25,18 +24,18 @@ namespace px {
 			io.DisplaySize = { static_cast<float>(width), static_cast<float>(height) };
 			io.DisplayFramebufferScale = { 1, 1 };
 		}
-		void begin(double delta_time)
-		{
+
+		void begin(double delta_time) {
 			ImGui::GetIO().DeltaTime = static_cast<float>(delta_time);
 			ImGui::NewFrame();
 		}
-		void end()
-		{
+
+		void end() {
 			ImGui::Render();
 			render();
 		}
-		bool click(unsigned int mouse_button, bool is_down)
-		{
+
+		bool click(unsigned int mouse_button, bool is_down) {
 			if (mouse_button > 5) return false;
 			bool hovered = ImGui::IsAnyWindowHovered();
 
@@ -45,25 +44,25 @@ namespace px {
 			ImGui::GetIO().MouseDown[mouse_button] = is_down;
 			return hovered;
 		}
-		bool text(unsigned int codepoint)
-		{
+
+		bool text(unsigned int codepoint) {
 			if (!ImGui::IsAnyItemActive() || codepoint >= 256) return false;
 
 			ImGui::GetIO().AddInputCharacter(static_cast<unsigned char>(codepoint));
 			return true;
 		}
-		bool hover(unsigned int x, unsigned int y)
-		{
+
+		bool hover(unsigned int x, unsigned int y) {
 			ImGui::GetIO().MousePos = { static_cast<float>(x), static_cast<float>(y) };
 			return ImGui::IsAnyWindowHovered();
 		}
-		bool scroll(double horisontal, double vertical)
-		{
+
+		bool scroll(double horisontal, double vertical) {
 			ImGui::GetIO().MouseWheel = static_cast<float>(horisontal + vertical);
 			return ImGui::IsAnyWindowHovered();
 		}
-		bool takes_input()
-		{
+
+		bool takes_input() {
 			return ImGui::IsAnyItemActive();
 		}
 
@@ -73,6 +72,7 @@ namespace px {
 			ImGui::Shutdown();
 			release_pipeline();
 		}
+
 		director(unsigned int w, unsigned int h)
 		{
 			resize(w, h);
@@ -94,10 +94,9 @@ namespace px {
 		}
 
 	private:
-		void render()
-		{
+		void render() {
 			// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
-			auto &io = ImGui::GetIO();
+			auto & io = ImGui::GetIO();
 			int framebuffer_width = static_cast<int>(io.DisplaySize.x * io.DisplayFramebufferScale.x);
 			int framebuffer_height = static_cast<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
 			if (framebuffer_width == 0 || framebuffer_height == 0) return;
@@ -154,8 +153,8 @@ namespace px {
 				}
 			}
 		}
-		void create_pipeline()
-		{
+
+		void create_pipeline() {
 			shader = compile_program("data/shaders/ui");
 			locationTex = glGetUniformLocation(shader, "Texture");
 			locationProjMtx = glGetUniformLocation(shader, "ProjMtx");
@@ -179,14 +178,14 @@ namespace px {
 			glVertexAttribPointer(locationColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)PX_OFFSETOF(ImDrawVert, col));
 #undef PX_OFFSETOF
 		}
-		void release_pipeline()
-		{
+
+		void release_pipeline() {
 			glDeleteVertexArrays(1, &vao);
 			glDeleteBuffers(1, &vbo);
 			glDeleteBuffers(1, &elements);
 		}
-		void load_font()
-		{
+
+		void load_font() {
 			auto & io = ImGui::GetIO();
 			unsigned char * pixels;
 			int texture_width, texture_height;
