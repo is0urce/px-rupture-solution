@@ -48,6 +48,10 @@ namespace px {
 		return run;
 	}
 
+	void environment::shutdown() {
+		run = false;
+	}
+
 	bool environment::has_control() const {
 		if (turn_pass) return false;
 		if (!player) return false;

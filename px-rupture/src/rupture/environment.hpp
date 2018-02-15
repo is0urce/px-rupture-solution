@@ -37,6 +37,7 @@ namespace px {
 		transform_component *				target() noexcept;					// hover point in world
 		void								target(point2 offset);				// hovered unit
 		bool								is_running() const noexcept;
+		void								shutdown();
 		void								step(point2 const& movement);		// move player
 		void								advance();							// move player to target
 		void								action(unsigned int action_idx);	// use skill

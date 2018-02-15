@@ -1,4 +1,4 @@
-// name: trait.hpp
+// name: levelup.hpp
 // type: c++
 // auth: is0urce
 // desc: class
