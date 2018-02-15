@@ -23,7 +23,7 @@ namespace px::ui {
 
 	protected:
 		virtual void combine_panel() override {
-#if PX_INGAME_PERFORMANCE_TEST == 1
+
 			ImGui::SetNextWindowSize({ 150, 100 });
 			ImGui::SetNextWindowPos({ 50, 50 });
 			ImGui::Begin("performance", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
@@ -42,7 +42,6 @@ namespace px::ui {
 			if (dbg) {
 				ImGui::ShowTestWindow();
 			}
-#endif
 		}
 
 	private:

@@ -26,12 +26,12 @@ namespace px {
 	// aux
 
 	namespace {
-		template <typename M, typename ... Args>
-		M * make_panel(std::vector<uq_ptr<panel>> & c, Args && ...args) {
-			auto p = make_uq<M>(std::forward<Args>(args)...);
-			M * ptr = p.get();
-			c.emplace_back(std::move(p));
-			return ptr;
+		template <typename DesiredType, typename Container, typename ... Args>
+		DesiredType * make_panel(Container & container, Args && ...args) {
+			auto smart = make_uq<DesiredType>(std::forward<Args>(args)...);
+			auto raw = smart.get();
+			container.emplace_back(std::move(smart));
+			return raw;
 		}
 	}
 
@@ -47,12 +47,6 @@ namespace px {
 		, smith_panel(nullptr)
 		, alchemy_panel(nullptr)
 	{
-		make_panel<ui::skills>(stack, game);
-		make_panel<ui::status>(stack, game);
-		make_panel<ui::inspector>(stack, game);
-		make_panel<ui::title>(stack, game);
-		make_panel<ui::levelup>(stack, game);
-
 #if PX_INGAME_PERFORMANCE_TEST == 1
 		make_panel<ui::performance>(stack);
 #endif
@@ -60,9 +54,16 @@ namespace px {
 		make_panel<ui::editor>(stack, game);
 #endif
 
+		make_panel<ui::skills>(stack, game);
+		make_panel<ui::status>(stack, game);
+		make_panel<ui::inspector>(stack, game);
+
 		inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
 		smith_panel = make_panel<craft_smith>(stack, game);
 		alchemy_panel = make_panel<craft_alchemy>(stack, game);
+
+		make_panel<ui::title>(stack, game);
+		make_panel<ui::levelup>(stack, game);
 	}
 
 	// methods
