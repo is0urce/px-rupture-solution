@@ -376,6 +376,7 @@
     <ClInclude Include="src\rupture\ui\director.hpp" />
     <ClInclude Include="src\rupture\ui\panel.hpp" />
     <ClInclude Include="src\rupture\ui\performance.hpp" />
+    <ClInclude Include="src\rupture\ui\results.hpp" />
     <ClInclude Include="src\rupture\ui\skills.hpp" />
     <ClInclude Include="src\rupture\ui\status.hpp" />
     <ClInclude Include="src\rupture\ui\title.hpp" />

@@ -16,6 +16,7 @@
 #include "skills.hpp"
 #include "title.hpp"
 #include "levelup.hpp"
+#include "results.hpp"
 
 #include "rupture/app/bootstrap.hpp"
 
@@ -64,6 +65,7 @@ namespace px {
 
 		make_panel<ui::title>(stack, game);
 		make_panel<ui::levelup>(stack, game);
+		make_panel<ui::results>(stack, game);
 	}
 
 	// methods
