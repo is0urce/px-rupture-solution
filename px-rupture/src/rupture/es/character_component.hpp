@@ -1,5 +1,7 @@
 // name: character_component.hpp
 // type: c++
+// auth: is0urce
+// desc: class
 
 #pragma once
 
@@ -9,8 +11,9 @@
 #include "rupture/rl/skill.hpp"
 #include <px/rl/skill/skill_set.hpp>
 
-#include <vector>
-#include <string>
+#include <algorithm>	// remove
+#include <string>		// key
+#include <vector>		// container
 
 namespace px {
 
@@ -26,9 +29,12 @@ namespace px {
 
 		void remove_trait(size_t idx) {
 			if (idx < traits.size()) {
-				traits[idx] = traits.back();
+				traits[idx] = std::move(traits.back());
 				traits.pop_back();
 			}
+		}
+		void remove_trait(std::string const& tag) {
+			std::remove(traits.begin(), traits.end(), tag);
 		}
 
 		void clear_traits() {

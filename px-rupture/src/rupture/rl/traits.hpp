@@ -69,11 +69,9 @@ namespace px {
 		}
 
 		std::tuple<unsigned int, unsigned int, unsigned int> select_traits(body_component const& body) {
-			auto level = body.level();
 			std::tuple<unsigned int, unsigned int, unsigned int> result = { 0, 0, 0 };
-			character_component * character = body.linked<character_component>();
-			if (character) {
-				result = select_traits(level, specialization(*character));
+			if (character_component * character = body.linked<character_component>()) {
+				result = select_traits(body.level(), specialization(*character));
 			}
 			return result;
 		}
@@ -100,18 +98,21 @@ namespace px {
 		}
 		static unsigned int bucket(class_branch branch) {
 			switch (branch) {
-			case class_branch::warrior: return 0;
-			case class_branch::mage: return 1;
-			case class_branch::archer: return 2;
+			case class_branch::warrior:
+				return 0;
+			case class_branch::mage:
+				return 1;
+			case class_branch::archer:
+				return 2;
 			}
 			return 0;
 		}
 
 		void add_trait(trait const& feature) {
-			lib.push_back(feature);
+			library.push_back(feature);
 
-			// vector can be reallocated
-			for (auto const& record : lib) {
+			// vector can be reallocated, iterate everything
+			for (auto const& record : library) {
 				by_tag[record.tag] = &record;
 				by_id[record.index] = &record;
 			}
@@ -124,12 +125,6 @@ namespace px {
 			mod_stats(feature.index, body);
 		}
 
-		void mod_stats(unsigned int trait_id, body_component & /*body*/) const {
-			switch (trait_id) {
-			case 1:
-				break;
-			}
-		}
 		void register_traits() {
 			add_trait({ 1, "class_warrior", "Strongest gnome under ground", "" });
 			add_trait({ 2, "class_archer", "Stealth Archery", "" });
@@ -138,12 +133,18 @@ namespace px {
 		void register_options() {
 			trait_selection[0][0] = { 1, 2, 3 };
 		}
+		void mod_stats(unsigned int trait_id, body_component & /*body*/) const {
+			switch (trait_id) {
+			case 1:
+				break;
+			}
+		}
 
 
 	private:
-		std::vector<trait>						lib;
-		std::map<std::string, trait const*>		by_tag;
-		std::map<unsigned int, trait const*>	by_id;
-		std::array<std::array<std::vector<unsigned int>, 60>, 3> trait_selection;
+		std::vector<trait>											library;
+		std::map<std::string, trait const*>							by_tag;
+		std::map<unsigned int, trait const*>						by_id;
+		std::array<std::array<std::vector<unsigned int>, 60>, 3>	trait_selection;
 	};
 }
