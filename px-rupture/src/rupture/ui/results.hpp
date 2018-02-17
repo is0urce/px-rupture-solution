@@ -38,11 +38,9 @@ namespace px::ui {
 			bool show = character->has_trait("game_over");
 			if (!show) return;
 
-			bool dead = !body->is_alive();
-
 			const float screen_width = ImGui::GetIO().DisplaySize.x;
 			const float screen_height = ImGui::GetIO().DisplaySize.y;
-			//const float window_width = 200.0f;
+			const float	window_width = 200.0f;
 			const float window_height = screen_height / 2;
 			const float padding_x = ImGui::GetStyle().FramePadding.x * 2; // multiplier from pixel size multiplication
 			const float padding_y = ImGui::GetStyle().FramePadding.y * 2;
@@ -52,21 +50,22 @@ namespace px::ui {
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 1.0f });
 			ImGui::Begin("##results_content", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
-			if (dead) {
-				print("Game Over");
+			if (body->is_alive()) {
+				print("Victory!", window_width);
 				ImGui::NewLine();
-				print("You have died.");
+				print("You have won.", window_width);
 				ImGui::NewLine();
-				if (button("Load")) press_load();
-				if (button("Restart")) press_restart();
+				if (button("Continue", window_width)) press_resume(*character);
+				if (button("Titles", window_width)) press_title();
+
 			}
-			if (!dead) {
-				print("Victory!");
+			else {
+				print("Game Over", window_width);
 				ImGui::NewLine();
-				print("You have won.");
+				print("You have died.", window_width);
 				ImGui::NewLine();
-				if (button("Continue")) press_resume(*character);
-				if (button("Titles")) press_title();
+				if (button("Load", window_width)) press_load();
+				if (button("Restart", window_width)) press_restart();
 			}
 
 			ImGui::End();
@@ -74,19 +73,20 @@ namespace px::ui {
 		}
 
 	private:
-		void print(std::string const& text) {
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::Button(text.c_str(), { window_width, 0.0f });
-			ImGui::PopStyleColor(3);
+		void print(std::string const& text, float width) {
+			line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f });
 		}
-		bool button(std::string const& name) {
+
+		bool button(std::string const& text, float width) {
+			return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.1f, 0.0f, 1.0f }, { 1.0f, 0.3f, 0.0f, 1.0f });
+		}
+
+		bool line(std::string const& name, float width, ImVec4 const& bg, ImVec4 const& hover, ImVec4 active) {
 			bool result;
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5f, 0.1f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 1.0f, 0.3f, 0.0f, 1.0f });
-			result = ImGui::Button(name.c_str(), { window_width, 0.0f });
+			ImGui::PushStyleColor(ImGuiCol_Button, bg);
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hover);
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, active);
+			result = ImGui::Button(name.c_str(), { width, 0.0f });
 			ImGui::PopStyleColor(3); // button style
 			return result;
 		}
@@ -94,19 +94,21 @@ namespace px::ui {
 		void press_load() {
 			context->load("quicksave");
 		}
+
 		void press_resume(character_component & character) {
 			character.remove_trait("game_over");
 		}
+
 		void press_restart() {
 			context->end();
 			context->start();
 		}
+
 		void press_title() {
 			context->end();
 		}
 
 	private:
 		environment *	context;
-		const float		window_width = 200.0f;
 	};
 }

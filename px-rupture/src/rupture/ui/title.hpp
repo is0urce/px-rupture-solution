@@ -37,39 +37,37 @@ namespace px::ui {
 			ImGui::Begin("##title_screen", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
 			// title
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::Button("Gnomi##title_name", { options_length, 0.0f });
-			ImGui::PopStyleColor(3);
+			print("Gnomi##title_name", options_length);
 			ImGui::NewLine();
 
-			// start button
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5f, 0.1f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 1.0f, 0.3f, 0.0f, 1.0f });
-			if (ImGui::Button("Start##title_start", { options_length, 0.0f })) {
-				start();
-			}
-			ImGui::PopStyleColor(3); // button style
-
-			// exit button
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.5f, 0.1f, 0.0f, 1.0f });
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 1.0f, 0.3f, 0.0f, 1.0f });
-			if (ImGui::Button("Exit##title_exit", { options_length, 0.0f })) {
-				exit();
-			}
-			ImGui::PopStyleColor(3); // button style
+			// options
+			if (button("Start", options_length)) press_start();
+			if (button("Exit##title_exit", options_length))	press_exit();
 
 			ImGui::End();
 		}
 
 	private:
-		void start() {
+		void print(std::string const& text, float width) {
+			line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f });
+		}
+
+		bool button(std::string const& text, float width) {
+			return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.1f, 0.0f, 1.0f }, { 1.0f, 0.3f, 0.0f, 1.0f });
+		}
+		bool line(std::string const& name, float width, ImVec4 const& bg, ImVec4 const& hover, ImVec4 active) {
+			bool result;
+			ImGui::PushStyleColor(ImGuiCol_Button, bg);
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hover);
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, active);
+			result = ImGui::Button(name.c_str(), { width, 0.0f });
+			ImGui::PopStyleColor(3); // button style
+			return result;
+		}
+		void press_start() {
 			context->start();
 		}
-		void exit() {
+		void press_exit() {
 			context->shutdown();
 		}
 
