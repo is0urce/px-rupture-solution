@@ -65,8 +65,8 @@ namespace px::ui {
 				ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.25f, 0.25f, 0.25f, 1.0f });
 				ImGui::Begin(("trait_card##idx" + std::to_string(index)).c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
-				ImGui::Text("%s", perk->label.c_str());
-				ImGui::Text("%s", perk->description.c_str());
+				ImGui::Text(perk->label.c_str());
+				ImGui::Text(perk->description.c_str());
 				if (ImGui::Button("Take##take_this_trait")) {
 					increment_level(trait_id, body);
 				}

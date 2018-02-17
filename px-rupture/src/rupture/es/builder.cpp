@@ -43,8 +43,8 @@ namespace px {
 	transform_component * builder::get_transform() const {
 		return transform;
 	}
-	sprite_component * builder::add_sprite(std::string const& name)
-	{
+
+	sprite_component * builder::add_sprite(std::string const& name) {
 		auto part = factory->sprites.make(name);
 		sprite = part.get();
 		if (sprite) {
@@ -53,8 +53,8 @@ namespace px {
 
 		return sprite;
 	}
-	animator_component * builder::add_animator(std::string const& name)
-	{
+
+	animator_component * builder::add_animator(std::string const& name) {
 		auto part = factory->animators.make(name);
 		animator = part.get();
 		if (animator) {
@@ -63,8 +63,8 @@ namespace px {
 
 		return animator;
 	}
-	transform_component * builder::add_transform(point2 const& location)
-	{
+
+	transform_component * builder::add_transform(point2 const& location) {
 		auto part = factory->transforms.make();
 		transform = part.get();
 		part->place(location);
@@ -72,80 +72,80 @@ namespace px {
 		unit->add(std::move(part));
 		return transform;
 	}
-	light_component * builder::add_light()
-	{
+
+	light_component * builder::add_light() {
 		auto part = factory->lights.make();
 		light = part.get();
 		unit->add(std::move(part));
 
 		return light;
 	}
-	body_component * builder::add_body()
-	{
+
+	body_component * builder::add_body() {
 		auto part = factory->bodies.make();
 		body = part.get();
 		unit->add(std::move(part));
 
 		return body;
 	}
-	npc_component * builder::add_npc()
-	{
+
+	npc_component * builder::add_npc() {
 		auto part = factory->npcs.make();
 		npc = part.get();
 		unit->add(std::move(part));
 
 		return npc;
 	}
-	character_component * builder::add_character()
-	{
+
+	character_component * builder::add_character() {
 		auto part = factory->characters.make();
 		character = part.get();
 		unit->add(std::move(part));
 
 		return character;
 	}
-	container_component * builder::add_container()
-	{
+
+	container_component * builder::add_container() {
 		auto part = make_uq<container_component>();
 		container = part.get();
 		unit->add(std::move(part));
 
 		return container;
 	}
-	player_component * builder::add_player()
-	{
+
+	player_component * builder::add_player() {
 		auto part = make_uq<player_component>();
 		player = part.get();
 		unit->add(std::move(part));
 
 		return player;
 	}
-	door_component * builder::add_door()
-	{
+
+	door_component * builder::add_door() {
 		auto part = make_uq<door_component>();
 		door = part.get();
 		unit->add(std::move(part));
 
 		return door;
 	}
-	deposite_component * builder::add_deposite()
-	{
+
+	deposite_component * builder::add_deposite() {
 		auto part = make_uq<deposite_component>();
 		deposite = part.get();
 		unit->add(std::move(part));
 
 		return deposite;
 	}
-	storage_component * builder::add_storage()
-	{
+
+	storage_component * builder::add_storage() {
 		auto part = make_uq<storage_component>();
 		storage = part.get();
 		unit->add(std::move(part));
 
 		return storage;
 	}
-	workshop_component * builder::add_workshop()
-	{
+
+	workshop_component * builder::add_workshop() {
 		auto part = make_uq<workshop_component>();
 		workshop = part.get();
 		unit->add(std::move(part));
@@ -153,39 +153,34 @@ namespace px {
 		return workshop;
 	}
 
-	void builder::remove_animator()
-	{
+	void builder::remove_animator() {
 		unit->remove<animator_component>();
 		animator = nullptr;
 	}
-	void builder::remove_transform()
-	{
+
+	void builder::remove_transform() {
 		unit->remove<transform_component>();
 		transform = nullptr;
 	}
-	void builder::remove_sprite()
-	{
+
+	void builder::remove_sprite() {
 		unit->remove<sprite_component>();
 		sprite = nullptr;
 	}
 
-	void builder::remove_body()
-	{
+	void builder::remove_body() {
 		unit->remove<body_component>();
 		body = nullptr;
 	}
-	void builder::remove_character()
-	{
+	void builder::remove_character() {
 		unit->remove<character_component>();
 		character = nullptr;
 	}
-	void builder::remove_container()
-	{
+	void builder::remove_container() {
 		unit->remove<container_component>();
 		container = nullptr;
 	}
-	void builder::remove_deposite()
-	{
+	void builder::remove_deposite() {
 		unit->remove<deposite_component>();
 		deposite = nullptr;
 	}
@@ -193,13 +188,11 @@ namespace px {
 		unit->remove<door_component>();
 		door = nullptr;
 	}
-	void builder::remove_light()
-	{
+	void builder::remove_light() {
 		unit->remove<light_component>();
 		light = nullptr;
 	}
-	void builder::remove_npc()
-	{
+	void builder::remove_npc() {
 		unit->remove<npc_component>();
 		npc = nullptr;
 	}
