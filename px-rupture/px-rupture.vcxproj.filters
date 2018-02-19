@@ -594,6 +594,9 @@
     <ClInclude Include="src\rupture\ui\results.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\ui\immediate.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">

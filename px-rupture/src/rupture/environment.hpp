@@ -33,11 +33,11 @@ namespace px {
 		: public core
 	{
 	public:
-		point2								area() const noexcept;		// hovered point
+		point2								area() const noexcept;				// hovered point
 		transform_component *				target() noexcept;					// hover point in world
 		void								target(point2 offset);				// hovered unit
 		bool								is_running() const noexcept;
-		void								shutdown();
+		void								shutdown();							// close game
 		void								step(point2 const& movement);		// move player
 		void								advance();							// move player to target
 		void								action(unsigned int action_idx);	// use skill
@@ -46,7 +46,7 @@ namespace px {
 		void								start();
 		void								end();
 		void								clear();
-		transform_component	*				possessed() noexcept;
+		transform_component	*				possessed() noexcept;				// get current player
 		void								start_turn();						// clear from previous turn
 		void								end_turn(unsigned int turns);		// end player turn and sart world processing
 		bool								turn_passed() const noexcept;		// true if it's the world processing stage

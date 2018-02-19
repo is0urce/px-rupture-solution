@@ -6,13 +6,12 @@
 #pragma once
 
 #include "panel.hpp"
+#include "immediate.hpp"
 
-#include "rupture/environment.hpp"
-#include "rupture/es/transform_component.hpp"
-#include "rupture/es/body_component.hpp"
-#include "rupture/es/character_component.hpp"
-
-#include <imgui/imgui.h>
+#include "../environment.hpp"
+#include "../es/transform_component.hpp"
+#include "../es/body_component.hpp"
+#include "../es/character_component.hpp"
 
 namespace px::ui {
 
@@ -51,21 +50,21 @@ namespace px::ui {
 			ImGui::Begin("##results_content", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
 			if (body->is_alive()) {
-				print("Victory!", window_width);
+				immediate::print("Victory!", window_width);
 				ImGui::NewLine();
-				print("You have won.", window_width);
+				immediate::print("You have won.", window_width);
 				ImGui::NewLine();
-				if (button("Continue", window_width)) press_resume(*character);
-				if (button("Titles", window_width)) press_title();
+				if (immediate::button("Continue", window_width)) press_resume(*character);
+				if (immediate::button("Titles", window_width)) press_title();
 
 			}
 			else {
-				print("Game Over", window_width);
+				immediate::print("Game Over", window_width);
 				ImGui::NewLine();
-				print("You have died.", window_width);
+				immediate::print("You have died.", window_width);
 				ImGui::NewLine();
-				if (button("Load", window_width)) press_load();
-				if (button("Restart", window_width)) press_restart();
+				if (immediate::button("Load", window_width)) press_load();
+				if (immediate::button("Restart", window_width)) press_restart();
 			}
 
 			ImGui::End();
@@ -73,24 +72,6 @@ namespace px::ui {
 		}
 
 	private:
-		void print(std::string const& text, float width) {
-			line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f });
-		}
-
-		bool button(std::string const& text, float width) {
-			return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.1f, 0.0f, 1.0f }, { 1.0f, 0.3f, 0.0f, 1.0f });
-		}
-
-		bool line(std::string const& name, float width, ImVec4 const& bg, ImVec4 const& hover, ImVec4 active) {
-			bool result;
-			ImGui::PushStyleColor(ImGuiCol_Button, bg);
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hover);
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, active);
-			result = ImGui::Button(name.c_str(), { width, 0.0f });
-			ImGui::PopStyleColor(3); // button style
-			return result;
-		}
-
 		void press_load() {
 			context->load("quicksave");
 		}

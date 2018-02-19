@@ -1,15 +1,16 @@
 // name: inspector.hpp
 // type: c++
+// auth: is0urce
+// desc: ui inspectior panel class
 
 #pragma once
 
 #include "panel.hpp"
+#include "immediate.hpp"
 
-#include "rupture/environment.hpp"
-#include "rupture/es/transform_component.hpp"
-#include "rupture/es/body_component.hpp"
-
-#include <imgui/imgui.h>
+#include "../environment.hpp"
+#include "../es/transform_component.hpp"
+#include "../es/body_component.hpp"
 
 namespace px::ui {
 
@@ -24,15 +25,11 @@ namespace px::ui {
 		}
 
 	protected:
-		virtual void combine_panel() override
-		{
+		virtual void combine_panel() override {
 			if (!game) return;
 
-			transform_component * target = game->target();
-			if (target) {
-				auto body = target->linked<body_component>();
-
-				if (body) {
+			if (auto target = game->target()) {
+				if (auto body = target->linked<body_component>()) {
 
 					const float screen_width = ImGui::GetIO().DisplaySize.x;
 					const float screen_height = ImGui::GetIO().DisplaySize.y;
@@ -45,9 +42,8 @@ namespace px::ui {
 					ImGui::Begin("##target_inspector", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
 					ImGui::Text(body->name().c_str());
-
-					bar(body->health(), "hp", { 0.5f, 0.0f, 0.0f, 1.0f });
-					bar(body->energy(), "mp", { 0.0f, 0.0f, 0.5f, 1.0f });
+					immediate::bar(body->health(), "hp", { 0.5f, 0.0f, 0.0f, 1.0f });
+					immediate::bar(body->energy(), "mp", { 0.0f, 0.0f, 0.5f, 1.0f });
 
 					if (body->is_useable()) {
 						ImGui::Text("useable [e]");
@@ -56,22 +52,6 @@ namespace px::ui {
 					ImGui::End();
 				}
 			}
-		}
-
-	private:
-		// draw resource bar
-		template <typename ResourceOption>
-		bool bar(ResourceOption const& resource, std::string const& prefix, ImVec4 const& tint) {
-			if (!resource) return false;
-			auto current = resource->current();
-			auto maximum = resource->maximum();
-			float fraction = (maximum == 0) ? 0.0f : current / static_cast<float>(maximum);
-			ImGui::Text(prefix.c_str());
-			ImGui::SameLine();
-			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, tint);
-			ImGui::ProgressBar(fraction, { -1, 0 }, (std::to_string(current) + "/" + std::to_string(maximum)).c_str());
-			ImGui::PopStyleColor(1);
-			return true;
 		}
 
 	private:

@@ -33,6 +33,7 @@ namespace px {
 				traits.pop_back();
 			}
 		}
+
 		void remove_trait(std::string const& tag) {
 			std::remove(traits.begin(), traits.end(), tag);
 		}
