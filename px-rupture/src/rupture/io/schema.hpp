@@ -7,10 +7,10 @@
 
 // build unit from document
 
-#include "rupture/es/builder.hpp"
-#include "rupture/es/body_component.hpp"
-#include "rupture/es/container_component.hpp"
-#include "rupture/es/character_component.hpp"
+#include "../es/builder.hpp"
+#include "../es/body_component.hpp"
+#include "../es/container_component.hpp"
+#include "../es/character_component.hpp"
 
 #include <bitset>	// movement mask
 #include <string>	// keys
@@ -33,6 +33,7 @@ namespace px {
 			load_node(doc, factory, "body", &load_body);
 			load_node(doc, factory, "container", &load_container);
 			load_node(doc, factory, "character", &load_character);
+			load_node(doc, factory, "npc", &load_npc);
 
 			auto result = factory.request();
 
@@ -56,16 +57,14 @@ namespace px {
 
 		// add transform
 		template <typename Document>
-		static void load_transform(Document && transform_node, builder & factory) {
-			point2 position(transform_node.value("x", 0), (transform_node.value("y", 0)));
-			factory.add_transform(position);
+		static void load_transform(Document && node, builder & factory) {
+			factory.add_transform({ node.value("x", 0), (node.value("y", 0)) });
 		}
 
 		// add sprite
 		template <typename Document>
-		static void load_sprite(Document && sprite_node, builder & factory) {
-			std::string src = sprite_node;
-			factory.add_sprite(src);
+		static void load_sprite(Document && node, builder & factory) {
+			factory.add_sprite(node);
 		}
 
 		// add body
@@ -114,8 +113,27 @@ namespace px {
 
 		// add character
 		template <typename Document>
-		static void load_character(Document && /*character_node*/, builder & factory) {
-			factory.add_character();
+		static void load_character(Document && node, builder & factory) {
+			auto person = factory.add_character();
+			auto skills = node.find("skills");
+			if (skills != node.end()) {
+				for (auto const& i : *skills) {
+					person->learn(i);
+				}
+			}
+			auto traits = node.find("traits");
+			if (traits != node.end()) {
+				for (auto const& i : *traits) {
+					person->add_trait(i);
+				}
+			}
+		}
+
+		// add npc ai
+		template <typename Document>
+		static void load_npc(Document && node, builder & factory) {
+			auto ai = factory.add_npc();
+			ai->set_range(node.value("idle_range", 10000), node.value("alert_range", 10000)); // zero is bad default value, use "bigenought" instead
 		}
 	};
 }
