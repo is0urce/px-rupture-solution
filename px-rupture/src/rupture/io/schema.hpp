@@ -69,40 +69,47 @@ namespace px {
 
 		// add body
 		template <typename Document>
-		static void load_body(Document && body_node, builder & factory) {
+		static void load_body(Document && node, builder & factory) {
 			auto body = factory.add_body();
 
 			// entity
-			body->set_tag(body_node.value("tag", std::string{ "" }));
-			body->set_name(body_node.value("name", std::string{ "" }));
-			body->set_description(body_node.value("description", std::string{ "" }));
+			load_entity(node, *body);
 
 			// standings
-			body->join_faction(body_node.value("faction", 0));
+			body->join_faction(node.value("faction", 0));
 
 			// mass
-			bool is_transparent = body_node.value("transparent", false);
-			unsigned long long blocking_mask = body_node.value("traversable", 0);
-			unsigned long long movement_mask = body_node.value("movement", 0);
+			bool is_transparent = node.value("transparent", false);
+			unsigned long long blocking_mask = node.value("traversable", 0);
+			unsigned long long movement_mask = node.value("movement", 0);
 			body->blocking().make_transparent(is_transparent);
 			body->blocking().make_traversable(body_component::mass_type::bitset_type{ blocking_mask });
 			body->movement().make_traversable(body_component::mass_type::bitset_type{ movement_mask });
 
 			// resources
-			auto hp_node = body_node.find("hp");
-			if (hp_node != body_node.end()) {
+			auto hp_node = node.find("hp");
+			if (hp_node != node.end()) {
 				int hp = *hp_node;
 				body->health().emplace(hp, hp);
 			}
-			auto mp_node = body_node.find("mp");
-			if (mp_node != body_node.end()) {
+			auto mp_node = node.find("mp");
+			if (mp_node != node.end()) {
 				int mp = *mp_node;
 				body->energy().emplace(mp, mp);
 			}
 
+			// equipment
+			auto equipment_node = node.find("equipment");
+			if (equipment_node != node.end()) {
+				auto hand_node = equipment_node->find("hand");
+				if (hand_node != equipment_node->end()) {
+					body->get_mannequin().equip(rl::equipment::hand, make_item(*hand_node));
+				}
+			}
+
 			// level & exp
-			body->set_experience(body_node.value("experience", 0));
-			body->set_level(body_node.value("level", 0));
+			body->set_experience(node.value("experience", 0));
+			body->set_level(node.value("level", 0));
 		}
 
 		// add conteiner
@@ -134,6 +141,27 @@ namespace px {
 		static void load_npc(Document && node, builder & factory) {
 			auto ai = factory.add_npc();
 			ai->set_range(node.value("idle_range", 10000), node.value("alert_range", 10000)); // zero is bad default value, use "bigenought" instead
+		}
+
+		template <typename Document>
+		static auto make_item(Document && node) {
+			auto item = make_uq<rl::item>();
+			load_entity(node, *item);
+
+			auto damage = node.find("damage");
+			if (damage != node.end()) {
+				item->add(rl::item::enhancement_type::real(rl::effect::damage, 0x00, *damage));
+			}
+
+			return item;
+		}
+
+		// fill entity props
+		template <typename Document>
+		static void load_entity(Document && node, rl::entity & obj) {
+			obj.set_tag(node.value("tag", std::string{ "" }));
+			obj.set_name(node.value("name", std::string{ "" }));
+			obj.set_description(node.value("description", std::string{ "" }));
 		}
 	};
 }

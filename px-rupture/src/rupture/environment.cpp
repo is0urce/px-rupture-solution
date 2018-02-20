@@ -87,6 +87,12 @@ namespace px {
 				player->place(destination);
 				end_turn(1);
 			}
+			else {
+				if (auto versus = stage.anybody(destination)) {
+					target_unit = versus->linked<transform_component>();
+					action(0);
+				}
+			}
 		}
 	}
 
@@ -165,8 +171,8 @@ namespace px {
 		auto body = unit_builder.add_body();
 		body->movement().make_traversable(rl::traverse::floor);
 		body->blocking().make_transparent();
-		body->health().emplace(100);
-		body->energy().emplace(50);
+		body->health().emplace(50);
+		body->energy().emplace(100);
 		body->set_name("Gnome");
 		body->join_faction(1);
 		auto character = unit_builder.add_character();

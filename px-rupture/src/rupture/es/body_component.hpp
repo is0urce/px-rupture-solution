@@ -53,6 +53,7 @@ namespace px {
 		using buff_type = rl::buff<rl::effect, std::int32_t, double>;
 		using enhancement_type = rl::enhancement<rl::effect, std::int32_t, double>;
 		using resource_value_type = resource_type::value_type::value_type;
+		using doll_type = rl::doll<rl::equipment, rl::item>;
 
 	public:
 		void														add(buff_type affect);
@@ -71,7 +72,7 @@ namespace px {
 		void														set_level(std::uint32_t lvl);
 		void														set_experience(std::uint32_t exp);
 		bool														try_use(body_component * user, environment * env);
-
+		doll_type &													get_mannequin();
 		void														unequip(rl::equipment slot);
 		void														use(body_component * user, environment * env);
 
@@ -95,7 +96,7 @@ namespace px {
 		mass_type													mass;
 		movement_type												traverse_opts;
 		useable_type *												button;
-		rl::doll<rl::equipment, rl::item>							mannequin;
+		doll_type													mannequin;
 		std::vector<buff_type>										buffs;
 		std::uint32_t												lvl;
 		std::uint32_t												exp;

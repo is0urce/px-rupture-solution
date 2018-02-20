@@ -103,4 +103,7 @@ namespace px {
 	void body_component::set_experience(std::uint32_t n) {
 		exp = n;
 	}
+	body_component::doll_type &	body_component::get_mannequin() {
+		return mannequin;
+	}
 }
