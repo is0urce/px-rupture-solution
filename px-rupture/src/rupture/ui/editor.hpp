@@ -484,6 +484,7 @@ namespace px::ui {
 			if (!character) return;
 
 			size_t skills = character->size();
+            size_t traits = character->count_traits();
 
 			ImGui::Separator();
 			ImGui::Text("character");
@@ -491,6 +492,7 @@ namespace px::ui {
 				ImGui::BeginTooltip();
 				ImGui::Text("book: %p", character->get_book());
 				ImGui::Text("skills: %d", skills);
+                ImGui::Text("traits: %d", traits);
 				ImGui::EndTooltip();
 			}
 			ImGui::SameLine();
@@ -498,6 +500,18 @@ namespace px::ui {
 				PX_BUILD(remove_character());
 			}
 			else {
+                ImGui::Text("Traits:");
+                for (size_t i = 0; i != traits; ++i) {
+                    ImGui::Text("%d) %s", i, character->get_trait(i).c_str());
+                    ImGui::SameLine();
+                    ImGui::PushID(static_cast<int>(i));
+                    if (ImGui::Button("x##remove_trait")) {
+                        character->remove_trait(i);
+                    }
+                    ImGui::PopID();
+                }
+
+                ImGui::Text("Abilities:");
 				for (size_t i = 0; i != skills; ++i) {
 					auto sk = character->get(i);
 					if (sk) {
@@ -513,9 +527,11 @@ namespace px::ui {
 							ImGui::EndTooltip();
 						}
 						ImGui::SameLine();
+                        ImGui::PushID(static_cast<int>(i));
 						if (ImGui::Button("x##remove_skill")) {
 							character->remove(i);
 						}
+                        ImGui::PopID();
 					}
 					else {
 						ImGui::Text("%d: null", i);

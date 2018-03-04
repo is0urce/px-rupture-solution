@@ -49,6 +49,15 @@ namespace px {
 			return false;
 		}
 
+        std::string get_trait(size_t idx) const {
+            return traits[idx];
+        }
+
+        // get number of traits
+        size_t count_traits() const noexcept {
+            return traits.size();
+        }
+
 		template <typename Archive>
 		void serialize(Archive & archive) {
 			archive(static_cast<rl::skill_set<skill> &>(*this));

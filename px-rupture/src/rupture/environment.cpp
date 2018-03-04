@@ -185,6 +185,7 @@ namespace px {
 		weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
 		weapon->set_name("Sword");
 		container->add(std::move(weapon));
+
 		for (int i = 0; i != 10; ++i) {
 			auto item = make_uq<rl::item>();
 			item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::alchemy), 1));
