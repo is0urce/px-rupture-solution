@@ -217,7 +217,7 @@
     <ClInclude Include="src\px\common\stream.hpp" />
     <ClInclude Include="src\px\common\string.hpp" />
     <ClInclude Include="src\px\common\timer.hpp" />
-    <ClInclude Include="src\px\common\title.hpp" />
+    <ClInclude Include="src\px\common\label.hpp" />
     <ClInclude Include="src\px\common\vector.hpp" />
     <ClInclude Include="src\px\dev\assert.hpp" />
     <ClInclude Include="src\px\dev\poly_logger.hpp" />
@@ -385,6 +385,7 @@
     <ClInclude Include="src\rupture\ui\levelup.hpp" />
     <ClInclude Include="src\tests\case\common\bigint_test.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
+    <ClInclude Include="src\tests\case\common\label_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />
     <ClInclude Include="src\tests\case\common\row_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />

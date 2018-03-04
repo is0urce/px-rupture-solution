@@ -38,12 +38,12 @@
 #include <vector>
 
 #define PX_BUILD(OP)	{ \
-							builder factory(game); \
-							factory.begin(std::move(current)); \
-							factory.OP; \
-							current = factory.request(); \
-							update_props(); \
-						}
+                            builder factory(game); \
+                            factory.begin(std::move(current)); \
+                            factory.OP; \
+                            current = factory.request(); \
+                            update_props(); \
+                        }
 
 namespace px::ui {
 
@@ -85,20 +85,20 @@ namespace px::ui {
 
             ImGui::Combo("##shemata_list", &schema_selected, vector_getter, static_cast<void*>(&schemata), static_cast<int>(schemata.size()));
             ImGui::SameLine();
-            if (ImGui::Button("load###load_schema")) {
+            if (ImGui::Button("load##load_schema")) {
                 load_current_schema();
             }
 
             ImGui::Combo("##blueprints_list", &blueprint_selected, vector_getter, static_cast<void*>(&blueprints), static_cast<int>(blueprints.size()));
             ImGui::SameLine();
-            if (ImGui::Button("load###load_blueprint")) {
+            if (ImGui::Button("load##load_blueprint")) {
                 load_current_blueprint();
             }
 
-            if (ImGui::Button("pick###pick_unit")) {
+            if (ImGui::Button("pick##pick_unit")) {
             }
             ImGui::SameLine();
-            if (ImGui::Button("refresh###refresh_templates")) {
+            if (ImGui::Button("refresh##refresh_templates")) {
                 refresh_template_items();
             }
 
@@ -1025,3 +1025,5 @@ namespace px::ui {
         int							workshop_variant;
     };
 }
+
+#undef PX_BUILD

@@ -597,7 +597,10 @@
     <ClInclude Include="src\rupture\ui\immediate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\px\common\title.hpp">
+    <ClInclude Include="src\tests\case\common\label_test.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\common\label.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
