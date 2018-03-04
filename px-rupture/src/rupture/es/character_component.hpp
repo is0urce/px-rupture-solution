@@ -17,37 +17,37 @@
 
 namespace px {
 
-	class character_component
-		: public component
-		, public link_dispatcher<character_component>
-		, public rl::skill_set<skill>
-	{
-	public:
-		void add_trait(std::string trait) {
-			traits.push_back(trait);
-		}
+    class character_component
+        : public component
+        , public link_dispatcher<character_component>
+        , public rl::skill_set<skill>
+    {
+    public:
+        void add_trait(std::string trait) {
+            traits.push_back(trait);
+        }
 
-		void remove_trait(size_t idx) {
-			if (idx < traits.size()) {
-				traits[idx] = std::move(traits.back());
-				traits.pop_back();
-			}
-		}
+        void remove_trait(size_t idx) {
+            if (idx < traits.size()) {
+                traits[idx] = std::move(traits.back());
+                traits.pop_back();
+            }
+        }
 
-		void remove_trait(std::string const& tag) {
-			std::remove(traits.begin(), traits.end(), tag);
-		}
+        void remove_trait(std::string const& tag) {
+            std::remove(traits.begin(), traits.end(), tag);
+        }
 
-		void clear_traits() {
-			traits.clear();
-		}
+        void clear_traits() {
+            traits.clear();
+        }
 
-		bool has_trait(std::string const& match) const noexcept {
-			for (std::string const& trait : traits) {
-				if (trait == match) return true;
-			}
-			return false;
-		}
+        bool has_trait(std::string const& match) const noexcept {
+            for (std::string const& trait : traits) {
+                if (trait == match) return true;
+            }
+            return false;
+        }
 
         std::string get_trait(size_t idx) const {
             return traits[idx];
@@ -58,19 +58,19 @@ namespace px {
             return traits.size();
         }
 
-		template <typename Archive>
-		void serialize(Archive & archive) {
-			archive(static_cast<rl::skill_set<skill> &>(*this));
-			archive(traits);
-		}
+        template <typename Archive>
+        void serialize(Archive & archive) {
+            archive(static_cast<rl::skill_set<skill> &>(*this));
+            archive(traits);
+        }
 
-	public:
-		virtual ~character_component() = default;
-		character_component() = default;
-		character_component(character_component const&) = delete;
-		character_component const& operator=(character_component const&) = delete;
+    public:
+        virtual ~character_component() = default;
+        character_component() = default;
+        character_component(character_component const&) = delete;
+        character_component const& operator=(character_component const&) = delete;
 
-	private:
-		std::vector<std::string> traits;
-	};
+    private:
+        std::vector<std::string> traits;
+    };
 }

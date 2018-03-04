@@ -56,7 +56,7 @@ namespace px {
             return !operator<(rh);
         }
 
-        // concatention
+        // concatenation
         // ::DOWENEEDITANYWAY?::
         template <size_t RLen>
         label<Len + RLen - 1> operator+(label<RLen> const& rh) {

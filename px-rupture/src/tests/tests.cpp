@@ -21,24 +21,24 @@
 
 namespace px {
 
-	unsigned int test::total = 0;
-	unsigned int test::fails = 0;
-	const char * test::lastmsg = "not specified";
+    unsigned int test::total = 0;
+    unsigned int test::fails = 0;
+    const char * test::lastmsg = "not specified";
 
-	void run_tests() {
-		test_coordinate();
-		test_pool();
-		test_qtree();
-		test_link();
-		test_matrix();
-		test_memory();
-		test_bigint();
-		test_row();
+    void run_tests() {
+        test_coordinate();
+        test_pool();
+        test_qtree();
+        test_link();
+        test_matrix();
+        test_memory();
+        test_bigint();
+        test_row();
         test_label();
 
-		test_traverse();
-		test::print();
-	}
+        test_traverse();
+        test::print();
+    }
 }
 
 #endif // TESTS

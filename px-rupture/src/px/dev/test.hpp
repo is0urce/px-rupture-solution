@@ -27,6 +27,9 @@ namespace px {
 			}
 		}
 
+        static void require_nocompile(const char * /*code*/) {
+        }
+
 		static void section(const char* section_name) {
 			lastmsg = section_name;
 		}
