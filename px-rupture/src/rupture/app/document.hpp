@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 #include <fstream>
 #include <stdexcept>
@@ -13,13 +13,12 @@
 
 namespace px {
 
-	class document {
-	public:
-		static auto load_document(std::string const& document_name)
-		{
-			std::ifstream file(document_name);
-			if (!file.is_open()) throw std::runtime_error("px::depot::load_document() - error opening file, path=" + document_name);
-			return nlohmann::json::parse(file);
-		}
-	};
+    class document {
+    public:
+        static auto load_document(std::string const& document_name) {
+            std::ifstream file(document_name);
+            if (!file.is_open()) throw std::runtime_error("px::depot::load_document() - error opening file, path=" + document_name);
+            return nlohmann::json::parse(file);
+        }
+    };
 }
