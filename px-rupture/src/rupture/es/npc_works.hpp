@@ -19,103 +19,106 @@
 
 namespace px {
 
-	class npc_works	{
-	public:
-		void assign_scene(scene * world) noexcept {
-			stage = world;
-		}
-		uq_ptr<npc_component> make() {
-			return pool.make_uq();
-		}
+    class npc_works {
+    public:
+        void assign_scene(scene * world) noexcept {
+            stage = world;
+        }
+        uq_ptr<npc_component> make() {
+            return pool.make_uq();
+        }
 
-	public:
-		void turn() {
-			fov observed;
-			pool.enumerate([&](npc_component & npc) {
-				if (!npc.is_active()) return;
+    public:
+        void turn() {
+            fov sight;
+            pool.enumerate([&](npc_component & npc) {
+                if (!npc.is_active()) return;
 
-				// ensure valid composition
-				transform_component * pawn = npc.linked<transform_component>();
-				if (!pawn) return;
-				body_component * body = pawn->linked<body_component>();
-				if (!body) return;
-				character_component * character = body->linked<character_component>();
-				if (!character) return;
+                // ensure valid composition
+                auto pawn = npc.linked<transform_component>();
+                if (!pawn) return;
+                auto body = pawn->linked<body_component>();
+                if (!body) return;
+                auto character = body->linked<character_component>();
+                if (!character) return;
 
-				// ensure npc can act
-				if (!body->is_alive()) return;
+                // ensure npc can act
+                if (!body->is_alive()) return;
 
-				// health drop check
-				if (npc.is_idle() && !body->health()->full()) {
-					npc.alert();
-					npc.destination() = pawn->position(); // init waypoint to current position
-				}
+                // health drop check
+                if (npc.is_idle() && !body->health()->full()) {
+                    npc.alert();
+                    npc.destination() = pawn->position(); // init waypoint to current position
+                }
 
-				// select enemy in range
-				unsigned int range = npc.get_range();
-				observed.calculate(pawn->position(), range, [&](int x, int y) { return stage->is_transparent({ x, y }); });
-				transform_component * target = lock_target(pawn->position(), *body, observed);
-				if (target) {
-					npc.alert();
-					npc.destination() = target->position();
-				}
+                // select enemy in range
+                unsigned int range = npc.get_range();
+                sight.calculate(pawn->position(), range, [&](int x, int y) { return stage->is_transparent({ x, y }); });
+                transform_component * target = lock_target(pawn->position(), *body, sight);
+                if (target) {
+                    npc.alert();
+                    npc.destination() = target->position();
+                }
 
-				// act
-				if (!npc.is_idle()) {
-					bool cast = false;
+                // act
+                if (!npc.is_idle()) {
+                    bool cast = false;
 
-					// use direct skills
-					if (target) {
-						auto * target_body = target->linked<body_component>();
-						for (size_t i = 0, size = character->size(); !cast && i != size; ++i) {
-							if (auto * skill = character->get(i)) {
-								cast = skill->is_targeted() && skill->try_use(body, target_body);
-							}
-						}
-					}
+                    // use direct skills
+                    if (target) {
+                        auto * target_body = target->linked<body_component>();
+                        for (size_t i = 0, size = character->size(); !cast && i != size; ++i) {
+                            if (auto * skill = character->get(i)) {
+                                cast = skill->is_targeted() && skill->try_use(body, target_body);
+                            }
+                        }
+                    }
 
-					// use area skills
-					if (!cast) {
-						for (size_t i = 0, size = character->size(); !cast && i != size; ++i) {
-							if (auto * skill = character->get(i)) {
-								cast = !skill->is_targeted() && skill->try_use(body, npc.destination());
-							}
-						}
-					}
+                    // use area skills
+                    if (!cast) {
+                        for (size_t i = 0, size = character->size(); !cast && i != size; ++i) {
+                            if (auto * skill = character->get(i)) {
+                                cast = !skill->is_targeted() && skill->try_use(body, npc.destination());
+                            }
+                        }
+                    }
 
-					// or advance
-					if (!cast) {
-						const unsigned int iteration_steps = 150;
-						auto path = a_star::find(pawn->position(), npc.destination(), [opts = body->movement(), this](point2 const& location) { return stage->is_traversable(location, opts); }, iteration_steps);
+                    // or advance
+                    if (!cast) {
+                        const unsigned int iteration_steps = 150;
+                        auto path = a_star::find(pawn->position(), npc.destination(), [opts = body->movement(), this](point2 const& location) { return stage->is_traversable(location, opts); }, iteration_steps);
 
-						if (path.size() != 0) {
-							point2 const& next = path.front();
-							if (stage->is_traversable(next, body->movement())) {
-								pawn->place(next);
-							}
-						}
-					}
-				}
-			});
-		}
-	private:
-		transform_component * lock_target(point2 const& center, body_component::standing_type const& faction, fov const& observe) {
-			transform_component * result = nullptr;
-			stage->space()->find(center, observe.range(), [&](int /*x*/, int /*y*/, transform_component * subject) {
-				if (!subject) return;
-				if (!observe.contains(subject->position())) return;
+                        if (path.size() != 0) {
+                            point2 const& next = path.front();
+                            if (stage->is_traversable(next, body->movement())) {
+                                pawn->place(next);
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
-				if (auto subject_body = subject->linked<body_component>()) {
-					if (faction.is_hostile(*subject_body)) {
-						result = subject;
-					}
-				}
-			});
-			return result;
-		}
+    private:
 
-	private:
-		pool_chain<npc_component, 1024> pool;
-		scene *							stage;
-	};
+        // select target
+        transform_component * lock_target(point2 const& center, body_component::standing_type const& faction, fov const& observe) {
+            transform_component * result = nullptr;
+            stage->space()->find(center, observe.range(), [&](int /*x*/, int /*y*/, transform_component * subject) {
+                if (!subject) return;
+                if (!observe.contains(subject->position())) return;
+
+                if (auto subject_body = subject->linked<body_component>()) {
+                    if (faction.is_hostile(*subject_body)) {
+                        result = subject;
+                    }
+                }
+            });
+            return result;
+        }
+
+    private:
+        pool_chain<npc_component, 1024> pool;
+        scene *                         stage;
+    };
 }

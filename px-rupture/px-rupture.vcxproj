@@ -231,6 +231,7 @@
     <ClInclude Include="src\px\es\light.hpp" />
     <ClInclude Include="src\px\rgl\offscreen.hpp" />
     <ClInclude Include="src\px\rl\ai_state.hpp" />
+    <ClInclude Include="src\px\rl\specialty.hpp" />
     <ClInclude Include="src\px\rl\bar.hpp" />
     <ClInclude Include="src\px\rl\buff.hpp" />
     <ClInclude Include="src\px\rl\constitution.hpp" />
@@ -400,6 +401,7 @@
     <None Include="data\controls.json" />
     <None Include="data\schemata\dummy.json" />
     <None Include="data\schemata\mobile.json" />
+    <None Include="data\schemata\mobile_t0.json" />
     <None Include="data\scripts\lib_rupture.lua" />
     <None Include="data\scripts\sk_o_teleport.lua" />
     <None Include="data\scripts\sk_s_flurry.lua" />

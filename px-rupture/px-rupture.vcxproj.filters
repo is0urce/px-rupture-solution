@@ -603,6 +603,9 @@
     <ClInclude Include="src\px\common\label.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\px\rl\specialty.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -717,5 +720,6 @@
     <None Include="data\scripts\sk_v_bite.lua" />
     <None Include="data\scripts\sk_v_sting.lua" />
     <None Include="data\scripts\sk_v_swipe.lua" />
+    <None Include="data\schemata\mobile_t0.json" />
   </ItemGroup>
 </Project>
