@@ -54,7 +54,7 @@ namespace px {
         void                                return_turn();                      // pass turn back to player
         void                                popup(std::string, color tint, point2 location);
         void                                popup(std::string, color tint);
-        int	                                distance(point2 const& a, point2 const& b) const;
+        int                                 distance(point2 const& a, point2 const& b) const;
         void                                give_experience(int experience, int level);
         bool                                has_access(rl::craft_activity station) const noexcept;
         void                                open_workshop(rl::craft_activity station);
@@ -67,8 +67,8 @@ namespace px {
 
         // script bindings
     public:
-        bool                                in_sight(body_component const& body, point2 const& location) const;    // in line of sight
-        bool                                in_line(body_component const& body, point2 const& location) const;    // in line of movement
+        bool                                in_sight(body_component const& body, point2 const& location) const; // in line of sight
+        bool                                in_line(body_component const& body, point2 const& location) const;  // in line of movement
         void                                emit_visual(std::string const& name, point2 start, point2 finish, transform_component * track);
         void                                emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component * track);
         rl::hit_result                      hit(body_component const& source, body_component const& target) const;

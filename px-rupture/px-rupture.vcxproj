@@ -198,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\px\algorithm\a_star.hpp" />
+    <ClInclude Include="src\px\algorithm\bresenham.hpp" />
     <ClInclude Include="src\px\algorithm\fov.hpp" />
     <ClInclude Include="src\px\algorithm\recursive_shadowcasting.hpp" />
     <ClInclude Include="src\px\common\b_uint.hpp" />

@@ -24,6 +24,7 @@
 
 #include <px/memory/memory.hpp>
 #include <px/algorithm/fov.hpp>
+#include <px/algorithm/bresenham.hpp>
 
 namespace px {
 
@@ -411,7 +412,14 @@ namespace px {
         return sight.contains(location);
     }
 
-    bool environment::in_line(body_component const& /*body*/, point2 const& /*location*/) const {
-        return true;
+    bool environment::in_line(body_component const& body, point2 const& location) const {
+        auto pawn = body.linked<transform_component>();
+        if (!pawn) return false;
+
+        bool traverse = true;
+        bresenham::line(pawn->position(), location, [&](auto && spot) {
+            if (spot != pawn->position()) traverse &= stage.is_traversable(spot, body.movement());
+        });
+        return traverse;
     }
 }
