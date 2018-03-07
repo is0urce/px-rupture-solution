@@ -724,5 +724,6 @@
     <None Include="data\scripts\sk_v_sting.lua" />
     <None Include="data\scripts\sk_v_swipe.lua" />
     <None Include="data\schemata\mobile_t0.json" />
+    <None Include="data\scripts\sk_v_sound.lua" />
   </ItemGroup>
 </Project>

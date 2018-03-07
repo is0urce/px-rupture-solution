@@ -178,7 +178,7 @@ namespace px {
         body->set_name("Gnome");
         body->join_faction(1);
         auto character = unit_builder.add_character();
-        character->learn("sk_v_melee", "sk_s_smite", "sk_s_rend", "sk_s_flurry");
+        character->learn("sk_v_melee", "sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_v_sound", "sk_o_teleport");
 
         // inventory
         auto container = unit_builder.add_container();
@@ -290,6 +290,12 @@ namespace px {
             }
         });
 
+        // update visual effect unit tracking
+        for (auto & fx : vfx) {
+            fx.pawn->place(fx.track ? fx.track->position() : fx.finish);
+            fx.pawn->store(fx.start);
+        }
+
         // select hovered unit
         lock_target();
 
@@ -372,33 +378,47 @@ namespace px {
         stage.pset(3, area());
     }
 
-    void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component * track) {
+    void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track) {
         auto sprite = sprites.make(name);
-        auto tr = make_uq<transform_component>();
-        tr->store(start);
-        tr->place(finish);
+        auto pawn = make_uq<transform_component>();
 
-        sprite->connect<transform_component>(track ? track : tr.get());
+        // setup
+
+        pawn->store(start);
+        pawn->place(finish);
+
+        sprite->connect(pawn.get());
+
+        // activate
+
+        pawn->activate();
         sprite->activate();
 
-        vfx.push_back({ start, finish, std::move(tr), std::move(sprite), nullptr });
+        vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), nullptr, track });
     }
 
-    void environment::emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component * track) {
+    void environment::emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track) {
         auto sprite = sprites.make("e_empty");
         auto animation = animators.make(name);
-        auto tr = make_uq<transform_component>();
-        tr->store(start);
-        tr->place(finish);
+        auto pawn = make_uq<transform_component>();
 
-        sprite->connect<transform_component>(track ? track : tr.get());
-        sprite->activate();
+        // setup
 
-        animation->connect<sprite_component>(sprite.get());
-        animation->activate();
+        pawn->store(start);
+        pawn->place(finish);
+
+        sprite->connect(pawn.get());
+
+        animation->connect(sprite.get());
         animation->play(clip_id);
 
-        vfx.push_back({ start, finish, std::move(tr), std::move(sprite), std::move(animation) });
+        // activate
+
+        pawn->activate();
+        animation->activate();
+        sprite->activate();
+
+        vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), std::move(animation), track });
     }
 
     bool environment::in_sight(body_component const& body, point2 const& location) const {

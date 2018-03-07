@@ -1,9 +1,9 @@
 // name: bresenham.hpp
+// type: c++
 
 #pragma once
 
 #include <cmath>
-#include <tuple>
 
 namespace px {
 
@@ -20,8 +20,8 @@ namespace px {
             int dy = std::abs(y1 - y0);
             int error = 0;
 
-            int sy = y0 > y1 ? -1 : 1;
             int sx = x0 > x1 ? -1 : 1;
+            int sy = y0 > y1 ? -1 : 1;
 
             int y = y0;
 
