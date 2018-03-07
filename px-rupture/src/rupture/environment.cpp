@@ -375,7 +375,6 @@ namespace px {
     }
 
     void environment::function_edit(std::uint32_t /*idx*/) {
-        stage.pset(3, area());
     }
 
     void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track) {
@@ -437,8 +436,9 @@ namespace px {
         if (!pawn) return false;
 
         bool traverse = true;
-        bresenham::line(pawn->position(), location, [&](auto && spot) {
-            if (spot != pawn->position()) traverse &= stage.is_traversable(spot, body.movement());
+        bresenham::line(pawn->position(), location, [&](int x, int y) {
+            point2 position(x, y);
+            if (position != pawn->position()) traverse &= stage.is_traversable(position, body.movement());
         });
         return traverse;
     }
