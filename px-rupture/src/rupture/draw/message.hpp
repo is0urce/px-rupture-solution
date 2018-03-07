@@ -7,12 +7,11 @@
 #include <string>
 
 namespace px {
-	
-	class message
-	{
-	public:
-		std::string	text;
-		color		tint;
-		double		magnitude;
-	};
+
+    class message final {
+    public:
+        std::string text;
+        color       tint;
+        double      magnitude;
+    };
 }

@@ -8,7 +8,7 @@
 #include <px/es/component.hpp>
 #include <px/es/link_dispatcher.hpp>
 
-#include "rupture/rl/skill.hpp"
+#include "../rl/skill.hpp"
 #include <px/rl/skill/skill_set.hpp>
 #include <px/rl/specialty.hpp>
 

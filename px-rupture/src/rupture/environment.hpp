@@ -17,6 +17,7 @@
 #include <px/rl/craft_activity.hpp>
 
 #include <cstdint>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -71,7 +72,7 @@ namespace px {
         bool                                in_line(body_component const& body, point2 const& location) const;  // in line of movement
         void                                emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track);
         void                                emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track);
-        rl::hit_result                      hit(body_component const& source, body_component const& target) const;
+        rl::hit_result                      hit(body_component const& source, body_component const& target);
         std::tuple<int, rl::damage_type>    dps(body_component const& source) const;
         void                                damage(body_component & target, int damage, rl::damage_type dmg_type);
 
@@ -106,5 +107,6 @@ namespace px {
         transform_component *               target_unit;                        // targeted unit
         rl::craft_activity                  opened_workshop;
         std::vector<visual>                 vfx;                                // current visual effects
+        std::mt19937                        rng;                                // random number generator engine
     };
 }

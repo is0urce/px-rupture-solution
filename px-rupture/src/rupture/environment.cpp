@@ -10,6 +10,8 @@
 #include "draw/visual.hpp"
 #include "io/repository.hpp"
 
+#include "es/builder.hpp"
+
 #include "es/animator_component.hpp"
 #include "es/body_component.hpp"
 #include "es/character_component.hpp"
@@ -20,11 +22,11 @@
 #include "es/sprite_component.hpp"
 #include "es/transform_component.hpp"
 
-#include "es/builder.hpp"
-
 #include <px/memory/memory.hpp>
 #include <px/algorithm/fov.hpp>
 #include <px/algorithm/bresenham.hpp>
+
+#include <algorithm>
 
 namespace px {
 
@@ -42,6 +44,12 @@ namespace px {
         stage.set_enter_event([&](point2 const& cell) { load_scene(cell); });
 
         clear();
+
+        std::mt19937::result_type noize[rng.state_size];
+        std::random_device device;
+        std::generate(std::begin(noize), std::end(noize), std::ref(device));
+        std::seed_seq seq(std::begin(noize), std::end(noize));
+        rng = std::mt19937(seq);
     }
 
     // methods
@@ -340,8 +348,27 @@ namespace px {
         }
     }
 
-    rl::hit_result environment::hit(body_component const& /*source*/, body_component const& /*target*/) const {
-        return rl::hit_result::connects;
+    rl::hit_result environment::hit(body_component const& source, body_component const& target) {
+        rl::hit_result result = rl::hit_result::miss;
+
+        double accuracy = source.accumulate({ rl::effect::accuracy }).magnitude0;
+        double dodge = target.accumulate({ rl::effect::dodge }).magnitude0;
+
+        auto score = accuracy - dodge;
+        if (std::uniform_real_distribution<double>{}(rng) < score) {
+            result = rl::hit_result::connects;
+            double critical = source.accumulate({ rl::effect::critical }).magnitude0;
+            if (std::uniform_real_distribution<double>{}(rng) < critical) {
+                result = rl::hit_result::critical;
+            }
+        }
+        else {
+            if (std::uniform_real_distribution<double>{}(rng) < 0.05) {
+                result = rl::hit_result::failure;
+            }
+        }
+
+        return result;
     }
     std::tuple<int, rl::damage_type> environment::dps(body_component const& source) const {
         auto dps = source.accumulate(body_component::enhancement_type::zero(rl::effect::damage));
@@ -431,12 +458,12 @@ namespace px {
         return sight.contains(location);
     }
 
-    bool environment::in_line(body_component const& body, point2 const& location) const {
+    bool environment::in_line(body_component const& body, point2 const& destination) const {
         auto pawn = body.linked<transform_component>();
         if (!pawn) return false;
 
         bool traverse = true;
-        bresenham::line(pawn->position(), location, [&](int x, int y) {
+        bresenham::line(pawn->position(), destination, [&](int x, int y) {
             point2 position(x, y);
             if (position != pawn->position()) traverse &= stage.is_traversable(position, body.movement());
         });

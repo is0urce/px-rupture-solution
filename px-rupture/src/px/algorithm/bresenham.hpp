@@ -1,7 +1,11 @@
 // name: bresenham.hpp
 // type: c++
+// auth: is0urce
+// desc: static function class
 
 #pragma once
+
+// line plotting with bresneham algorithm
 
 #include <algorithm>
 #include <cmath>
@@ -22,6 +26,7 @@ namespace px {
             int dy = std::abs(y1 - y0);
             int steps = std::max(dx, dy) + 1;
 
+            // select resolution
             if (dx >= dy) {
                 if (x1 > x0) {
                     if (y1 > y0)    line_h<+1, +1>(x0, y0, dx, dy, steps, std::forward<Plot>(fn));
@@ -45,6 +50,7 @@ namespace px {
         }
 
     private:
+        // horisontal stride option
         template <int MX, int MY, typename Plot>
         static void line_h(int x, int y, int dx, int dy, int steps, Plot && fn) {
             int error = 0;
@@ -61,6 +67,7 @@ namespace px {
             }
         }
 
+        // vertical stride option
         template <int MX, int MY, typename Plot>
         static void line_v(int x, int y, int dx, int dy, int steps, Plot && fn) {
             int error = 0;
