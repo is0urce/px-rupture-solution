@@ -40,13 +40,14 @@ namespace px {
         }
 
         // simulate melee hit event ang get it results
-        std::tuple<int, int, bool, bool> hit(script_unit const& attacker, script_unit const& target) {
+        std::tuple<float, int, bool, bool> hit(script_unit const& attacker, script_unit const& target) {
             body_component const* user_body = attacker.get_body();
             body_component const* target_body = target.get_body();
 
-            int damage = 0;
-            bool critical = false;
             bool connects = false;
+            bool critical = false;
+
+            float damage = 0;
             rl::damage_type damage_type = rl::damage_type::pure;
 
             if (user_body && target_body) {
@@ -72,9 +73,9 @@ namespace px {
             return script_unit(composite ? composite->qlink<body_component, transform_component>() : nullptr);
         }
 
-        void damage(script_unit & target, int damage, int damage_type) {
+        void damage(script_unit & target, float damage, int damage_type) {
             if (auto body = target.get_body()) {
-                game->damage(*body, damage, static_cast<rl::damage_type>(damage_type));
+                game->damage(*body, static_cast<int>(damage), static_cast<rl::damage_type>(damage_type));
             }
         }
 

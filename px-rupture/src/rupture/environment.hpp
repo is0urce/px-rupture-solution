@@ -73,7 +73,7 @@ namespace px {
         void                                emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track);
         void                                emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track);
         rl::hit_result                      hit(body_component const& source, body_component const& target);
-        std::tuple<int, rl::damage_type>    dps(body_component const& source) const;
+        std::tuple<float, rl::damage_type>  dps(body_component const& source) const;
         void                                damage(body_component & target, int damage, rl::damage_type dmg_type);
 
     public:

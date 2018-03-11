@@ -196,6 +196,14 @@ namespace px {
         weapon->set_name("Sword");
         container->add(std::move(weapon));
 
+        // intrinsic effect item
+        auto hide = make_uq<rl::item>();
+        hide->setup_entity("intrinsic", "i_hide");
+        hide->add(body_component::enhancement_type::real(rl::effect::accuracy, 0, 0.85));
+        hide->add(body_component::enhancement_type::real(rl::effect::critical, 0, 0.05));
+        hide->add(body_component::enhancement_type::real(rl::effect::dodge, 0, 0.05));
+        body->get_mannequin().equip(rl::equipment::hide, std::move(hide));
+
         for (int i = 0; i != 10; ++i) {
             auto item = make_uq<rl::item>();
             item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::alchemy), 1));
@@ -370,12 +378,13 @@ namespace px {
 
         return result;
     }
-    std::tuple<int, rl::damage_type> environment::dps(body_component const& source) const {
-        auto dps = source.accumulate(body_component::enhancement_type::zero(rl::effect::damage));
-        int damage = static_cast<int>(dps.magnitude0);
-        return { damage, rl::damage_type::pure };
+
+    std::tuple<float, rl::damage_type> environment::dps(body_component const& source) const {
+        auto dps = source.accumulate({ rl::effect::damage });
+        return { static_cast<float>(dps.magnitude0), rl::damage_type::pure };
     }
-    void environment::damage(body_component & target, int damage, rl::damage_type /*discard*/) {
+
+    void environment::damage(body_component & target, int damage, rl::damage_type /*damage_type*/) {
         if (auto & hp = target.health()) {
             hp->damage(damage);
 

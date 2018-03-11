@@ -727,5 +727,6 @@
     <None Include="data\scripts\sk_v_sound.lua" />
     <None Include="data\scripts\sk_v_fire.lua" />
     <None Include="data\scripts\sk_v_acid.lua" />
+    <None Include="data\scripts\sk_v_zap.lua" />
   </ItemGroup>
 </Project>
