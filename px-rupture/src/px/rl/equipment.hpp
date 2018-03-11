@@ -7,18 +7,18 @@
 
 namespace px::rl {
 
-	enum class equipment : unsigned char {
-		not_valid = 0,  // default is invalid
+    enum class equipment : unsigned char {
+        not_valid = 0,  // default is invalid
 
-		hand,
+        hand,           // weapon
 
         head,
         chest,
         legs,
 
-        teeth,          // intrinsic 
-        hide,           // intrinsic
+        teeth,          // intrinsic weapon
+        hide,           // intrinsic armor
 
         max_value
-	};
+    };
 }

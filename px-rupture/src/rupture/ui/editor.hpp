@@ -7,25 +7,25 @@
 
 #include "panel.hpp"
 
-#include "rupture/app/document.hpp"
-#include "rupture/app/settings.hpp"
-#include "rupture/es/builder.hpp"
-#include "rupture/es/animator_component.hpp"
-#include "rupture/es/composite_component.hpp"
-#include "rupture/es/character_component.hpp"
-#include "rupture/es/container_component.hpp"
-#include "rupture/es/deposit_component.hpp"
-#include "rupture/es/door_component.hpp"
-#include "rupture/es/light_component.hpp"
-#include "rupture/es/player_component.hpp"
-#include "rupture/es/npc_component.hpp"
-#include "rupture/es/sprite_component.hpp"
-#include "rupture/es/transform_component.hpp"
-#include "rupture/es/workshop_component.hpp"
-#include "rupture/io/schema.hpp"
-#include "rupture/io/blueprint.hpp"
-#include "rupture/io/serialization.hpp"
-#include "rupture/environment.hpp"
+#include "../app/document.hpp"
+#include "../app/settings.hpp"
+#include "../es/builder.hpp"
+#include "../es/animator_component.hpp"
+#include "../es/composite_component.hpp"
+#include "../es/character_component.hpp"
+#include "../es/container_component.hpp"
+#include "../es/deposit_component.hpp"
+#include "../es/door_component.hpp"
+#include "../es/light_component.hpp"
+#include "../es/player_component.hpp"
+#include "../es/npc_component.hpp"
+#include "../es/sprite_component.hpp"
+#include "../es/transform_component.hpp"
+#include "../es/workshop_component.hpp"
+#include "../io/schema.hpp"
+#include "../io/blueprint.hpp"
+#include "../io/serialization.hpp"
+#include "../environment.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -394,7 +394,7 @@ namespace px::ui {
                 PX_BUILD(remove_body());
             }
             else {
-
+                // entity
                 ImGui::Text("tag: ");
                 ImGui::SameLine();
                 if (ImGui::InputText("##body_tag", body_tag.data(), body_tag.size() - 1, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_CharsNoBlank)) {
@@ -411,6 +411,10 @@ namespace px::ui {
                     body->set_description(body_description.data());
                 }
 
+                // props
+                ImGui::Text("accuracy:     %f", body->accumulate({ rl::effect::accuracy }).magnitude0);
+                ImGui::Text("dodge:        %f", body->accumulate({ rl::effect::dodge }).magnitude0);
+                ImGui::Text("critical:     %f", body->accumulate({ rl::effect::accuracy }).magnitude0);
 
                 // level
                 if (ImGui::InputInt("level##body", &level)) {
@@ -464,15 +468,8 @@ namespace px::ui {
                     }
                 }
 
-                if (auto i = body->equipment(rl::equipment::hand)) {
-                    ImGui::Text("hand: ");
-                    ImGui::SameLine();
-                    combine_item(*i);
-                    ImGui::SameLine();
-                    if (ImGui::Button("x##unequip_hand")) {
-                        body->unequip(rl::equipment::hand);
-                    }
-                }
+                combine_equipmentt(*body, rl::equipment::hand, "hand");
+                combine_equipmentt(*body, rl::equipment::hide, "hide");
 
                 if (ImGui::Button("equip##equip_first")) {
                     body->equip(0);
@@ -782,11 +779,25 @@ namespace px::ui {
                 }
             }
         }
+
         void combine_entity(rl::entity const& subject) {
             ImGui::Text("tag:         '%s'", subject.tag().c_str());
             ImGui::Text("name:        '%s'", subject.name().c_str());
             ImGui::Text("description: '%s'", subject.description().c_str());
         }
+
+        void combine_equipmentt(body_component & body, rl::equipment slot, std::string const& slot_name) {
+            if (auto i = body.equipment(slot)) {
+                ImGui::Text((slot_name + ": ").c_str());
+                ImGui::SameLine();
+                combine_item(*i);
+                ImGui::SameLine();
+                if (ImGui::Button(("x##unequip_" + std::to_string(static_cast<int>(slot))).c_str())) {
+                    body.unequip(slot);
+                }
+            }
+        }
+
         void combine_item(rl::item const& item) {
             ImGui::Text("%s x%d", item.tag().c_str(), item.count());
             if (ImGui::IsItemHovered()) {
@@ -812,6 +823,7 @@ namespace px::ui {
                 ImGui::EndTooltip();
             }
         }
+
         void load_schema(std::string const& schema_name) {
             if (!game) return;
 
@@ -961,68 +973,68 @@ namespace px::ui {
         }
 
     private:
-        environment * game;
-        uq_ptr<composite_component>	current;
+        environment *               game;
+        uq_ptr<composite_component> current;
 
-        int							schema_selected;
-        std::vector<std::string>	schemata;
-        int							blueprint_selected;
-        std::vector<std::string>	blueprints;
+        int                         schema_selected;
+        std::vector<std::string>    schemata;
+        int                         blueprint_selected;
+        std::vector<std::string>    blueprints;
 
-        std::array<char, 128>		composite_name;
-        int							composite_lifetime;
+        std::array<char, 128>       composite_name;
+        int                         composite_lifetime;
 
-        int							transform_x;
-        int							transform_y;
-        bool						transform_static;
+        int                         transform_x;
+        int                         transform_y;
+        bool                        transform_static;
 
-        std::array<char, 128>		sprite_name;
+        std::array<char, 128>       sprite_name;
 
-        std::array<char, 128>		body_tag;
-        std::array<char, 128>		body_name;
-        std::array<char, 1024>		body_description;
-        bool						body_transparent;
-        int							hp;
-        int							hp_max;
-        int							mp;
-        int							mp_max;
-        int							level;
-        int							experience;
+        std::array<char, 128>       body_tag;
+        std::array<char, 128>       body_name;
+        std::array<char, 1024>      body_description;
+        bool                        body_transparent;
+        int                         hp;
+        int                         hp_max;
+        int                         mp;
+        int                         mp_max;
+        int                         level;
+        int                         experience;
 
-        bool						deposit_dissolve;
-        bool						door_open;
+        bool                        deposit_dissolve;
+        bool                        door_open;
 
-        std::array<char, 128>		animator_name;
-        bool						animator_playing;
+        std::array<char, 128>       animator_name;
+        bool                        animator_playing;
 
-        std::array<char, 128>		character_learn;
+        std::array<char, 128>       character_learn;
 
-        int							npc_state;
-        int							npc_range_idle;
-        int							npc_range_alert;
-        int							npc_waypoint_x;
-        int							npc_waypoint_y;
+        int                         npc_state;
+        int                         npc_range_idle;
+        int                         npc_range_alert;
+        int                         npc_waypoint_x;
+        int                         npc_waypoint_y;
 
-        std::array<char, 128>		item_tag;
-        std::array<char, 128>		item_name;
-        std::array<char, 1024>		item_description;
-        int							item_stack;
-        int							item_maximum;
+        std::array<char, 128>       item_tag;
+        std::array<char, 128>       item_name;
+        std::array<char, 1024>      item_description;
+        int                         item_stack;
+        int                         item_maximum;
 
-        float						item_damage;
-        int							item_effect;
-        int							item_effect_subtype;
-        int							item_effect_value;
-        float						item_effect_magnitude;
-        float						item_reagent_power;
-        int							item_reagent_essence;
+        float                       item_damage;
+        int                         item_effect;
+        int                         item_effect_subtype;
+        int                         item_effect_value;
+        float                       item_effect_magnitude;
+        float                       item_reagent_power;
+        int                         item_reagent_essence;
 
-        float						light_tint[4];
-        float						light_elevation;
-        bool						light_on;
-        int							light_type;
+        float                       light_tint[4];
+        float                       light_elevation;
+        bool                        light_on;
+        int                         light_type;
 
-        int							workshop_variant;
+        int                         workshop_variant;
     };
 }
 

@@ -725,5 +725,7 @@
     <None Include="data\scripts\sk_v_swipe.lua" />
     <None Include="data\schemata\mobile_t0.json" />
     <None Include="data\scripts\sk_v_sound.lua" />
+    <None Include="data\scripts\sk_v_fire.lua" />
+    <None Include="data\scripts\sk_v_acid.lua" />
   </ItemGroup>
 </Project>
