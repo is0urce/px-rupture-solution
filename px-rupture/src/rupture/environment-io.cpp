@@ -13,115 +13,115 @@
 
 namespace px {
 
-	uq_ptr<composite_component>	& environment::spawn(std::string const& blueprint_name, point2 const& position) {
-		auto input = input_stream("data/blueprints/" + blueprint_name + ".dat");
-		SAVE_INPUT_ARCHIVE archive(input);
+    uq_ptr<composite_component>	& environment::spawn(std::string const& blueprint_name, point2 const& position) {
+        auto input = input_stream("data/blueprints/" + blueprint_name + ".dat");
+        SAVE_INPUT_ARCHIVE archive(input);
 
-		builder factory(this);
-		auto unit = blueprint::assemble(archive, factory);
-		auto transform = unit->query<transform_component>();
-		transform->place(position);
-		transform->store();
-		return spawn(std::move(unit));
-	}
+        builder factory(this);
+        auto unit = blueprint::assemble(archive, factory);
+        auto transform = unit->query<transform_component>();
+        transform->place(position);
+        transform->store();
+        return spawn(std::move(unit));
+    }
 
-	bool environment::save(std::string const& name) {
+    bool environment::save(std::string const& name) {
 
-		stage.unload();
+        stage.unload();
 
-		save_main();
+        save_main();
 
-		// copy directory
-		repository out_directory(std::string(settings::save_path) + name);
-		out_directory.clear();
-		current->save(out_directory);
+        // copy directory
+        repository out_directory(std::string(settings::save_path) + name);
+        out_directory.clear();
+        current->save(out_directory);
 
-		load(name);
-		return true;
-	}
+        load(name);
+        return true;
+    }
 
-	bool environment::load(std::string const& name) {
+    bool environment::load(std::string const& name) {
 
-		end();
+        end();
 
-		// copy directory
-		repository in_directory(std::string(settings::save_path) + name);
-		if (!in_directory.has_main()) return false;
-		current->clear();
-		current->load(in_directory);
+        // copy directory
+        repository in_directory(std::string(settings::save_path) + name);
+        if (!in_directory.has_main()) return false;
+        current->clear();
+        current->load(in_directory);
 
-		load_main();
+        load_main();
 
-		return_turn();
+        return_turn();
 
-		return true;
-	}
+        return true;
+    }
 
-	void environment::save_main() {
-		auto ostream = output_stream(current->depot_main());
-		SAVE_OUTPUT_ARCHIVE archive(ostream);
+    void environment::save_main() {
+        auto ostream = output_stream(current->depot_main());
+        SAVE_OUTPUT_ARCHIVE archive(ostream);
 
-		// save units
-		size_t count = stage.size();
-		archive(count);
-		stage.enumerate([&](composite_component & unit) {
-			blueprint::store(archive, unit);
-		});
-	}
+        // save units
+        size_t count = stage.size();
+        archive(count);
+        stage.enumerate([&](composite_component & unit) {
+            blueprint::store(archive, unit);
+        });
+    }
 
-	void environment::load_main() {
-		auto istream = input_stream(current->depot_main());
-		SAVE_INPUT_ARCHIVE archive(istream);
+    void environment::load_main() {
+        auto istream = input_stream(current->depot_main());
+        SAVE_INPUT_ARCHIVE archive(istream);
 
-		builder factory(this);
+        builder factory(this);
 
-		stage.clear_units();
+        stage.clear_units();
 
-		size_t count;
-		archive(count);
-		for (size_t i = 0; i != count; ++i) {
-			auto & unit = stage.spawn(blueprint::assemble(archive, factory));
-			unit->activate();
-		}
+        size_t count;
+        archive(count);
+        for (size_t i = 0; i != count; ++i) {
+            auto & unit = stage.spawn(blueprint::assemble(archive, factory));
+            unit->activate();
+        }
 
-		incarnate(factory.created_player());
-	}
+        incarnate(factory.created_player());
+    }
 
-	void environment::save_scene(point2 const& cell) {
+    void environment::save_scene(point2 const& cell) {
 
-		auto ostream = output_stream(current->depot_scene(cell));
-		SAVE_OUTPUT_ARCHIVE archive(ostream);
+        auto ostream = output_stream(current->depot_scene(cell));
+        SAVE_OUTPUT_ARCHIVE archive(ostream);
 
-		std::vector<uq_ptr<composite_component>> tmp;
-		stage.pull(cell, [&](uq_ptr<composite_component> unit) {
-			tmp.push_back(std::move(unit));
-		});
+        std::vector<uq_ptr<composite_component>> tmp;
+        stage.pull(cell, [&](uq_ptr<composite_component> unit) {
+            tmp.push_back(std::move(unit));
+        });
 
-		// save units
-		size_t count = tmp.size();
-		archive(count);
-		for (auto & ptr : tmp) {
-			blueprint::store(archive, *ptr);
-		}
-	}
+        // save units
+        size_t count = tmp.size();
+        archive(count);
+        for (auto & ptr : tmp) {
+            blueprint::store(archive, *ptr);
+        }
+    }
 
-	void environment::load_scene(point2 const& cell) {
-		auto name = current->depot_scene(cell);
-		if (!current->has_scene(cell)) return;
+    void environment::load_scene(point2 const& cell) {
+        auto name = current->depot_scene(cell);
+        if (!current->has_scene(cell)) return;
 
-		auto istream = input_stream(name);
-		SAVE_INPUT_ARCHIVE archive(istream);
+        auto istream = input_stream(name);
+        SAVE_INPUT_ARCHIVE archive(istream);
 
-		builder factory(this);
+        builder factory(this);
 
-		size_t count;
-		archive(count);
-		for (size_t i = 0; i != count; ++i) {
-			auto & unit = stage.spawn(blueprint::assemble(archive, factory));
-			unit->activate();
-		}
-	}
+        size_t count;
+        archive(count);
+        for (size_t i = 0; i != count; ++i) {
+            auto & unit = stage.spawn(blueprint::assemble(archive, factory));
+            unit->activate();
+        }
+    }
 
-	void environment::update_blueprints(std::string const& /*out_path*/, std::string const& /*blueprint*/) {
-	}
+    void environment::update_blueprints(std::string const& /*out_path*/, std::string const& /*blueprint*/) {
+    }
 }

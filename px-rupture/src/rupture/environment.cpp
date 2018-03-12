@@ -363,6 +363,15 @@ namespace px {
         double dodge = target.accumulate({ rl::effect::dodge }).magnitude0;
 
         auto score = accuracy - dodge;
+
+        // level difference attentuation
+        if (source.linked<transform_component>() == player) {
+            auto spread = target.level() - source.level();
+            if (spread > 0) {
+                score -= spread * 0.05;
+            }
+        }
+
         if (std::uniform_real_distribution<double>{}(rng) < score) {
             result = rl::hit_result::connects;
             double critical = source.accumulate({ rl::effect::critical }).magnitude0;
