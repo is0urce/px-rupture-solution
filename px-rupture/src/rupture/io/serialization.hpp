@@ -34,14 +34,14 @@
 
 namespace px {
 
-	inline std::ifstream input_stream(std::string const& name) {
-		std::ifstream input(name, SAVE_INPUT_MODE);
-		if (!input.is_open()) throw std::runtime_error("px::input_stream(name) - file error, name=" + name);
-		return input;
-	}
-	inline std::ofstream output_stream(std::string const& name) {
-		std::ofstream output(name, SAVE_OUTPUT_MODE);
-		if (!output.is_open()) throw std::runtime_error("px::output_stream(name) - file error, name=" + name);
-		return output;
-	}
+    inline std::ifstream input_stream(std::string const& name) {
+        std::ifstream input(name, SAVE_INPUT_MODE);
+        if (!input.is_open()) throw std::runtime_error("px::input_stream(name) - file error, name=" + name);
+        return input;
+    }
+    inline std::ofstream output_stream(std::string const& name) {
+        std::ofstream output(name, SAVE_OUTPUT_MODE);
+        if (!output.is_open()) throw std::runtime_error("px::output_stream(name) - file error, name=" + name);
+        return output;
+    }
 }

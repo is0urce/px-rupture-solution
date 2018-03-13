@@ -34,6 +34,7 @@ namespace px {
             load_node(doc, factory, "container", &load_container);
             load_node(doc, factory, "character", &load_character);
             load_node(doc, factory, "npc", &load_npc);
+            load_node(doc, factory, "deposite", &load_deposite);
 
             auto result = factory.request();
 
@@ -140,6 +141,14 @@ namespace px {
         static void load_npc(Document && node, builder & factory) {
             auto ai = factory.add_npc();
             ai->set_range(node.value("idle_range", 10000), node.value("alert_range", 10000)); // zero is bad default value, use "bigenought" instead
+        }
+
+        // append useable
+        template <typename Document>
+        static void load_deposite(Document && node, builder & factory) {
+            auto deposite = factory.add_deposite();
+            deposite->set_dissolve(node.value("dissolve", true));
+            deposite->set_use_duration(node.value("timer", 0));
         }
 
         // fill entity props

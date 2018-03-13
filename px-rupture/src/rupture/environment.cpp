@@ -367,9 +367,7 @@ namespace px {
         // level difference attentuation
         if (source.linked<transform_component>() == player) {
             auto spread = target.level() - source.level();
-            if (spread > 0) {
-                score -= spread * 0.05;
-            }
+            score -= spread > 0 ? spread * 0.05 : 0;
         }
 
         if (std::uniform_real_distribution<double>{}(rng) < score) {

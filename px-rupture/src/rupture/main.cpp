@@ -1,4 +1,7 @@
 // name: main.cpp
+// type: c++
+// auth: is0urce
+// desc: programm entry point
 
 #define GLEW_STATIC
 #include <gl/glew.h>
@@ -20,99 +23,99 @@
 
 namespace px {
 
-	// create main window from configuration
-	glfw_window create_window(configuration const& config, char const* name, GLFWmonitor * monitor) {
-		if (monitor && config.fullscreen) {
-			auto *const mode = glfwGetVideoMode(monitor);
-			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-		}
-		return glfwCreateWindow(config.width, config.height, name, monitor, nullptr);
-	}
+    // create main window from configuration
+    glfw_window create_window(configuration const& config, char const* name, GLFWmonitor * monitor) {
+        if (monitor && config.fullscreen) {
+            auto *const mode = glfwGetVideoMode(monitor);
+            glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+            glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+            glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+            glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        }
+        return glfwCreateWindow(config.width, config.height, name, monitor, nullptr);
+    }
 
-	// enable context and load opengl extensions
-	void create_context(glfw_window const& win, int swap_interval) {
-		glfwMakeContextCurrent(win); // context
-		glfwSwapInterval(swap_interval);
-		glewInit();	// OpenGL extensions, after context
-	}
+    // enable context and load opengl extensions
+    void create_context(glfw_window const& win, int swap_interval) {
+        glfwMakeContextCurrent(win);        // context
+        glfwSwapInterval(swap_interval);
+        glewInit();                         // OpenGL extensions, after context
+    }
 
-	// main loop
-	void process() {
-		glfw_instance glfw;
+    // main loop
+    void process() {
+        glfw_instance glfw;
 
-		// load settings
+        // load settings
 
-		auto config = configuration::from_document(document::load_document(settings::configuration_path));
-		auto binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
+        auto config = configuration::from_document(document::load_document(settings::configuration_path));
+        auto binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
 
-		auto monitor = glfwGetPrimaryMonitor();
-		auto *const mode = glfwGetVideoMode(monitor);
-		if (config.fullscreen) {
-			config.width = mode->width;
-			config.height = mode->height;
-		}
+        auto monitor = glfwGetPrimaryMonitor();
+        auto *const mode = glfwGetVideoMode(monitor);
+        if (config.fullscreen) {
+            config.width = mode->width;
+            config.height = mode->height;
+        }
 
-		// create windows
+        // create windows
 
-		glfw_window win = create_window(config, settings::application_name, config.fullscreen ? monitor : nullptr);
-		create_context(win, config.vsync);
-		shell game(config.width, config.height);
+        glfw_window win = create_window(config, settings::application_name, config.fullscreen ? monitor : nullptr);
+        create_context(win, config.vsync);
+        shell game(config.width, config.height);
 
-		// register events
+        // register events
 
-		glfw_callback evt(win);
-		evt.on_resize([&](int widht, int height) {
-			game.resize(widht, height);
-		});
-		evt.on_click([&](int mouse_button, int action, int /* mods */) {
-			game.click(mouse_button, action == GLFW_PRESS);
-		});
-		evt.on_hover([&](double x, double y) {
-			game.hover(static_cast<int>(x), static_cast<int>(y));
-		});
-		evt.on_scroll([&](double horisontal, double vertical) {
-			game.scroll(horisontal, vertical);
-		});
-		evt.on_text([&](unsigned int codepoint) {
-			game.text(codepoint);
-		});
-		evt.on_key([&](int os_code, int /* scancode */, int action, int /* mods */) {
-			if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-				game.press(binds.get_or(os_code, key::not_valid));
-			}
-		});
+        glfw_callback evt(win);
+        evt.on_resize([&](int widht, int height) {
+            game.resize(widht, height);
+        });
+        evt.on_click([&](int mouse_button, int action, int /* mods */) {
+            game.click(mouse_button, action == GLFW_PRESS);
+        });
+        evt.on_hover([&](double x, double y) {
+            game.hover(static_cast<int>(x), static_cast<int>(y));
+        });
+        evt.on_scroll([&](double horisontal, double vertical) {
+            game.scroll(horisontal, vertical);
+        });
+        evt.on_text([&](unsigned int codepoint) {
+            game.text(codepoint);
+        });
+        evt.on_key([&](int os_code, int /* scancode */, int action, int /* mods */) {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+                game.press(binds.get_or(os_code, key::not_valid));
+            }
+        });
 
-		// main loop
+        // main loop
 
-		timer<glfw_time> time;
-		while (game.is_running() && win.process()) {
-			game.frame(time);
-		}
-	}
+        timer<glfw_time> time;
+        while (game.is_running() && win.process()) {
+            game.frame(time);
+        }
+    }
 
-	int run_application() {
-		logger log(settings::log_path);
+    int run_application() {
+        logger log(settings::log_path);
 
-		try {
-			process();
-		}
-		catch (std::exception const& exc) {
-			log.message(exc.what());
-			return -1;
-		}
-		catch (...) {
-			log.message("unhandled exception");
-			return -1;
-		}
+        try {
+            process();
+        }
+        catch (std::exception const& exc) {
+            log.message(exc.what());
+            return -1;
+        }
+        catch (...) {
+            log.message("unhandled exception");
+            return -1;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 }
 
 int main() {
-	px::bootstrap();
-	return px::run_application();
+    px::bootstrap();
+    return px::run_application();
 }
