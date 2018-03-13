@@ -6,6 +6,7 @@
 #pragma once
 
 #include "script_unit.hpp"
+#include "script_effect.hpp"
 
 #include "rupture/environment.hpp"
 
@@ -91,6 +92,13 @@ namespace px {
                 return game->in_line(*body, location);
             }
             return false;
+        }
+
+        script_effect create_effect(std::string const& name, unsigned int duration) {
+            script_effect result;
+            result.set_name(name);
+            result.set_duration(duration);
+            return result;
         }
 
     public:

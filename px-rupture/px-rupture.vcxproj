@@ -358,6 +358,7 @@
     <ClInclude Include="src\rupture\app\settings.hpp" />
     <ClInclude Include="src\rupture\rl\terrain_surface.hpp" />
     <ClInclude Include="src\rupture\rl\tile_library.hpp" />
+    <ClInclude Include="src\rupture\script\script_effect.hpp" />
     <ClInclude Include="src\rupture\script\script_environment.hpp" />
     <ClInclude Include="src\rupture\script\script.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />

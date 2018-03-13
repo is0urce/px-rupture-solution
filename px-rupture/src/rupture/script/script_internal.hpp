@@ -1,3 +1,8 @@
+// name: script internal
+// type: c++ class
+// auth: is0urce
+// desc: internal implementation of script system
+
 #pragma once
 
 #include "script_unit.hpp"
@@ -41,7 +46,7 @@ namespace px {
                     try {
                         action(script_unit(user), script_unit(target));
                     }
-                    catch (sol::error & error) {
+                    catch (sol::error const& error) {
                         px::debug(error.what());
                     }
                 };
@@ -50,7 +55,7 @@ namespace px {
                     try {
                         action(script_unit(user), area);
                     }
-                    catch (sol::error & error) {
+                    catch (sol::error const& error) {
                         px::debug(error.what());
                     }
                 };
@@ -59,7 +64,7 @@ namespace px {
                     try {
                         return condition(script_unit(user), script_unit(target));
                     }
-                    catch (sol::error & error) {
+                    catch (sol::error const& error) {
                         px::debug(error.what());
                         return false;
                     }
@@ -68,7 +73,7 @@ namespace px {
                     try {
                         return condition(script_unit(user), area);
                     }
-                    catch (sol::error & error) {
+                    catch (sol::error const& error) {
                         px::debug(error.what());
                         return false;
                     }
@@ -77,7 +82,7 @@ namespace px {
                 // create record
                 return { targeted, target_action, target_condition, area_action, area_condition };
             }
-            catch (sol::error & error) {
+            catch (sol::error const& error) {
                 px::debug(error.what());
                 return {};
             }
@@ -96,6 +101,19 @@ namespace px {
 
     private:
         void add_usertypes() {
+
+            lua.new_usertype<point2>("point"
+                , "x", &point2::x
+                , "y", &point2::y
+                );
+
+            lua.new_usertype<script_effect>("effect"
+                , "set_name", &script_effect::set_name
+                , "set_duration", &script_effect::set_duration
+                , "set_hidden", &script_effect::set_hidden
+                , "add", &script_effect::add
+                );
+
             lua.new_usertype<script_unit>("unit"
                 , "mp", &script_unit::mp
                 , "damage", &script_unit::damage
@@ -105,12 +123,7 @@ namespace px {
                 , "is_valid", &script_unit::is_valid
                 , "place", &script_unit::place
                 , "position", &script_unit::position
-                , "add_effect", &script_unit::add_effect
-                );
-
-            lua.new_usertype<point2>("point"
-                , "x", &point2::x
-                , "y", &point2::y
+                , "apply_effect", &script_unit::apply_effect
                 );
 
             lua.new_usertype<script_environment>("environment"
@@ -124,6 +137,7 @@ namespace px {
                 , "spawn", &script_environment::spawn
                 , "in_sight", &script_environment::in_sight
                 , "in_line", &script_environment::in_line
+                , "create_effect", &script_environment::create_effect
                 );
         }
         void add_functions() {
