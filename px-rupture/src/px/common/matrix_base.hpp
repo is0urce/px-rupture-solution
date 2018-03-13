@@ -6,5 +6,5 @@
 
 namespace px {
 
-	template <typename Element, size_t...> class matrix2;
+    template <typename Element, size_t...> class matrix2;
 }

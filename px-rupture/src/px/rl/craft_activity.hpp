@@ -7,9 +7,9 @@
 
 namespace px::rl {
 
-	enum class craft_activity : unsigned char {
-		none = 0,
-		blacksmith = 1,
-		alchemy = 2
-	};
+    enum class craft_activity : unsigned char {
+        none = 0,
+        blacksmith = 1,
+        alchemy = 2
+    };
 }

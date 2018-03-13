@@ -9,109 +9,106 @@
 
 #include <bitset>
 
-namespace px::rl
-{
-	template <typename E, size_t Size = static_cast<size_t>(E::max_value)>
-	class traverse_options {
-	public:
-		using enumeration_type = E;
-		using bitset_type = std::bitset<Size>;
+namespace px::rl {
 
-	public:
-		static const size_t traverse_layers = Size;
+    template <typename E, size_t Size = static_cast<size_t>(E::max_value)>
+    class traverse_options {
+    public:
+        using enumeration_type = E;
+        using bitset_type = std::bitset<Size>;
 
-	public:
+    public:
+        static const size_t traverse_layers = Size;
 
-		// traverable getters
+    public:
 
-		operator bitset_type() const noexcept { return bits };
-		bitset_type traverse_bitset() const noexcept { return bits; };
-		constexpr bool is_traversable() const { return bits[0]; }
-		constexpr bool is_traversable(traverse_options const& opts) const { return (bits & opts.bits).any(); }
-		constexpr bool is_traversable(E layer) const { return bits[static_cast<size_t>(layer)]; }
+        // traverable getters
 
-		// traversable setters
+        operator bitset_type() const noexcept { return bits };
+        bitset_type traverse_bitset() const noexcept { return bits; };
+        constexpr bool is_traversable() const { return bits[0]; }
+        constexpr bool is_traversable(traverse_options const& opts) const { return (bits & opts.bits).any(); }
+        constexpr bool is_traversable(E layer) const { return bits[static_cast<size_t>(layer)]; }
 
-		void make_blocking()
-		{
-			bits.reset();
-		}
-		void make_blocking(E layer)
-		{
-			bits.reset(static_cast<size_t>(layer));
-		}
-		void make_traversable()
-		{
-			bits.set();
-		}
-		void make_traversable(bool val)
-		{
-			if (val) {
-				bits.set();
-			}
-			else {
-				bits.reset();
-			}
-		}
-		void make_traversable(E layer)
-		{
-			bits[static_cast<size_t>(layer)] = true;
-		}
-		void make_traversable(E layer, bool val)
-		{
-			bits[static_cast<size_t>(layer)] = val;
-		}
-		void make_traversable(traverse_options const& opts)
-		{
-			bits |= opts.bits;
-		}
-		void make_traversable(bitset_type const& layers)
-		{
-			bits |= layers;
-		}
-		void set_traversable(traverse_options const& opts)
-		{
-			bits = opts.bits;
-		}
-		void set_traversable(bitset_type const& layers)
-		{
-			bits = layers;
-		}
+        // traversable setters
 
-		// templates
+        void make_blocking() {
+            bits.reset();
+        }
 
-		template <E Layer>
-		void make_traversable()
-		{
-			bits[static_cast<size_t>(Layer)] = true;
-		}
-		template <E Layer>
-		void make_blocking()
-		{
-			bits[static_cast<size_t>(Layer)] = false;
-		}
-		template <E Layer>
-		constexpr bool is_traversable() const
-		{
-			return bits[static_cast<size_t>(Layer)];
-		}
+        void make_blocking(E layer) {
+            bits.reset(static_cast<size_t>(layer));
+        }
 
-		// serialization
+        void make_traversable() {
+            bits.set();
+        }
 
-		template <typename Archive>
-		void serialize(Archive & archive)
-		{
-			archive(bits);
-		}
+        void make_traversable(bool val) {
+            if (val) {
+                bits.set();
+            }
+            else {
+                bits.reset();
+            }
+        }
 
-	public:
-		constexpr traverse_options() noexcept = default;
-		constexpr traverse_options(bitset_type layers) noexcept
-			: bits(layers)
-		{
-		}
+        void make_traversable(E layer) {
+            bits[static_cast<size_t>(layer)] = true;
+        }
 
-	private:
-		bitset_type bits;
-	};
+        void make_traversable(E layer, bool val) {
+            bits[static_cast<size_t>(layer)] = val;
+        }
+
+        void make_traversable(traverse_options const& opts) {
+            bits |= opts.bits;
+        }
+
+        void make_traversable(bitset_type const& layers) {
+            bits |= layers;
+        }
+
+        void set_traversable(traverse_options const& opts) {
+            bits = opts.bits;
+        }
+
+        void set_traversable(bitset_type const& layers) {
+            bits = layers;
+        }
+
+        // templates
+
+        template <E Layer>
+        void make_traversable() {
+            bits[static_cast<size_t>(Layer)] = true;
+        }
+
+        template <E Layer>
+        void make_blocking() {
+            bits[static_cast<size_t>(Layer)] = false;
+        }
+
+        template <E Layer>
+        constexpr bool is_traversable() const {
+            return bits[static_cast<size_t>(Layer)];
+        }
+
+        // serialization
+
+        template <typename Archive>
+        void serialize(Archive & archive) {
+            archive(bits);
+        }
+
+    public:
+        constexpr traverse_options() noexcept = default;
+        constexpr traverse_options(bitset_type layers) noexcept
+            : bits(layers)
+        {
+        }
+
+    private:
+        bitset_type bits;
+    };
 }

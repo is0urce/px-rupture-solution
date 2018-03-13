@@ -7,59 +7,56 @@
 
 namespace px::rl {
 
-	template <typename Faction>
-	class standing {
-	public:
-		using faction_type = Faction;
-		// reputation
+    template <typename Faction>
+    class standing {
+    public:
+        using faction_type = Faction;
+        // reputation
 
-		Faction current_faction() const noexcept
-		{
-			return faction;
-		}
-		void join_faction(Faction faction_id) noexcept
-		{
-			faction = faction_id;
-		}
-		void quit_faction() noexcept
-		{
-			faction = 0;
-		}
+        Faction current_faction() const noexcept {
+            return faction;
+        }
 
-		int reputation(standing const& subject) const noexcept
-		{
-			return faction == subject.faction ? 100 : -100;
-		}
-		bool is_hostile(standing const& subject) const noexcept
-		{
-			return reputation(subject) < 0;
-		}
-		bool is_ally(standing const& subject) const noexcept
-		{
-			return reputation(subject) > 0;
-		}
-		bool is_neutral(standing const& subject) const noexcept
-		{
-			return reputation(subject) == 0;
-		}
+        void join_faction(Faction faction_id) noexcept {
+            faction = faction_id;
+        }
 
-		template <typename Archive>
-		void serialize(Archive & archive)
-		{
-			archive(faction);
-		}
+        void quit_faction() noexcept {
+            faction = 0;
+        }
 
-	public:
-		constexpr standing(Faction faction_id) noexcept
-			: faction(faction_id)
-		{
-		}
-		constexpr standing() noexcept
-			: faction(0)
-		{
-		}
+        int reputation(standing const& subject) const noexcept {
+            return faction == subject.faction ? 100 : -100;
+        }
 
-	private:
-		Faction faction;
-	};
+        bool is_hostile(standing const& subject) const noexcept {
+            return reputation(subject) < 0;
+        }
+
+        bool is_ally(standing const& subject) const noexcept {
+            return reputation(subject) > 0;
+        }
+
+        bool is_neutral(standing const& subject) const noexcept {
+            return reputation(subject) == 0;
+        }
+
+        template <typename Archive>
+        void serialize(Archive & archive) {
+            archive(faction);
+        }
+
+    public:
+        constexpr standing(faction_type faction_id) noexcept
+            : faction(faction_id)
+        {
+        }
+        constexpr standing() noexcept
+            : faction(0)
+        {
+        }
+
+    private:
+        faction_type faction;
+    };
 }
