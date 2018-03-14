@@ -1,9 +1,14 @@
 // name: body_component.cpp
+// type: c++
+// auth: is0urce
+// type: class implementation
 
 #include "body_component.hpp"
 #include "container_component.hpp"
 
 namespace px {
+
+    // ctor & dtor
 
     body_component::~body_component() = default;
 

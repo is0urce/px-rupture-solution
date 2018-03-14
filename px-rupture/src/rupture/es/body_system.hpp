@@ -14,25 +14,25 @@
 
 namespace px {
 
-	class body_component;
-	class body_works;
-	class environment;
+    class body_component;
+    class body_works;
+    class environment;
 
-	class body_system final
-		: public system<delta>
-	{
-	public:
-		void					assign_environment(environment * env);	// bind system to an environment
-		uq_ptr<body_component>	make();
+    class body_system final
+        : public system<delta>
+    {
+    public:
+        void                    assign_environment(environment * env);	// bind system to an environment
+        uq_ptr<body_component>  make();
 
-	public:
-		virtual					~body_system();
-		body_system();
+    public:
+        virtual                 ~body_system();
+        body_system();
 
-	protected:
-		virtual void			turn_update_system(delta_type const& delta_time) override;
+    protected:
+        virtual void            turn_update_system(delta_type const& delta_time) override;
 
-	private:
-		uq_ptr<body_works>		works;
-	};
+    private:
+        uq_ptr<body_works>      works;
+    };
 }
