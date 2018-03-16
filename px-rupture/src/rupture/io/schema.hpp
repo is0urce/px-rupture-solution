@@ -181,6 +181,14 @@ namespace px {
             load_effect(node, *item, "accuracy", rl::effect::accuracy);
             load_effect(node, *item, "dodge", rl::effect::dodge);
 
+            // ingredient properties
+            auto ingredient_node = node.find("ingredient");
+            if (ingredient_node != node.end()) {
+                rl::craft_activity workshop = ingredient_node->value("activity", { "" }) == "blacksmith" ? rl::craft_activity::blacksmith : rl::craft_activity::alchemy;
+                item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, static_cast<int>(workshop), ingredient_node->value("power", 0)));
+                item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0x00, ingredient_node->value("essence", 1)));
+            }
+
             return item;
         }
 

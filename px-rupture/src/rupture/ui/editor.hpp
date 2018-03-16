@@ -595,7 +595,7 @@ namespace px::ui {
                     auto & item = container->add(make_uq<rl::item>());
                     setup_item(*item);
 
-                    item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, 1, item_reagent_power));
+                    item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, static_cast<int>(rl::craft_activity::blacksmith), item_reagent_power));
                     item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, item_reagent_essence));
                 }
 
