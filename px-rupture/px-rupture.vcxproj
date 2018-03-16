@@ -370,6 +370,7 @@
     <ClInclude Include="src\rupture\ui\editor.hpp" />
     <ClInclude Include="src\rupture\ui\immediate.hpp" />
     <ClInclude Include="src\rupture\ui\inspector.hpp" />
+    <ClInclude Include="src\rupture\ui\inspector_common.hpp" />
     <ClInclude Include="src\rupture\ui\inventory.hpp" />
     <ClInclude Include="src\rupture\ui\menu.hpp" />
     <ClInclude Include="src\rupture\rl\scene.hpp" />

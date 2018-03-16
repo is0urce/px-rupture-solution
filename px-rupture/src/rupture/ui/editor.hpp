@@ -979,8 +979,8 @@ namespace px::ui {
         }
 
     private:
-        environment * game;
         uq_ptr<composite_component> current;
+        environment *               game;
 
         int                         schema_selected;
         std::vector<std::string>    schemata;

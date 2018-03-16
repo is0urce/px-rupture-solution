@@ -3,6 +3,8 @@
 
 #include "menu.hpp"
 
+#include "../app/bootstrap.hpp"
+
 #include "director.hpp"
 #include "panel.hpp"
 
@@ -18,94 +20,92 @@
 #include "levelup.hpp"
 #include "results.hpp"
 
-#include "rupture/app/bootstrap.hpp"
-
 #include <px/memory/memory.hpp>
 
 namespace px {
 
-	// aux
+    // aux
 
-	namespace {
-		template <typename DesiredType, typename Container, typename ... Args>
-		DesiredType * make_panel(Container & container, Args && ...args) {
-			auto smart = make_uq<DesiredType>(std::forward<Args>(args)...);
-			auto raw = smart.get();
-			container.emplace_back(std::move(smart));
-			return raw;
-		}
-	}
+    namespace {
+        template <typename DesiredType, typename Container, typename ... Args>
+        DesiredType * make_panel(Container & container, Args && ...args) {
+            auto smart = make_uq<DesiredType>(std::forward<Args>(args)...);
+            auto raw = smart.get();
+            container.emplace_back(std::move(smart));
+            return raw;
+        }
+    }
 
-	// ctor & dtor
+    // ctor & dtor
 
-	menu::~menu() = default;
+    menu::~menu() = default;
 
-	menu::menu(unsigned int w, unsigned int h, environment * game)
-		: context(game)
-		, nexus(make_uq<director>(w, h))
-		, inventory_open(false)
-		, inventory_panel(nullptr)
-		, smith_panel(nullptr)
-		, alchemy_panel(nullptr)
-	{
+    menu::menu(unsigned int w, unsigned int h, environment * game)
+        : context(game)
+        , nexus(make_uq<director>(w, h))
+        , inventory_open(false)
+        , inventory_panel(nullptr)
+        , smith_panel(nullptr)
+        , alchemy_panel(nullptr)
+    {
 #if PX_INGAME_PERFORMANCE_TEST == 1
-		make_panel<ui::performance>(stack);
+        make_panel<ui::performance>(stack);
 #endif
 #if PX_INGAME_EDITOR == 1
-		make_panel<ui::editor>(stack, game);
+        make_panel<ui::editor>(stack, game);
 #endif
 
-		make_panel<ui::skills>(stack, game);
-		make_panel<ui::status>(stack, game);
-		make_panel<ui::inspector>(stack, game);
+        make_panel<ui::skills>(stack, game);
+        make_panel<ui::status>(stack, game);
+        make_panel<ui::inspector>(stack, game);
 
-		inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
-		smith_panel = make_panel<craft_smith>(stack, game);
-		alchemy_panel = make_panel<craft_alchemy>(stack, game);
+        inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
+        smith_panel = make_panel<craft_smith>(stack, game);
+        alchemy_panel = make_panel<craft_alchemy>(stack, game);
 
-		make_panel<ui::title>(stack, game);
-		make_panel<ui::levelup>(stack, game);
-		make_panel<ui::results>(stack, game);
-	}
+        make_panel<ui::title>(stack, game);
+        make_panel<ui::levelup>(stack, game);
+        make_panel<ui::results>(stack, game);
+    }
 
-	// methods
+    // methods
 
-	void menu::resize(unsigned int w, unsigned int h) {
-		nexus->resize(w, h);
-	}
-	void menu::draw(double delta_time) {
-		nexus->begin(delta_time);
-		combine();
-		nexus->end();
-	}
-	bool menu::click(unsigned int mouse_button, bool is_down) {
-		return nexus->click(mouse_button, is_down);
-	}
-	bool menu::text(unsigned int codepoint) {
-		return nexus->text(codepoint);
-	}
-	bool menu::hover(unsigned int x, unsigned int y) {
-		return nexus->hover(x, y);
-	}
-	bool menu::scroll(double horisontal, double vertical) {
-		return nexus->scroll(horisontal, vertical);
-	}
-	bool menu::takes_input() {
-		return nexus->takes_input();
-	}
-	void menu::toggle_inventory() {
-		smith_panel->cancel_task();
-		alchemy_panel->cancel_task();
-		inventory_open = !inventory_open;
-	}
-	void menu::combine() {
-		for (auto & ptr : stack) {
-			ptr->combine();
-		}
-	}
-	void menu::rollback() {
-		smith_panel->cancel_task();
-		alchemy_panel->cancel_task();
-		inventory_open = false;
-	}
+    void menu::resize(unsigned int w, unsigned int h) {
+        nexus->resize(w, h);
+    }
+    void menu::draw(double delta_time) {
+        nexus->begin(delta_time);
+        combine();
+        nexus->end();
+    }
+    bool menu::click(unsigned int mouse_button, bool is_down) {
+        return nexus->click(mouse_button, is_down);
+    }
+    bool menu::text(unsigned int codepoint) {
+        return nexus->text(codepoint);
+    }
+    bool menu::hover(unsigned int x, unsigned int y) {
+        return nexus->hover(x, y);
+    }
+    bool menu::scroll(double horisontal, double vertical) {
+        return nexus->scroll(horisontal, vertical);
+    }
+    bool menu::takes_input() {
+        return nexus->takes_input();
+    }
+    void menu::toggle_inventory() {
+        smith_panel->cancel_task();
+        alchemy_panel->cancel_task();
+        inventory_open = !inventory_open;
+    }
+    void menu::combine() {
+        for (auto & ptr : stack) {
+            ptr->combine();
+        }
+    }
+    void menu::rollback() {
+        smith_panel->cancel_task();
+        alchemy_panel->cancel_task();
+        inventory_open = false;
+    }
 }

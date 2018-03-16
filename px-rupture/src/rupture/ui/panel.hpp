@@ -4,17 +4,16 @@
 
 namespace px {
 
-	class panel	{
-	public:
-		void combine() {
-			combine_panel();
-		}
+    class panel {
+    public:
+        void combine() {
+            combine_panel();
+        }
 
-	public:
-		virtual ~panel() = default;
+    public:
+        virtual ~panel() = default;
 
-	protected:
-		virtual void combine_panel() {
-		}
-	};
+    protected:
+        virtual void combine_panel() = 0;
+    };
 }
