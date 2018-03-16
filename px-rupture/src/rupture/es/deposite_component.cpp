@@ -1,8 +1,11 @@
 // name: deposite_component.cpp
+// type: c++
+// auth: is0urce
+// type: class implementation
 
-#include "deposit_component.hpp"
+#include "deposite_component.hpp"
 
-#include "rupture/environment.hpp"
+#include "../environment.hpp"
 #include "body_component.hpp"
 #include "container_component.hpp"
 #include "composite_component.hpp"
@@ -10,13 +13,15 @@
 
 namespace px {
 
+    // ctor & dtor
+
+    deposite_component::~deposite_component() = default;
+
     deposite_component::deposite_component()
         : dissolve(true)
         , use_duration(1)
     {
     }
-
-    deposite_component::~deposite_component() = default;
 
     // virtual
 
@@ -64,5 +69,9 @@ namespace px {
 
     bool deposite_component::is_dissolving() const noexcept {
         return dissolve;
+    }
+
+    deposite_component::time_type deposite_component::get_use_duration() const noexcept {
+        return use_duration;
     }
 }

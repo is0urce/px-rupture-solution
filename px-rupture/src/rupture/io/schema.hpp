@@ -102,9 +102,9 @@ namespace px {
             // equipment
             auto equipment_node = node.find("equipment");
             if (equipment_node != node.end()) {
-                load_item(equipment_node, *body, "hand", rl::equipment::hand);
-                load_item(equipment_node, *body, "teeth", rl::equipment::teeth);
-                load_item(equipment_node, *body, "hide", rl::equipment::hide);
+                load_equipment(equipment_node, *body, "hand", rl::equipment::hand);
+                load_equipment(equipment_node, *body, "teeth", rl::equipment::teeth);
+                load_equipment(equipment_node, *body, "hide", rl::equipment::hide);
             }
 
             // level & exp
@@ -114,8 +114,11 @@ namespace px {
 
         // add conteiner
         template <typename Document>
-        static void load_container(Document && /*container_node*/, builder & factory) {
-            factory.add_container();
+        static void load_container(Document && container_node, builder & factory) {
+            auto container = factory.add_container();
+            for (auto const & item_node : container_node["items"]) {
+                container->add(make_item(item_node));
+            }
         }
 
         // add character
@@ -161,7 +164,7 @@ namespace px {
 
         // item in slot
         template <typename Document>
-        static void load_item(Document && node, body_component & body, std::string const& key, rl::equipment slot_id) {
+        static void load_equipment(Document && node, body_component & body, std::string const& key, rl::equipment slot_id) {
             auto slot_node = node->find(key);
             if (slot_node != node->end()) {
                 body.get_mannequin().equip(slot_id, make_item(*slot_node));

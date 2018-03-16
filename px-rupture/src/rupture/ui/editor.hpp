@@ -14,7 +14,7 @@
 #include "../es/composite_component.hpp"
 #include "../es/character_component.hpp"
 #include "../es/container_component.hpp"
-#include "../es/deposit_component.hpp"
+#include "../es/deposite_component.hpp"
 #include "../es/door_component.hpp"
 #include "../es/light_component.hpp"
 #include "../es/player_component.hpp"
@@ -117,7 +117,7 @@ namespace px::ui {
                 npc_component * npc = current->query<npc_component>();
                 light_component * light = current->query<light_component>();
 
-                deposite_component * deposit = current->query<deposite_component>();
+                deposite_component * deposite = current->query<deposite_component>();
                 door_component * door = current->query<door_component>();
                 workshop_component * workshop = current->query<workshop_component>();
 
@@ -198,7 +198,7 @@ namespace px::ui {
                 combine_container(container);
 
                 // useables
-                combine_deposit(deposit);
+                combine_deposite(deposite);
                 combine_door(door);
                 combine_workshop(workshop);
 
@@ -230,7 +230,7 @@ namespace px::ui {
                     if (!container && ImGui::MenuItem("container##add")) {
                         PX_BUILD(add_container());
                     }
-                    if (!deposit && !door && !workshop) {
+                    if (!deposite && !door && !workshop) {
                         if (ImGui::BeginMenu("useables..##add")) {
                             if (ImGui::MenuItem("deposit##add")) {
                                 PX_BUILD(add_deposite());
@@ -637,18 +637,24 @@ namespace px::ui {
                 }
             }
         }
-        void combine_deposit(deposite_component * deposit) {
-            if (!deposit) return;
+        void combine_deposite(deposite_component * deposite) {
+            if (!deposite) return;
 
             ImGui::Separator();
             ImGui::Text("deposite");
+            if (ImGui::IsItemHovered()) {
+                ImGui::BeginTooltip();
+                ImGui::Text("dissolve:  %s", deposite->is_dissolving() ? "true" : "false");
+                ImGui::Text("use timer: %d", deposite->get_use_duration());
+                ImGui::EndTooltip();
+            }
             ImGui::SameLine();
             if (ImGui::Button("x##remove_deposit")) {
                 PX_BUILD(remove_deposite());
             }
             else {
                 if (ImGui::Checkbox("dissolve##deposit_dissolve", &deposit_dissolve)) {
-                    deposit->set_dissolve(deposit_dissolve);
+                    deposite->set_dissolve(deposit_dissolve);
                 }
             }
         }
@@ -973,7 +979,7 @@ namespace px::ui {
         }
 
     private:
-        environment *               game;
+        environment * game;
         uq_ptr<composite_component> current;
 
         int                         schema_selected;

@@ -177,7 +177,7 @@
     <ClCompile Include="src\rupture\es\body_system.cpp" />
     <ClCompile Include="src\rupture\es\builder.cpp" />
     <ClCompile Include="src\rupture\es\character_system.cpp" />
-    <ClCompile Include="src\rupture\es\deposit_component.cpp" />
+    <ClCompile Include="src\rupture\es\deposite_component.cpp" />
     <ClCompile Include="src\rupture\es\door_component.cpp" />
     <ClCompile Include="src\rupture\es\light_system.cpp" />
     <ClCompile Include="src\rupture\es\notification_system.cpp" />
@@ -239,6 +239,7 @@
     <ClInclude Include="src\px\rl\craft_activity.hpp" />
     <ClInclude Include="src\rupture\app\macro.hpp" />
     <ClInclude Include="src\rupture\draw\visual.hpp" />
+    <ClInclude Include="src\rupture\es\deposite_component.hpp" />
     <ClInclude Include="src\rupture\rl\craft_recipe.hpp" />
     <ClInclude Include="src\rupture\rl\craft_result.hpp" />
     <ClInclude Include="src\px\rl\craft_task.hpp" />
@@ -329,7 +330,6 @@
     <ClInclude Include="src\rupture\environment.hpp" />
     <ClInclude Include="src\rupture\es\composition_element.hpp" />
     <ClInclude Include="src\rupture\es\container_component.hpp" />
-    <ClInclude Include="src\rupture\es\deposit_component.hpp" />
     <ClInclude Include="src\rupture\es\door_component.hpp" />
     <ClInclude Include="src\rupture\es\light_component.hpp" />
     <ClInclude Include="src\rupture\es\light_system.hpp" />
@@ -366,8 +366,8 @@
     <ClInclude Include="src\rupture\ui\craft_alchemy.hpp" />
     <ClInclude Include="src\rupture\ui\craft_smith.hpp" />
     <ClInclude Include="src\rupture\ui\craft_station.hpp" />
-    <ClInclude Include="src\rupture\ui\editor.hpp" />
     <ClInclude Include="src\rupture\ui\craft_common.hpp" />
+    <ClInclude Include="src\rupture\ui\editor.hpp" />
     <ClInclude Include="src\rupture\ui\immediate.hpp" />
     <ClInclude Include="src\rupture\ui\inspector.hpp" />
     <ClInclude Include="src\rupture\ui\inventory.hpp" />

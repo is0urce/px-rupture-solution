@@ -363,9 +363,6 @@
     <ClInclude Include="src\rupture\ui\panel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\editor.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\es\animator_component.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -475,9 +472,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\ui\inventory.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rupture\es\deposit_component.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\px\rl\ai_state.hpp">
@@ -612,6 +606,12 @@
     <ClInclude Include="src\rupture\script\script_effect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\ui\editor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\es\deposite_component.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -683,9 +683,6 @@
     <ClCompile Include="src\rupture\es\animator_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\rupture\es\deposit_component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\rupture\es\door_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -693,6 +690,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\rupture\es\workshop_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rupture\es\deposite_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

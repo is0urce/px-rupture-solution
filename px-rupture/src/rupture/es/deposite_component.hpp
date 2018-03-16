@@ -32,6 +32,7 @@ namespace px {
         void            set_dissolve(bool should_destroy) noexcept;
         void            set_use_duration(time_type timer) noexcept;
         bool            is_dissolving() const noexcept;
+        time_type       get_use_duration() const noexcept;
 
     public:
         virtual ~deposite_component();
