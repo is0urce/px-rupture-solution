@@ -209,12 +209,14 @@ namespace px {
             item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::alchemy), 1));
             item->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
             item->set_name("petal");
-            container->add(std::move(item));
+            item->make_stacking();
+            container->aquire(std::move(item));
             auto ore = make_uq<rl::item>();
             ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
             ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
+            ore->make_stacking();
             ore->set_name("ore");
-            container->add(std::move(ore));
+            container->aquire(std::move(ore));
         }
 
         // as player
@@ -295,10 +297,10 @@ namespace px {
                     if (auto loot = body->linked<container_component>()) {
 
                         // loot drop
-                        if (loot->size() != 0) {
+                        if (loot->item_count() != 0) {
                             auto & bag = spawn("bag", pawn->position());
                             if (auto drop = bag->qlink<container_component, body_component, transform_component>()) {
-                                drop->take(*loot);
+                                drop->give(*loot);
                             }
                         }
                     }

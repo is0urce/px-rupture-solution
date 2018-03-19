@@ -37,7 +37,7 @@ namespace px {
 
                 // transfer items with popups
                 auto pawn = user->linked<transform_component>();
-                dest->take(*source, [&](auto const& item) {
+                dest->give(*source, [&](auto const& item) {
                     if (pawn) {
                         environment->popup("+ " + item.name(), 0xffffff, pawn->position());
                     }

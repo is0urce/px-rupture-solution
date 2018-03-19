@@ -211,7 +211,7 @@ namespace px {
             }
 
             // item status
-            ImGui::Text("Quantity: %d", item.count());
+            ImGui::Text("Quantity: %d/%d", item.count(), item.maximum());
 
             ImGui::End();
         }

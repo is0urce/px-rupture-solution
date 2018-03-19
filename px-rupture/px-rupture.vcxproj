@@ -232,6 +232,7 @@
     <ClInclude Include="src\px\es\light.hpp" />
     <ClInclude Include="src\px\rgl\offscreen.hpp" />
     <ClInclude Include="src\px\rl\ai_state.hpp" />
+    <ClInclude Include="src\px\rl\pack.hpp" />
     <ClInclude Include="src\px\rl\specialty.hpp" />
     <ClInclude Include="src\px\rl\bar.hpp" />
     <ClInclude Include="src\px\rl\buff.hpp" />

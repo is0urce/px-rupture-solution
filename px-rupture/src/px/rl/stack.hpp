@@ -12,21 +12,21 @@ namespace px::rl {
     template <typename UInteger>
     class stack {
     public:
-        using int_t = UInteger;
+        using stack_type = UInteger;
 
     public:
         // returns number of items failed to stack (due max stack size restrictions)
         // zero indicates everything is stacked
-        int_t give(stack & source) {
-            give(source, source.m_stack);
+        stack_type give(stack & source) {
+            return give(source, source.m_stack);
         }
 
-        int_t give(stack & source, int_t n) {
+        stack_type give(stack & source, stack_type n) {
             if (&source == this) return m_stack; // stacking onto same item has no point
 
             if (source.m_stack < n) n = source.m_stack;
 
-            int_t total = m_stack + n;
+            stack_type total = m_stack + n;
 
             if (m_max_stack == 0 || total <= m_max_stack) {
                 m_stack = total;
@@ -34,25 +34,25 @@ namespace px::rl {
             }
             else {
                 m_stack = m_max_stack;
-                source.m_stack -= total - m_stack;
+                source.m_stack = total - m_stack;
             }
             return source.m_stack;
         }
 
-        int_t increase(int_t n) {
+        stack_type increase(stack_type n) {
             UInteger total = m_stack + n;
             return m_stack = (total < m_max_stack || m_max_stack == 0) ? total : m_max_stack;
         }
 
-        int_t decrease(int_t n) {
+        stack_type decrease(stack_type n) {
             return m_stack -= (n < m_stack) ? n : m_stack;
         }
 
-        int_t count() const noexcept {
+        stack_type count() const noexcept {
             return m_stack;
         }
 
-        int_t maximum() const noexcept {
+        stack_type maximum() const noexcept {
             return m_max_stack;
         }
 
@@ -76,12 +76,12 @@ namespace px::rl {
             return m_stack != 0;
         }
 
-        void set_current_stack(int_t n) noexcept {
+        void set_current_stack(stack_type n) noexcept {
             m_stack = n;
         }
 
         // size - maximum size of a stack, use 0 for unlimited
-        void set_maximum_stack(int_t n) noexcept {
+        void set_maximum_stack(stack_type n) noexcept {
             m_max_stack = n;
         }
 
@@ -113,7 +113,7 @@ namespace px::rl {
         }
 
     private:
-        int_t m_stack;
-        int_t m_max_stack; // default is 1, if max_stack is 0, allow unlimited stacking
+        stack_type m_stack;
+        stack_type m_max_stack; // default is 1, if max_stack is 0, allow unlimited stacking
     };
 }

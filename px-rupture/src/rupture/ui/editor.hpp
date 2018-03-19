@@ -554,7 +554,7 @@ namespace px::ui {
         void combine_container(container_component * container) {
             if (!container) return;
 
-            size_t size = container->size();
+            size_t size = container->item_count();
             ImGui::Separator();
             ImGui::Text("container");
             if (ImGui::IsItemHovered()) {
@@ -588,7 +588,7 @@ namespace px::ui {
                     auto & item = container->add(make_uq<rl::item>());
                     setup_item(*item);
 
-                    item->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+                    item->add(rl::item::enhancement_type::real(rl::effect::damage, 0x00, item_damage));
                     item->add(rl::item::enhancement_type::zero(rl::effect::equipment, static_cast<rl::item::enhancement_type::integer_type>(rl::equipment::hand)));
                 }
                 if (ImGui::Button("+ ore##create_item")) {
@@ -596,7 +596,7 @@ namespace px::ui {
                     setup_item(*item);
 
                     item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, static_cast<int>(rl::craft_activity::blacksmith), item_reagent_power));
-                    item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0, item_reagent_essence));
+                    item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0x00, item_reagent_essence));
                 }
 
                 // print contained items
@@ -622,7 +622,7 @@ namespace px::ui {
                 if (auto it = container->get<0>()) {
                     if (!it->has_effect(rl::effect::damage)) {
                         if (ImGui::Button("+ damage##add_item_prop")) {
-                            it->add(rl::item::enhancement_type::real(rl::effect::damage, 0, item_damage, item_damage));
+                            it->add(rl::item::enhancement_type::real(rl::effect::damage, 0x00, item_damage));
                         }
                     }
 
