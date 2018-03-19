@@ -26,7 +26,11 @@ namespace px {
     // virtual
 
     bool deposite_component::can_use_useable(body_component * user, environment * environment) const {
-        return environment && user && user->linked<container_component>() && linked<container_component>();
+        if (!environment || !user) return false;
+        if (!user->linked<container_component>() || !this->linked<container_component>()) return false;
+        auto [unit, location] = this->unwind<composite_component, transform_component>();
+        auto pawn = user->linked<transform_component>();
+        return unit && pawn && environment->distance(pawn->position(), location->position()) <= 1;
     }
 
     void deposite_component::use_useable(body_component * user, environment * environment) {
@@ -45,8 +49,8 @@ namespace px {
 
                 // destroy deposit
                 if (dissolve) {
-                    if (auto composite = linked<composite_component>()) {
-                        composite->destroy(0);
+                    if (auto unit = linked<composite_component>()) {
+                        unit->destroy(0);
                     }
                 }
 

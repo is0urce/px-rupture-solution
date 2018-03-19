@@ -292,18 +292,11 @@ namespace px {
 
         // death of units
         stage.discard([&](composite_component & composite) {
-            if (auto pawn = composite.linked<transform_component>()) {
-                if (auto body = pawn->linked<body_component>()) {
-                    if (auto loot = body->linked<container_component>()) {
-
-                        // loot drop
-                        if (loot->item_count() != 0) {
-                            auto & bag = spawn("bag", pawn->position());
-                            if (auto drop = bag->qlink<container_component, body_component, transform_component>()) {
-                                drop->give(*loot);
-                            }
-                        }
-                    }
+            auto[pawn, body, loot] = composite.unwind<transform_component, body_component, container_component>();
+            if (loot && loot->item_count() != 0) {
+                auto & bag = spawn("bag", pawn->position());
+                if (auto drop = bag->qlink<container_component, body_component, transform_component>()) {
+                    drop->give(*loot);
                 }
             }
         });

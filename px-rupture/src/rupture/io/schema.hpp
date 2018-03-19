@@ -189,6 +189,10 @@ namespace px {
                 item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0x00, ingredient_node->value("essence", 1)));
             }
 
+            // stack
+            item->set_maximum_stack(node.value("maximum", 1));
+            item->set_current_stack(node.value("current", 1));
+
             return item;
         }
 

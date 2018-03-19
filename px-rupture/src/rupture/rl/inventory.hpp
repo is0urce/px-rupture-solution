@@ -14,7 +14,7 @@ namespace px::rl {
         : public pack<item>
     {
     public:
-        void aquire(item_ptr && new_item) {
+        void aquire(item_ptr new_item) {
             // try stack
             enumerate([&](item & current) {
                 if (new_item) {

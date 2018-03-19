@@ -17,11 +17,11 @@ namespace px::rl {
     public:
         // returns number of items failed to stack (due max stack size restrictions)
         // zero indicates everything is stacked
-        stack_type give(stack & source) {
+        stack_type give(stack & source) noexcept {
             return give(source, source.m_stack);
         }
 
-        stack_type give(stack & source, stack_type n) {
+        stack_type give(stack & source, stack_type n) noexcept {
             if (&source == this) return m_stack; // stacking onto same item has no point
 
             if (source.m_stack < n) n = source.m_stack;
