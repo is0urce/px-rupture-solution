@@ -9,22 +9,17 @@
 
 namespace px {
 
-	class abstract_logger
-	{
-	public:
-		void message(std::string const& text)
-		{
-			log_message(text);
-		}
+    class abstract_logger {
+    public:
+        void message(std::string const& text) {
+            log_message(text);
+        }
 
-	public:
-		virtual ~abstract_logger()
-		{
-		}
+    public:
+        virtual ~abstract_logger() = default;
 
-	protected:
-		virtual void log_message(std::string const& text)
-		{
-		}
-	};
+    protected:
+        virtual void log_message(std::string const& text) {
+        }
+    };
 }

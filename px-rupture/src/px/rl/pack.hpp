@@ -9,6 +9,7 @@
 #include <px/memory/memory.hpp>
 
 #include <vector>
+#include <utility>
 
 namespace px::rl {
 
@@ -41,24 +42,16 @@ namespace px::rl {
             return result;
         }
 
-        void clear_inventory() {
+        void clear_pack() {
             items.clear();
         }
 
-        void give(pack & loot) {
-            for (item_ptr & i : loot.items) {
-                items.push_back(std::move(i));
-            }
-            loot.items.clear();
-        }
-
         template <typename Op>
-        void give(pack & loot, Op && msg) {
-            for (item_ptr & i : loot.items) {
-                msg(*i);
-                items.push_back(std::move(i));
+        void unload(Op && fn) {
+            for (auto & i : items) {
+                fn(std::move(i));
             }
-            loot.items.clear();
+            items.clear();
         }
 
         template <typename Op>
@@ -66,7 +59,7 @@ namespace px::rl {
             std::sort(items.begin(), items.end(), std::forward<Op>(comparator));
         }
 
-        size_t item_count() {
+        size_t item_count() const noexcept {
             return items.size();
         }
 

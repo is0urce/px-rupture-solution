@@ -50,8 +50,6 @@ namespace px {
             return std::tuple_cat(std::make_tuple(first), first ? first->h_unwind<Args...>() : std::tuple<Args*...>{});
         }
 
-
-
     private:
         template <typename T, typename ... Args>
         T * hlink() const noexcept {

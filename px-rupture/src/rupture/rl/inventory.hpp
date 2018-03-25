@@ -29,7 +29,44 @@ namespace px::rl {
                 add(std::move(new_item));
             }
 
-            // sort by name
+            arrange(); // sort by name
+        }
+
+        item_ptr unaquire(size_t idx, item::stack_type n) {
+            item_ptr result;
+            if (item * current = get(idx)) {
+                auto count = current->count();
+                if (count >= n) {
+                    if (count == n) {
+                        result = remove(idx);
+                        arrange(); // item removed, sort
+                    }
+                    else {
+                        result = make_uq<item>(*current); // copy constructor
+                        result->set_current_stack(n);
+                        current->decrease(n);
+                    }
+                }
+            }
+            return result;
+        }
+
+        void give(pack & loot) {
+            loot.unload([&](item_ptr && item) {
+                aquire(std::move(item));
+            });
+        }
+
+        template <typename Op>
+        void give(pack & loot, Op && msg) {
+            loot.unload([&](item_ptr && item) {
+                msg(*item);
+                aquire(std::move(item));
+            });
+        }
+
+        // sort by name
+        void arrange() {
             sort([](item_ptr const& lh, item_ptr const& rh) {
                 return lh->name() < rh->name();
             });

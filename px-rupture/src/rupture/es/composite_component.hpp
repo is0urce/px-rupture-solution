@@ -27,24 +27,30 @@ namespace px {
         void set_persistency(persistency lifetime) noexcept {
             endurance = lifetime;
         }
-        std::string name() {
+
+        std::string name() const {
             return source;
         }
+
         void set_name(std::string resource_name) {
             source = resource_name;
         }
+
         void destroy(unsigned char time) noexcept {
             endurance = persistency::destroying;
             decay_timer = time;
         }
+
         unsigned char decay(unsigned char delta_time) {
             decay_timer = (delta_time > decay_timer) ? 0 : decay_timer - delta_time;
             return decay_timer;
         }
+
         unsigned char decay() const {
             return decay_timer;
         }
-        bool decayed() const {
+
+        bool is_decayed() const noexcept {
             return endurance == persistency::destroying && decay_timer == 0;
         }
 
@@ -69,13 +75,14 @@ namespace px {
         virtual void activate_component() override {
             enable();
         }
+
         virtual void deactivate_component() override {
             disable();
         }
 
     private:
-        persistency		endurance;
-        std::string		source;
-        unsigned char	decay_timer;
+        persistency     endurance;      // persistency option
+        std::string     source;         // resource name
+        unsigned char   decay_timer;    // scene remove timer
     };
 }

@@ -7,8 +7,7 @@
 
 namespace px {
 
-	enum class light_source : unsigned char
-	{
-		point, ambient
-	};
+    enum class light_source : unsigned char {
+        point, ambient
+    };
 }

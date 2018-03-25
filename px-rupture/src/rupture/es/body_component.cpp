@@ -71,9 +71,9 @@ namespace px {
 
                 if (slot == rl::equipment::not_valid) return false;
 
-                if (auto item_ptr = cont->remove(idx)) {
+                if (auto item_ptr = cont->unaquire(idx, 1)) {
                     if (auto swap_ptr = mannequin.equip(slot, std::move(item_ptr))) {
-                        cont->add(std::move(swap_ptr));
+                        cont->aquire(std::move(swap_ptr));
                     }
                     return true;
                 }

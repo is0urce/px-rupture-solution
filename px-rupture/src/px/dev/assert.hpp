@@ -7,19 +7,17 @@
 
 namespace px {
 
-	void debug(std::string const& text)
-	{
-		std::cout << text << std::endl;
-	}
+    void debug(std::string const& text) {
+        std::cout << text << std::endl;
+    }
 }
 
 #else
 
 namespace px {
 
-	void debug(std::string const& /* discarded */)
-	{
-	}
+    void debug(std::string const& /* discarded */) {
+    }
 }
 
 #endif
