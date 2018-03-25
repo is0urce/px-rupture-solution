@@ -63,11 +63,11 @@ namespace px {
 
             selected_slot = nullptr; // reset hovered equipment slot
 
-            combine_slot("hands", slot_position, slot_size, *body, *container, rl::equipment::hand);
+            combine_slot("hands", slot_position, slot_size, *body, rl::equipment::hand);
             slot_position.y += slot_size.y;
 
             slot_position.y += 8;
-            combine_slot("head", slot_position, slot_size, *body, *container, rl::equipment::head);
+            combine_slot("head", slot_position, slot_size, *body, rl::equipment::head);
             slot_position.y += slot_size.y;
 
             rl::item const* inspect = nullptr;
@@ -97,7 +97,6 @@ namespace px {
                         // equipment
                         if (ptr->has_effect(rl::effect::equipment)) {
                             body.equip(selected);
-                            sort(container);
                             game->end_turn(1);
                         }
 
@@ -106,7 +105,7 @@ namespace px {
                             auto useable = ptr->find({ rl::effect::useable });
                             if (useable.sub == 0) {
                                 use_potion(*ptr, body);
-                                container.unaquire(selected, 1);
+                                container.unacquire(selected, 1);
                                 game->end_turn(1);
                             }
                         }
@@ -124,7 +123,7 @@ namespace px {
         }
 
         // equipment slots drawing
-        void combine_slot(std::string const& name, ImVec2 const& position, ImVec2 const& size, body_component & body, container_component & container, rl::equipment slot) {
+        void combine_slot(std::string const& name, ImVec2 const& position, ImVec2 const& size, body_component & body, rl::equipment slot) {
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(size);
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
@@ -138,7 +137,6 @@ namespace px {
                 ImGui::PushID(ptr);
                 if (ImGui::Button(ptr->name().c_str(), size)) {
                     body.unequip(slot);
-                    sort(container);
                 }
                 else if (ImGui::IsItemHovered()) {
                     selected_slot = ptr;

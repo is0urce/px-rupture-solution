@@ -64,16 +64,16 @@ namespace px {
     }
 
     bool body_component::equip(size_t idx) {
-        if (container_component * cont = linked<container_component>()) {
+        if (auto cont = linked<container_component>()) {
             if (auto selected_item = cont->get(idx)) {
-                auto enh = selected_item->accumulate(enhancement_type::zero(rl::effect::equipment));
+                auto enh = selected_item->accumulate({ rl::effect::equipment });
                 auto slot = static_cast<rl::equipment>(enh.sub);
 
                 if (slot == rl::equipment::not_valid) return false;
 
-                if (auto item_ptr = cont->unaquire(idx, 1)) {
+                if (auto item_ptr = cont->unacquire(idx, 1)) {
                     if (auto swap_ptr = mannequin.equip(slot, std::move(item_ptr))) {
-                        cont->aquire(std::move(swap_ptr));
+                        cont->acquire(std::move(swap_ptr));
                     }
                     return true;
                 }
@@ -83,10 +83,10 @@ namespace px {
     }
 
     void body_component::unequip(rl::equipment slot) {
-        if (container_component * cont = linked<container_component>()) {
+        if (auto cont = linked<container_component>()) {
             auto item_ptr = mannequin.remove(slot);
             if (item_ptr) {
-                cont->add(std::move(item_ptr));
+                cont->acquire(std::move(item_ptr));
             }
         }
     }

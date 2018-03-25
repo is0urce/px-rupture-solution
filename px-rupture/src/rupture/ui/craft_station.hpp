@@ -46,11 +46,10 @@ namespace px {
             uq_ptr<rl::item> item;
             goto query;
             while (item) {
-                container->aquire(std::move(item));
+                container->acquire(std::move(item));
             query:
                 item = task.remove();
             }
-            sort(*container);
         }
 
         void consume_items() {
@@ -95,7 +94,7 @@ namespace px {
                     ++current_idx;
                 });
                 if (!task.is_complete()) {
-                    task.add(container->unaquire(absolute_idx, 1));
+                    task.add(container->unacquire(absolute_idx, 1));
                 }
             }
             ImGui::PopItemWidth();

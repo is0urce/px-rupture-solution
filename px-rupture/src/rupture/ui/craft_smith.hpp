@@ -69,12 +69,11 @@ namespace px {
 
     private:
         rl::item const* execute_craft() {
-            rl::item * result = nullptr;
+            rl::item const* result = nullptr;
             if (container && task.is_complete() && recipe_current) {
                 auto item = rl::craft_result::create_weapon(*recipe_current, rl::craft_result::calculate_essence(task), rl::craft_result::calculate_power(task).magnitude0);
                 result = item.get();
-                container->add(std::move(item));
-                sort(*container);
+                container->acquire(std::move(item));
                 consume_items();
                 recipe_current = nullptr;
             }

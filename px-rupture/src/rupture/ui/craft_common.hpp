@@ -1,3 +1,5 @@
+// name: craft_common.hpp
+
 #pragma once
 
 #include <vector>
@@ -16,10 +18,6 @@ namespace px {
                 return true;
             }
             return false;
-        }
-
-        void sort(container_component & container) {
-            container.sort([](auto const& a, auto const& b) { return a->name() < b->name(); });
         }
 
         template <typename Predicate>

@@ -173,7 +173,7 @@ namespace px {
         // appearance
         unit_builder.add_sprite("m_gnome_warrior");
         auto light = unit_builder.add_light();
-        light->tint = color(0.3, 0.3, 0.3);
+        light->tint = color(0.7, 0.7, 0.7);
         light->elevation = 0.5;
         light->is_on = true;
 
@@ -210,13 +210,13 @@ namespace px {
             item->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
             item->set_name("petal");
             item->make_stacking();
-            container->aquire(std::move(item));
+            container->acquire(std::move(item));
             auto ore = make_uq<rl::item>();
             ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
             ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
             ore->make_stacking();
             ore->set_name("ore");
-            container->aquire(std::move(ore));
+            container->acquire(std::move(ore));
         }
 
         // as player
@@ -321,6 +321,7 @@ namespace px {
     void environment::popup(std::string text, color tint, point2 location) {
         messages.send({ text, tint, 1.0 }, location);
     }
+
     void environment::popup(std::string text, color tint) {
         if (player) {
             messages.send({ text, tint, 1.0 }, player->position());
@@ -332,12 +333,12 @@ namespace px {
     }
 
     // give experience to current player
-    void environment::give_experience(int exp, int source_level) {
+    void environment::give_experience(unsigned int exp, unsigned int source_level) {
         if (player && exp != 0) {
             if (auto body = player->linked<body_component>()) {
                 if (!body->is_dead()) {
 
-                    int lvl = body->level();
+                    auto lvl = body->level();
 
                     // apply softcap
                     if (lvl == source_level + 1) exp /= 2;

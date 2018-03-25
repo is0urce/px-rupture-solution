@@ -56,7 +56,7 @@ namespace px {
         void                                popup(std::string, color tint, point2 location);
         void                                popup(std::string, color tint);
         int                                 distance(point2 const& a, point2 const& b) const;
-        void                                give_experience(int experience, int level);
+        void                                give_experience(unsigned int experience, unsigned int level);
         bool                                has_access(rl::craft_activity station) const noexcept;
         void                                open_workshop(rl::craft_activity station);
         void                                close_workshop();

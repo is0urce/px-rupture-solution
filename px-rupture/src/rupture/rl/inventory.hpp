@@ -14,7 +14,7 @@ namespace px::rl {
         : public pack<item>
     {
     public:
-        void aquire(item_ptr new_item) {
+        void acquire(item_ptr new_item) {
             // try stack
             enumerate([&](item & current) {
                 if (new_item) {
@@ -32,7 +32,7 @@ namespace px::rl {
             arrange(); // sort by name
         }
 
-        item_ptr unaquire(size_t idx, item::stack_type n) {
+        item_ptr unacquire(size_t idx, item::stack_type n) {
             item_ptr result;
             if (item * current = get(idx)) {
                 auto count = current->count();
@@ -53,7 +53,7 @@ namespace px::rl {
 
         void give(pack & loot) {
             loot.unload([&](item_ptr && item) {
-                aquire(std::move(item));
+                acquire(std::move(item));
             });
         }
 
@@ -61,7 +61,7 @@ namespace px::rl {
         void give(pack & loot, Op && msg) {
             loot.unload([&](item_ptr && item) {
                 msg(*item);
-                aquire(std::move(item));
+                acquire(std::move(item));
             });
         }
 
