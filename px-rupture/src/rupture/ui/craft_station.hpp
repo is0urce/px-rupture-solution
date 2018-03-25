@@ -11,6 +11,7 @@
 
 #include "../environment.hpp"
 #include "../es/container_component.hpp"
+#include "../rl/craft.hpp"
 
 #include <px/rl/craft_activity.hpp>
 #include <px/rl/craft_task.hpp>
@@ -21,6 +22,17 @@
 #include <vector>
 
 namespace px {
+
+    namespace {
+        bool name_getter(void * data, int n, const char** result) {
+            auto & vector = *static_cast<std::vector<std::string>*>(data);
+            if (n >= 0 && n < static_cast<int>(vector.size())) {
+                *result = vector[n].c_str();
+                return true;
+            }
+            return false;
+        }
+    }
 
     template <rl::craft_activity Activity>
     class craft_station
@@ -37,6 +49,7 @@ namespace px {
             : game(context)
             , container(nullptr)
         {
+            generator.assign_environment(context);
         }
 
     protected:
@@ -105,6 +118,7 @@ namespace px {
         rl::craft_task<rl::item>        task;               // ingredient selected
         container_component *           container;          // user inventory
         environment *                   game;               // game context
+        rl::craft                       generator;
 
     private:
         std::vector<std::string>        inventory_names;    // inventory items names cashe

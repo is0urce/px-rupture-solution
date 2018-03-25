@@ -481,4 +481,8 @@ namespace px {
         });
         return traverse;
     }
+
+    int environment::roll(int min, int max) {
+        return std::uniform_int_distribution<>{ min, max }(rng);
+    }
 }

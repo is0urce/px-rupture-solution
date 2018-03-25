@@ -7,13 +7,9 @@
 
 #include "craft_station.hpp"
 
-#include "rupture/environment.hpp"
-#include "rupture/es/transform_component.hpp"
-#include "rupture/es/body_component.hpp"
-#include "rupture/es/container_component.hpp"
-
-#include "rupture/rl/craft_recipe.hpp"
-#include "rupture/rl/craft_result.hpp"
+#include "../es/transform_component.hpp"
+#include "../es/body_component.hpp"
+#include "../es/container_component.hpp"
 
 namespace px {
 
@@ -71,7 +67,7 @@ namespace px {
         rl::item const* execute_craft() {
             rl::item const* result = nullptr;
             if (container && task.is_complete() && recipe_current) {
-                auto item = rl::craft_result::create_weapon(*recipe_current, rl::craft_result::calculate_essence(task), rl::craft_result::calculate_power(task).magnitude0);
+                auto item = generator.create(*recipe_current, task);
                 result = item.get();
                 container->acquire(std::move(item));
                 consume_items();
@@ -80,8 +76,8 @@ namespace px {
             return result;
         }
         void fill_recipes() {
-            recipes.push_back({ "sword", "it_sword", "", rl::craft_activity::blacksmith, rl::equipment::hand, 4, 1.0, 1.0 });
-            recipes.push_back({ "armor", "it_armor", "", rl::craft_activity::blacksmith, rl::equipment::chest, 6, 1.0, 1.0 });
+            recipes.push_back({ "sword", "it_sword", "", rl::item_category::weapon, rl::craft_activity::blacksmith, rl::equipment::hand, 4, 1.0, 1.0 });
+            recipes.push_back({ "armor", "it_armor", "", rl::item_category::armor, rl::craft_activity::blacksmith, rl::equipment::chest, 6, 1.0, 1.0 });
         }
         void select_recipe(size_t recipe_idx) {
             release_items();
@@ -141,7 +137,7 @@ namespace px {
         }
 
     private:
-        std::vector<rl::craft_recipe>	recipes;			// recipe list
-        rl::craft_recipe const*			recipe_current;		// selected recipe
+        std::vector<rl::craft_recipe>   recipes;            // recipe list
+        rl::craft_recipe const*         recipe_current;     // selected recipe
     };
 }

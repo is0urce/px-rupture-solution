@@ -242,7 +242,6 @@
     <ClInclude Include="src\rupture\draw\visual.hpp" />
     <ClInclude Include="src\rupture\es\deposite_component.hpp" />
     <ClInclude Include="src\rupture\rl\craft_recipe.hpp" />
-    <ClInclude Include="src\rupture\rl\craft_result.hpp" />
     <ClInclude Include="src\px\rl\craft_task.hpp" />
     <ClInclude Include="src\px\rl\damage_type.hpp" />
     <ClInclude Include="src\px\rl\doll.hpp" />
@@ -253,6 +252,7 @@
     <ClInclude Include="src\px\rl\equipment.hpp" />
     <ClInclude Include="src\px\rl\hit_result.hpp" />
     <ClInclude Include="src\px\rl\stack.hpp" />
+    <ClInclude Include="src\px\rl\item_category.hpp" />
     <ClInclude Include="src\rupture\rl\trait.hpp" />
     <ClInclude Include="src\rupture\rl\traits.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />
@@ -365,7 +365,7 @@
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
     <ClInclude Include="src\rupture\script\script_unit.hpp" />
     <ClInclude Include="src\rupture\ui\craft_alchemy.hpp" />
-    <ClInclude Include="src\rupture\ui\craft_generator.hpp" />
+    <ClInclude Include="src\rupture\rl\craft.hpp" />
     <ClInclude Include="src\rupture\ui\craft_smith.hpp" />
     <ClInclude Include="src\rupture\ui\craft_station.hpp" />
     <ClInclude Include="src\rupture\ui\craft_common.hpp" />

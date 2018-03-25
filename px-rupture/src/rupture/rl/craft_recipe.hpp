@@ -7,6 +7,7 @@
 
 #include <px/rl/craft_activity.hpp>
 #include <px/rl/equipment.hpp>
+#include <px/rl/item_category.hpp>
 #include <string>
 
 namespace px::rl {
@@ -15,6 +16,7 @@ namespace px::rl {
         std::string         name;
         std::string         tag;
         std::string         description;
+        item_category       category;
         rl::craft_activity  activity;
         rl::equipment       equipment_slot;
         unsigned int        reagent_count;

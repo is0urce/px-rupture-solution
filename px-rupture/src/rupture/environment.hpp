@@ -65,6 +65,7 @@ namespace px {
         uq_ptr<composite_component> &       spawn(uq_ptr<composite_component> unit);
         uq_ptr<composite_component> &       spawn(std::string const& blueprint, point2 const& position);
         void                                update_blueprints(std::string const& out_path, std::string const& blueprint);
+        int                                 roll(int min, int max);
 
         // script bindings
     public:

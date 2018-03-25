@@ -5,10 +5,7 @@
 
 #pragma once
 
-#include "panel.hpp"
 #include "craft_station.hpp"
-
-#include "rupture/rl/craft_result.hpp"
 
 namespace px {
 
@@ -53,7 +50,7 @@ namespace px {
         rl::item const* execute_craft() {
             rl::item const* result = nullptr;
             if (container && task.is_complete()) {
-                auto item = rl::craft_result::create_potion(rl::craft_result::calculate_essence(task), rl::craft_result::calculate_power(task).magnitude0);
+                auto item = generator.potion(task);
                 result = item.get();
                 container->acquire(std::move(item));
                 consume_items();
