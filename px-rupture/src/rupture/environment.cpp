@@ -417,53 +417,54 @@ namespace px {
     }
 
     void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track) {
-        auto sprite = sprites.make(name);
-        auto pawn = make_uq<transform_component>();
+        if (auto sprite = sprites.make(name)) {
+            auto pawn = make_uq<transform_component>();
 
-        // setup
+            // setup
 
-        pawn->store(start);
-        pawn->place(finish);
+            pawn->store(start);
+            pawn->place(finish);
 
-        sprite->connect(pawn.get());
+            sprite->connect(pawn.get());
 
-        // activate
+            // activate
 
-        pawn->activate();
-        sprite->activate();
+            pawn->activate();
+            sprite->activate();
 
-        vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), nullptr, track });
+            vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), nullptr, track });
+        }
     }
 
     void environment::emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track) {
         auto sprite = sprites.make("e_empty");
         auto animation = animators.make(name);
-        auto pawn = make_uq<transform_component>();
+        if (sprite && animation) {
+            auto pawn = make_uq<transform_component>();
 
-        // setup
+            // setup
 
-        pawn->store(start);
-        pawn->place(finish);
+            pawn->store(start);
+            pawn->place(finish);
 
-        sprite->connect(pawn.get());
+            sprite->connect(pawn.get());
 
-        animation->connect(sprite.get());
-        animation->play(clip_id);
+            animation->connect(sprite.get());
+            animation->play(clip_id);
 
-        // activate
+            // activate
 
-        pawn->activate();
-        animation->activate();
-        sprite->activate();
+            pawn->activate();
+            animation->activate();
+            sprite->activate();
 
-        vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), std::move(animation), track });
+            vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), std::move(animation), track });
+        }
     }
 
     bool environment::in_sight(body_component const& body, point2 const& location) const {
         auto pawn = body.linked<transform_component>();
         if (!pawn) return false;
-        auto person = body.linked<character_component>();
-        if (!person) return false;
 
         fov sight;
         sight.calculate(pawn->position(), 25, [&](int x, int y) { return stage.is_transparent({ x, y }); });
