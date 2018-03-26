@@ -13,7 +13,9 @@
 #include <px/memory/memory.hpp>
 
 #include <functional>   // for hash
+#include <map>
 #include <string>       // for tags
+#include <vector>
 
 namespace px::rl {
 
@@ -31,54 +33,48 @@ namespace px::rl {
         }
 
         uq_ptr<rl::item> create(craft_recipe const& recipe, task_type const& task) {
-            switch (recipe.category)
-            {
-            case rl::item_category::weapon: return weapon(recipe, task);
-            case rl::item_category::armor: return armor(recipe, task);
-            case rl::item_category::potion: return potion(task);
+            switch (recipe.category) {
+            case rl::item_category::weapon:
+            case rl::item_category::armor:
+                return equipment(recipe, task);
+            case rl::item_category::potion:
+                return potion(task);
+            default:
+                return nullptr;
+            }
+        }
+
+        uq_ptr<rl::item> equipment(craft_recipe const& recipe, task_type const& task) {
+            int rarity = roll_rarity();
+
+            auto essence = calculate_essence(task);
+            auto reagent_power = calculate_power(task).magnitude0;
+
+            reagent_power *= 1.0 + std::pow(1.1, 1 + rarity);
+
+            auto power_raw = reagent_power * recipe.power_raw;
+            auto power_enh = reagent_power * recipe.power_enhancement;
+
+            auto name = generate_name(recipe, essence, rarity);
+
+            auto item = make_uq<rl::item>();
+
+            item->setup_entity(name, recipe.tag, recipe.description);
+
+            enhance(*item, essence, power_enh);
+            if (recipe.equipment_slot != rl::equipment::not_valid) item->add(enhancement_type::zero(effect::equipment, static_cast<integer_type>(recipe.equipment_slot)));
+
+            switch (recipe.category) {
+            case rl::item_category::weapon:
+                item->add(enhancement_type::real(rl::effect::damage, 0x00, power_raw));
+                break;
+            case rl::item_category::armor:
+                item->add(enhancement_type::real(rl::effect::armor, 0x00, power_raw));
+                break;
             default:
                 break;
             }
-            return nullptr;
-        }
 
-        uq_ptr<rl::item> weapon(craft_recipe const& recipe, task_type const& task) {
-            auto item = make_uq<rl::item>();
-
-            int quality = roll_quality();
-
-            auto essence = calculate_essence(task);
-            auto reagent_power = calculate_power(task).magnitude0;
-
-            reagent_power *= 1.0 + std::pow(1.1, 1 + quality);
-
-            auto power_raw = reagent_power * recipe.power_raw;
-            auto power_enh = reagent_power * recipe.power_enhancement;
-
-            enhance(*item, essence, power_enh);
-            setup_equipment(*item, recipe);
-
-            item->add(enhancement_type::real(rl::effect::damage, 0x00, power_raw));
-            return item;
-        }
-
-        uq_ptr<rl::item> armor(craft_recipe const& recipe, task_type const& task) {
-            auto item = make_uq<rl::item>();
-
-            int quality = roll_quality();
-
-            auto essence = calculate_essence(task);
-            auto reagent_power = calculate_power(task).magnitude0;
-
-            reagent_power *= 1.0 + std::pow(1.1, 1 + quality);
-
-            auto power_raw = reagent_power * recipe.power_raw;
-            auto power_enh = reagent_power * recipe.power_enhancement;
-
-            enhance(*item, essence, power_enh);
-            setup_equipment(*item, recipe);
-
-            item->add(enhancement_type::real(rl::effect::armor, 0x00, power_raw));
             return item;
         }
 
@@ -121,6 +117,9 @@ namespace px::rl {
         craft()
             : context(nullptr)
         {
+            name_prefix = { "boris", "ivan", "nestor" };
+            name_postfix = { "slashworks", "intrigue" };
+            name_substance = { {3, "numidium"} };
         }
 
     private:
@@ -146,16 +145,6 @@ namespace px::rl {
             return power;
         }
 
-        // setup general item attributes
-        static void setup_equipment(rl::item & item, craft_recipe const& recipe) {
-            item.setup_entity(generate_name(recipe), recipe.tag, recipe.description);
-            item.make_single();
-
-            if (recipe.equipment_slot != rl::equipment::not_valid) {
-                item.add(enhancement_type::zero(effect::equipment, static_cast<integer_type>(recipe.equipment_slot)));
-            }
-        }
-
         // add item properties
         static void enhance(rl::item & item, integer_type essence, real_type power) {
             switch (hash_mod(essence, 2)) {
@@ -176,13 +165,7 @@ namespace px::rl {
             return std::hash<unsigned int>{}(x) % modulo;
         }
 
-        static std::string generate_name(craft_recipe const& recipe) {
-            std::string prefix = "";
-            std::string postfix = "";
-            return prefix + " " + recipe.name + " " + postfix;
-        }
-
-        int roll_quality() {
+        int roll_rarity() {
             int quality = 0;
             if (context->roll(1, 5) == 5) {
                 ++quality; // rare
@@ -196,7 +179,41 @@ namespace px::rl {
             return quality;
         }
 
+        std::string generate_name(rl::craft_recipe const& recipe, integer_type essence, int rarity) const {
+            std::string result = name_base(recipe);
+            result = name_material(result, essence);
+            result = name_attributes(result, essence);
+            result = name_rarity(result, rarity);
+            return result;
+        }
+
+        std::string name_base(rl::craft_recipe const& recipe) const {
+            return recipe.name;
+        }
+
+        std::string name_material(std::string name, integer_type essence) const {
+            auto found = name_substance.find(essence);
+            if (found != name_substance.end()) return found->second + " " + name;
+
+            return name;
+        }
+
+        std::string name_attributes(std::string name, integer_type essence) const {
+            return name + " of " + name_postfix[hash_mod(essence, static_cast<int>(name_postfix.size() - 1))];
+        }
+
+        std::string name_rarity(std::string name, int rarity) const {
+            if (rarity > 0) {
+                size_t n = context->roll(0, static_cast<int>(name_prefix.size() - 1));
+                return name_prefix[n] + " " + name;
+            }
+            return name;
+        }
+
     private:
-        environment * context;
+        std::map<integer_type, std::string> name_substance;
+        std::vector<std::string>            name_postfix;
+        std::vector<std::string>            name_prefix;
+        environment *                       context;
     };
 }

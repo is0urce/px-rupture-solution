@@ -17,7 +17,7 @@ namespace px {
             container.enumerate([&](auto const& item) {
                 if (predicate(item)) {
                     auto count = item.count();
-                    names.push_back(item.name() + " x" + std::to_string(count));
+                    names.push_back(item.name() + ((count == 1) ? std::string{ "" } : " x" + std::to_string(count)));
                 }
             });
         }
