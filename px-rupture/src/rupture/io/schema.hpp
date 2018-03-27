@@ -35,6 +35,7 @@ namespace px {
             load_node(doc, factory, "character", &load_character);
             load_node(doc, factory, "npc", &load_npc);
             load_node(doc, factory, "deposite", &load_deposite);
+            load_node(doc, factory, "light", &load_light);
 
             auto result = factory.request();
 
@@ -146,12 +147,28 @@ namespace px {
             ai->set_range(node.value("idle_range", 10000), node.value("alert_range", 10000)); // zero is bad default value, use "bigenought" instead
         }
 
-        // append useable
+        // append deposite useable
         template <typename Document>
         static void load_deposite(Document && node, builder & factory) {
             auto deposite = factory.add_deposite();
             deposite->set_dissolve(node.value("dissolve", true));
             deposite->set_use_duration(node.value("timer", 0));
+        }
+
+        // append light
+        template <typename Document>
+        static void load_light(Document && node, builder & factory) {
+            auto light = factory.add_light();
+
+            // tint
+            light->tint.R = node.value("r", 0.0f);
+            light->tint.G = node.value("g", 0.0f);
+            light->tint.B = node.value("b", 0.0f);
+            light->tint.A = node.value("a", 1.0f);
+
+            light->elevation = node.value("elevation", 0.0f);
+            light->is_on = node.value("on", true);
+            light->source = static_cast<light_source>(node.value("source", static_cast<int>(light_source::point)));
         }
 
         // fill entity props
@@ -185,7 +202,7 @@ namespace px {
             auto ingredient_node = node.find("ingredient");
             if (ingredient_node != node.end()) {
                 rl::craft_activity workshop = ingredient_node->value("activity", { "" }) == "blacksmith" ? rl::craft_activity::blacksmith : rl::craft_activity::alchemy;
-                item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, static_cast<int>(workshop), ingredient_node->value("power", 0)));
+                item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, static_cast<int>(workshop), ingredient_node->value("power", 0.0f)));
                 item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0x00, ingredient_node->value("essence", 1)));
             }
 
