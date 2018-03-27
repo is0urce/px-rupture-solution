@@ -8,9 +8,9 @@
 #include "script_unit.hpp"
 #include "script_effect.hpp"
 
-#include "rupture/environment.hpp"
+#include "../environment.hpp"
 
-#include "rupture/es/composite_component.hpp"
+#include "../es/composite_component.hpp"
 
 #include <string>
 #include <tuple>

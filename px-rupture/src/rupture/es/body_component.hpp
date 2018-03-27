@@ -74,6 +74,7 @@ namespace px {
         void                                                        set_experience(std::uint32_t exp);
         bool                                                        try_use(body_component * user, environment * env);
         doll_type &                                                 get_mannequin();
+        std::vector<buff_type> const&                               get_buffs() const;
         void                                                        unequip(rl::equipment slot);
         void                                                        use(body_component * user, environment * env);
 

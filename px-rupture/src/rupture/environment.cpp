@@ -22,6 +22,7 @@
 #include "es/sprite_component.hpp"
 #include "es/transform_component.hpp"
 
+#include <px/dev/assert.hpp>
 #include <px/memory/memory.hpp>
 #include <px/algorithm/fov.hpp>
 #include <px/algorithm/bresenham.hpp>
@@ -434,6 +435,9 @@ namespace px {
 
             vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), nullptr, track });
         }
+        else {
+            debug("environment::evit_visual(..) - '" + name + "' do not exists");
+        }
     }
 
     void environment::emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track) {
@@ -459,6 +463,9 @@ namespace px {
             sprite->activate();
 
             vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), std::move(animation), track });
+        }
+        else {
+            debug("environment::evit_visual(..) - sprite or animation do not exists, name='" + name + "'");
         }
     }
 

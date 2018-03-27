@@ -1,3 +1,5 @@
+// name: assert.hpp
+
 #pragma once
 
 #ifndef NDEBUG
@@ -7,8 +9,10 @@
 
 namespace px {
 
-    void debug(std::string const& text) {
-        std::cout << text << std::endl;
+    namespace {
+        void debug(std::string const& text) {
+            std::cout << text << std::endl;
+        }
     }
 }
 
@@ -16,7 +20,9 @@ namespace px {
 
 namespace px {
 
-    void debug(std::string const& /* discarded */) {
+    namespace {
+        void debug(std::string const& /* discarded */) {
+        }
     }
 }
 

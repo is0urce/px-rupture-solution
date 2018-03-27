@@ -117,4 +117,7 @@ namespace px {
     body_component::doll_type &	body_component::get_mannequin() {
         return mannequin;
     }
+    std::vector<body_component::buff_type> const& body_component::get_buffs() const {
+        return buffs;
+    }
 }

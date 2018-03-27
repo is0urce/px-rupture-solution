@@ -103,7 +103,7 @@ namespace px {
                         // useables
                         if (ptr->has_effect(rl::effect::useable)) {
                             auto useable = ptr->find({ rl::effect::useable });
-                            if (useable.sub == 0) {
+                            if (useable.sub == 0x00) {
                                 use_potion(*ptr, body);
                                 container.unacquire(selected, 1);
                                 game->end_turn(1);

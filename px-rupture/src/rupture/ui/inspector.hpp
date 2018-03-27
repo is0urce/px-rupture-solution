@@ -36,11 +36,11 @@ namespace px::ui {
                     const float window_height = 125.0f;
                     const float window_padding_x = 16;
                     const float window_padding_y = 65;
-                    ImGui::SetNextWindowPos({ screen_width - window_width - window_padding_x, screen_height - window_height - window_padding_y }, ImGuiCond_Always);
-                    ImGui::SetNextWindowSize({ window_width, window_height });
-                    ImGui::Begin("##target_inspector", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
-                    combine_status(*body);
-                    ImGui::End();
+
+                    ImVec2 position{ screen_width - window_width - window_padding_x, screen_height - window_height - window_padding_y };
+                    ImVec2 size{ window_width, window_height };
+
+                    combine_status("##inspector", position, size, *body);
                 }
             }
         }
