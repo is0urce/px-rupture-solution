@@ -720,8 +720,6 @@
     <None Include="data\shaders\light.frag" />
     <None Include="data\shaders\text.frag" />
     <None Include="data\shaders\text.vert" />
-    <None Include="data\schemata\dummy.json" />
-    <None Include="data\schemata\mobile.json" />
     <None Include="data\skills.json" />
     <None Include="data\animations.json" />
     <None Include="data\scripts\lib_rupture.lua" />

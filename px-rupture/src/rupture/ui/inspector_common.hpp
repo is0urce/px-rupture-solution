@@ -27,6 +27,7 @@ namespace px::ui {
             ImGui::SetNextWindowSize(size);
             ImGui::Begin(label, nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
+            combine_name(body);
             combine_attributes(body);
 
             ImGui::End();
@@ -35,7 +36,6 @@ namespace px::ui {
         }
 
         void combine_attributes(body_component const& body) {
-            ImGui::Text(body.name().c_str());
             immediate::bar(body.health(), "hp", { 0.5f, 0.0f, 0.0f, 1.0f });
             immediate::bar(body.energy(), "mp", { 0.0f, 0.0f, 0.5f, 1.0f });
             if (body.is_useable()) {
@@ -80,6 +80,16 @@ namespace px::ui {
             ImGui::End();
         }
 
+        void combine_name(body_component const& body) {
+            auto level = body.level();
+            ImGui::Text(body.name().c_str());
+  
+            if (level != 0) {
+                ImGui::SameLine();
+                ImGui::Text(std::string{ " (lvl " + std::to_string(level) + ")" }.c_str());
+            }
+        }
+
         void combine_effect(body_component::buff_type const& buff, rl::effect efx, std::string name) {
             if (buff.has_effect(efx)) {
                 float value = static_cast<float>(buff.accumulate({ efx }).magnitude0);
@@ -90,6 +100,7 @@ namespace px::ui {
         std::string format_buff_name(body_component::buff_type const& buff) const {
             return buff.name() + " (" + std::to_string(buff.timer()) + ")";
         }
+
         std::string format_effect_name(std::string name, float value) const {
             int floor = static_cast<int>(value);
             return name + ": " + std::to_string(floor);

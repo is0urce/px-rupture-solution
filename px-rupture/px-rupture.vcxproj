@@ -404,8 +404,6 @@
     <None Include="data\animations.json" />
     <None Include="data\config.json" />
     <None Include="data\controls.json" />
-    <None Include="data\schemata\dummy.json" />
-    <None Include="data\schemata\mobile.json" />
     <None Include="data\schemata\mobile_t0.json" />
     <None Include="data\scripts\lib_rupture.lua" />
     <None Include="data\scripts\sk_o_teleport.lua" />

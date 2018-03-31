@@ -102,21 +102,30 @@ namespace px {
         return mannequin.accumulate(accumulator);
     }
 
-    std::uint32_t body_component::level() const {
+    std::uint32_t body_component::level() const noexcept {
         return lvl;
     }
-    std::uint32_t body_component::experience() const {
+
+    std::uint32_t body_component::experience() const noexcept {
         return exp;
     }
-    void body_component::set_level(std::uint32_t n) {
+
+    void body_component::set_level(std::uint32_t n) noexcept {
         lvl = n;
     }
-    void body_component::set_experience(std::uint32_t n) {
+
+    void body_component::set_experience(std::uint32_t n) noexcept {
         exp = n;
     }
+
+    std::uint32_t body_component::mod_experience(std::uint32_t n) noexcept {
+        return exp += n;
+    }
+
     body_component::doll_type &	body_component::get_mannequin() {
         return mannequin;
     }
+
     std::vector<body_component::buff_type> const& body_component::get_buffs() const {
         return buffs;
     }

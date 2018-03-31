@@ -94,6 +94,7 @@ namespace px {
     public:
         script_internal() {
             lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table);
+            lua.open_libraries(sol::lib::math);
 
             add_usertypes();
             add_functions();

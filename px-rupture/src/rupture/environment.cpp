@@ -346,7 +346,7 @@ namespace px {
                     else if (lvl == source_level + 2) exp /= 10;
                     else if (lvl >= source_level + 3) exp = 1;
 
-                    body->set_experience(exp + body->experience());
+                    body->mod_experience(exp);
                     popup("+ " + std::to_string(exp) + " exp", color(0.8, 0, 0.9), player->position());
                 }
             }

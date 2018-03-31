@@ -65,13 +65,14 @@ namespace px {
         bool                                                        can_use(body_component * user, environment * env) const;
         bool                                                        equip(size_t idx);
         rl::item *                                                  equipment(rl::equipment slot) const;
-        std::uint32_t                                               experience() const;
+        std::uint32_t                                               experience() const noexcept;
         bool                                                        is_useable() const noexcept;
-        std::uint32_t                                               level() const;
+        std::uint32_t                                               level() const noexcept;
         movement_type const&                                        movement() const noexcept;
         movement_type &                                             movement() noexcept;
-        void                                                        set_level(std::uint32_t lvl);
-        void                                                        set_experience(std::uint32_t exp);
+        void                                                        set_level(std::uint32_t lvl) noexcept;
+        void                                                        set_experience(std::uint32_t exp) noexcept;
+        std::uint32_t                                               mod_experience(std::uint32_t exp) noexcept;
         bool                                                        try_use(body_component * user, environment * env);
         doll_type &                                                 get_mannequin();
         std::vector<buff_type> const&                               get_buffs() const;

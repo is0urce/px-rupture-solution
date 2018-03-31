@@ -197,6 +197,8 @@ namespace px {
             load_effect(node, *item, "critical", rl::effect::critical);
             load_effect(node, *item, "accuracy", rl::effect::accuracy);
             load_effect(node, *item, "dodge", rl::effect::dodge);
+            load_effect(node, *item, "mp_regen", rl::effect::mp_regen);
+            load_effect(node, *item, "hp_regen", rl::effect::hp_regen);
 
             // ingredient properties
             auto ingredient_node = node.find("ingredient");
