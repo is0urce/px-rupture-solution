@@ -738,5 +738,7 @@
     <None Include="data\scripts\sk_v_fire.lua" />
     <None Include="data\scripts\sk_v_acid.lua" />
     <None Include="data\scripts\sk_v_zap.lua" />
+    <None Include="data\scripts\sk_v_needle.lua" />
+    <None Include="data\scripts\sk_v_poison.lua" />
   </ItemGroup>
 </Project>

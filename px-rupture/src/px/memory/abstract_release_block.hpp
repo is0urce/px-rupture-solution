@@ -10,18 +10,18 @@
 
 namespace px {
 
-	class abstract_release_block abstract {
-	public:
-		void release() noexcept {
-			release_block();
-		}
+    class abstract_release_block abstract {
+    public:
+        void release() noexcept {
+            release_block();
+        }
 
-	public:
-		virtual ~abstract_release_block() = default;
-		abstract_release_block() noexcept = default;
+    public:
+        virtual ~abstract_release_block() = default;
+        abstract_release_block() noexcept = default;
 
-	protected:
-		virtual void release_block() noexcept {
-		}
-	};
+    protected:
+        virtual void release_block() noexcept {
+        }
+    };
 }

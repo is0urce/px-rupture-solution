@@ -415,6 +415,8 @@
     <None Include="data\scripts\sk_v_disease.lua" />
     <None Include="data\scripts\sk_v_fire.lua" />
     <None Include="data\scripts\sk_v_melee.lua" />
+    <None Include="data\scripts\sk_v_needle.lua" />
+    <None Include="data\scripts\sk_v_poison.lua" />
     <None Include="data\scripts\sk_v_sound.lua" />
     <None Include="data\scripts\sk_v_sting.lua" />
     <None Include="data\scripts\sk_v_swipe.lua" />

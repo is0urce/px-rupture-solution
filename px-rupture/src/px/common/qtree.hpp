@@ -9,459 +9,425 @@
 
 #pragma once
 
-#include <cmath> // abs
+#include <cmath>        // abs
 #include <memory>
 #include <stdexcept>
 #include <vector>
 
 namespace px {
 
-	template <typename T>
-	class qtree
-	{
-	public:
-		using element_type = T;
-		using ptr = std::unique_ptr<qtree>;
-		class bucket;
+    template <typename T>
+    class qtree {
+    public:
+        using element_type = T;
+        using ptr = std::unique_ptr<qtree>;
+        class bucket;
 
-	public:
-		template <typename Coordinate>
-		void add(Coordinate const& coordinate, element_type element)
-		{
-			add(coordinate.x(), coordinate.y(), element);
-		}
-		template <typename Coordinate>
-		void remove(Coordinate const& coordinate, element_type element)
-		{
-			remove(coordinate.x(), coordinate.y(), element);
-		}
-		template <typename Coordinate>
-		void move(Coordinate const& current, element_type element, Coordinate const& destination)
-		{
-			move(current.x(), current.y(), element, destination.x(), destination.y());
-		}
-		template <typename Coordinate>
-		bool exists(Coordinate const& coordinate) const
-		{
-			return exists(coordinate.x(), coordinate.y());
-		}
-		template <typename Coordinate, typename Operator>
-		void find(Coordinate const& coordinate, unsigned int radius, Operator && fn) const
-		{
-			find(coordinate.x(), coordinate.y(), radius, std::forward<Operator>(fn));
-		}
-		template <typename Coordinate, typename Operator>
-		void find(Coordinate const& coordinate, Operator && fn) const
-		{
-			find(coordinate.x(), coordinate.y(), std::forward<Operator>(fn));
-		}
+    public:
+        template <typename Coordinate>
+        void add(Coordinate const& coordinate, element_type element) {
+            add(coordinate.x(), coordinate.y(), element);
+        }
 
-		// this partition contains point in range (there could be no elements)
-		bool covers(int x, int y) const noexcept
-		{
-			return x >= m_center_x - static_cast<int>(m_range)
-				&& x < m_center_x + static_cast<int>(m_range)
-				&& y >= m_center_y - static_cast<int>(m_range)
-				&& y < m_center_y + static_cast<int>(m_range);
-		}
-		bool leaf() const noexcept
-		{
-			return m_bucket;
-		}
+        template <typename Coordinate>
+        void remove(Coordinate const& coordinate, element_type element) {
+            remove(coordinate.x(), coordinate.y(), element);
+        }
 
-		void add(int x, int y, element_type element)
-		{
-			while (!covers(x, y)) {
-				expand();
-			}
-			insert(x, y, element);
-		}
-		void remove(int x, int y, element_type element)
-		{
-			erase(x, y, element);
-		}
+        template <typename Coordinate>
+        void move(Coordinate const& current, element_type element, Coordinate const& destination) {
+            move(current.x(), current.y(), element, destination.x(), destination.y());
+        }
 
-		// Operator sould support bool operator()(int, int, T)
-		template <typename Operator>
-		void find(int x, int y, unsigned int radius, Operator && fn) const
-		{
-			if (m_bucket) {
-				if (std::abs(x - m_bucket->x()) <= static_cast<int>(radius) && std::abs(y - m_bucket->y()) <= static_cast<int>(radius)) {
-					m_bucket->enumerate_index(fn);
-				}
-			}
-			else {
-				bool w = x - static_cast<int>(radius) <= m_center_x;
-				bool e = x + static_cast<int>(radius) >= m_center_x;
-				bool n = y + static_cast<int>(radius) >= m_center_y;
-				bool s = y - static_cast<int>(radius) <= m_center_y;
-				if (n && w && nw) nw->find(x, y, radius, fn);
-				if (n && e && ne) ne->find(x, y, radius, fn);
-				if (s && w && sw) sw->find(x, y, radius, fn);
-				if (s && e && se) se->find(x, y, radius, fn);
-			}
-		}
+        template <typename Coordinate>
+        bool exists(Coordinate const& coordinate) const {
+            return exists(coordinate.x(), coordinate.y());
+        }
 
-		// Operator sould support bool operator()(int, int, T)
-		template <typename Operator>
-		void find(int x, int y, Operator && fn) const
-		{
-			if (m_bucket && m_bucket->match(x, y)) {
-				m_bucket->enumerate(fn);
-			}
-			else {
-				auto const& branch = select(x, y);
-				if (branch) branch->find(x, y, std::forward<Operator>(fn));
-			}
-		}
-		bool exists(int x, int y) const noexcept
-		{
-			if (m_bucket) {
-				return !m_bucket->empty() && m_bucket->match(x, y);
-			}
-			else {
-				auto const& branch = select(x, y);
-				return branch ? branch->exists(x, y) : false;
-			}
-		}
-		void move(int sx, int sy, element_type e, int dx, int dy)
-		{
-			move_hint(sx, sy, e, dx, dy)->add(dx, dy, e);
-		}
+        template <typename Coordinate, typename Operator>
+        void find(Coordinate const& coordinate, unsigned int radius, Operator && fn) const {
+            find(coordinate.x(), coordinate.y(), radius, std::forward<Operator>(fn));
+        }
 
-		bool empty() const noexcept
-		{
-			return m_bucket && m_bucket->empty() && !nw && !ne && !sw && !se;
-		}
+        template <typename Coordinate, typename Operator>
+        void find(Coordinate const& coordinate, Operator && fn) const {
+            find(coordinate.x(), coordinate.y(), std::forward<Operator>(fn));
+        }
 
-		//std::string to_string() const
-		//{
-		//	auto result = std::string("qT(") + std::to_string(m_center_x) + std::string(",") + std::to_string(m_center_y) + std::string(")-") + std::to_string(m_range);
-		//	if (m_bucket) result += std::string(":") + std::to_string(m_bucket->size());
-		//	if (nw) result += std::string(" nw=") + nw->to_string();
-		//	if (ne) result += std::string(" ne=") + ne->to_string();
-		//	if (sw) result += std::string(" sw=") + sw->to_string();
-		//	if (se) result += std::string(" se=") + se->to_string();
-		//	result += ";";
-		//	return result;
-		//}
+        // this partition contains point in range (there could be no elements)
+        bool covers(int x, int y) const noexcept {
+            return x >= m_center_x - static_cast<int>(m_range)
+                && x < m_center_x + static_cast<int>(m_range)
+                && y >= m_center_y - static_cast<int>(m_range)
+                && y < m_center_y + static_cast<int>(m_range);
+        }
 
-	public:
-		qtree(int x, int y, unsigned int range)
-			: m_center_x(x)
-			, m_center_y(y)
-			, m_range(range)
-			, m_bucket(std::make_unique<bucket>())
-		{
-		}
-		qtree(unsigned int range)
-			: qtree(0, 0, range)
-		{
-		}
-		qtree(qtree const&) = delete;
-		qtree & operator=(qtree const&) = delete;
+        bool leaf() const noexcept {
+            return m_bucket;
+        }
 
-	private:
-		// select branch for specified coordinates
-		// internal garantee coordinates are in quad
-		ptr & select(int x, int y) noexcept
-		{
-			if (x >= m_center_x) {
-				return y >= m_center_y ? ne : se;
-			}
-			else {
-				return y >= m_center_y ? nw : sw;
-			}
-		}
-		ptr const& select(int x, int y) const noexcept
-		{
-			if (x >= m_center_x) {
-				return y >= m_center_y ? ne : se;
-			}
-			else {
-				return y >= m_center_y ? nw : sw;
-			}
-		}
+        void add(int x, int y, element_type element) {
+            while (!covers(x, y)) {
+                expand();
+            }
+            insert(x, y, element);
+        }
 
-		// select branch, if none available, create one
-		// souldn't used by itself on a leaves as it interfere with hierarchy leaves detection
-		ptr & access(int x, int y)
-		{
-			auto & branch = select(x, y);
-			if (!branch) {
-				int range = m_range / 2;
-				auto result = std::make_unique<qtree>(m_center_x + ((x >= m_center_x) ? range : -range), m_center_y + ((y >= m_center_y) ? range : -range), range);
-				std::swap(branch, result);
-			}
-			return branch;
-		}
+        void remove(int x, int y, element_type element) {
+            erase(x, y, element);
+        }
 
-		// partition current leaf
-		void split()
-		{
-			if (!m_bucket) throw std::runtime_error("px::qtree:split() - can't split non-leaf");
+        // Operator sould support bool operator()(int, int, T)
+        template <typename Operator>
+        void find(int x, int y, unsigned int radius, Operator && fn) const {
+            if (m_bucket) {
+                if (std::abs(x - m_bucket->x()) <= static_cast<int>(radius) && std::abs(y - m_bucket->y()) <= static_cast<int>(radius)) {
+                    m_bucket->enumerate_index(fn);
+                }
+            }
+            else {
+                bool w = x - static_cast<int>(radius) <= m_center_x;
+                bool e = x + static_cast<int>(radius) >= m_center_x;
+                bool n = y + static_cast<int>(radius) >= m_center_y;
+                bool s = y - static_cast<int>(radius) <= m_center_y;
+                if (n && w && nw) nw->find(x, y, radius, fn);
+                if (n && e && ne) ne->find(x, y, radius, fn);
+                if (s && w && sw) sw->find(x, y, radius, fn);
+                if (s && e && se) se->find(x, y, radius, fn);
+            }
+        }
 
-			auto &branch = access(m_bucket->x(), m_bucket->y());
-			std::swap(m_bucket, branch->m_bucket);
-			m_bucket.release();
-		}
+        // Operator sould support bool operator()(int, int, T)
+        template <typename Operator>
+        void find(int x, int y, Operator && fn) const {
+            if (m_bucket && m_bucket->match(x, y)) {
+                m_bucket->enumerate(fn);
+            }
+            else {
+                auto const& branch = select(x, y);
+                if (branch) branch->find(x, y, std::forward<Operator>(fn));
+            }
+        }
 
-		// empty or not-created leaf
-		bool static is_empty(ptr const& tree) noexcept
-		{
-			return !tree || tree && tree->m_bucket && tree->m_bucket->empty();
-		}
+        bool exists(int x, int y) const noexcept {
+            if (m_bucket) {
+                return !m_bucket->empty() && m_bucket->match(x, y);
+            }
+            else {
+                auto const& branch = select(x, y);
+                return branch ? branch->exists(x, y) : false;
+            }
+        }
 
-		// opposite command to split
-		// combine leaves back
-		// all branches must be leaves
-		// only one branch can have elements - collapse it and put that branch on top
-		bool combine(ptr & cleaned)
-		{
-			if (!cleaned->m_bucket) throw std::runtime_error("can't collapse at non-leaf");
+        void move(int sx, int sy, element_type e, int dx, int dy) {
+            move_hint(sx, sy, e, dx, dy)->add(dx, dy, e);
+        }
 
-			bool enw = is_empty(nw);
-			bool ene = is_empty(ne);
-			bool esw = is_empty(sw);
-			bool ese = is_empty(se);
+        bool empty() const noexcept {
+            return m_bucket && m_bucket->empty() && !nw && !ne && !sw && !se;
+        }
 
-			if (nw && nw->m_bucket && ene && esw && ese)
-			{
-				std::swap(m_bucket, nw->m_bucket);
-				nw.reset();
-				return true;
-			}
-			if (ne && ne->m_bucket && enw && esw && ese)
-			{
-				std::swap(m_bucket, ne->m_bucket);
-				ne.reset();
-				return true;
-			}
-			if (sw && sw->m_bucket && ene && enw && ese)
-			{
-				std::swap(m_bucket, sw->m_bucket);
-				sw.reset();
-				return true;
-			}
-			if (se && se->m_bucket && ene && esw && enw)
-			{
-				std::swap(m_bucket, se->m_bucket);
-				se.reset();
-				return true;
-			}
-			return false;
-		}
+        //std::string to_string() const
+        //{
+        //	auto result = std::string("qT(") + std::to_string(m_center_x) + std::string(",") + std::to_string(m_center_y) + std::string(")-") + std::to_string(m_range);
+        //	if (m_bucket) result += std::string(":") + std::to_string(m_bucket->size());
+        //	if (nw) result += std::string(" nw=") + nw->to_string();
+        //	if (ne) result += std::string(" ne=") + ne->to_string();
+        //	if (sw) result += std::string(" sw=") + sw->to_string();
+        //	if (se) result += std::string(" se=") + se->to_string();
+        //	result += ";";
+        //	return result;
+        //}
 
-		// helper function for expansion into
-		// old - part for expanding (internal not null garantee)
-		// expansion - bigger area, not null
-		// update - area in bigger area for swap to old, is null
-		void static expand(ptr & old, ptr & expansion, ptr & update)
-		{
-			expansion->m_bucket.reset();
-			if (old->m_bucket)
-			{
-				std::swap(old->m_bucket, expansion->m_bucket);
-				old->m_bucket.reset();
-			}
-			else
-			{
-				std::swap(update, old);
-			}
-			std::swap(old, expansion);
-		}
+    public:
+        qtree(int x, int y, unsigned int range)
+            : m_center_x(x)
+            , m_center_y(y)
+            , m_range(range)
+            , m_bucket(std::make_unique<bucket>())
+        {
+        }
+        qtree(unsigned int range)
+            : qtree(0, 0, range)
+        {
+        }
+        qtree(qtree const&) = delete;
+        qtree & operator=(qtree const&) = delete;
 
-		// expand range
-		void expand()
-		{
-			int range = static_cast<int>(m_range);
-			if (nw)
-			{
-				auto expand = std::make_unique<qtree>(m_center_x - range, m_center_y + range, range);
-				qtree::expand(nw, expand, expand->se);
-			}
-			if (ne)
-			{
-				auto expand = std::make_unique<qtree>(m_center_x + range, m_center_y + range, range);
-				qtree::expand(ne, expand, expand->sw);
-			}
-			if (sw)
-			{
-				auto expand = std::make_unique<qtree>(m_center_x - range, m_center_y - range, range);
-				qtree::expand(sw, expand, expand->ne);
-			}
-			if (se)
-			{
-				auto expand = std::make_unique<qtree>(m_center_x + range, m_center_y - range, range);
-				qtree::expand(se, expand, expand->nw);
-			}
-			m_range *= 2;
-		}
+    private:
+        // select branch for specified coordinates
+        // internal garantee coordinates are in quad
+        ptr & select(int x, int y) noexcept {
+            if (x >= m_center_x) {
+                return y >= m_center_y ? ne : se;
+            }
+            else {
+                return y >= m_center_y ? nw : sw;
+            }
+        }
 
-		// adding element, internal guarantee x and y in range
-		void insert(int x, int y, element_type e)
-		{
-			if (m_bucket) // it is a leaf
-			{
-				if (m_bucket->empty() || m_bucket->match(x, y))
-				{
-					m_bucket->add(e, x, y);
-				}
-				else
-				{
-					// partition and try again
-					split();
-					insert(x, y, e);
-				}
-			}
-			else
-			{
-				auto &branch = access(x, y);
-				branch->insert(x, y, e);
-			}
-		}
+        ptr const& select(int x, int y) const noexcept {
+            if (x >= m_center_x) {
+                return y >= m_center_y ? ne : se;
+            }
+            else {
+                return y >= m_center_y ? nw : sw;
+            }
+        }
 
-		bool erase(int x, int y, element_type e) {
-			if (m_bucket) {
-				if (!m_bucket->match(x, y)) throw std::runtime_error("px::qtree::remove - bucket coordinates not match");
-				if (!m_bucket->remove(e)) throw std::runtime_error("px::qtree::remove - item not found");
+        // select branch, if none available, create one
+        // souldn't used by itself on a leaves as it interfere with hierarchy leaves detection
+        ptr & access(int x, int y) {
+            auto & branch = select(x, y);
+            if (!branch) {
+                int range = m_range / 2;
+                auto result = std::make_unique<qtree>(m_center_x + ((x >= m_center_x) ? range : -range), m_center_y + ((y >= m_center_y) ? range : -range), range);
+                std::swap(branch, result);
+            }
+            return branch;
+        }
 
-				return true;
-			}
-			else {
-				ptr & branch = select(x, y);
+        // partition current leaf
+        void split() {
+            if (!m_bucket) throw std::runtime_error("px::qtree:split() - can't split non-leaf");
 
-				if (!branch) throw std::runtime_error("px::qtree::remove - no branch");
+            auto &branch = access(m_bucket->x(), m_bucket->y());
+            std::swap(m_bucket, branch->m_bucket);
+            m_bucket.release();
+        }
 
-				if (branch->erase(x, y, e))	{
-					return combine(branch); // try to optimize
-				}
-				return false;
-			}
-		}
-		qtree * move_hint(int sx, int sy, element_type e, int dx, int dy)
-		{
-			if (m_bucket)
-			{
-				if (!m_bucket->match(sx, sy)) throw std::runtime_error("px::qtree::move_hint - bucket coordinates not match");
-				if (!m_bucket->remove(e)) throw std::runtime_error("px::qtree::move_hint - item not found");
+        // empty or not-created leaf
+        bool static is_empty(ptr const& tree) noexcept {
+            return !tree || tree && tree->m_bucket && tree->m_bucket->empty();
+        }
 
-				return this;
-			}
-			else
-			{
-				ptr &branch = select(sx, sy);
+        // opposite command to split
+        // combine leaves back
+        // all branches must be leaves
+        // only one branch can have elements - collapse it and put that branch on top
+        bool combine(ptr & cleaned) {
+            if (!cleaned->m_bucket) throw std::runtime_error("can't collapse at non-leaf");
 
-				if (!branch) throw std::runtime_error("px::qtree::move_hint - no branch");
+            bool enw = is_empty(nw);
+            bool ene = is_empty(ne);
+            bool esw = is_empty(sw);
+            bool ese = is_empty(se);
 
-				if (branch->covers(dx, dy))
-				{
-					return branch->move_hint(sx, sy, e, dx, dy);
-				}
-				else
-				{
-					erase(sx, sy, e);
-					return this;
-				}
-			}
-		}
+            if (nw && nw->m_bucket && ene && esw && ese)
+            {
+                std::swap(m_bucket, nw->m_bucket);
+                nw.reset();
+                return true;
+            }
+            if (ne && ne->m_bucket && enw && esw && ese)
+            {
+                std::swap(m_bucket, ne->m_bucket);
+                ne.reset();
+                return true;
+            }
+            if (sw && sw->m_bucket && ene && enw && ese)
+            {
+                std::swap(m_bucket, sw->m_bucket);
+                sw.reset();
+                return true;
+            }
+            if (se && se->m_bucket && ene && esw && enw)
+            {
+                std::swap(m_bucket, se->m_bucket);
+                se.reset();
+                return true;
+            }
+            return false;
+        }
 
-	private:
-		ptr						nw, ne, se, sw;	// leaves
-		std::unique_ptr<bucket>	m_bucket;		// value, not null if it is a leaf
-		int						m_center_x;
-		int						m_center_y;
-		unsigned int			m_range;
+        // helper function for expansion into
+        // old - part for expanding (internal not null garantee)
+        // expansion - bigger area, not null
+        // update - area in bigger area for swap to old, is null
+        void static expand(ptr & old, ptr & expansion, ptr & update) {
+            expansion->m_bucket.reset();
+            if (old->m_bucket) {
+                std::swap(old->m_bucket, expansion->m_bucket);
+                old->m_bucket.reset();
+            }
+            else {
+                std::swap(update, old);
+            }
+            std::swap(old, expansion);
+        }
 
-		class bucket final
-		{
-		public:
-			template <typename CallbackOperator>
-			void enumerate_index(CallbackOperator && fn)
-			{
-				for (auto & e : m_elements) {
-					fn(m_x, m_y, e);
-				}
-			}
-			template <typename CallbackOperator>
-			void enumerate_index(CallbackOperator && fn) const
-			{
-				for (auto const& e : m_elements) {
-					fn(m_x, m_y, e);
-				}
-			}
-			template <typename CallbackOperator>
-			void enumerate(CallbackOperator && fn)
-			{
-				for (auto & e : m_elements) {
-					fn(e);
-				}
-			}
-			template <typename CallbackOperator>
-			void enumerate(CallbackOperator && fn) const
-			{
-				for (auto const& e : m_elements) {
-					fn(e);
-				}
-			}
+        // expand range
+        void expand() {
+            int range = static_cast<int>(m_range);
+            if (nw) {
+                auto expand = std::make_unique<qtree>(m_center_x - range, m_center_y + range, range);
+                qtree::expand(nw, expand, expand->se);
+            }
+            if (ne) {
+                auto expand = std::make_unique<qtree>(m_center_x + range, m_center_y + range, range);
+                qtree::expand(ne, expand, expand->sw);
+            }
+            if (sw) {
+                auto expand = std::make_unique<qtree>(m_center_x - range, m_center_y - range, range);
+                qtree::expand(sw, expand, expand->ne);
+            }
+            if (se) {
+                auto expand = std::make_unique<qtree>(m_center_x + range, m_center_y - range, range);
+                qtree::expand(se, expand, expand->nw);
+            }
+            m_range *= 2;
+        }
 
-			template <typename CallbackOperator>
-			void enumerate_while(CallbackOperator && fn)
-			{
-				for (auto it = std::begin(m_elements), last = std::end(m_elements); it != last; ++it) {
-					if (!fn(m_x, m_y, *it)) return;
-				}
-			}
-			template <typename CallbackOperator>
-			void enumerate_while(CallbackOperator && fn) const
-			{
-				for (auto it = std::cbegin(m_elements), last = std::cend(m_elements); it != last; ++it) {
-					if (!fn(m_x, m_y, *it)) return;
-				}
-			}
-			bool match(int x, int y) const noexcept
-			{
-				return m_x == x && m_y == y;
-			}
-			size_t size() const noexcept
-			{
-				return m_elements.size();
-			}
-			bool empty() const noexcept
-			{
-				return m_elements.empty();
-			}
-			void add(element_type e, int x, int y)
-			{
-				m_elements.push_back(e);
-				m_x = x;
-				m_y = y;
-			}
-			bool remove(element_type e)
-			{
-				for (auto it = std::begin(m_elements), last = std::end(m_elements); it != last; /* increment is conditional */) {
-					if (*it == e) {
-						std::swap(*it, m_elements.back());
-						m_elements.pop_back();
-						return true;
-					}
-					++it;
-				}
-				return false;
-			}
-			int x() const noexcept
-			{
-				return m_x;
-			}
-			int y() const noexcept
-			{
-				return m_y;
-			}
+        // adding element, internal guarantee x and y in range
+        void insert(int x, int y, element_type e) {
+            if (m_bucket) {
+                // it is a leaf
+                if (m_bucket->empty() || m_bucket->match(x, y)) {
+                    m_bucket->add(e, x, y);
+                }
+                else {
+                    // partition and try again
+                    split();
+                    insert(x, y, e);
+                }
+            }
+            else {
+                auto &branch = access(x, y);
+                branch->insert(x, y, e);
+            }
+        }
 
-		private:
-			std::vector<element_type> m_elements;
-			int m_x;
-			int m_y;
-		};
-	};
+        bool erase(int x, int y, element_type e) {
+            if (m_bucket) {
+                if (!m_bucket->match(x, y)) throw std::runtime_error("px::qtree::remove - bucket coordinates not match");
+                if (!m_bucket->remove(e)) throw std::runtime_error("px::qtree::remove - item not found");
+
+                return true;
+            }
+            else {
+                ptr & branch = select(x, y);
+
+                if (!branch) throw std::runtime_error("px::qtree::remove - no branch");
+
+                if (branch->erase(x, y, e)) {
+                    return combine(branch); // try to optimize
+                }
+                return false;
+            }
+        }
+
+        qtree * move_hint(int sx, int sy, element_type e, int dx, int dy) {
+            if (m_bucket) {
+                if (!m_bucket->match(sx, sy)) throw std::runtime_error("px::qtree::move_hint - bucket coordinates not match");
+                if (!m_bucket->remove(e)) throw std::runtime_error("px::qtree::move_hint - item not found");
+
+                return this;
+            }
+            else {
+                ptr &branch = select(sx, sy);
+
+                if (!branch) throw std::runtime_error("px::qtree::move_hint - no branch");
+
+                if (branch->covers(dx, dy)) {
+                    return branch->move_hint(sx, sy, e, dx, dy);
+                }
+                else {
+                    erase(sx, sy, e);
+                    return this;
+                }
+            }
+        }
+
+    private:
+        ptr                     nw, ne, se, sw;	// leaves
+        std::unique_ptr<bucket> m_bucket;		// value, not null if it is a leaf
+        int                     m_center_x;
+        int                     m_center_y;
+        unsigned int            m_range;
+
+        class bucket final {
+        public:
+            template <typename CallbackOperator>
+            void enumerate_index(CallbackOperator && fn) {
+                for (auto & e : m_elements) {
+                    fn(m_x, m_y, e);
+                }
+            }
+            template <typename CallbackOperator>
+            void enumerate_index(CallbackOperator && fn) const {
+                for (auto const& e : m_elements) {
+                    fn(m_x, m_y, e);
+                }
+            }
+            template <typename CallbackOperator>
+            void enumerate(CallbackOperator && fn) {
+                for (auto & e : m_elements) {
+                    fn(e);
+                }
+            }
+            template <typename CallbackOperator>
+            void enumerate(CallbackOperator && fn) const {
+                for (auto const& e : m_elements) {
+                    fn(e);
+                }
+            }
+
+            template <typename CallbackOperator>
+            void enumerate_while(CallbackOperator && fn) {
+                for (auto it = std::begin(m_elements), last = std::end(m_elements); it != last; ++it) {
+                    if (!fn(m_x, m_y, *it)) return;
+                }
+            }
+
+            template <typename CallbackOperator>
+            void enumerate_while(CallbackOperator && fn) const {
+                for (auto it = std::cbegin(m_elements), last = std::cend(m_elements); it != last; ++it) {
+                    if (!fn(m_x, m_y, *it)) return;
+                }
+            }
+
+            bool match(int x, int y) const noexcept {
+                return m_x == x && m_y == y;
+            }
+
+            size_t size() const noexcept {
+                return m_elements.size();
+            }
+
+            bool empty() const noexcept {
+                return m_elements.empty();
+            }
+
+            void add(element_type e, int x, int y) {
+                m_elements.push_back(e);
+                m_x = x;
+                m_y = y;
+            }
+
+            bool remove(element_type e) {
+                for (auto it = std::begin(m_elements), last = std::end(m_elements); it != last; /* increment is conditional */) {
+                    if (*it == e) {
+                        std::swap(*it, m_elements.back());
+                        m_elements.pop_back();
+                        return true;
+                    }
+                    ++it;
+                }
+                return false;
+            }
+
+            int x() const noexcept {
+                return m_x;
+            }
+
+            int y() const noexcept {
+                return m_y;
+            }
+
+        private:
+            std::vector<element_type>   m_elements;
+            int                         m_x;
+            int                         m_y;
+        };
+    };
 }

@@ -9,24 +9,24 @@
 
 namespace px {
 
-	template <typename T>
-	class delete_release_block final
-		: public abstract_release_block
-	{
-	public:
-		virtual ~delete_release_block() = default;
-		delete_release_block(T * raw)
-			: original(raw)
-		{
-		}
+    template <typename T>
+    class delete_release_block final
+        : public abstract_release_block
+    {
+    public:
+        virtual ~delete_release_block() = default;
+        delete_release_block(T * raw)
+            : original(raw)
+        {
+        }
 
-	protected:
-		virtual void release_block() noexcept override {
-			delete original;
-		}
+    protected:
+        virtual void release_block() noexcept override {
+            delete original;
+        }
 
-	private:
-		T * original;
-	};
+    private:
+        T * original;
+    };
 
 }
