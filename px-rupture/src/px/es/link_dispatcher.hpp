@@ -44,6 +44,7 @@ namespace px {
             return hlink<T, Args..., link_dispatcher>();
         }
 
+        // unroll link chain to tuple succession
         template <typename T, typename ... Args>
         std::tuple<T *, Args * ...> unwind() const {
             T * first = linked<T>();

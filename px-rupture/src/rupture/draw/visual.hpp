@@ -10,9 +10,10 @@
 
 namespace px {
 
-    class transform_component;
     class animator_component;
     class sprite_component;
+    class light_component;
+    class transform_component;
 
     struct visual {
         point2                      start;
@@ -21,6 +22,7 @@ namespace px {
         uq_ptr<transform_component> pawn;
         uq_ptr<sprite_component>    sprite;
         uq_ptr<animator_component>  animator;
+        uq_ptr<light_component>     light;
         transform_component const*  track;
     };
 }

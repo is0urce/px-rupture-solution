@@ -60,12 +60,14 @@ namespace px {
                 if (!animator.is_active()) return;
                 if (!animator.is_playing()) return;
 
-                if (auto img = animator.linked<sprite_component>()) {
 
-                    auto current = animator.current();
-                    auto frame = current->last_frame();
-                    if (frame) {
-                        *static_cast<sprite*>(img) = *frame;
+                if (auto img = animator.linked<sprite_component>()) {
+                    if (auto current_clip = animator.current()) {
+                        if (current_clip->is_loop()) {
+                            if (auto frame = current_clip->last_frame()) {
+                                *static_cast<sprite*>(img) = *frame;
+                            }
+                        }
                     }
                 }
 
@@ -97,7 +99,7 @@ namespace px {
                         clip_set.emplace_back();
                         animation & clip = clip_set.back();
 
-                        clip.has_loop = clip_node["loop"];
+                        clip.loop = clip_node["loop"];
 
                         for (auto const& keyframe_node : clip_node["frames"]) {
                             double time = keyframe_node["time"];

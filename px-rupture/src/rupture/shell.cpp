@@ -111,11 +111,11 @@ namespace px {
         if (ui.hover(x, y)) return;
 
         vector2 position(x, y);
-        position /= vector2(width, height);			// (0, 1) screen space
-        position += { -0.5, -0.5 };					// to screen center
-        position *= { 2.0, -2.0 * height / width };	// account aspect
+        position /= vector2(width, height);         // (0, 1) screen space
+        position += { -0.5, -0.5 };                 // to screen center
+        position *= { 2.0, -2.0 * height / width }; // account aspect
         position /= renderer.get_scale();
-        position += { 0.5, 0.5 };					// tile center offset
+        position += { 0.5, 0.5 };                   // tile center offset
         target(position.floor());
     }
     void shell::scroll(double horisontal, double vertical) {

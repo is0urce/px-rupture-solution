@@ -5,6 +5,7 @@
 
 #include "body_component.hpp"
 #include "container_component.hpp"
+#include "../environment.hpp"
 
 namespace px {
 
@@ -128,5 +129,58 @@ namespace px {
 
     std::vector<body_component::buff_type> const& body_component::get_buffs() const {
         return buffs;
+    }
+
+    void body_component::use_potion(rl::item const& potion, environment * context) {
+
+        // hp restore
+        if (potion.has_effect(rl::effect::hp_bonus)) {
+            if (auto resource = health()) {
+                auto bonus = static_cast<body_component::resource_value_type>(potion.accumulate({ rl::effect::hp_bonus }).magnitude0);
+                resource->restore(bonus);
+
+                // notify
+                context->popup("+ " + std::to_string(bonus), { 0.0, 1.0, 0.0 });
+            }
+        }
+
+        // mp restore
+        if (potion.has_effect(rl::effect::mp_bonus)) {
+            if (auto resource = energy()) {
+                auto bonus = static_cast<body_component::resource_value_type>(potion.accumulate({ rl::effect::mp_bonus }).magnitude0);
+                resource->restore(bonus);
+
+                // notify
+                context->popup("+ " + std::to_string(bonus), { 0.0, 0.0, 1.0 });
+            }
+        }
+
+        // hp regen
+        if (potion.has_effect(rl::effect::hp_regen)) {
+            auto effect = potion.accumulate({ rl::effect::hp_regen });
+            body_component::buff_type regen;
+            regen.set_name("regeneration");
+            regen.set_tag("b_hp_regen");
+            regen.set_duration(effect.value0);
+            regen.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0, effect.magnitude0));
+            add(regen);
+
+            // notify
+            context->popup("+ " + regen.name(), { 0.0, 1.0, 0.0 });
+        }
+
+        // mp regen
+        if (potion.has_effect(rl::effect::mp_regen)) {
+            auto effect = potion.accumulate({ rl::effect::mp_regen });
+            body_component::buff_type regen;
+            regen.set_name("invigoration");
+            regen.set_tag("b_mp_regen");
+            regen.set_duration(effect.value0);
+            regen.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0, effect.magnitude0));
+            add(regen);
+
+            // notify
+            context->popup("+ " + regen.name(), { 0.0, 1.0, 0.0 });
+        }
     }
 }

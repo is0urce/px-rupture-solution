@@ -31,8 +31,8 @@ namespace px {
             {
             }
         private:
-            element_type						element;
-            delete_release_block<join_block>	ctrl;
+            element_type                        element;
+            delete_release_block<join_block>    ctrl;
         };
 
         // function body

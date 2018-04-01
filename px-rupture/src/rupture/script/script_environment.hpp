@@ -40,6 +40,11 @@ namespace px {
             game->emit_animation(name, clip_id, start, finish, track.get_transform());
         }
 
+        // emit light effect
+        void light(point2 location, float r, float g, float b) {
+            game->emit_light(location, color(r, g, b));
+        }
+
         // simulate melee hit event ang get it results
         std::tuple<float, int, bool, bool> hit(script_unit const& attacker, script_unit const& target) {
             body_component const* user_body = attacker.get_body();

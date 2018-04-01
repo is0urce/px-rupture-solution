@@ -135,6 +135,7 @@ namespace px {
                 , "popup", &script_environment::popup
                 , "vfx", &script_environment::vfx
                 , "clip", &script_environment::clip
+                , "light", &script_environment::light
                 , "spawn", &script_environment::spawn
                 , "in_sight", &script_environment::in_sight
                 , "in_line", &script_environment::in_line

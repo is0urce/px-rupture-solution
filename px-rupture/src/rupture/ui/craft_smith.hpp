@@ -75,10 +75,16 @@ namespace px {
             }
             return result;
         }
+
         void fill_recipes() {
-            recipes.push_back({ "sword", "it_sword", "", rl::item_category::weapon, rl::craft_activity::blacksmith, rl::equipment::hand, 4, 1.0, 1.0 });
-            recipes.push_back({ "armor", "it_armor", "", rl::item_category::armor, rl::craft_activity::blacksmith, rl::equipment::chest, 6, 1.0, 1.0 });
+            recipes.push_back({ "axe", "i_axe", "", rl::item_category::weapon, rl::craft_activity::blacksmith, rl::equipment::hand, 4, 1.2, 0.8 });
+            recipes.push_back({ "dagger", "i_sword", "", rl::item_category::weapon, rl::craft_activity::blacksmith, rl::equipment::hand, 2, 0.7, 1.1 });
+            recipes.push_back({ "spear", "i_spear", "", rl::item_category::weapon, rl::craft_activity::blacksmith, rl::equipment::hand, 3, 1.0, 0.7 });
+            recipes.push_back({ "sword", "i_sword", "", rl::item_category::weapon, rl::craft_activity::blacksmith, rl::equipment::hand, 4, 1.0, 1.0 });
+            recipes.push_back({ "breastplate", "i_breastplate", "", rl::item_category::armor, rl::craft_activity::blacksmith, rl::equipment::chest, 6, 1.0, 1.0 });
+            recipes.push_back({ "helmet", "i_helmet", "", rl::item_category::armor, rl::craft_activity::blacksmith, rl::equipment::head, 4, 1.0, 1.0 });
         }
+
         void select_recipe(size_t recipe_idx) {
             release_items();
             task.close();
@@ -87,6 +93,7 @@ namespace px {
                 task.reset(recipe_current->reagent_count);
             }
         }
+
         void combine_recipes(ImVec2 const& window_position, ImVec2 const& window_size) {
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(window_size);
@@ -103,6 +110,7 @@ namespace px {
 
             ImGui::End();
         }
+
         void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(window_size);

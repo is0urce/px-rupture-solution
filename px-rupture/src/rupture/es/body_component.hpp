@@ -62,7 +62,7 @@ namespace px {
         void                                                        assign_useable(useable_type * useable) noexcept;
         mass_type const&                                            blocking() const noexcept;
         mass_type &                                                 blocking() noexcept;
-        bool                                                        can_use(body_component * user, environment * env) const;
+        bool                                                        can_use(body_component * user, environment * context) const;
         bool                                                        equip(size_t idx);
         rl::item *                                                  equipment(rl::equipment slot) const;
         std::uint32_t                                               experience() const noexcept;
@@ -73,11 +73,12 @@ namespace px {
         void                                                        set_level(std::uint32_t lvl) noexcept;
         void                                                        set_experience(std::uint32_t exp) noexcept;
         std::uint32_t                                               mod_experience(std::uint32_t exp) noexcept;
-        bool                                                        try_use(body_component * user, environment * env);
+        bool                                                        try_use(body_component * user, environment * context);
         doll_type &                                                 get_mannequin();
         std::vector<buff_type> const&                               get_buffs() const;
         void                                                        unequip(rl::equipment slot);
         void                                                        use(body_component * user, environment * env);
+        void                                                        use_potion(rl::item const& potion, environment * context);
 
         template <typename Archive>
         void                                                        serialize(Archive & archive) {

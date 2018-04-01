@@ -70,6 +70,10 @@ namespace px {
             combine_slot("head", slot_position, slot_size, *body, rl::equipment::head);
             slot_position.y += slot_size.y;
 
+            slot_position.y += 8;
+            combine_slot("chest", slot_position, slot_size, *body, rl::equipment::chest);
+            slot_position.y += slot_size.y;
+
             rl::item const* inspect = nullptr;
             if (selected >= 0) inspect = container->get(selected);
             if (selected_slot) inspect = selected_slot;
@@ -96,15 +100,17 @@ namespace px {
 
                         // equipment
                         if (ptr->has_effect(rl::effect::equipment)) {
+                            game->start_turn();
                             body.equip(selected);
                             game->end_turn(1);
                         }
 
-                        // useables
+                        // useable
                         if (ptr->has_effect(rl::effect::useable)) {
                             auto useable = ptr->find({ rl::effect::useable });
                             if (useable.sub == 0x00) {
-                                use_potion(*ptr, body);
+                                game->start_turn();
+                                body.use_potion(*ptr, game);
                                 container.unacquire(selected, 1);
                                 game->end_turn(1);
                             }
@@ -190,6 +196,9 @@ namespace px {
             if (item.has_effect(rl::effect::damage)) {
                 ImGui::Text("Damage: %.0f", item.accumulate({ rl::effect::damage }).magnitude0);
             }
+            if (item.has_effect(rl::effect::armor)) {
+                ImGui::Text("Armor: %.0f", item.accumulate({ rl::effect::armor }).magnitude0);
+            }
 
             // potion props
             if (item.has_effect(rl::effect::hp_bonus)) {
@@ -211,58 +220,6 @@ namespace px {
             ImGui::Text("Quantity: %d/%d", item.count(), item.maximum());
 
             ImGui::End();
-        }
-
-        void use_potion(rl::item const& item, body_component & body) {
-            // hp restore
-            if (item.has_effect(rl::effect::hp_bonus)) {
-                if (auto hp = body.health()) {
-                    auto heal = static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::hp_bonus }).magnitude0);
-                    hp->restore(heal);
-
-                    // notify
-                    game->popup("+ " + std::to_string(heal), { 0, 1, 0 });
-                }
-            }
-
-            // hp regen
-            if (item.has_effect(rl::effect::hp_regen)) {
-                auto effect = item.accumulate({ rl::effect::hp_regen });
-                body_component::buff_type regen;
-                regen.set_name("regeneration");
-                regen.set_tag("b_hp_regen");
-                regen.set_duration(effect.value0);
-                regen.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0, effect.magnitude0));
-                body.add(regen);
-
-                // notify
-                game->popup("+ " + regen.name(), { 0, 1, 0 });
-            }
-
-            // mp restore
-            if (item.has_effect(rl::effect::mp_bonus)) {
-                if (auto mp = body.energy()) {
-                    auto bonus = static_cast<body_component::resource_value_type>(item.accumulate({ rl::effect::mp_bonus }).magnitude0);
-                    mp->restore(bonus);
-
-                    // notify
-                    game->popup("+ " + std::to_string(bonus), { 0, 0, 1 });
-                }
-            }
-
-            // mp regen
-            if (item.has_effect(rl::effect::mp_regen)) {
-                auto effect = item.accumulate({ rl::effect::mp_regen });
-                body_component::buff_type regen;
-                regen.set_name("invigoration");
-                regen.set_tag("b_mp_regen");
-                regen.set_duration(effect.value0);
-                regen.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0, effect.magnitude0));
-                body.add(regen);
-
-                // notify
-                game->popup("+ " + regen.name(), { 0, 1, 0 });
-            }
         }
 
     private:

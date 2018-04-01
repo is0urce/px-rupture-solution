@@ -28,6 +28,7 @@
 #include <px/algorithm/bresenham.hpp>
 
 #include <algorithm>
+#include <utility>
 
 namespace px {
 
@@ -108,26 +109,21 @@ namespace px {
     }
 
     // player ability use action
-    void environment::action(unsigned int action_idx) {
-        if (!has_control()) return;
-
-        if (auto body = player->linked<body_component>()) {
-            if (auto character = body->linked<character_component>()) {
-                if (skill * ability = character->get(action_idx)) {
-                    bool success = false;
-                    start_turn();
-                    if (ability->is_targeted()) {
-                        success = ability->try_use(body, target_unit ? target_unit->linked<body_component>() : nullptr);
-                    }
-                    else {
-                        success = ability->try_use(body, target_area);
-                    }
-                    if (success) {
-                        end_turn(1);
-                    }
+    bool environment::action(unsigned int action_idx) {
+        bool success = false;
+        if (has_control()) {
+            auto[user, person] = player->unwind<body_component, character_component>();
+            if (auto ability = person ? person->get(action_idx) : nullptr) {
+                start_turn();
+                success = ability->is_targeted()
+                    ? ability->try_use(user, target_unit ? target_unit->linked<body_component>() : nullptr)
+                    : ability->try_use(user, target_area);
+                if (success) {
+                    end_turn(1);
                 }
             }
         }
+        return success;
     }
 
     void environment::advance() {
@@ -218,6 +214,14 @@ namespace px {
             ore->make_stacking();
             ore->set_name("ore");
             container->acquire(std::move(ore));
+
+            auto pot = make_uq<rl::item>();
+            pot->add(body_component::enhancement_type::zero(rl::effect::useable, 0x00));
+            pot->add(body_component::enhancement_type::real(rl::effect::hp_bonus, 0x00, 100.0));
+            pot->set_name("healing potion");
+            pot->set_tag("i_hp_potion_dev");
+            pot->make_stacking();
+            container->acquire(std::move(pot));
         }
 
         // as player
@@ -304,8 +308,10 @@ namespace px {
 
         // update visual effect unit tracking
         for (auto & fx : vfx) {
-            fx.pawn->place(fx.track ? fx.track->position() : fx.finish);
-            fx.pawn->store(fx.start);
+            if (auto & pawn = fx.pawn) {
+                pawn->place(fx.track ? fx.track->position() : fx.finish);
+                pawn->store(fx.start);
+            }
         }
 
         // select hovered unit
@@ -433,7 +439,7 @@ namespace px {
             pawn->activate();
             sprite->activate();
 
-            vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), nullptr, track });
+            vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), nullptr, nullptr, track });
         }
         else {
             debug("environment::evit_visual(..) - '" + name + "' do not exists");
@@ -462,11 +468,35 @@ namespace px {
             animation->activate();
             sprite->activate();
 
-            vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), std::move(animation), track });
+            vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), std::move(animation), nullptr, track });
         }
         else {
             debug("environment::evit_visual(..) - sprite or animation do not exists, name='" + name + "'");
         }
+    }
+
+    void environment::emit_light(point2 location, color const& light) {
+        auto pawn = make_uq<transform_component>();
+        auto lamp = lights.make();
+
+        // setup
+
+        lamp->tint = light;
+        lamp->elevation = 0;
+        lamp->is_on = true;
+        lamp->source = light_source::point;
+
+        pawn->store(location);
+        pawn->place(location);
+
+        lamp->connect(pawn.get());
+
+        // activate
+
+        pawn->activate();
+        lamp->activate();
+
+        vfx.push_back({ location, location, std::move(pawn), nullptr, nullptr, std::move(lamp), nullptr });
     }
 
     bool environment::in_sight(body_component const& body, point2 const& location) const {

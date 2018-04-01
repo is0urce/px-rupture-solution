@@ -79,8 +79,8 @@ namespace px {
                 ctrl->release();
             }
         }
-        uq_ptr(element_type * pointer, abstract_release_block * control_block) noexcept
-            : ptr(pointer)
+        uq_ptr(element_type * raw, abstract_release_block * control_block) noexcept
+            : ptr(raw)
             , ctrl(control_block)
         {
         }

@@ -29,59 +29,14 @@ namespace px {
 
         void tick() {
             pool.enumerate([&](body_component & body) {
-
-                // damage-over-time
-
-                auto dot = body.accumulate({ rl::effect::dot });
-                if (dot.magnitude0 > 0) {
-                    auto damage = static_cast<body_component::resource_value_type>(dot.magnitude0);
-                    game->damage(body, damage, static_cast<rl::damage_type>(dot.sub));
-                }
-
-                // resource regeneration
-
-                auto mp_regen = body.accumulate({ rl::effect::mp_regen });
-                if (mp_regen.magnitude0 > 0) {
-                    if (body.energy()) {
-                        auto mod = static_cast<body_component::resource_value_type>(mp_regen.magnitude0);
-                        body.energy()->restore(mod);
-                    }
-                }
-
-                auto hp_regen = body.accumulate({ rl::effect::hp_regen });
-                if (hp_regen.magnitude0 > 0) {
-                    if (body.health()) {
-                        auto mod = static_cast<body_component::resource_value_type>(hp_regen.magnitude0);
-                        body.health()->restore(mod);
-                    }
-                }
+                process_effects(body);
+                process_death(body);
 
                 // reduce effect durations
                 for (auto & buff : body.buffs) {
                     buff.reduce_duration(1);
                 }
                 body.buffs.erase(std::remove_if(body.buffs.begin(), body.buffs.end(), [](auto & buff) { return buff.is_expired(); }), body.buffs.end());
-
-                // death of units
-                if (composite_component * unit = body.linked<composite_component>()) {
-                    switch (unit->lifetime()) {
-                    case persistency::permanent:    // skip for permanent entities
-                        break;
-                    case persistency::destroying:
-                        unit->decay(1);
-                        break;
-                    default:
-                        if (body.is_dead()) {
-                            // give experience
-                            game->give_experience(body.experience(), body.level());
-                            body.set_experience(0);
-
-                            // set destroying persistency status
-                            unit->destroy(0);
-                        }
-                        break;
-                    }
-                }
             });
         }
 
@@ -89,6 +44,58 @@ namespace px {
         body_works()
             : game(nullptr)
         {
+        }
+
+    private:
+        void process_effects(body_component & body) {
+            // damage-over-time
+
+            auto dot = body.accumulate({ rl::effect::dot });
+            if (dot.magnitude0 > 0) {
+                auto damage = static_cast<body_component::resource_value_type>(dot.magnitude0);
+                game->damage(body, damage, static_cast<rl::damage_type>(dot.sub));
+            }
+
+            // resource regeneration
+
+            auto mp_regen = body.accumulate({ rl::effect::mp_regen });
+            if (mp_regen.magnitude0 > 0) {
+                if (body.energy()) {
+                    auto mod = static_cast<body_component::resource_value_type>(mp_regen.magnitude0);
+                    body.energy()->restore(mod);
+                }
+            }
+
+            auto hp_regen = body.accumulate({ rl::effect::hp_regen });
+            if (hp_regen.magnitude0 > 0) {
+                if (body.health()) {
+                    auto mod = static_cast<body_component::resource_value_type>(hp_regen.magnitude0);
+                    body.health()->restore(mod);
+                }
+            }
+        }
+
+        // death of unit
+        void process_death(body_component & body) {
+            if (composite_component * unit = body.linked<composite_component>()) {
+                switch (unit->lifetime()) {
+                case persistency::permanent:    // skip for permanent entities
+                    break;
+                case persistency::destroying:
+                    unit->decay(1);
+                    break;
+                default:
+                    if (body.is_dead()) {
+                        // give experience
+                        game->give_experience(body.experience(), body.level());
+                        body.set_experience(0);
+
+                        // set destroying persistency status
+                        unit->destroy(0);
+                    }
+                    break;
+                }
+            }
         }
 
     private:
