@@ -26,7 +26,7 @@ namespace px {
         uq_ptr<body_component>  make();
 
     public:
-        virtual                 ~body_system();
+        virtual                 ~body_system() override;
         body_system();
 
     protected:

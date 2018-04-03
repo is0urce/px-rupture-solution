@@ -33,8 +33,10 @@ namespace px {
     protected:
         virtual void update_system(delta_type const& /* delta */) {
         }
+
         virtual void fixed_update_system(delta_type const& /* delta */) {
         }
+
         virtual void turn_update_system(delta_type const& /* delta */) {
         }
     };

@@ -11,31 +11,33 @@
 
 namespace px {
 
-	class player_component
-		: public component
-		, public link_dispatcher<player_component>
-	{
-	public:
-		std::uint32_t get_seed() const noexcept {
-			return seed;
-		}
-		void set_seed(std::uint32_t seed_value) noexcept {
-			seed = seed_value;
-		}
+    class player_component
+        : public component
+        , public link_dispatcher<player_component>
+    {
+    public:
+        std::uint32_t get_seed() const noexcept {
+            return seed;
+        }
 
-		template <typename Archive>
-		void serialize(Archive & archive) {
-			archive(seed);
-		}
+        void set_seed(std::uint32_t seed_value) noexcept {
+            seed = seed_value;
+        }
 
-	public:
-		virtual ~player_component() = default;
-		player_component()
-			: seed(0)
-		{
-		}
+        template <typename Archive>
+        void serialize(Archive & archive) {
+            archive(seed);
+        }
 
-	private:
-		std::uint32_t	seed;
-	};
+    public:
+        virtual ~player_component() override = default;
+
+        player_component()
+            : seed(0)
+        {
+        }
+
+    private:
+        std::uint32_t   seed;
+    };
 }

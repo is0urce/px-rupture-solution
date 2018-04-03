@@ -14,7 +14,7 @@ namespace px {
         : public abstract_release_block
     {
     public:
-        virtual ~delete_release_block() = default;
+        virtual ~delete_release_block() override = default;
         delete_release_block(T * raw)
             : original(raw)
         {

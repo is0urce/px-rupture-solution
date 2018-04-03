@@ -1,4 +1,7 @@
 // name: transform_system.hpp
+// type: c++
+// auth: is0urce
+// desc: class declaration
 
 #pragma once
 
@@ -8,25 +11,25 @@
 #include <px/memory/uq_ptr.hpp>
 
 namespace px {
-	
-	class transform_component;
-	class transform_works;
 
-	class transform_system final
-		: public system<delta>
-	{
-	public:
-		uq_ptr<transform_component> make();
-		void store();
+    class transform_component;
+    class transform_works;
 
-	public:
-		virtual ~transform_system();
-		transform_system();
+    class transform_system final
+        : public system<delta>
+    {
+    public:
+        uq_ptr<transform_component> make();
+        void store();
 
-	protected:
-		virtual void turn_update_system(delta_type const& delta_time) override;
+    public:
+        virtual ~transform_system() override;
+        transform_system();
 
-	private:
-		uq_ptr<transform_works> works;
-	};
+    protected:
+        virtual void turn_update_system(delta_type const& delta_time) override;
+
+    private:
+        uq_ptr<transform_works> works;
+    };
 }

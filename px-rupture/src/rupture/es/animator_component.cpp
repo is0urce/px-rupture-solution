@@ -1,16 +1,24 @@
 // name: animator_component.cpp
+// type: c++
+// auth: is0urce
+// desc: class implementation
 
 #include "animator_component.hpp"
 
 namespace px {
 
+    // constructor & desctructor
+
     animator_component::~animator_component() = default;
+
     animator_component::animator_component() noexcept
         : name(nullptr)
         , playing(false)
         , current_index(0)
     {
     }
+
+    // methods
 
     bool animator_component::play(size_t animation_id) {
         if (animation_id <= animations.size()) {

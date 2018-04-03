@@ -21,7 +21,7 @@ namespace px {
         }
 
     public:
-        virtual ~container_component() = default;
+        virtual ~container_component() override = default;
         container_component() = default;
         container_component(container_component const&) = delete;
         container_component & operator=(container_component const&) = delete;

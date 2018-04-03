@@ -28,7 +28,7 @@ namespace px {
         }
 
     public:
-        virtual ~character_component() = default;
+        virtual ~character_component() override = default;
         character_component() = default;
         character_component(character_component const&) = delete;
         character_component const& operator=(character_component const&) = delete;

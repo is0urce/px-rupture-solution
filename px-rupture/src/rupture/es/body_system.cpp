@@ -10,7 +10,7 @@
 
 namespace px {
 
-    // ctor & dtor
+    // constructor & destructor
 
     body_system::~body_system() = default;
 

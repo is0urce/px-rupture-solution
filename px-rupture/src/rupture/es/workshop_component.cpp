@@ -1,34 +1,40 @@
 // name: workshop_component.cpp
+// type: c++
+// auth: is0urce
+// desc: class implementation
 
 #include "workshop_component.hpp"
 
-#include "rupture/environment.hpp"
+#include "../environment.hpp"
 
 namespace px {
 
-	workshop_component::~workshop_component() = default;
+    // constructor & desctuctor
 
-	workshop_component::workshop_component()
-		: activity_variant(rl::craft_activity::none) {
-	}
+    workshop_component::~workshop_component() = default;
 
-	// overrides
+    workshop_component::workshop_component()
+        : activity_variant(rl::craft_activity::none) {
+    }
 
-	bool workshop_component::can_use_useable(body_component * /*user*/, environment * /*context*/) const {
-		return true;
-	}
-	void workshop_component::use_useable(body_component * /*user*/, environment * context) {
-		if (context) {
-			context->open_workshop(activity_variant);
-		}
-	}
+    // overrides
 
-	// methods
+    bool workshop_component::can_use_useable(body_component * /*user*/, environment * /*context*/) const {
+        return true;
+    }
 
-	rl::craft_activity workshop_component::activity() const noexcept {
-		return activity_variant;
-	}
-	void workshop_component::set_activity(rl::craft_activity variant) {
-		activity_variant = variant;
-	}
+    void workshop_component::use_useable(body_component * /*user*/, environment * context) {
+        if (context) {
+            context->open_workshop(activity_variant);
+        }
+    }
+
+    // methods
+
+    rl::craft_activity workshop_component::activity() const noexcept {
+        return activity_variant;
+    }
+    void workshop_component::set_activity(rl::craft_activity variant) {
+        activity_variant = variant;
+    }
 }

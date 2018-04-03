@@ -38,7 +38,7 @@ namespace px {
         }
 
     public:
-        virtual	                        ~animator_component();
+        virtual	                        ~animator_component() override;
         animator_component() noexcept;
         animator_component(animator_component const&) = delete;
         animator_component & operator=(animator_component const&) = delete;

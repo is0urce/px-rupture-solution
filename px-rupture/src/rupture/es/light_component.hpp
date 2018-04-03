@@ -9,18 +9,18 @@
 
 namespace px {
 
-	class transform_component;
+    class transform_component;
 
-	class light_component
-		: public component
-		, public link<transform_component>
-		, public link_dispatcher<light_component>
-		, public light
-	{
-	public:
-		virtual ~light_component() noexcept = default;
-		light_component() noexcept = default;
-		light_component(light_component const&) noexcept = delete;
-		light_component & operator=(light_component const&) noexcept = delete;
-	};
+    class light_component
+        : public component
+        , public link<transform_component>
+        , public link_dispatcher<light_component>
+        , public light
+    {
+    public:
+        virtual ~light_component() noexcept override = default;
+        light_component() noexcept = default;
+        light_component(light_component const&) noexcept = delete;
+        light_component & operator=(light_component const&) noexcept = delete;
+    };
 }

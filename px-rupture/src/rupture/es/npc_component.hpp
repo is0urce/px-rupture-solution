@@ -13,65 +13,68 @@
 
 namespace px {
 
-	class transform_component;
+    class transform_component;
 
-	class npc_component
-		: public component
-		, public link<transform_component>
-		, public link_dispatcher<npc_component>
-	{
-	public:
-		rl::ai_state get_state() const noexcept {
-			return state;
-		}
-		std::uint32_t get_range() const noexcept {
-			return state == rl::ai_state::idle ? range_idle : range_alert;
-		}
-		std::tuple<std::uint32_t, std::uint32_t> get_ranges() const noexcept {
-			return { range_idle, range_alert };
-		}
-		void set_state(rl::ai_state current) noexcept {
-			state = current;
-		}
+    class npc_component
+        : public component
+        , public link<transform_component>
+        , public link_dispatcher<npc_component>
+    {
+    public:
+        rl::ai_state get_state() const noexcept {
+            return state;
+        }
 
-		void set_range(std::uint32_t idle, std::uint32_t alert) noexcept {
-			range_idle = idle;
-			range_alert = alert;
-		}
+        std::uint32_t get_range() const noexcept {
+            return state == rl::ai_state::idle ? range_idle : range_alert;
+        }
 
-		point2 & destination() {
-			return waypoint;
-		}
+        std::tuple<std::uint32_t, std::uint32_t> get_ranges() const noexcept {
+            return { range_idle, range_alert };
+        }
 
-		bool is_idle() const noexcept {
-			return state == rl::ai_state::idle;
-		}
+        void set_state(rl::ai_state current) noexcept {
+            state = current;
+        }
 
-		void alert() {
-			state = rl::ai_state::alert;
-		}
+        void set_range(std::uint32_t idle, std::uint32_t alert) noexcept {
+            range_idle = idle;
+            range_alert = alert;
+        }
 
-		template <typename Archive>
-		void serialize(Archive & archive) {
-			archive(state, waypoint, range_idle, range_alert);
-		}
+        point2 & destination() {
+            return waypoint;
+        }
 
-	public:
-		virtual ~npc_component() = default;
-		npc_component()
-			: state(rl::ai_state::idle)
-			, range_idle(0)
-			, range_alert(0)
-			, waypoint{ 0, 0 }
-		{
-		}
-		npc_component(npc_component const&) = delete;
-		npc_component & operator=(npc_component const&) = delete;
+        bool is_idle() const noexcept {
+            return state == rl::ai_state::idle;
+        }
 
-	private:
-		rl::ai_state	state;
-		std::uint32_t	range_idle;
-		std::uint32_t	range_alert;
-		point2			waypoint;
-	};
+        void alert() {
+            state = rl::ai_state::alert;
+        }
+
+        template <typename Archive>
+        void serialize(Archive & archive) {
+            archive(state, waypoint, range_idle, range_alert);
+        }
+
+    public:
+        virtual ~npc_component() = default;
+        npc_component()
+            : state(rl::ai_state::idle)
+            , range_idle(0)
+            , range_alert(0)
+            , waypoint{ 0, 0 }
+        {
+        }
+        npc_component(npc_component const&) = delete;
+        npc_component & operator=(npc_component const&) = delete;
+
+    private:
+        rl::ai_state    state;
+        std::uint32_t   range_idle;
+        std::uint32_t   range_alert;
+        point2          waypoint;
+    };
 }

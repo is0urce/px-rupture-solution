@@ -1,4 +1,7 @@
 // name: sprite_system.hpp
+// type: c++
+// auth: is0urce
+// desc: class implementation
 
 #include "sprite_system.hpp"
 #include "sprite_works.hpp"
@@ -7,37 +10,40 @@
 
 namespace px {
 
-	sprite_system::~sprite_system() = default;
+    // constructor & desctructor
 
-	sprite_system::sprite_system()
-		: works(make_uq<sprite_works>())
-	{
-	}
+    sprite_system::~sprite_system() = default;
 
-	// override
+    sprite_system::sprite_system()
+        : works(make_uq<sprite_works>())
+    {
+    }
 
-	void sprite_system::update_system(delta_type const& delta_time)	{
-		works->batch(delta_time.turn_duration);
-	}
+    // override
 
-	// methods
+    void sprite_system::update_system(delta_type const& delta_time) {
+        works->batch(delta_time.turn_duration);
+    }
 
-	uq_ptr<sprite_component> sprite_system::make(std::string const& name) {
-		return works->make(name);
-	}
-	sprite const* sprite_system::frame(std::string const& name) const {
-		return works->frame(name);
-	}
+    // methods
 
-	std::vector<std::vector<sprite_vertex>> const* sprite_system::data() const noexcept {
-		return works->data();
-	}
+    uq_ptr<sprite_component> sprite_system::make(std::string const& name) {
+        return works->make(name);
+    }
 
-	void sprite_system::target(transform_component const* camera) noexcept {
-		works->target(camera);
-	}
+    sprite const* sprite_system::frame(std::string const& name) const {
+        return works->frame(name);
+    }
 
-	void sprite_system::add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture_id) {
-		works->add_sprite(name, sx, sy, dx, dy, texture_id);
-	}
+    std::vector<std::vector<sprite_vertex>> const* sprite_system::data() const noexcept {
+        return works->data();
+    }
+
+    void sprite_system::target(transform_component const* camera) noexcept {
+        works->target(camera);
+    }
+
+    void sprite_system::add_sprite(std::string const& name, float sx, float sy, float dx, float dy, unsigned int texture_id) {
+        works->add_sprite(name, sx, sy, dx, dy, texture_id);
+    }
 }

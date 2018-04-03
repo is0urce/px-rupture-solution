@@ -73,9 +73,10 @@ namespace px {
         void                                                        set_level(std::uint32_t lvl) noexcept;
         void                                                        set_experience(std::uint32_t exp) noexcept;
         std::uint32_t                                               mod_experience(std::uint32_t exp) noexcept;
+        std::uint32_t                                               mod_level(std::uint32_t lvl) noexcept;
         bool                                                        try_use(body_component * user, environment * context);
-        doll_type &                                                 get_mannequin();
-        std::vector<buff_type> const&                               get_buffs() const;
+        doll_type &                                                 get_mannequin() noexcept;
+        std::vector<buff_type> const&                               get_buffs() const noexcept;
         void                                                        unequip(rl::equipment slot);
         void                                                        use(body_component * user, environment * env);
         void                                                        use_potion(rl::item const& potion, environment * context);
@@ -91,7 +92,7 @@ namespace px {
         }
 
     public:
-        virtual                                                     ~body_component();
+        virtual                                                     ~body_component() override;
         body_component() noexcept;
         body_component(body_component const&) noexcept = delete;
         body_component & operator=(body_component const&) noexcept = delete;

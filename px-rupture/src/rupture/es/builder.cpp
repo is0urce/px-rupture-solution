@@ -26,7 +26,10 @@
 
 namespace px {
 
+    // constructor & destructor
+
     builder::~builder() = default;
+
     builder::builder(core * production_factory)
         : factory(production_factory)
         , last_player(nullptr)

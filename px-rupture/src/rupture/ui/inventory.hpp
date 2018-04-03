@@ -38,9 +38,7 @@ namespace px {
 
             transform_component * target = game->possessed();
             if (!target) return;
-            body_component * body = target->linked<body_component>();
-            if (!body) return;
-            container_component * container = body->linked<container_component>();
+            auto[body, container] = target->unwind<body_component, container_component>();
             if (!container) return;
 
             const float screen_width = ImGui::GetIO().DisplaySize.x;

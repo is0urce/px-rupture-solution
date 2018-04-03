@@ -17,7 +17,7 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~title() = default;
+        virtual ~title() override = default;
         title(environment * game)
             : context(game)
         {

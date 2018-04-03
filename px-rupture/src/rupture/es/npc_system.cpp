@@ -1,4 +1,7 @@
 // name: npc_system.cpp
+// type: c++
+// auth: is0urce
+// desc: class implementation
 
 #include "npc_system.hpp"
 
@@ -8,28 +11,28 @@
 
 namespace px {
 
-	// ctor & dtor
+    // constructor & destructor
 
-	npc_system::~npc_system() {
-	}
-	npc_system::npc_system()
-		: works(make_uq<npc_works>())
-	{
-	}
+    npc_system::~npc_system() = default;
 
-	// virtual overrides
+    npc_system::npc_system()
+        : works(make_uq<npc_works>())
+    {
+    }
 
-	void npc_system::turn_update_system(delta_type const& /*delta_time*/) {
-		works->turn();
-	}
+    // virtual overrides
 
-	// methods
+    void npc_system::turn_update_system(delta_type const& /*delta_time*/) {
+        works->turn();
+    }
 
-	void npc_system::assign_scene(scene * world) noexcept {
-		works->assign_scene(world);
-	}
+    // methods
 
-	uq_ptr<npc_component> npc_system::make() {
-		return works->make();
-	}
+    void npc_system::assign_scene(scene * world) noexcept {
+        works->assign_scene(world);
+    }
+
+    uq_ptr<npc_component> npc_system::make() {
+        return works->make();
+    }
 }

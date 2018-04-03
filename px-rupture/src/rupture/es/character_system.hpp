@@ -9,25 +9,25 @@
 
 namespace px {
 
-	class character_component;
-	class character_works;
-	class script;
+    class character_component;
+    class character_works;
+    class script;
 
-	class character_system
-		: public system<delta>
-	{
-	public:
-		uq_ptr<character_component> make();
-		void load(script * scripts);
+    class character_system
+        : public system<delta>
+    {
+    public:
+        uq_ptr<character_component> make();
+        void load(script * scripts);
 
-	public:
-		virtual ~character_system();
-		character_system();
+    public:
+        virtual ~character_system() override;
+        character_system();
 
-	protected:
-		virtual void turn_update_system(delta_type const& delta_time) override;
+    protected:
+        virtual void turn_update_system(delta_type const& delta_time) override;
 
-	private:
-		uq_ptr<character_works> works;
-	};
+    private:
+        uq_ptr<character_works> works;
+    };
 }

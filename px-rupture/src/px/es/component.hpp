@@ -9,17 +9,19 @@
 
 namespace px {
 
-    class component {
+    class component abstract {
     public:
         bool is_active() const noexcept {
             return active;
         }
+
         void activate() {
             if (!active) {
                 activate_component();
                 active = true;
             }
         }
+
         void deactivate() {
             if (active) {
                 deactivate_component();
@@ -29,6 +31,7 @@ namespace px {
 
     public:
         virtual ~component() = default;
+
         component() noexcept
             : active(false)
         {
@@ -37,6 +40,7 @@ namespace px {
     protected:
         virtual void activate_component() {
         }
+
         virtual void deactivate_component() {
         }
 

@@ -7,12 +7,12 @@
 
 #include "panel.hpp"
 
-#include "rupture/environment.hpp"
-#include "rupture/es/transform_component.hpp"
-#include "rupture/es/body_component.hpp"
-#include "rupture/es/character_component.hpp"
+#include "../environment.hpp"
+#include "../es/transform_component.hpp"
+#include "../es/body_component.hpp"
+#include "../es/character_component.hpp"
 
-#include "rupture/rl/traits.hpp"
+#include "../rl/traits.hpp"
 
 #include <imgui/imgui.h>
 
@@ -24,37 +24,32 @@ namespace px::ui {
     public:
         virtual ~levelup() = default;
 
-        levelup(environment * game)
-            : context(game)
+        levelup(environment * ctx)
+            : context(ctx)
         {
         }
 
     protected:
         virtual void combine_panel() override {
-            if (!context) return;
-            transform_component * player = context->possessed();
-            if (!player) return;
-            body_component * body = player->linked<body_component>();
-            if (!body) return;
-            character_component * character = body->linked<character_component>();
-            if (!character) return;
+            auto pawn = context ? context->possessed() : nullptr;
+            auto body = pawn ? pawn->linked<body_component>() : nullptr;
 
-            if (!features.levelup_required(*body)) return; // require levelup
+            if (body && features.levelup_required(*body)) {
 
-            const float screen_width = ImGui::GetIO().DisplaySize.x;
-            const float screen_height = ImGui::GetIO().DisplaySize.y;
-            const float padding_x = 16;
-            const float padding_y = 65;
+                const float screen_width = ImGui::GetIO().DisplaySize.x;
+                const float screen_height = ImGui::GetIO().DisplaySize.y;
+                const float padding_x = 16;
+                const float padding_y = 65;
 
-            const float window_width = screen_width / 3 - padding_x * 3;
-            const float window_height = screen_height * 2 / 3 - padding_y;
+                const float window_width = screen_width / 3 - padding_x * 3;
+                const float window_height = screen_height * 2 / 3 - padding_y;
 
-            unsigned int trait_1, trait_2, trait_3;
-            std::tie(trait_1, trait_2, trait_3) = features.select_traits(*body);
+                auto[trait_1, trait_2, trait_3] = features.select_traits(*body);
 
-            combine_option({ padding_x * (1 + 2 * 0) + window_width * 0, screen_height / 4 }, { window_width, window_height }, *body, 0, trait_1);
-            combine_option({ padding_x * (1 + 2 * 1) + window_width * 1, screen_height / 4 }, { window_width, window_height }, *body, 1, trait_2);
-            combine_option({ padding_x * (1 + 2 * 2) + window_width * 2, screen_height / 4 }, { window_width, window_height }, *body, 2, trait_3);
+                combine_option({ padding_x * (1 + 2 * 0) + window_width * 0, screen_height / 4 }, { window_width, window_height }, *body, 0, trait_1);
+                combine_option({ padding_x * (1 + 2 * 1) + window_width * 1, screen_height / 4 }, { window_width, window_height }, *body, 1, trait_2);
+                combine_option({ padding_x * (1 + 2 * 2) + window_width * 2, screen_height / 4 }, { window_width, window_height }, *body, 2, trait_3);
+            }
         }
 
     private:
@@ -78,7 +73,7 @@ namespace px::ui {
 
         void increment_level(unsigned int trait_id, body_component & body) {
             features.give_trait(trait_id, body);
-            body.set_level(body.level() + 1);
+            body.mod_level(1);
         }
 
     private:

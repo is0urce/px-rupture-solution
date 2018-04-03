@@ -123,11 +123,15 @@ namespace px {
         return exp += n;
     }
 
-    body_component::doll_type &	body_component::get_mannequin() {
+    std::uint32_t body_component::mod_level(std::uint32_t mod) noexcept {
+        return lvl += mod;
+    }
+
+    body_component::doll_type &	body_component::get_mannequin() noexcept {
         return mannequin;
     }
 
-    std::vector<body_component::buff_type> const& body_component::get_buffs() const {
+    std::vector<body_component::buff_type> const& body_component::get_buffs() const noexcept {
         return buffs;
     }
 

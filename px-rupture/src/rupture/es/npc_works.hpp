@@ -10,7 +10,7 @@
 #include "npc_component.hpp"
 #include "transform_component.hpp"
 
-#include "rupture/rl/scene.hpp"
+#include "../rl/scene.hpp"
 
 #include <px/common/pool_chain.hpp>
 #include <px/common/qtree.hpp>
