@@ -140,8 +140,11 @@ namespace px {
                 , "in_sight", &script_environment::in_sight
                 , "in_line", &script_environment::in_line
                 , "create_effect", &script_environment::create_effect
+                , "is_traversable", &script_environment::is_traversable
+                , "neighbour", &script_environment::neighbour
                 );
         }
+
         void add_functions() {
             lua.script_file("data/scripts/lib_rupture.lua");
         }

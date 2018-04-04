@@ -65,7 +65,6 @@ namespace px {
         uq_ptr<composite_component> &       spawn(uq_ptr<composite_component> unit);
         uq_ptr<composite_component> &       spawn(std::string const& blueprint, point2 const& position);
         void                                update_blueprints(std::string const& out_path, std::string const& blueprint);
-        int                                 roll(int min, int max);
 
         // script bindings
     public:
@@ -77,6 +76,9 @@ namespace px {
         rl::hit_result                      hit(body_component const& source, body_component const& target);
         std::tuple<float, rl::damage_type>  dps(body_component const& source) const;
         void                                damage(body_component & target, int damage, rl::damage_type dmg_type);
+        bool                                is_traversable(point2 const location, body_component const& body) const;
+        std::tuple<bool, point2>            neighbour(point2 const location, unsigned int pos) const;
+        int                                 roll(int min, int max);
 
     public:
         virtual                             ~environment();

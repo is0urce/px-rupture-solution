@@ -106,6 +106,18 @@ namespace px {
             return result;
         }
 
+        bool is_traversable(point2 const& location, script_unit const& unit) {
+            bool result = false;
+            if (auto body = unit.get_body()) {
+                result = game->is_traversable(location, *body);
+            }
+            return result;
+        }
+
+        std::tuple<bool, point2> neighbour(point2 const& location, unsigned int direction) {
+            return game->neighbour(location, direction);
+        }
+
     public:
         script_environment() noexcept
             : game(nullptr)

@@ -523,4 +523,45 @@ namespace px {
     int environment::roll(int min, int max) {
         return std::uniform_int_distribution<>{ min, max }(rng);
     }
+
+    bool environment::is_traversable(point2 const location, body_component const& body) const {
+        return stage.is_traversable(location, body.movement());
+    }
+
+    std::tuple<bool, point2> environment::neighbour(point2 const location, unsigned int pos) const {
+        std::tuple<bool, point2> result{ false, {} };
+        switch (pos) {
+        case 0:
+            result = { true, location.moved({ +1, +0 }) };
+            break;
+        case 1:
+            result = { true, location.moved({ +1, +1 }) };
+            break;
+        case 2:
+            result = { true, location.moved({ +0, +1 }) };
+            break;
+        case 3:
+            result = { true, location.moved({ -1, +1 }) };
+            break;
+        case 4:
+            result = { true, location.moved({ -1, +0 }) };
+            break;
+        case 5:
+            result = { true, location.moved({ -1, -1 }) };
+            break;
+        case 6:
+            result = { true, location.moved({ -1, +0 }) };
+            break;
+        case 7:
+            result = { true, location.moved({ -1, -1 }) };
+            break;
+        case 8:
+            result = { true, location.moved({ +1, -1 }) };
+            break;
+        default:
+            break;
+        }
+
+        return result;
+    }
 }
