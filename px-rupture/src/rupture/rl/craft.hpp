@@ -119,7 +119,7 @@ namespace px::rl {
         {
             name_prefix = { "boris", "ivan", "nestor" };
             name_postfix = { "slashworks", "intrigue" };
-            name_substance = { {3, "numidium"} };
+            name_substance = { { 3, "numidium" } };
         }
 
     private:

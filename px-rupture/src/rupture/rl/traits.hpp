@@ -36,9 +36,11 @@ namespace px {
         static unsigned int calculate_level(unsigned int experience) {
             return cap_level(level_by_experience(experience));
         }
+
         static unsigned int levelup_required(unsigned int experience, unsigned int level) {
             return calculate_level(experience) > level;
         }
+
         static unsigned int levelup_required(body_component const& body) {
             return levelup_required(body.experience(), body.level());
         }
@@ -81,9 +83,11 @@ namespace px {
             }
             return result;
         }
+
         std::tuple<unsigned int, unsigned int, unsigned int> select_traits(unsigned int level, character_component const& character) {
             return select_traits(level, specialization(character));
         }
+
         std::tuple<unsigned int, unsigned int, unsigned int> select_traits(unsigned int level, class_branch skill_branch) {
             auto const& trait_options = trait_selection[bucket(skill_branch)][level];
             auto options = trait_options.size();
@@ -104,9 +108,13 @@ namespace px {
         }
 
     private:
+        // returns level attainable with specified experience points
         static unsigned int level_by_experience(unsigned int experience) {
             return 1 + (static_cast<unsigned int>(std::sqrt(2500 + 200 * experience)) - 50) / 100;
         }
+
+        // limit level by maximum level cap
+        // returns capped level
         constexpr static unsigned int cap_level(unsigned int level) {
             return std::min<unsigned int>(level, 60);
         }

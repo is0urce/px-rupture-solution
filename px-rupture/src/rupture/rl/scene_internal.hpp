@@ -46,12 +46,15 @@ namespace px {
         void clear_units() {
             units.clear();
         }
+
         void unload() {
             surface.clear();
         }
+
         void set_enter_event(patch_event evt) {
             enter_fn = evt;
         }
+
         void set_leave_event(patch_event evt) {
             leave_fn = evt;
         }
@@ -95,6 +98,7 @@ namespace px {
 
             return transparent;
         }
+
         bool is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const {
             if (!surface.is_traversable(location, opts)) return false;
 
@@ -106,6 +110,7 @@ namespace px {
 
             return traversable;
         }
+
         transform_component * any(point2 const& location) const {
             transform_component * subject = nullptr;
             space.find(location, [&](transform_component * pawn) {
@@ -113,6 +118,7 @@ namespace px {
             });
             return subject;
         }
+
         body_component * anybody(point2 const& location) const {
             body_component * found = nullptr;
             space.find(location, [&](transform_component * pawn) {
@@ -195,11 +201,13 @@ namespace px {
         std::string depot_name(point2 const& grid) const {
             return settings::terrrain_path + std::to_string(grid.x()) + "_" + std::to_string(grid.y()) + ".dat";
         }
+
         void on_leave(point2 const& grid_cell, stream_type & /*terrain*/) {
             if (leave_fn) {
                 leave_fn(grid_cell);
             }
         }
+
         void on_enter(point2 const& grid_cell, stream_type & terrain) {
             terrain.load([&](patch_type & chunk) {
                 chunk.assign_sprites(sprites);
@@ -210,6 +218,7 @@ namespace px {
                 enter_fn(grid_cell);
             }
         }
+
         bool in_cell(point2 const& pos, point2 cell) const {
             return surface_type::get_cell(pos) == cell;
         }

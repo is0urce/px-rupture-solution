@@ -8,72 +8,73 @@
 
 namespace px {
 
-	// ctor
+    // constructor & desctuctor
 
-	scene::~scene() = default;
-	scene::scene()
-		: works(make_uq<scene_internal>())
-	{
-	}
+    scene::~scene() = default;
 
-	// methods
+    scene::scene()
+        : works(make_uq<scene_internal>())
+    {
+    }
 
-	void scene::focus(point2 const& location) {
-		works->focus(location);
-	}
+    // methods
 
-	bool scene::is_transparent(point2 const& location) const {
-		return works->is_transparent(location);
-	}
-	bool scene::is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const {
-		return works->is_traversable(location, opts);
-	}
+    void scene::focus(point2 const& location) {
+        works->focus(location);
+    }
 
-	uq_ptr<composite_component> & scene::spawn(uq_ptr<composite_component> && ptr) {
-		return works->spawn(std::forward<uq_ptr<composite_component>>(ptr));
-	}
+    bool scene::is_transparent(point2 const& location) const {
+        return works->is_transparent(location);
+    }
+    bool scene::is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const {
+        return works->is_traversable(location, opts);
+    }
 
-	void scene::assign_sprites(sprite_system * system) {
-		works->assign_sprites(system);
-	}
+    uq_ptr<composite_component> & scene::spawn(uq_ptr<composite_component> && ptr) {
+        return works->spawn(std::forward<uq_ptr<composite_component>>(ptr));
+    }
 
-	void scene::pset(std::uint32_t block_id, point2 const& location) {
-		works->pset(block_id, location);
-	}
+    void scene::assign_sprites(sprite_system * system) {
+        works->assign_sprites(system);
+    }
 
-	qtree<transform_component*> * scene::space() noexcept {
-		return works->get_space();
-	}
+    void scene::pset(std::uint32_t block_id, point2 const& location) {
+        works->pset(block_id, location);
+    }
 
-	transform_component * scene::any(point2 const& location) const {
-		return works->any(location);
-	}
-	body_component * scene::anybody(point2 const& location) const {
-		return works->anybody(location);
-	}
-	void scene::discard(std::function<void(composite_component&)> fn) {
-		works->discard(fn);
-	}
+    qtree<transform_component*> * scene::space() noexcept {
+        return works->get_space();
+    }
 
-	size_t scene::size() const {
-		return works->size();
-	}
-	void scene::clear_units() {
-		works->clear_units();
-	}
-	void scene::set_enter_event(std::function<void(point2 const&)> evt) {
-		works->set_enter_event(evt);
-	}
-	void scene::set_leave_event(std::function<void(point2 const&)> evt) {
-		works->set_leave_event(evt);
-	}
-	void scene::enumerate(std::function<void(composite_component&)> fn) {
-		works->enumerate(fn);
-	}
-	void scene::unload() {
-		works->unload();
-	}
-	void scene::pull(point2 const& cell, std::function<void(uq_ptr<composite_component>)> fn) {
-		works->pull(cell, fn);
-	}
+    transform_component * scene::any(point2 const& location) const {
+        return works->any(location);
+    }
+    body_component * scene::anybody(point2 const& location) const {
+        return works->anybody(location);
+    }
+    void scene::discard(std::function<void(composite_component&)> fn) {
+        works->discard(fn);
+    }
+
+    size_t scene::size() const {
+        return works->size();
+    }
+    void scene::clear_units() {
+        works->clear_units();
+    }
+    void scene::set_enter_event(std::function<void(point2 const&)> evt) {
+        works->set_enter_event(evt);
+    }
+    void scene::set_leave_event(std::function<void(point2 const&)> evt) {
+        works->set_leave_event(evt);
+    }
+    void scene::enumerate(std::function<void(composite_component&)> fn) {
+        works->enumerate(fn);
+    }
+    void scene::unload() {
+        works->unload();
+    }
+    void scene::pull(point2 const& cell, std::function<void(uq_ptr<composite_component>)> fn) {
+        works->pull(cell, fn);
+    }
 }

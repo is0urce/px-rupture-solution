@@ -183,7 +183,7 @@ namespace px {
         body->set_name("Gnome");
         body->join_faction(1);
         auto character = unit_builder.add_character();
-        character->learn("sk_v_melee", "sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_v_sound", "sk_o_teleport");
+        character->learn("sk_v_melee", "sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_s_charge", "sk_v_sound", "sk_o_teleport");
 
         // inventory
         auto container = unit_builder.add_container();
@@ -528,9 +528,10 @@ namespace px {
         return stage.is_traversable(location, body.movement());
     }
 
-    std::tuple<bool, point2> environment::neighbour(point2 const location, unsigned int pos) const {
+    std::tuple<bool, point2> environment::neighbour(point2 const location, unsigned int direction) const {
         std::tuple<bool, point2> result{ false, {} };
-        switch (pos) {
+
+        switch (direction) {
         case 0:
             result = { true, location.moved({ +1, +0 }) };
             break;
@@ -550,12 +551,9 @@ namespace px {
             result = { true, location.moved({ -1, -1 }) };
             break;
         case 6:
-            result = { true, location.moved({ -1, +0 }) };
+            result = { true, location.moved({ +0, -1 }) };
             break;
         case 7:
-            result = { true, location.moved({ -1, -1 }) };
-            break;
-        case 8:
             result = { true, location.moved({ +1, -1 }) };
             break;
         default:

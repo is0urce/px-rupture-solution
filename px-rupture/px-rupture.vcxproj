@@ -407,6 +407,7 @@
     <None Include="data\schemata\mobile_t0.json" />
     <None Include="data\scripts\lib_rupture.lua" />
     <None Include="data\scripts\sk_o_teleport.lua" />
+    <None Include="data\scripts\sk_s_charge.lua" />
     <None Include="data\scripts\sk_s_flurry.lua" />
     <None Include="data\scripts\sk_s_rend.lua" />
     <None Include="data\scripts\sk_s_smite.lua" />
