@@ -11,19 +11,19 @@
 
 namespace px {
 
-	void run_tests();
+    void run_tests();
 
-	inline void bootstrap() {
-		run_tests();
-	}
+    inline void bootstrap() {
+        run_tests();
+    }
 }
 
 #else
 
 namespace px {
 
-	inline void bootstrap() {
-	}
+    inline void bootstrap() {
+    }
 }
 
 #endif

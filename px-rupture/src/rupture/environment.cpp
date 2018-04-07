@@ -66,12 +66,9 @@ namespace px {
 
     bool environment::has_control() const {
         if (turn_pass) return false;
-        if (!player) return false;
-        auto body = player->linked<body_component>();
-        if (!body) return false;
-        auto hp = body->health();
-        if (!hp) return false;
-        return !hp->empty();
+
+        auto body = player ? player->linked<body_component>() : nullptr;
+        return body && body->is_alive();
     }
 
     void environment::incarnate(transform_component * camera) {
@@ -394,15 +391,17 @@ namespace px {
         return { static_cast<float>(dps.magnitude0), rl::damage_type::pure };
     }
 
-    void environment::damage(body_component & target, int damage, rl::damage_type /*damage_type*/) {
+    int environment::damage(body_component & target, int damage, rl::damage_type /*source*/) {
+        int damage_done = 0;
         if (auto & hp = target.health()) {
-            hp->damage(damage);
+            damage_done = hp->damage(damage);
 
             // send popup notification
-            if (transform_component * pawn = target.linked<transform_component>()) {
-                popup(std::to_string(damage), pawn == player ? 0xff0000 : 0xffff00, pawn->position());
+            if (auto pawn = target.linked<transform_component>()) {
+                popup(std::to_string(damage_done), pawn == player ? 0xff0000 : 0xffff00, pawn->position());
             }
         }
+        return damage_done;
     }
 
     // check if workshop activity available

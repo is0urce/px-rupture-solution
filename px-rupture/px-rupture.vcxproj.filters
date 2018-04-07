@@ -741,5 +741,6 @@
     <None Include="data\scripts\sk_v_needle.lua" />
     <None Include="data\scripts\sk_v_poison.lua" />
     <None Include="data\scripts\sk_s_charge.lua" />
+    <None Include="data\scripts\sk_v_vampiric.lua" />
   </ItemGroup>
 </Project>

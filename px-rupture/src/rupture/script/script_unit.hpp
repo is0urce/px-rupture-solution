@@ -17,39 +17,64 @@ namespace px {
                 body->add(effect.buff);
             }
         }
-        void damage(int amount) {
-            if (body) {
-                auto & hp = body->health();
-                if (hp) hp->damage(amount);
-            }
-        }
+
         bool is_alive() const {
             return body && body->is_alive();
         }
+
         bool is_valid() const noexcept {
             return body != nullptr;
         }
+
         bool is_enemy(script_unit const& subject) const {
             return body && subject.body && body->is_hostile(*subject.body);
         }
+
         void place(point2 target) {
-            auto pawn = get_transform();
-            if (pawn) {
+            if (auto && pawn = get_transform()) {
                 pawn->place(target);
             }
         }
-        int mp() const {
-            if (!body) return 0;
-            auto const& mp = body->energy();
-            if (!mp) return 0;
-            return mp->current();
+
+        float mp() const {
+            if (!body) {
+                if (auto && mp = body->energy()) {
+                    return static_cast<float>(mp->current());
+                }
+            }
+            return 0;
         }
-        void deplete(int val) {
-            if (!body) return;
-            auto & mp = body->energy();
-            if (!mp) return;
-            mp->damage(val);
+
+        float damage(float amount) {
+            float damage_done = 0;
+            if (body) {
+                if (auto && hp = body->health()) {
+                    damage_done = static_cast<float>(hp->damage(static_cast<body_component::resource_value_type>(amount)));
+                }
+            }
+            return damage_done;
         }
+
+        float deplete(float amount) {
+            float drain = 0;
+            if (body) {
+                if (auto && mp = body->energy()) {
+                    drain = static_cast<float>(mp->damage(static_cast<body_component::resource_value_type>(amount)));
+                }
+            }
+            return drain;
+        }
+
+        float heal(float magnitude) {
+            float healing_done = 0;
+            if (body) {
+                if (auto && hp = body->health()) {
+                    healing_done = static_cast<float>(hp->restore(static_cast<body_component::resource_value_type>(magnitude)));
+                }
+            }
+            return healing_done;
+        }
+
         point2 position() {
             auto pawn = get_transform();
             return pawn ? pawn->position() : point2(0, 0);
@@ -58,9 +83,11 @@ namespace px {
         body_component * get_body() {
             return body;
         }
+
         body_component const* get_body() const {
             return body;
         }
+
         transform_component * get_transform() {
             return body ? body->linked<transform_component>() : nullptr;
         }

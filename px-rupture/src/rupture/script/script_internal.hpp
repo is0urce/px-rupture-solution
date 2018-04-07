@@ -95,6 +95,7 @@ namespace px {
         script_internal() {
             lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::table);
             lua.open_libraries(sol::lib::math);
+            lua.open_libraries(sol::lib::string);
 
             add_usertypes();
             add_functions();
@@ -118,6 +119,7 @@ namespace px {
             lua.new_usertype<script_unit>("unit"
                 , "mp", &script_unit::mp
                 , "damage", &script_unit::damage
+                , "heal", &script_unit::heal
                 , "deplete", &script_unit::deplete
                 , "is_alive", &script_unit::is_alive
                 , "is_enemy", &script_unit::is_enemy

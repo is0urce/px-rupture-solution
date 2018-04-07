@@ -47,12 +47,12 @@ namespace px {
         void                                start();
         void                                end();
         void                                clear();
-        transform_component *               possessed() noexcept;               // get current player
-        void                                start_turn();                       // clear from previous turn
-        void                                end_turn(unsigned int turns);       // end player turn and sart world processing
-        bool                                turn_passed() const noexcept;       // true if it's the world processing stage
-        unsigned int                        current_turn() const noexcept;      // returns turn number
-        void                                return_turn();                      // pass turn back to player
+        transform_component *               possessed() noexcept;                                                   // get current player
+        void                                start_turn();                                                           // clear from previous turn
+        void                                end_turn(unsigned int turns);                                           // end player turn and sart world processing
+        bool                                turn_passed() const noexcept;                                           // true if it's the world processing stage
+        unsigned int                        current_turn() const noexcept;                                          // returns turn number
+        void                                return_turn();                                                          // pass turn back to player
         void                                popup(std::string, color tint, point2 location);
         void                                popup(std::string, color tint);
         int                                 distance(point2 const& a, point2 const& b) const;
@@ -68,14 +68,14 @@ namespace px {
 
         // script bindings
     public:
-        bool                                in_sight(body_component const& body, point2 const& location) const; // in line of sight
-        bool                                in_line(body_component const& body, point2 const& location) const;  // in line of movement
+        bool                                in_sight(body_component const& body, point2 const& location) const;     // in line of sight
+        bool                                in_line(body_component const& body, point2 const& location) const;      // in line of movement
         void                                emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track);
         void                                emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track);
         void                                emit_light(point2 position, color const& light);
         rl::hit_result                      hit(body_component const& source, body_component const& target);
         std::tuple<float, rl::damage_type>  dps(body_component const& source) const;
-        void                                damage(body_component & target, int damage, rl::damage_type dmg_type);
+        int                                 damage(body_component & target, int damage, rl::damage_type source);    // returns damage done
         bool                                is_traversable(point2 const location, body_component const& body) const;
         std::tuple<bool, point2>            neighbour(point2 const location, unsigned int pos) const;
         int                                 roll(int min, int max);

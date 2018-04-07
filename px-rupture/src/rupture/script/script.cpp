@@ -11,7 +11,7 @@
 
 namespace px {
 
-	// ctor & dtor
+	// constructor & destructor
 
 	script::~script() = default;
 
@@ -26,12 +26,12 @@ namespace px {
 		works->assign_environment(game);
 	}
 
+    void script::execute(std::string const& name) {
+        works->execute(name);
+    }
+
 	void script::run(std::string const& code) {
 		works->run(code);
-	}
-
-	void script::execute(std::string const& name) {
-		works->execute(name);
 	}
 
 	rl::skill_functional<body_component *, body_component *, point2> script::impact(std::string const& name) {

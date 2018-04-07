@@ -421,6 +421,7 @@
     <None Include="data\scripts\sk_v_sound.lua" />
     <None Include="data\scripts\sk_v_sting.lua" />
     <None Include="data\scripts\sk_v_swipe.lua" />
+    <None Include="data\scripts\sk_v_vampiric.lua" />
     <None Include="data\scripts\sk_v_zap.lua" />
     <None Include="data\shaders\light.frag" />
     <None Include="data\shaders\light.vert" />

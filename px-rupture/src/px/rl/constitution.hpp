@@ -15,10 +15,10 @@ namespace px::rl {
 
     public:
         bool is_dead() const {
-            return hp.has_value() && hp->empty();
+            return hp && hp->is_empty();
         }
         bool is_alive() const {
-            return hp.has_value() && !hp->empty();
+            return hp && !hp->is_empty();
         }
 
         bool has_health() const {

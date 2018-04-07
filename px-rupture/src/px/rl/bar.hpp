@@ -24,29 +24,41 @@ namespace px::rl {
         T current() const noexcept {
             return m_current;
         }
+
         T maximum() const noexcept {
             return m_max;
         }
-        bool empty() const noexcept {
+
+        bool is_empty() const noexcept {
             return m_current <= 0;
         }
-        bool full() const noexcept {
+
+        bool is_full() const noexcept {
             return m_current == m_max;
         }
 
         // restore value to maximum
 
-        void restore() noexcept {
+        T restore() noexcept {
+            T last = m_current;
             m_current = m_max;
+            return m_current - last;
         }
-        void restore(T magnitude) noexcept {
+
+        T restore(T magnitude) noexcept {
+            T last = m_current;
             m_current = cap(m_current + magnitude);
+            return m_current - last;
         }
+
         void modify(T magnitude) noexcept {
             m_current = cap(m_current + magnitude);
         }
-        void damage(T magnitude) noexcept {
+
+        T damage(T magnitude) noexcept {
+            T last = m_current;
             m_current = cap(m_current - magnitude);
+            return last - m_current;
         }
 
         // mutation operators
@@ -90,6 +102,7 @@ namespace px::rl {
         operator value_type() const noexcept {
             return m_current;
         }
+
         operator bool() const noexcept {
             return !empty();
         }
@@ -97,14 +110,17 @@ namespace px::rl {
         void set_current(T current) noexcept {
             m_current = cap(current);
         }
+
         void set_maximum(T max) noexcept {
             m_max = max;
             m_current = cap(m_current);
         }
+
         void set(T current_and_max) noexcept {
             m_max = current_and_max;
             m_current = current_and_max;
         }
+
         void set(T current, T max) noexcept {
             m_max = max;
             m_current = cap(current);
@@ -116,7 +132,7 @@ namespace px::rl {
             archive(m_current, m_max);
         }
 
-        // ctor & dtor
+        // constructor & destructor
     public:
         constexpr bar() noexcept
             : m_current(0)
@@ -143,7 +159,7 @@ namespace px::rl {
         }
 
     private:
-        T m_current;
-        T m_max;
+        value_type m_current;
+        value_type m_max;
     };
 }

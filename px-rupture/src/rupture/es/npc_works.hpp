@@ -46,7 +46,7 @@ namespace px {
                 if (!body->is_alive()) return;
 
                 // health drop check
-                if (npc.is_idle() && !body->health()->full()) {
+                if (npc.is_idle() && !body->health()->is_full()) {
                     npc.alert();
                     npc.destination() = pawn->position(); // init waypoint to current position
                 }
