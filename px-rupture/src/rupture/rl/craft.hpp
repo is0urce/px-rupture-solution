@@ -28,7 +28,7 @@ namespace px::rl {
         using real_type = enhancement_type::real_type;
 
     public:
-        void assign_environment(environment * game) {
+        void assign_environment(environment * game) noexcept {
             context = game;
         }
 
@@ -117,8 +117,8 @@ namespace px::rl {
         craft()
             : context(nullptr)
         {
-            name_prefix = { "boris", "ivan", "nestor" };
-            name_postfix = { "slashworks", "intrigue" };
+            name_prefix = { "boris", "ivan", "nestor", "executor" };
+            name_postfix = { "slashworks", "intrigue", "equilibriub", "abyss" };
             name_substance = { { 3, "numidium" } };
         }
 
@@ -199,7 +199,7 @@ namespace px::rl {
         }
 
         std::string name_attributes(std::string name, integer_type essence) const {
-            return name + " of " + name_postfix[hash_mod(essence, static_cast<int>(name_postfix.size() - 1))];
+            return name + " of " + name_postfix[hash_mod(essence, static_cast<unsigned int>(name_postfix.size() - 1))];
         }
 
         std::string name_rarity(std::string name, int rarity) const {
