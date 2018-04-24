@@ -10,7 +10,7 @@
 
 namespace px {
 
-    class alignas(long) point2
+    class point2
         : public coordinate<int, 2>
         , public coordinate_operation<point2>
     {
@@ -18,6 +18,7 @@ namespace px {
         constexpr component x() const noexcept {
             return m_array[0];
         }
+
         constexpr component y() const noexcept {
             return m_array[1];
         }
@@ -27,12 +28,15 @@ namespace px {
         // use point2(0, 0) for constexpr
         point2() noexcept {
         }
+
         constexpr point2(component x, component y) noexcept
             : coordinate(x, y) {
         }
+
         constexpr point2(component i) noexcept
             : coordinate(i, i) {
         }
+
         constexpr point2(point2 const&) noexcept = default;
     };
 

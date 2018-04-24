@@ -24,8 +24,7 @@ namespace px {
         : renderer(start_width, start_height)
         , ui(start_width, start_height, this)
         , width(start_width)
-        , height(start_height)
-    {
+        , height(start_height) {
         connect_managers();
         load_data();
         register_systems();

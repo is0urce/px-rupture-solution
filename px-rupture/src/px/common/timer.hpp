@@ -44,6 +44,10 @@ namespace px {
             return m_query() - start;
         }
 
+        auto raw() const {
+            return m_query();
+        }
+
         auto operator()() const {
             return measure();
         }

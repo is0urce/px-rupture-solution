@@ -46,12 +46,7 @@ namespace px {
         stage.set_enter_event([&](point2 const& cell) { load_scene(cell); });
 
         clear();
-
-        std::mt19937::result_type noize[rng.state_size];
-        std::random_device device;
-        std::generate(std::begin(noize), std::end(noize), std::ref(device));
-        std::seed_seq seq(std::begin(noize), std::end(noize));
-        rng = std::mt19937(seq);
+        seed(0);
     }
 
     // methods
@@ -560,5 +555,13 @@ namespace px {
         }
 
         return result;
+    }
+
+    void environment::seed(unsigned int seed) {
+        std::mt19937::result_type noize[rng.state_size];
+        std::random_device device;
+        std::generate(std::begin(noize), std::end(noize), [&]() { return device() ^ seed; });
+        std::seed_seq seq(std::begin(noize), std::end(noize));
+        rng = std::mt19937(seq);
     }
 }

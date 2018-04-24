@@ -397,6 +397,7 @@
     <ClInclude Include="src\tests\case\link_test.hpp" />
     <ClInclude Include="src\tests\case\common\pool_test.hpp" />
     <ClInclude Include="src\tests\case\common\qtree_test.hpp" />
+    <ClInclude Include="src\tests\case\rl\craft_test.hpp" />
     <ClInclude Include="src\tests\case\rl\traverse_test.hpp" />
     <ClInclude Include="src\tests\case\common\matrix_test.hpp" />
   </ItemGroup>

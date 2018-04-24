@@ -621,6 +621,9 @@
     <ClInclude Include="src\px\rl\item_category.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\tests\case\rl\craft_test.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">

@@ -87,7 +87,7 @@ namespace px::rl {
 
         uq_ptr<rl::item> solution(std::string const& name, integer_type essence, real_type power) {
             auto item = make_uq<rl::item>();
-            item->setup_entity(name, "i_potion#" + std::to_string(essence) + "#" + std::to_string(power));
+            item->setup_entity(name_potion(name, essence), "i_potion#" + std::to_string(essence) + "#" + std::to_string(power));
             item->make_stacking();
 
             item->add(enhancement_type::zero(effect::useable));
@@ -113,13 +113,55 @@ namespace px::rl {
             return item;
         }
 
+        // biased in both hash and modulo, but we don't need much accuracy
+        template <typename I>
+        static auto hash(I x) {
+            return std::hash<I>{}(x);
+        }
+
+        static unsigned int hash_mod(unsigned int x, unsigned int modulo) {
+            return hash(x) % modulo;
+        }
+
     public:
         craft()
-            : context(nullptr)
-        {
-            name_prefix = { "boris", "ivan", "nestor", "executor" };
-            name_postfix = { "slashworks", "intrigue", "equilibriub", "abyss" };
-            name_substance = { { 3, "numidium" } };
+            : context(nullptr) {
+            name_prefix = {
+                "boris",
+                "ivan",
+                "nestor",
+                "executor"
+            };
+            name_postfix = {
+                "slashworks",
+                "intrigue",
+                "equilibriub",
+                "abyss" };
+            name_substance = { 
+                { 3, "numidium" }
+            };
+            name_color = {
+                "azure",
+                "beige",
+                "black",
+                "blue",
+                "brown",
+                "crimson",
+                "cyan",
+                "gray",
+                "green",
+                "indigo",
+                "magenta",
+                "orange",
+                "pink",
+                "purple",
+                "red",
+                "teal",
+                "turquoise",
+                "violet",
+                "white",
+                "yellow"
+            };
         }
 
     private:
@@ -160,23 +202,22 @@ namespace px::rl {
             item.add(enhancement_type::integral(effect::essence, 0x00, essence));
         }
 
-        // biased in both hash and modulo, but we don't need much accuracy
-        static unsigned int hash_mod(unsigned int x, unsigned int modulo) {
-            return std::hash<unsigned int>{}(x) % modulo;
-        }
-
         int roll_rarity() {
             int quality = 0;
             if (context->roll(1, 5) == 5) {
-                ++quality; // rare
+                ++quality;          // rare
                 if (context->roll(1, 5) == 5) {
-                    ++quality; // epic
+                    ++quality;      // epic
                     if (context->roll(1, 5) == 5) {
-                        ++quality; // legend
+                        ++quality;  // legend
                     }
                 }
             }
             return quality;
+        }
+
+        std::string name_potion(std::string const& base, integer_type essence) const {
+            return select_name(name_color, essence) + " " + base;
         }
 
         std::string generate_name(rl::craft_recipe const& recipe, integer_type essence, int rarity) const {
@@ -199,21 +240,27 @@ namespace px::rl {
         }
 
         std::string name_attributes(std::string name, integer_type essence) const {
-            return name + " of " + name_postfix[hash_mod(essence, static_cast<unsigned int>(name_postfix.size() - 1))];
+            return name + " of " + select_name(name_postfix, essence);
         }
 
         std::string name_rarity(std::string name, int rarity) const {
-            if (rarity > 0) {
+            if (rarity != 0) {
                 size_t n = context->roll(0, static_cast<int>(name_prefix.size() - 1));
                 return name_prefix[n] + " " + name;
             }
             return name;
         }
 
+        static std::string select_name(std::vector<std::string> const& names, integer_type essence) {
+            if (names.empty()) throw std::runtime_error("craft::select(names, essence) - names is empty");
+            return names[hash_mod(essence, static_cast<unsigned int>(names.size() - 1))];
+        }
+
     private:
         std::map<integer_type, std::string> name_substance;
         std::vector<std::string>            name_postfix;
         std::vector<std::string>            name_prefix;
+        std::vector<std::string>            name_color;
         environment *                       context;
     };
 }

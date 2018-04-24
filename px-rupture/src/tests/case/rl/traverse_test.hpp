@@ -14,53 +14,52 @@ using namespace px::rl;
 using opts = traverse_options<traverse>;
 using ms = mass<traverse>;
 
-void test_traverse()
-{
-	test::section("traverse test");
-	{
-		test::section("traverse creation");
-		{
-			ms tile;
-			test::require(!tile.is_traversable<traverse::floor>());
+void test_traverse() {
+    test::section("traverse test");
+    {
+        test::section("traverse creation");
+        {
+            ms tile;
+            test::require(!tile.is_traversable<traverse::floor>());
 
-			opts unit(opts::bitset_type{ "000001" });
-			test::require(unit.is_traversable<traverse::floor>());
-		}
+            opts unit(opts::bitset_type{ "000001" });
+            test::require(unit.is_traversable<traverse::floor>());
+        }
 
-		test::section("traverse set");
-		{
-			ms tile;
+        test::section("traverse set");
+        {
+            ms tile;
 
-			tile.make_traversable<traverse::floor>();
-			test::require(tile.is_traversable<traverse::floor>());
+            tile.make_traversable<traverse::floor>();
+            test::require(tile.is_traversable<traverse::floor>());
 
-			tile.make_blocking<traverse::floor>();
-			test::require(!tile.is_traversable<traverse::floor>());
+            tile.make_blocking<traverse::floor>();
+            test::require(!tile.is_traversable<traverse::floor>());
 
-			tile.make_traversable();
-			test::require(tile.is_traversable<traverse::floor>());
-			test::require(tile.is_traversable<traverse::fly>());
+            tile.make_traversable();
+            test::require(tile.is_traversable<traverse::floor>());
+            test::require(tile.is_traversable<traverse::fly>());
 
-			tile.make_blocking();
-			test::require(!tile.is_traversable<traverse::floor>());
-			test::require(!tile.is_traversable<traverse::fly>());
+            tile.make_blocking();
+            test::require(!tile.is_traversable<traverse::floor>());
+            test::require(!tile.is_traversable<traverse::fly>());
 
-			tile.make_traversable(traverse::floor);
-			test::require(tile.is_traversable<traverse::floor>());
+            tile.make_traversable(traverse::floor);
+            test::require(tile.is_traversable<traverse::floor>());
 
-			tile.make_traversable(traverse::floor, false);
-			test::require(!tile.is_traversable<traverse::floor>());
-		}
+            tile.make_traversable(traverse::floor, false);
+            test::require(!tile.is_traversable<traverse::floor>());
+        }
 
-		test::section("traverse move");
-		{
-			opts tile(opts::bitset_type{ "100000" });
-			opts unit(opts::bitset_type{ "100000" });
+        test::section("traverse move");
+        {
+            opts tile(opts::bitset_type{ "100000" });
+            opts unit(opts::bitset_type{ "100000" });
 
-			test::require(tile.is_traversable(unit));
+            test::require(tile.is_traversable(unit));
 
-			tile = opts::bitset_type{ "011111" };
-			test::require(!tile.is_traversable(unit));
-		}
-	}
+            tile = opts::bitset_type{ "011111" };
+            test::require(!tile.is_traversable(unit));
+        }
+    }
 }

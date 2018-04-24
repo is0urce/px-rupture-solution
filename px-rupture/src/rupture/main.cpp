@@ -42,7 +42,7 @@ namespace px {
         glewInit();                         // OpenGL extensions, after context
     }
 
-    // main loop
+    // prepare and start main loop
     void process() {
         glfw_instance glfw;
 
@@ -63,6 +63,7 @@ namespace px {
         glfw_window win = create_window(config, settings::application_name, config.fullscreen ? monitor : nullptr);
         create_context(win, config.vsync);
         shell game(config.width, config.height);
+
 
         // register events
 
@@ -91,6 +92,7 @@ namespace px {
         // main loop
 
         timer<glfw_time> time;
+        game.seed(static_cast<unsigned int>(time.raw()));
         while (game.is_running() && win.process()) {
             game.frame(time);
         }

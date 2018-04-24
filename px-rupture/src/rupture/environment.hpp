@@ -79,6 +79,7 @@ namespace px {
         bool                                is_traversable(point2 const location, body_component const& body) const;
         std::tuple<bool, point2>            neighbour(point2 const location, unsigned int pos) const;
         int                                 roll(int min, int max);
+        void                                seed(unsigned int);
 
     public:
         virtual                             ~environment();

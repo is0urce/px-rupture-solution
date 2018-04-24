@@ -11,8 +11,8 @@
 namespace px {
 
     struct tile_prototype {
-        std::uint32_t block_id;
-        std::string name;
-        rl::mass<rl::traverse> mass;
+        std::uint32_t           block_id;
+        std::string             name;
+        rl::mass<rl::traverse>  mass;
     };
 }

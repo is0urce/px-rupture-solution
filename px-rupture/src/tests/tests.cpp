@@ -15,9 +15,10 @@
 #include "case/common/label_test.hpp"
 #include "case/common/row_test.hpp"
 
-#include "case/rl/traverse_test.hpp"
-
 #include "case/link_test.hpp"
+
+#include "case/rl/traverse_test.hpp"
+#include "case/rl/craft_test.hpp"
 
 namespace px {
 
@@ -37,6 +38,7 @@ namespace px {
         test_label();
 
         test_traverse();
+        test_craft();
         test::print();
     }
 }
