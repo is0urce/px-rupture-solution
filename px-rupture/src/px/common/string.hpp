@@ -12,8 +12,8 @@
 #include <functional>
 
 namespace {
-    const unsigned int replacement_character = 0xfffd; // '<?>' glyph
-    const unsigned int byte_order_mark = 0xfeff; // we should skip byte order mark
+    const unsigned int replacement_character = 0xfffd;  // '<?>' glyph
+    const unsigned int byte_order_mark = 0xfeff;        // we should skip byte order mark
 }
 
 namespace px {

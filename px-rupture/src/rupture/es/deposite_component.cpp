@@ -9,6 +9,7 @@
 #include "body_component.hpp"
 #include "container_component.hpp"
 #include "composite_component.hpp"
+#include "light_component.hpp"
 #include "transform_component.hpp"
 
 namespace px {
@@ -47,13 +48,18 @@ namespace px {
                     }
                 });
 
-                // destroy deposit
-                if (dissolve) {
-                    if (auto unit = linked<composite_component>()) {
+                if (auto unit = linked<composite_component>()) {
+                    // disable lights on depletion
+                    if (auto spot = unit->query<light_component>()) {
+                        spot->is_on = false;
+                    }
+
+                    // start destruction
+                    if (dissolve) {
                         unit->destroy(0);
                     }
                 }
-
+                
                 if (use_duration > 0) {
                     environment->end_turn(use_duration);
                 }

@@ -15,14 +15,14 @@ namespace px {
     {
     public:
         virtual ~op_release_block() override = default;
+
         op_release_block(T * raw, Operator fn)
             : original(raw)
-            , op(fn)
-        {
+            , op(fn) {
         }
+
         op_release_block()
-            : op_release_block(nullptr, Operator{})
-        {
+            : op_release_block(nullptr, Operator{}) {
         }
 
     protected:

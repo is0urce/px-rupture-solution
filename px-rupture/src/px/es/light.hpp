@@ -29,8 +29,7 @@ namespace px {
             : tint(0, 0, 0, 0)
             , elevation(0)
             , is_on(true)
-            , source(light_source::point)
-        {
+            , source(light_source::point) {
         }
     };
 }

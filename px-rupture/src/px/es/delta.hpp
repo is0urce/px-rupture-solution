@@ -24,11 +24,13 @@ namespace px {
 
             turn_duration = real_current - turn_start;
         }
+
         void advance_turn(unsigned int current_turn) noexcept {
             turn_number = current_turn;
             turn_start = real_current;
             turn_duration = 0;
         }
+
     public:
         delta()
             : real_current(0)
@@ -36,8 +38,7 @@ namespace px {
             , real_delta(0)
             , turn_start(0)
             , turn_duration(0)
-            , turn_number()
-        {
+            , turn_number() {
         }
     };
 }

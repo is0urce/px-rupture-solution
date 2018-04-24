@@ -23,6 +23,9 @@ namespace px {
             catch (std::exception const& exc) {
                 throw std::runtime_error("px::configuration::load(document) - error while loading configuration, what=" + std::string(exc.what()));
             }
+            catch (...) {
+                throw std::runtime_error("px::configuration::load(document) - unknown error");
+            }
         }
 
         template <typename Document>

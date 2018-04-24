@@ -87,13 +87,12 @@ namespace px {
         composition(composition const&) = delete;
         composition & operator=(composition const&) = delete;
         composition(composition && that) noexcept
-            : composition()
-        {
+            : composition() {
             swap(that);
             //m_components = std::move(that.m_components);
         }
-        composition & operator=(composition && that) noexcept
-        {
+
+        composition & operator=(composition && that) noexcept {
             swap(that);
             //m_components = std::move(that.m_components);
             return *this;

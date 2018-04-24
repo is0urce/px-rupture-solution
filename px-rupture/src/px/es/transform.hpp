@@ -29,8 +29,7 @@ namespace px {
         transform() noexcept = default;
         transform(point2 position) noexcept
             : current(position)
-            , prev(position)
-        {
+            , prev(position) {
         }
         transform(transform const& position) noexcept = default;
         transform & operator=(transform const& position) noexcept = default;

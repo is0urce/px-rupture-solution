@@ -15,24 +15,26 @@ namespace px {
         T * get_link() const noexcept {
             return m_link;
         }
+
         void set_link(T * element) noexcept {
             m_link = element;
         }
+
         void break_link() noexcept {
             m_link = nullptr;
         }
+
         explicit operator T * () const noexcept {
             return m_link;
         }
 
     public:
         link() noexcept
-            : m_link(nullptr)
-        {
+            : m_link(nullptr) {
         }
+
         link(T * element) noexcept
-            : m_link(element)
-        {
+            : m_link(element) {
         }
 
     private:

@@ -23,19 +23,23 @@ namespace px {
         void add(system_type * system) {
             systems.push_back(system);
         }
+
         void clear() {
             systems.clear();
         }
+
         void update(delta_type const& delta) {
             for (system_type * system : systems) {
                 system->update(delta);
             }
         }
+
         void fixed_update(delta_type const& delta) {
             for (system_type * system : systems) {
                 system->fixed_update(delta);
             }
         }
+
         void turn_update(delta_type const& delta) {
             for (system_type * system : systems) {
                 system->turn_update(delta);

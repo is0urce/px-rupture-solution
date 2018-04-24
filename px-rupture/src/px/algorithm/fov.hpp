@@ -47,6 +47,6 @@ namespace px {
     private:
         matrix2<bool>   grid;
         point2          center;
-        unsigned int    r;
+        unsigned int    r;      // radius
     };
 }
