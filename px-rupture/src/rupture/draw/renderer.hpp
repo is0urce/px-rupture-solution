@@ -140,10 +140,11 @@ namespace px {
             , scale(1.0f)
             , scale_level(3)
             , popup_font(font_path, font_size, atlas_size) {
+
+            // output size
             assign_size(width, height);
 
             // setup rendering
-
             create_resources();
             reset_pipeline();
         }
@@ -179,7 +180,7 @@ namespace px {
             diffuse.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
             light.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
 
-            for (auto & batch : sprites) {
+            for (auto && batch : sprites) {
                 setup_batch(batch);
             }
 

@@ -58,7 +58,7 @@ namespace px {
     public:
         ~message_works() = default;
 
-        message_works()
+        message_works() noexcept
             : total(0)
             , camera(nullptr) {
         }

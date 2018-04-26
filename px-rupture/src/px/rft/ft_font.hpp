@@ -110,8 +110,7 @@ namespace px
             // select area in atlas to rasterize into
             unsigned int x_stride = slot->bitmap.width + padding * 2;
             unsigned int y_stride = slot->bitmap.rows + padding * 2;
-            if (m_pen_x + x_stride > m_width)
-            {
+            if (m_pen_x + x_stride > m_width) {
                 m_pen_x = 0;
                 m_pen_y += m_max_height;
                 m_max_height = 0;

@@ -8,5 +8,6 @@
 namespace px {
 
     core::~core() = default;
+
     core::core() = default;
 }

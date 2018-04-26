@@ -13,6 +13,7 @@ namespace px {
         bool is_dirty() {
             return data && data->version != last_version;
         }
+
         void notify_cashing() {
             last_version = data ? data->version : 0;
         }

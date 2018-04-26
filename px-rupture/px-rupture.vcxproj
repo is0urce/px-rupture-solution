@@ -245,6 +245,7 @@
     <ClInclude Include="src\rupture\draw\glm_options.hpp" />
     <ClInclude Include="src\rupture\draw\visual.hpp" />
     <ClInclude Include="src\rupture\es\deposite_component.hpp" />
+    <ClInclude Include="src\rupture\es\sound_component.hpp" />
     <ClInclude Include="src\rupture\rl\craft_recipe.hpp" />
     <ClInclude Include="src\px\rl\craft_task.hpp" />
     <ClInclude Include="src\px\rl\damage_type.hpp" />
