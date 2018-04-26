@@ -9,65 +9,58 @@
 
 namespace px::rl {
 
-		template <typename User, typename Target, typename Area>
-		class skill_impact
-		{
-		public:
-			using user_type = User;
-			using target_type = Target;
-			using area_type = Area;
+    template <typename User, typename Target, typename Area>
+    class skill_impact {
+    public:
+        using user_type = User;
+        using target_type = Target;
+        using area_type = Area;
 
-		public:
-			bool is_targeted() const {
-				return is_targeted_skill();
-			}
+    public:
+        bool is_targeted() const {
+            return is_targeted_skill();
+        }
 
-			bool useable(user_type user, target_type target) const
-			{
-				return useable_skill(user, target);
-			}
-			bool useable(user_type user, area_type area) const
-			{
-				return useable_skill(user, area);
-			}
+        bool useable(user_type user, target_type target) const {
+            return useable_skill(user, target);
+        }
 
-			void use(user_type user, target_type target)
-			{
-				use_skill(user, target);
-			}
-			void use(user_type user, area_type area)
-			{
-				use_skill(user, area);
-			}
+        bool useable(user_type user, area_type area) const {
+            return useable_skill(user, area);
+        }
 
-			bool try_use(user_type user, target_type target)
-			{
-				bool can_use = useable_skill(user, target);
-				if (can_use) {
-					use_skill(user, target);
-				}
-				return can_use;
-			}
+        void use(user_type user, target_type target) {
+            use_skill(user, target);
+        }
 
-			bool try_use(user_type user, area_type area)
-			{
-				bool can_use = useable_skill(user, area);
-				if (can_use) {
-					use_skill(user, area);
-				}
-				return can_use;
-			}
+        void use(user_type user, area_type area) {
+            use_skill(user, area);
+        }
 
-		public:
-			virtual ~skill_impact()
-			{
-			}
+        bool try_use(user_type user, target_type target) {
+            bool can_use = useable_skill(user, target);
+            if (can_use) {
+                use_skill(user, target);
+            }
+            return can_use;
+        }
 
-		protected:
-			virtual void use_skill(user_type user, target_type target) = 0;
-			virtual void use_skill(user_type user, area_type area) = 0;
-			virtual bool useable_skill(user_type user, target_type target) const = 0;
-			virtual bool useable_skill(user_type user, area_type area) const = 0;
-			virtual bool is_targeted_skill() const = 0;
-		};
+        bool try_use(user_type user, area_type area) {
+            bool can_use = useable_skill(user, area);
+            if (can_use) {
+                use_skill(user, area);
+            }
+            return can_use;
+        }
+
+    public:
+        virtual ~skill_impact() = default;
+
+    protected:
+        virtual void use_skill(user_type user, target_type target) = 0;
+        virtual void use_skill(user_type user, area_type area) = 0;
+        virtual bool useable_skill(user_type user, target_type target) const = 0;
+        virtual bool useable_skill(user_type user, area_type area) const = 0;
+        virtual bool is_targeted_skill() const = 0;
+    };
 }

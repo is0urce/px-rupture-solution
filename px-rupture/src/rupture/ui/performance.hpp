@@ -13,12 +13,11 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~performance() = default;
+        virtual ~performance() override = default;
 
         performance()
             : metrics(false)
-            , dbg(false)
-        {
+            , dbg(false) {
         }
 
     protected:

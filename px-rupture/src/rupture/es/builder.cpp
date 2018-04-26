@@ -32,8 +32,7 @@ namespace px {
 
     builder::builder(core * production_factory)
         : factory(production_factory)
-        , last_player(nullptr)
-    {
+        , last_player(nullptr) {
         begin();
     }
 

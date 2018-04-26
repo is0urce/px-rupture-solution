@@ -18,9 +18,9 @@ namespace px::ui {
     {
     public:
         virtual ~title() override = default;
+
         title(environment * game)
-            : context(game)
-        {
+            : context(game) {
         }
 
     protected:

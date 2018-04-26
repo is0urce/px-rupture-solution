@@ -11,6 +11,7 @@
 #include "io/repository.hpp"
 
 #include "es/builder.hpp"
+#include "rl/mechanic.hpp"
 
 #include "es/animator_component.hpp"
 #include "es/body_component.hpp"
@@ -352,49 +353,19 @@ namespace px {
     }
 
     rl::hit_result environment::hit(body_component const& source, body_component const& target) {
-        rl::hit_result result = rl::hit_result::miss;
-
-        double accuracy = source.accumulate({ rl::effect::accuracy }).magnitude0;
-        double dodge = target.accumulate({ rl::effect::dodge }).magnitude0;
-
-        auto score = accuracy - dodge;
-
-        // level difference attentuation
-        if (source.linked<transform_component>() == player) {
-            auto spread = target.level() - source.level();
-            score -= spread > 0 ? spread * 0.05 : 0;
-        }
-
-        if (std::uniform_real_distribution<double>{}(rng) < score) {
-            result = rl::hit_result::connects;
-            double critical = source.accumulate({ rl::effect::critical }).magnitude0;
-            if (std::uniform_real_distribution<double>{}(rng) < critical) {
-                result = rl::hit_result::critical;
-            }
-        }
-        else {
-            if (std::uniform_real_distribution<double>{}(rng) < 0.05) {
-                result = rl::hit_result::failure;
-            }
-        }
-
-        return result;
+        bool diminish = source.linked<transform_component>() == player;
+        return mechanic::hit(source, target, diminish, rng);
     }
 
     std::tuple<float, rl::damage_type> environment::dps(body_component const& source) const {
-        auto dps = source.accumulate({ rl::effect::damage });
-        return { static_cast<float>(dps.magnitude0), rl::damage_type::pure };
+        return mechanic::dps(source);
     }
 
-    int environment::damage(body_component & target, int damage, rl::damage_type /*source*/) {
-        int damage_done = 0;
-        if (auto & hp = target.health()) {
-            damage_done = hp->damage(damage);
-
-            // send popup notification
-            if (auto pawn = target.linked<transform_component>()) {
-                popup(std::to_string(damage_done), pawn == player ? 0xff0000 : 0xffff00, pawn->position());
-            }
+    int environment::damage(body_component & target, int dmg, rl::damage_type source) {
+        int damage_done = mechanic::damage(target, dmg, source);
+        // send popup notification
+        if (auto pawn = target.linked<transform_component>()) {
+            popup(std::to_string(damage_done), pawn == player ? 0xff0000 : 0xffff00, pawn->position());
         }
         return damage_done;
     }

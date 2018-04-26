@@ -11,9 +11,8 @@
 
 namespace px {
 
-	struct sprite_vertex
-	{
-		glm::vec2 position;
-		glm::vec2 texture;
-	};
+    struct sprite_vertex {
+        glm::vec2 position;
+        glm::vec2 texture;
+    };
 }

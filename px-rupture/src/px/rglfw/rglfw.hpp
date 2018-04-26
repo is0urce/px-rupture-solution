@@ -1,3 +1,5 @@
+// name: rglfw.hpp
+
 #pragma once
 
 #include "glfw_instance.hpp"

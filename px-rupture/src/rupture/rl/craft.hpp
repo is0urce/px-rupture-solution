@@ -87,7 +87,7 @@ namespace px::rl {
 
         uq_ptr<rl::item> solution(std::string const& name, integer_type essence, real_type power) {
             auto item = make_uq<rl::item>();
-            item->setup_entity(name_potion(name, essence), "i_potion#" + std::to_string(essence) + "#" + std::to_string(power));
+            item->setup_entity(name_potion(name, essence), "i_potion#" + std::to_string(essence) + "_" + std::to_string(power));
             item->make_stacking();
 
             item->add(enhancement_type::zero(effect::useable));
@@ -141,6 +141,7 @@ namespace px::rl {
                 { 3, "numidium" }
             };
             name_color = {
+                "amber",
                 "azure",
                 "beige",
                 "black",
@@ -158,6 +159,7 @@ namespace px::rl {
                 "red",
                 "teal",
                 "turquoise",
+                "vermillion"
                 "violet",
                 "white",
                 "yellow"

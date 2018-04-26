@@ -19,8 +19,7 @@ namespace px {
     character_system::~character_system() = default;
 
     character_system::character_system()
-        : works(make_uq<character_works>())
-    {
+        : works(make_uq<character_works>()) {
     }
 
     // virtual overload

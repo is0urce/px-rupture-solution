@@ -15,7 +15,7 @@
 
 namespace px {
 
-    class tile_library {
+    class tile_library final {
     public:
         void add_prototype(std::uint32_t block_id, std::string const& name, rl::mass<rl::traverse> const& mass) {
             library[block_id] = { block_id, name, mass };
@@ -47,8 +47,7 @@ namespace px {
 
     public:
         tile_library()
-            : sprites(nullptr)
-        {
+            : sprites(nullptr) {
             load_prototypes();
         }
 

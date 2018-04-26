@@ -5,15 +5,15 @@
 
 namespace px {
 
-	class offscreen {
-	public:
-		gl_framebuffer	framebuffer;
-		gl_texture		texture;
+    class offscreen {
+    public:
+        gl_framebuffer  framebuffer;
+        gl_texture      texture;
 
-	public:
-		void setup(GLenum internal_format, GLenum format, GLsizei width, GLsizei height) {
-			texture.image2d(internal_format, format, width, height);
-			framebuffer.texture(texture);
-		}
-	};
+    public:
+        void setup(GLenum internal_format, GLenum format, GLsizei width, GLsizei height) {
+            texture.image2d(internal_format, format, width, height);
+            framebuffer.texture(texture);
+        }
+    };
 }

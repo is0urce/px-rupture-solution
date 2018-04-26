@@ -13,8 +13,7 @@ namespace px {
     scene::~scene() = default;
 
     scene::scene()
-        : works(make_uq<scene_internal>())
-    {
+        : works(make_uq<scene_internal>()) {
     }
 
     // methods
@@ -26,6 +25,7 @@ namespace px {
     bool scene::is_transparent(point2 const& location) const {
         return works->is_transparent(location);
     }
+
     bool scene::is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const {
         return works->is_traversable(location, opts);
     }
@@ -49,9 +49,11 @@ namespace px {
     transform_component * scene::any(point2 const& location) const {
         return works->any(location);
     }
+
     body_component * scene::anybody(point2 const& location) const {
         return works->anybody(location);
     }
+
     void scene::discard(std::function<void(composite_component&)> fn) {
         works->discard(fn);
     }
@@ -59,21 +61,27 @@ namespace px {
     size_t scene::size() const {
         return works->size();
     }
+
     void scene::clear_units() {
         works->clear_units();
     }
+
     void scene::set_enter_event(std::function<void(point2 const&)> evt) {
         works->set_enter_event(evt);
     }
+
     void scene::set_leave_event(std::function<void(point2 const&)> evt) {
         works->set_leave_event(evt);
     }
+
     void scene::enumerate(std::function<void(composite_component&)> fn) {
         works->enumerate(fn);
     }
+
     void scene::unload() {
         works->unload();
     }
+
     void scene::pull(point2 const& cell, std::function<void(uq_ptr<composite_component>)> fn) {
         works->pull(cell, fn);
     }

@@ -31,12 +31,6 @@ namespace px {
             pool.enumerate([&](body_component & body) {
                 process_effects(body);
                 process_death(body);
-
-                // reduce effect durations
-                for (auto & buff : body.buffs) {
-                    buff.reduce_duration(1);
-                }
-                body.buffs.erase(std::remove_if(body.buffs.begin(), body.buffs.end(), [](auto & buff) { return buff.is_expired(); }), body.buffs.end());
             });
         }
 
@@ -49,7 +43,6 @@ namespace px {
     private:
         void process_effects(body_component & body) {
             // damage-over-time
-
             auto dot = body.accumulate({ rl::effect::dot });
             if (dot.magnitude0 > 0) {
                 auto damage = static_cast<body_component::resource_value_type>(dot.magnitude0);
@@ -57,7 +50,6 @@ namespace px {
             }
 
             // resource regeneration
-
             auto mp_regen = body.accumulate({ rl::effect::mp_regen });
             if (mp_regen.magnitude0 > 0) {
                 if (body.energy()) {
@@ -65,7 +57,6 @@ namespace px {
                     body.energy()->restore(mod);
                 }
             }
-
             auto hp_regen = body.accumulate({ rl::effect::hp_regen });
             if (hp_regen.magnitude0 > 0) {
                 if (body.health()) {
@@ -73,6 +64,14 @@ namespace px {
                     body.health()->restore(mod);
                 }
             }
+
+            // degrade buffs
+            for (auto & buff : body.buffs) {
+                buff.reduce_duration(1);
+            }
+
+            // erase expired 
+            body.buffs.erase(std::remove_if(body.buffs.begin(), body.buffs.end(), [](auto & buff) { return buff.is_expired(); }), body.buffs.end());
         }
 
         // death of unit

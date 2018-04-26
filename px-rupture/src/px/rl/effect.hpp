@@ -39,6 +39,8 @@ namespace px::rl {
         mp_regen = 73,
 
         essence = 80,
-        ingredient_power = 81
+        ingredient_power = 81,
+
+        potion_intoxication = 90
     };
 }

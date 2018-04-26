@@ -8,11 +8,10 @@
 
 namespace px {
 
-	class popup
-	{
-	public:
-		message	msg;
-		vector2	position;
-		double	lift;
-	};
+    class popup {
+    public:
+        message msg;
+        vector2 position;
+        double  lift;
+    };
 }

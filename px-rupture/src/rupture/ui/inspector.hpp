@@ -18,9 +18,9 @@ namespace px::ui {
     {
     public:
         virtual ~inspector() = default;
+
         inspector(environment * env)
-            : game(env)
-        {
+            : game(env) {
         }
 
     protected:

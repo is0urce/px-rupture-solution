@@ -4,10 +4,10 @@
 
 namespace px {
 
-	struct sprite;
+    struct sprite;
 
-	struct keyframe {
-		sprite const*	frame;	// what
-		double			time;	// where
-	};
+    struct keyframe {
+        sprite const*   frame;  // what
+        double          time;   // where
+    };
 }

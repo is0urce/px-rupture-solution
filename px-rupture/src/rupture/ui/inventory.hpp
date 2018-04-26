@@ -28,8 +28,7 @@ namespace px {
             : game(env)
             , opened(p_open)
             , selected_slot(nullptr)
-            , selected(-1)
-        {
+            , selected(-1) {
         }
 
     protected:

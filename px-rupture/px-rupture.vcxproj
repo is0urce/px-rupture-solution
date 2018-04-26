@@ -253,6 +253,7 @@
     <ClInclude Include="src\px\rl\hit_result.hpp" />
     <ClInclude Include="src\px\rl\stack.hpp" />
     <ClInclude Include="src\px\rl\item_category.hpp" />
+    <ClInclude Include="src\rupture\rl\mechanic.hpp" />
     <ClInclude Include="src\rupture\rl\trait.hpp" />
     <ClInclude Include="src\rupture\rl\traits.hpp" />
     <ClInclude Include="src\rupture\rl\inventory.hpp" />

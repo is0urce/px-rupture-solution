@@ -65,6 +65,7 @@ namespace px {
         uq_ptr<composite_component> &       spawn(uq_ptr<composite_component> unit);
         uq_ptr<composite_component> &       spawn(std::string const& blueprint, point2 const& position);
         void                                update_blueprints(std::string const& out_path, std::string const& blueprint);
+        void                                seed(unsigned int);
 
         // script bindings
     public:
@@ -79,7 +80,6 @@ namespace px {
         bool                                is_traversable(point2 const location, body_component const& body) const;
         std::tuple<bool, point2>            neighbour(point2 const location, unsigned int pos) const;
         int                                 roll(int min, int max);
-        void                                seed(unsigned int);
 
     public:
         virtual                             ~environment();

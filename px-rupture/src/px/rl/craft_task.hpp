@@ -24,9 +24,11 @@ namespace px::rl {
         void close() {
             slots.clear();
         }
+
         void reset(size_t n) {
             slots.resize(n);
         }
+
         size_t size() const noexcept {
             return slots.size();
         }
@@ -41,6 +43,7 @@ namespace px::rl {
             }
             return false;
         }
+
         ptr remove(size_t idx) {
             ptr result;
             if (idx < slots.size()) {
@@ -50,6 +53,7 @@ namespace px::rl {
             }
             return result;
         }
+
         template <size_t Index>
         ptr remove() {
             ptr result;
@@ -60,15 +64,18 @@ namespace px::rl {
             }
             return result;
         }
+
         ptr remove() {
             return remove<0>();
         }
+
         bool is_empty() const noexcept {
             for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
                 if (slots[idx]) return false;
             }
             return true;
         }
+
         bool is_complete() const noexcept {
             for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
                 if (!slots[idx]) return false;

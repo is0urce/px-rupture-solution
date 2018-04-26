@@ -29,7 +29,7 @@ namespace px {
         void            resize(unsigned int screen_width, unsigned int screen_height);
 
     public:
-        virtual         ~shell();
+        virtual         ~shell() override;
         shell(unsigned int start_widht, unsigned int start_height);
 
     private:

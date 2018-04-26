@@ -10,18 +10,16 @@
 
 namespace px {
 
-	class popup;
+    class popup;
 
-	class message_data
-	{
-	public:
-		unsigned int		version;
-		std::vector<popup>	messages;
+    class message_data {
+    public:
+        unsigned int        version;
+        std::vector<popup>  messages;
 
-	public:
-		message_data()
-			: version(0)
-		{
-		}
-	};
+    public:
+        message_data()
+            : version(0) {
+        }
+    };
 }

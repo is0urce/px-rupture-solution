@@ -102,14 +102,15 @@ namespace px::rl {
 
     public:
         ~skill_set() = default;
+
         skill_set()
-            : m_book(nullptr)
-        {
+            : m_book(nullptr) {
         }
+
         skill_set(book_type * skillbook)
-            : m_book(skillbook)
-        {
+            : m_book(skillbook) {
         }
+
         skill_set(skill_set const&) = delete;
         skill_set & operator=(skill_set const&) = delete;
 

@@ -11,14 +11,14 @@
 
 namespace px {
 
-	struct camera_uniform {
-		glm::vec2	scale;
-		glm::vec2	translate;
-		glm::vec2	screen;
-		glm::vec2	lightmap_size;
-		glm::vec2	lightmap_range; 
-		glm::vec2	lightmap_last_offset;
-		glm::vec2	interpolate;
-		glm::vec2	timer;
-	};
+    struct camera_uniform {
+        glm::vec2	scale;
+        glm::vec2	translate;
+        glm::vec2	screen;
+        glm::vec2	lightmap_size;
+        glm::vec2	lightmap_range;
+        glm::vec2	lightmap_last_offset;
+        glm::vec2	interpolate;
+        glm::vec2	timer;
+    };
 }

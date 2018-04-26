@@ -95,13 +95,12 @@ namespace px {
     public:
         script_unit()
             : body(nullptr)
-            , transform(nullptr)
-        {
+            , transform(nullptr) {
         }
+
         script_unit(body_component * user)
             : body(user)
-            , transform(nullptr)
-        {
+            , transform(nullptr) {
         }
 
     private:

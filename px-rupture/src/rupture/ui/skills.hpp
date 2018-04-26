@@ -18,10 +18,10 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~skills() = default;
+        virtual ~skills() override = default;
+
         skills(environment * game)
-            : context(game)
-        {
+            : context(game) {
         }
 
     protected:

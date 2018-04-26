@@ -18,7 +18,7 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~inspector_common() = default;
+        virtual ~inspector_common() override = default;
 
     protected:
         void combine_status(const char * label, ImVec2 const& pos, ImVec2 const& size, body_component const& body) {
@@ -80,6 +80,7 @@ namespace px::ui {
             ImGui::End();
         }
 
+        // entity label in status
         void combine_name(body_component const& body) {
             auto level = body.level();
             ImGui::Text(body.name().c_str());

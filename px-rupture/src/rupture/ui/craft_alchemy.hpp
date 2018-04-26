@@ -20,8 +20,7 @@ namespace px {
     public:
         virtual ~craft_alchemy() = default;
         craft_alchemy(environment * context)
-            : craft_station(context)
-        {
+            : craft_station(context) {
             reset_recipe();
         }
 

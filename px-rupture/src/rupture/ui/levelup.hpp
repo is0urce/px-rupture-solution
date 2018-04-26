@@ -25,8 +25,7 @@ namespace px::ui {
         virtual ~levelup() = default;
 
         levelup(environment * ctx)
-            : context(ctx)
-        {
+            : context(ctx) {
         }
 
     protected:

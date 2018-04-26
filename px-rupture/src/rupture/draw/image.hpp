@@ -9,10 +9,10 @@
 
 namespace px {
 
-	struct image {
-		float sx_texture;
-		float sy_texture;
-		float dx_texture;
-		float dy_texture;
-	};
+    struct image {
+        float sx_texture;
+        float sy_texture;
+        float dx_texture;
+        float dy_texture;
+    };
 }

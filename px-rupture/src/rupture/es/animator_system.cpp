@@ -15,8 +15,7 @@ namespace px {
     animator_system::~animator_system() = default;
 
     animator_system::animator_system()
-        : works(make_uq<animator_works>())
-    {
+        : works(make_uq<animator_works>()) {
     }
 
     // methods
@@ -35,6 +34,7 @@ namespace px {
     void animator_system::load(sprite_system const* sprites_sys) {
         works->load(sprites_sys);
     }
+
     void animator_system::finish_animations() {
         works->finish_animations();
     }

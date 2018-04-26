@@ -11,9 +11,9 @@
 
 namespace px {
 
-	struct glfw_time final {
-		double operator()() const {
-			return glfwGetTime();
-		}
-	};
+    struct glfw_time final {
+        double operator()() const {
+            return glfwGetTime();
+        }
+    };
 }

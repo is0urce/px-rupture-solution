@@ -14,8 +14,7 @@ namespace px {
     animator_component::animator_component() noexcept
         : name(nullptr)
         , playing(false)
-        , current_index(0)
-    {
+        , current_index(0) {
     }
 
     // methods

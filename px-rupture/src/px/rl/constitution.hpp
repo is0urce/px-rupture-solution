@@ -17,6 +17,7 @@ namespace px::rl {
         bool is_dead() const {
             return hp && hp->is_empty();
         }
+
         bool is_alive() const {
             return hp && !hp->is_empty();
         }
@@ -24,6 +25,7 @@ namespace px::rl {
         bool has_health() const {
             return hp.has_value();
         }
+
         bool has_energy() const {
             return mp.has_value();
         }
@@ -31,12 +33,15 @@ namespace px::rl {
         resource_type & health() {
             return hp;
         }
+
         resource_type & energy() {
             return mp;
         }
+
         resource_type const& health() const {
             return hp;
         }
+
         resource_type const& energy() const {
             return mp;
         }

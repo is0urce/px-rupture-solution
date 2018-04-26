@@ -5,7 +5,9 @@
 
 #include "body_component.hpp"
 #include "container_component.hpp"
+
 #include "../environment.hpp"
+#include "../rl/mechanic.hpp"
 
 namespace px {
 
@@ -139,24 +141,16 @@ namespace px {
 
         // hp restore
         if (potion.has_effect(rl::effect::hp_bonus)) {
-            if (auto resource = health()) {
-                auto bonus = static_cast<body_component::resource_value_type>(potion.accumulate({ rl::effect::hp_bonus }).magnitude0);
-                resource->restore(bonus);
-
-                // notify
-                context->popup("+ " + std::to_string(bonus), { 0.0, 1.0, 0.0 });
-            }
+            auto efx = potion.accumulate({ rl::effect::hp_bonus });
+            auto done = mechanic::heal(*this, static_cast<int>(efx.magnitude0), static_cast<rl::damage_type>(efx.sub));
+            context->popup("+ " + std::to_string(done), { 0.0, 1.0, 0.0 });
         }
 
         // mp restore
         if (potion.has_effect(rl::effect::mp_bonus)) {
-            if (auto resource = energy()) {
-                auto bonus = static_cast<body_component::resource_value_type>(potion.accumulate({ rl::effect::mp_bonus }).magnitude0);
-                resource->restore(bonus);
-
-                // notify
-                context->popup("+ " + std::to_string(bonus), { 0.0, 0.0, 1.0 });
-            }
+            auto efx = potion.accumulate({ rl::effect::mp_bonus });
+            auto done = mechanic::innervate(*this, static_cast<int>(efx.magnitude0), static_cast<rl::damage_type>(efx.sub));
+            context->popup("+ " + std::to_string(done), { 0.0, 0.0, 1.0 });
         }
 
         // hp regen

@@ -46,8 +46,7 @@ namespace px {
         , inventory_open(false)
         , inventory_panel(nullptr)
         , smith_panel(nullptr)
-        , alchemy_panel(nullptr)
-    {
+        , alchemy_panel(nullptr) {
 #if PX_INGAME_PERFORMANCE_TEST == 1
         make_panel<ui::performance>(stack);
 #endif
@@ -73,36 +72,45 @@ namespace px {
     void menu::resize(unsigned int w, unsigned int h) {
         nexus->resize(w, h);
     }
+
     void menu::draw(double delta_time) {
         nexus->begin(delta_time);
         combine();
         nexus->end();
     }
+
     bool menu::click(unsigned int mouse_button, bool is_down) {
         return nexus->click(mouse_button, is_down);
     }
+
     bool menu::text(unsigned int codepoint) {
         return nexus->text(codepoint);
     }
+
     bool menu::hover(unsigned int x, unsigned int y) {
         return nexus->hover(x, y);
     }
+
     bool menu::scroll(double horisontal, double vertical) {
         return nexus->scroll(horisontal, vertical);
     }
+
     bool menu::takes_input() {
         return nexus->takes_input();
     }
+
     void menu::toggle_inventory() {
         smith_panel->cancel_task();
         alchemy_panel->cancel_task();
         inventory_open = !inventory_open;
     }
+
     void menu::combine() {
         for (auto & ptr : stack) {
             ptr->combine();
         }
     }
+
     void menu::rollback() {
         smith_panel->cancel_task();
         alchemy_panel->cancel_task();

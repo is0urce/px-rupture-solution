@@ -26,13 +26,14 @@ namespace px {
 
     public:
         tile() = default;
+
         tile(tile && that) noexcept
             : sprite(std::move(that.sprite))
             , transform(that.transform.position())
             , mass(std::move(that.mass))
-            , block_id(std::move(that.block_id))
-        {
+            , block_id(std::move(that.block_id)) {
         }
+
         tile(tile const&) noexcept = delete;
         tile & operator=(tile const&) = delete;
     };

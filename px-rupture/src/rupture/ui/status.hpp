@@ -18,6 +18,7 @@ namespace px::ui {
     {
     public:
         virtual ~status() = default;
+
         status(environment * game)
             : context(game)
         {
