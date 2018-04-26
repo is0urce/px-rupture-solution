@@ -12,6 +12,7 @@
 
 #include <lodepng.h>
 
+#include <stdexcept>
 #include <string>
 
 namespace px {

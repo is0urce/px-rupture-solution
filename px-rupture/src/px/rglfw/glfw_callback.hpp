@@ -8,7 +8,7 @@
 // RAII glfw
 // setter container for callback functions
 
-#include <GLFW/glfw3.h>
+#include "glfw_options.hpp"
 
 #include <functional>
 

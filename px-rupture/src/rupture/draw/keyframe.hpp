@@ -8,6 +8,6 @@ namespace px {
 
     struct keyframe {
         sprite const*   frame;  // what
-        double          time;   // where
+        double          time;   // when
     };
 }

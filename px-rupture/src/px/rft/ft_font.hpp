@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "ft_options.hpp"
 #include "ft_face.hpp"
 
 #include <algorithm>

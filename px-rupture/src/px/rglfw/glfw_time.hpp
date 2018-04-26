@@ -7,7 +7,7 @@
 
 // glfw time querry operator
 
-#include <GLFW/glfw3.h>
+#include "glfw_options.hpp"
 
 namespace px {
 

@@ -2,10 +2,8 @@
 
 #pragma once
 
+#include "ft_options.hpp"
 #include "ft_library.hpp"
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 #include <stdexcept>
 #include <string>
@@ -63,8 +61,9 @@ namespace px {
         ft_face(FT_Library library, char const* path)
             : ft_face(library, path, 0) {
         }
+
         ft_face(ft_face const&) = delete;
-        ft_face& operator=(ft_face const&) = delete;
+        ft_face & operator=(ft_face const&) = delete;
 
     private:
         FT_Face         m_face;

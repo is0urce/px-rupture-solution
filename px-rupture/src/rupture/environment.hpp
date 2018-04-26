@@ -82,7 +82,7 @@ namespace px {
         int                                 roll(int min, int max);
 
     public:
-        virtual                             ~environment();
+        virtual                             ~environment() override;
         environment();
 
     private:

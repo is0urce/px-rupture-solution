@@ -10,7 +10,7 @@
 // call for glfw init and sets an error callback
 // do not create more than one
 
-#include <GLFW/glfw3.h>
+#include "glfw_options.hpp"
 
 #include <stdexcept>
 #include <string>

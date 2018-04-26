@@ -230,6 +230,8 @@
     <ClInclude Include="src\px\es\useable.hpp" />
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
     <ClInclude Include="src\px\es\light.hpp" />
+    <ClInclude Include="src\px\rft\ft_options.hpp" />
+    <ClInclude Include="src\px\rglfw\glfw_options.hpp" />
     <ClInclude Include="src\px\rgl\offscreen.hpp" />
     <ClInclude Include="src\px\rl\ai_state.hpp" />
     <ClInclude Include="src\px\rl\pack.hpp" />
@@ -239,6 +241,8 @@
     <ClInclude Include="src\px\rl\constitution.hpp" />
     <ClInclude Include="src\px\rl\craft_activity.hpp" />
     <ClInclude Include="src\rupture\app\macro.hpp" />
+    <ClInclude Include="src\rupture\draw\glew_options.hpp" />
+    <ClInclude Include="src\rupture\draw\glm_options.hpp" />
     <ClInclude Include="src\rupture\draw\visual.hpp" />
     <ClInclude Include="src\rupture\es\deposite_component.hpp" />
     <ClInclude Include="src\rupture\rl\craft_recipe.hpp" />

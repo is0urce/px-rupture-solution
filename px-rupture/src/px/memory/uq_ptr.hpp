@@ -95,23 +95,24 @@ namespace px {
 
         // copy, move
 
-        uq_ptr(uq_ptr const& other) = delete;
-        uq_ptr & operator=(uq_ptr const& other) = delete;
         uq_ptr(uq_ptr && other) noexcept
-            : uq_ptr()
-        {
+            : uq_ptr() {
             other.swap(*this);
         }
+
         uq_ptr & operator=(uq_ptr && other) {
             other.swap(*this);
             return *this;
         }
+
         template <typename U>
         uq_ptr(uq_ptr<U> && other) noexcept
-            : uq_ptr()
-        {
+            : uq_ptr() {
             other.downcast<T>().swap(*this);
         }
+
+        uq_ptr(uq_ptr const& other) = delete;
+        uq_ptr & operator=(uq_ptr const& other) = delete;
 
     private:
         pointer                     ptr;

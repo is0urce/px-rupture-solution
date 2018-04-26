@@ -1,4 +1,7 @@
 // name: rglfw.hpp
+// type: c++
+// auth: is0urce
+// desc: include all rglfw
 
 #pragma once
 

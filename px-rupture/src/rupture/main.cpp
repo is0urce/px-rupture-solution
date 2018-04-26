@@ -3,13 +3,11 @@
 // auth: is0urce
 // desc: programm entry point
 
-#define GLEW_STATIC
-#include <gl/glew.h>
-
 #include "app/bootstrap.hpp"
 #include "app/configuration.hpp"
 #include "app/document.hpp"
 #include "app/settings.hpp"
+#include "draw/glew_options.hpp"
 #include "key.hpp"
 #include "shell.hpp"
 

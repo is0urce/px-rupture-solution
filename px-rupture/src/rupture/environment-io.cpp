@@ -88,7 +88,6 @@ namespace px {
     }
 
     void environment::save_scene(point2 const& cell) {
-
         auto ostream = output_stream(current->depot_scene(cell));
         SAVE_OUTPUT_ARCHIVE archive(ostream);
 
