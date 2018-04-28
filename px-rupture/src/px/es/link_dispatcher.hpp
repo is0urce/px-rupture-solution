@@ -46,7 +46,7 @@ namespace px {
 
         // unroll link chain to tuple succession
         template <typename T, typename ... Args>
-        std::tuple<T *, Args * ...> unwind() const {
+        std::tuple<T *, Args * ...> unwind() const noexcept {
             T * first = linked<T>();
             return std::tuple_cat(std::make_tuple(first), first ? first->h_unwind<Args...>() : std::tuple<Args*...>{});
         }
@@ -57,17 +57,19 @@ namespace px {
             auto * p = hlink<Args...>();
             return p ? p->linked<T>() : nullptr;
         }
+
         template <>
         link_dispatcher * hlink<link_dispatcher>() const noexcept {
             return const_cast<link_dispatcher *>(this);
         }
 
         template <typename ... Args>
-        std::tuple<Args * ...> h_unwind() const {
+        std::tuple<Args * ...> h_unwind() const noexcept {
             return unwind<Args...>();
         }
+
         template <>
-        std::tuple<> h_unwind<>() const {
+        std::tuple<> h_unwind<>() const noexcept {
             return std::tuple<>{};
         }
     };

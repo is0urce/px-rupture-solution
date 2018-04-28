@@ -18,6 +18,7 @@ namespace px {
         size_t length() const {
             return std::strlen(data);
         }
+
         const char * c_str() const noexcept {
             return data;
         }
@@ -40,18 +41,23 @@ namespace px {
         bool operator==(label const& rh) {
             return std::memcmp(data, rh.data, Len) == 0;
         }
+
         bool operator<(label const& rh) {
             return std::memcmp(data, rh.data, Len) < 0;
         }
+
         bool operator<=(label const& rh) {
             return std::memcmp(data, rh.data, Len) <= 0;
         }
+
         bool operator!=(label const& rh) {
             return !operator==(rh);
         }
+
         bool operator>(label const& rh) {
             return !operator<=(rh);
         }
+
         bool operator>=(label const& rh) {
             return !operator<(rh);
         }

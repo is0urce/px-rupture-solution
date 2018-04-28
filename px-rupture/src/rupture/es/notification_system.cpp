@@ -17,8 +17,7 @@ namespace px {
 
     notification_system::~notification_system() = default;
     notification_system::notification_system()
-        : works(make_uq<message_works>())
-    {
+        : works(make_uq<message_works>()) {
     }
 
     // virtual overloads

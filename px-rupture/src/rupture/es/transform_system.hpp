@@ -20,16 +20,16 @@ namespace px {
     {
     public:
         uq_ptr<transform_component> make();
-        void store();
+        void                        store();
 
     public:
-        virtual ~transform_system() override;
+        virtual                     ~transform_system() override;
         transform_system();
 
     protected:
-        virtual void turn_update_system(delta_type const& delta_time) override;
+        virtual void                turn_update_system(delta_type const& delta_time) override;
 
     private:
-        uq_ptr<transform_works> works;
+        uq_ptr<transform_works>     works;
     };
 }

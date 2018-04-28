@@ -10,7 +10,7 @@
 namespace px::rl {
 
     template <typename User, typename Target, typename Area>
-    class skill_impact {
+    class skill_impact abstract {
     public:
         using user_type = User;
         using target_type = Target;
@@ -54,7 +54,7 @@ namespace px::rl {
         }
 
     public:
-        virtual ~skill_impact() = default;
+        virtual ~skill_impact() noexcept = default;
 
     protected:
         virtual void use_skill(user_type user, target_type target) = 0;

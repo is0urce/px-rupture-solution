@@ -22,27 +22,27 @@ namespace px::rl {
             return hp && !hp->is_empty();
         }
 
-        bool has_health() const {
+        bool has_health() const noexcept {
             return hp.has_value();
         }
 
-        bool has_energy() const {
+        bool has_energy() const noexcept {
             return mp.has_value();
         }
 
-        resource_type & health() {
+        resource_type & health() noexcept {
             return hp;
         }
 
-        resource_type & energy() {
+        resource_type & energy() noexcept {
             return mp;
         }
 
-        resource_type const& health() const {
+        resource_type const& health() const noexcept {
             return hp;
         }
 
-        resource_type const& energy() const {
+        resource_type const& energy() const noexcept {
             return mp;
         }
 
@@ -62,7 +62,7 @@ namespace px::rl {
         }
 
     public:
-        constitution() noexcept = default;
+        constitution() = default;
 
     private:
         resource_type hp;

@@ -61,13 +61,14 @@ namespace px {
 
     public:
         virtual ~npc_component() = default;
+
         npc_component()
             : state(rl::ai_state::idle)
             , range_idle(0)
             , range_alert(0)
-            , waypoint{ 0, 0 }
-        {
+            , waypoint{ 0, 0 } {
         }
+
         npc_component(npc_component const&) = delete;
         npc_component & operator=(npc_component const&) = delete;
 

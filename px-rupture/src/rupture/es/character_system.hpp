@@ -18,16 +18,16 @@ namespace px {
     {
     public:
         uq_ptr<character_component> make();
-        void load(script * scripts);
+        void                        load(script * scripts);
 
     public:
-        virtual ~character_system() override;
+        virtual                     ~character_system() override;
         character_system();
 
     protected:
-        virtual void turn_update_system(delta_type const& delta_time) override;
+        virtual void                turn_update_system(delta_type const& delta_time) override;
 
     private:
-        uq_ptr<character_works> works;
+        uq_ptr<character_works>     works;
     };
 }

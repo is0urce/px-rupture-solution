@@ -71,11 +71,11 @@ namespace px {
                     archive(composition_element::workshop);
                     archive(*workshop);
                 }
-                else if (auto player = dynamic_cast<player_component const*>(raw)) {
+                else if (player_component const* player = dynamic_cast<player_component const*>(raw)) {
                     archive(composition_element::player);
                     archive(*player);
                 }
-                else if (auto npc = dynamic_cast<npc_component const*>(raw)) {
+                else if (npc_component const* npc = dynamic_cast<npc_component const*>(raw)) {
                     archive(composition_element::npc);
                     archive(*npc);
                 }
@@ -89,9 +89,9 @@ namespace px {
 
         template <typename Archive>
         static uq_ptr<composite_component> assemble(Archive && archive, builder & factory) {
-            size_t size;								// total components in unit
-            composition_element variant;				// current component type
-            transform_component * transform = nullptr;	// transform hint
+            size_t size;                                // total components in unit
+            composition_element variant;                // current component type
+            transform_component * transform = nullptr;  // transform hint
 
             archive(size);
             for (size_t i = 0; i != size; ++i) {

@@ -16,9 +16,9 @@ namespace px {
         template <typename ResourceOption>
         static bool bar(ResourceOption const& resource, std::string const& prefix, ImVec4 const& tint) {
             if (!resource) return false;
-            auto current = resource->current();
-            auto maximum = resource->maximum();
-            float fraction = (maximum == 0) ? 0.0f : current / static_cast<float>(maximum);
+            auto const current = resource->current();
+            auto const maximum = resource->maximum();
+            float const fraction = (maximum == 0) ? 0.0f : current / static_cast<float>(maximum);
             ImGui::Text(prefix.c_str());
             ImGui::SameLine();
             ImGui::PushStyleColor(ImGuiCol_PlotHistogram, tint);

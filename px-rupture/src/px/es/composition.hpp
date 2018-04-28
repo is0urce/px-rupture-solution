@@ -84,8 +84,7 @@ namespace px {
 
     public:
         composition() = default;
-        composition(composition const&) = delete;
-        composition & operator=(composition const&) = delete;
+
         composition(composition && that) noexcept
             : composition() {
             swap(that);
@@ -98,8 +97,11 @@ namespace px {
             return *this;
         }
 
+        composition(composition const&) = delete;
+        composition & operator=(composition const&) = delete;
+
     private:
         std::vector<component_ptr> m_components;
-        //row<component_ptr, 16>	m_components;
+        //row<component_ptr, 16> m_components;
     };
 }

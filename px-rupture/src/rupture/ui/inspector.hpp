@@ -17,7 +17,7 @@ namespace px::ui {
         : public inspector_common
     {
     public:
-        virtual ~inspector() = default;
+        virtual ~inspector() override = default;
 
         inspector(environment * env)
             : game(env) {

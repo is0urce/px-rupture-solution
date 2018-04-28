@@ -1,4 +1,7 @@
 // name: effect.hpp
+// type: c++
+// auth: is0urce
+// desc: effect id enum
 
 #pragma once
 

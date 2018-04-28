@@ -22,7 +22,7 @@ namespace px {
         : public system<delta>
     {
     public:
-        void                    assign_environment(environment * env);	// bind system to an environment
+        void                    assign_environment(environment * env) noexcept; // bind system to an environment
         uq_ptr<body_component>  make();
 
     public:

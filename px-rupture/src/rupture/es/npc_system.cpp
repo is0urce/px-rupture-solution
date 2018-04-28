@@ -16,8 +16,7 @@ namespace px {
     npc_system::~npc_system() = default;
 
     npc_system::npc_system()
-        : works(make_uq<npc_works>())
-    {
+        : works(make_uq<npc_works>()) {
     }
 
     // virtual overrides

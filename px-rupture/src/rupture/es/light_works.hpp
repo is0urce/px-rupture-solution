@@ -159,13 +159,14 @@ namespace px {
 
     public:
         ~light_works() = default;
+
         light_works(unsigned int start_radius)
             : camera(nullptr)
             , stage(nullptr)
-            , crop_fov(true)
-        {
+            , crop_fov(true) {
             set_radius(start_radius);
         }
+
         light_works(light_works const&) = delete;
         light_works & operator=(light_works const&) = delete;
 
@@ -176,6 +177,7 @@ namespace px {
                 oy = camera->position().y() - radius;
             }
         }
+
         // store current into last
         void move_ligtmaps() {
             last_data = current_data; // update export data structure
@@ -185,20 +187,25 @@ namespace px {
             current_data.version++;
             current_data.raw = (last_data.raw == current_texels.data() ? last_texels : current_texels).data(); // alternate
         }
+
         double distance2(double dx, double dy, double elevation2) {
             return std::sqrt(dx * dx + dy * dy + elevation2);
         }
+
         bool contains(int x, int y) const {
             return x >= 0 && y >= 0 && map.contains(static_cast<size_t>(x), static_cast<size_t>(y));
         }
+
         bool is_transparent(int x, int y) const {
             return stage && stage->is_transparent({ x, y });
         }
+
         void illuminate(int x, int y, color c) {
             if (is_transparent(x, y)) {
                 pset(x - ox, y - oy, c);
             }
         }
+
         // add to point color
         void pset(int x, int y, color c) {
             if (contains(x, y)) {

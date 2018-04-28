@@ -20,8 +20,7 @@ namespace px {
 
     deposite_component::deposite_component()
         : dissolve(true)
-        , use_duration(1)
-    {
+        , use_duration(1) {
     }
 
     // virtual

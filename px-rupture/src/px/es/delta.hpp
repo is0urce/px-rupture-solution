@@ -32,13 +32,13 @@ namespace px {
         }
 
     public:
-        delta()
+        delta() noexcept
             : real_current(0)
             , real_last(0)
             , real_delta(0)
             , turn_start(0)
             , turn_duration(0)
-            , turn_number() {
+            , turn_number(0) {
         }
     };
 }

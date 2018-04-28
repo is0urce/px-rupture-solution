@@ -11,7 +11,7 @@ namespace px {
         }
 
     public:
-        virtual ~panel() = default;
+        virtual ~panel() noexcept = default;
 
     protected:
         virtual void combine_panel() = 0;

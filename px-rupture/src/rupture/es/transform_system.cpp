@@ -12,8 +12,7 @@ namespace px {
     transform_system::~transform_system() = default;
 
     transform_system::transform_system()
-        : works(make_uq<transform_works>())
-    {
+        : works(make_uq<transform_works>()) {
     }
 
     // virtual

@@ -28,18 +28,23 @@ namespace px {
         T * begin() noexcept {
             return &reinterpret()[0];
         }
+
         T * end() noexcept {
             return &reinterpret()[cursor];
         }
+
         T const* begin() const noexcept {
             return &reinterpret()[0];
         }
+
         T const* end() const noexcept {
             return &reinterpret()[cursor];
         }
+
         T const* cbegin() const noexcept {
             return &reinterpret()[0];
         }
+
         T const* cend() const noexcept {
             return &reinterpret()[cursor];
         }
@@ -54,20 +59,25 @@ namespace px {
             if (cursor == 0) throw std::runtime_error("px::row::back() - no elements");
             return reinterpret()[cursor - 1];
         }
+
         T const& back() const {
             if (cursor == 0) throw std::runtime_error("px::row::back() const - no elements");
             return reinterpret()[cursor - 1];
         }
+
         T & operator[](size_t index) noexcept {
             return reinterpret()[index];
         }
+
         T const& operator[](size_t index) const noexcept {
             return reinterpret()[index];
         }
+
         T & at(size_t index) {
             if (index >= cursor) throw std::runtime_error("px::row::at() - out of range");
             return reinterpret()[index];
         }
+
         T const& at(size_t index) const {
             if (index >= cursor) throw std::runtime_error("px::row::at() - out of range");
             return reinterpret()[index];
@@ -115,20 +125,21 @@ namespace px {
         ~row() {
             clear();
         }
+
         row()
-            : cursor(0)
-        {
+            : cursor(0) {
         }
+
         row(row const& that)
-            : row()
-        {
+            : row() {
             *this = that;
         }
+
         row(row && that)
-            : row()
-        {
+            : row() {
             *this = std::move(that);
         }
+
         row & operator=(row const& that) {
             clear();
             T * arr = reinterpret();
@@ -137,6 +148,7 @@ namespace px {
             }
             return *this;
         }
+
         row & operator=(row && that) {
             clear();
             T * arr = reinterpret();
@@ -150,12 +162,13 @@ namespace px {
         T * reinterpret() noexcept {
             return reinterpret_cast<T*>(&raw);
         }
+
         T const* reinterpret() const noexcept {
             return reinterpret_cast<T const*>(&raw);
         }
 
     private:
-        alignas(T) char			raw[N * (sizeof T)];
-        size_t					cursor;
+        alignas(T) char         raw[N * (sizeof T)];
+        size_t                  cursor;
     };
 }

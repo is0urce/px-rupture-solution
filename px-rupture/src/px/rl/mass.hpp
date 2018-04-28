@@ -64,22 +64,21 @@ namespace px::rl {
 
     public:
         constexpr mass() noexcept
-            : mass(false)
-        {
+            : mass(false) {
         }
+
         constexpr mass(bool transparency) noexcept
-            : transparent(transparency)
-        {
+            : transparent(transparency) {
         }
+
         constexpr mass(bool transparency, bool can_traverse)
-            : transparent(transparency)
-        {
+            : transparent(transparency) {
             make_traversable(can_traverse);
         }
+
         constexpr mass(bool transparency, traverse_options const& opts)
             : traverse_options(opts)
-            , transparent(transparency)
-        {
+            , transparent(transparency) {
         }
 
     private:

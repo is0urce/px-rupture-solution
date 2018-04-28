@@ -79,7 +79,7 @@ namespace px::rl {
             container.push_back(val);
         }
 
-        size_t size() const {
+        size_t size() const noexcept {
             return container.size();
         }
 

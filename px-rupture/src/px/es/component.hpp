@@ -30,11 +30,10 @@ namespace px {
         }
 
     public:
-        virtual ~component() = default;
+        virtual ~component() noexcept = default;
 
         component() noexcept
-            : active(false)
-        {
+            : active(false) {
         }
 
     protected:

@@ -60,7 +60,6 @@ namespace px {
                 if (!animator.is_active()) return;
                 if (!animator.is_playing()) return;
 
-
                 if (auto img = animator.linked<sprite_component>()) {
                     if (auto current_clip = animator.current()) {
                         if (current_clip->is_loop()) {

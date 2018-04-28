@@ -45,10 +45,10 @@ namespace px {
 
     public:
         virtual ~craft_station() = default;
+
         craft_station(environment * context)
             : game(context)
-            , container(nullptr)
-        {
+            , container(nullptr) {
             generator.assign_environment(context);
         }
 
@@ -83,7 +83,7 @@ namespace px {
         void combine_inventory(ImVec2 const& window_position, ImVec2 const& window_size) {
             if (!container) return;
 
-            const auto filter = [&](rl::item const& item) {
+            static auto const filter = [&](rl::item const& item) {
                 return item.has_effect(rl::effect::ingredient_power, static_cast<rl::item::enhancement_type::integer_type>(Activity));
             };
             format_names(*container, inventory_names, filter);

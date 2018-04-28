@@ -23,7 +23,8 @@ namespace px {
         : public panel
     {
     public:
-        virtual ~inventory() = default;
+        virtual ~inventory() override = default;
+
         inventory(environment * env, bool * p_open)
             : game(env)
             , opened(p_open)
@@ -97,15 +98,17 @@ namespace px {
 
                         // equipment
                         if (ptr->has_effect(rl::effect::equipment)) {
-                            game->start_turn();
-                            body.equip(selected);
-                            game->end_turn(1);
+                            if (game->has_control()) {
+                                game->start_turn();
+                                body.equip(selected);
+                                game->end_turn(1);
+                            }
                         }
 
                         // useable
                         if (ptr->has_effect(rl::effect::useable)) {
                             auto useable = ptr->find({ rl::effect::useable });
-                            if (useable.sub == 0x00) {
+                            if (game->has_control()) {
                                 game->start_turn();
                                 body.use_potion(*ptr, game);
                                 container.unacquire(selected, 1);
@@ -163,18 +166,15 @@ namespace px {
                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
             // main props
+
             ImGui::Text(item.name().c_str());
             ImGui::Text(item.description().c_str());
 
             // generic props
+
             if (item.has_effect(rl::effect::equipment)) {
                 ImGui::Text("Equipment");
             }
-            if (item.has_effect(rl::effect::useable)) {
-                ImGui::Text("Useable");
-            }
-
-            // ingredient props
             if (item.has_effect(rl::effect::ingredient_power)) {
                 switch (static_cast<rl::craft_activity>(item.find_subtype(rl::effect::ingredient_power, 0))) {
                 case rl::craft_activity::blacksmith:
@@ -190,6 +190,7 @@ namespace px {
             }
 
             // equipment props
+
             if (item.has_effect(rl::effect::damage)) {
                 ImGui::Text("Damage: %.0f", item.accumulate({ rl::effect::damage }).magnitude0);
             }
@@ -197,7 +198,11 @@ namespace px {
                 ImGui::Text("Armor: %.0f", item.accumulate({ rl::effect::armor }).magnitude0);
             }
 
-            // potion props
+            // useable props
+
+            if (item.has_effect(rl::effect::useable)) {
+                ImGui::Text("Useable");
+            }
             if (item.has_effect(rl::effect::hp_bonus)) {
                 ImGui::Text("Heal: %.0f", item.accumulate({ rl::effect::hp_bonus }).magnitude0);
             }
@@ -213,8 +218,11 @@ namespace px {
                 ImGui::Text("Invigorate: %.0f for %d", effect.magnitude0, effect.value0);
             }
 
-            // item status
-            ImGui::Text("Quantity: %d/%d", item.count(), item.maximum());
+            // stack
+
+            if (item.maximum() > 1) {
+                ImGui::Text("Quantity: %d/%d", item.count(), item.maximum());
+            }
 
             ImGui::End();
         }

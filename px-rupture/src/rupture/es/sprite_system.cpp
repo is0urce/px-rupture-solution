@@ -15,8 +15,7 @@ namespace px {
     sprite_system::~sprite_system() = default;
 
     sprite_system::sprite_system()
-        : works(make_uq<sprite_works>())
-    {
+        : works(make_uq<sprite_works>()) {
     }
 
     // override

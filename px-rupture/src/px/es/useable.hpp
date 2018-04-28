@@ -24,7 +24,7 @@ namespace px {
         }
 
     public:
-        virtual ~useable() = default;
+        virtual ~useable() noexcept = default;
 
     protected:
         virtual bool can_use_useable(User /*user*/, Environment /*environment*/) const {

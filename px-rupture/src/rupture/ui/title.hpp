@@ -17,9 +17,9 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~title() override = default;
+        virtual ~title() noexcept override = default;
 
-        title(environment * game)
+        title(environment * game) noexcept
             : context(game) {
         }
 
@@ -50,6 +50,7 @@ namespace px::ui {
         void press_start() {
             context->start();
         }
+
         void press_exit() {
             context->shutdown();
         }

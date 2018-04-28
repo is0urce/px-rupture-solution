@@ -21,32 +21,32 @@ namespace px::rl {
     public:
         // querry
 
-        T current() const noexcept {
+        constexpr T current() const noexcept {
             return m_current;
         }
 
-        T maximum() const noexcept {
+        constexpr T maximum() const noexcept {
             return m_max;
         }
 
-        bool is_empty() const noexcept {
+        constexpr bool is_empty() const noexcept {
             return m_current <= 0;
         }
 
-        bool is_full() const noexcept {
+        constexpr bool is_full() const noexcept {
             return m_current == m_max;
         }
 
         // restore value to maximum
 
         T restore() noexcept {
-            T last = m_current;
+            T const last = m_current;
             m_current = m_max;
             return m_current - last;
         }
 
         T restore(T magnitude) noexcept {
-            T last = m_current;
+            T const last = m_current;
             m_current = cap(m_current + magnitude);
             return m_current - last;
         }
@@ -56,7 +56,7 @@ namespace px::rl {
         }
 
         T damage(T magnitude) noexcept {
-            T last = m_current;
+            T const last = m_current;
             m_current = cap(m_current - magnitude);
             return last - m_current;
         }
@@ -67,10 +67,12 @@ namespace px::rl {
             set(c);
             return *this;
         }
+
         bar & operator+=(T c) noexcept {
             modify(c);
             return *this;
         }
+
         bar & operator-=(T c) noexcept {
             modify(-c);
             return *this;
@@ -78,32 +80,37 @@ namespace px::rl {
 
         // comparison operators
 
-        bool operator<(T c) const noexcept {
+        constexpr bool operator<(T c) const noexcept {
             return m_current < c;
         }
-        bool operator==(T c) const noexcept {
+
+        constexpr bool operator==(T c) const noexcept {
             return m_current == c;
         }
-        bool operator<=(T c) const noexcept {
+
+        constexpr bool operator<=(T c) const noexcept {
             return operator<(*this, c) || operator==(this*, c);
         }
-        bool operator>=(T c) const noexcept {
+
+        constexpr bool operator>=(T c) const noexcept {
             return !operator<(*this, c);
         }
-        bool operator!=(T c) const noexcept {
+
+        constexpr bool operator!=(T c) const noexcept {
             return !operator==(*this, c);
         }
-        bool operator>(T c) const noexcept {
+
+        constexpr bool operator>(T c) const noexcept {
             return !operator<=(*this, c);
         }
 
         // value cast operators
 
-        operator value_type() const noexcept {
+        constexpr operator value_type() const noexcept {
             return m_current;
         }
 
-        operator bool() const noexcept {
+        constexpr operator bool() const noexcept {
             return !empty();
         }
 
@@ -136,25 +143,24 @@ namespace px::rl {
     public:
         constexpr bar() noexcept
             : m_current(0)
-            , m_max(0)
-        {
+            , m_max(0) {
         }
+
         constexpr bar(T max) noexcept
             : m_current(max)
-            , m_max(max)
-        {
+            , m_max(max) {
         }
+
         constexpr bar(T current, T max) noexcept
             : m_current(current)
-            , m_max(max)
-        {
+            , m_max(max) {
         }
+
         bar(bar const&) = default;
         bar & operator=(bar const&) noexcept = default;
 
     private:
-        T cap(T val) const noexcept
-        {
+        constexpr T cap(T val) const noexcept {
             return std::min(val, m_max);
         }
 

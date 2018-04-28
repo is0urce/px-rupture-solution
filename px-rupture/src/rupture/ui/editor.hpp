@@ -60,10 +60,10 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~editor() = default;
+        virtual ~editor() override = default;
+
         editor(environment * env)
-            : game(env)
-        {
+            : game(env) {
             refresh_template_items();
         }
 

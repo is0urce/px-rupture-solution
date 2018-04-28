@@ -183,6 +183,7 @@
     <ClCompile Include="src\rupture\es\notification_system.cpp" />
     <ClCompile Include="src\rupture\es\npc_system.cpp" />
     <ClCompile Include="src\rupture\es\render_system.cpp" />
+    <ClCompile Include="src\rupture\es\sound_system.cpp" />
     <ClCompile Include="src\rupture\es\sprite_system.cpp" />
     <ClCompile Include="src\rupture\es\transform_component.cpp" />
     <ClCompile Include="src\rupture\es\transform_system.cpp" />
@@ -227,6 +228,9 @@
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
     <ClInclude Include="src\px\es\light_source.hpp" />
+    <ClInclude Include="src\rupture\es\sound_system.hpp" />
+    <ClInclude Include="src\rupture\es\sound_works.hpp" />
+    <ClInclude Include="src\rupture\snd\sound.hpp" />
     <ClInclude Include="src\px\es\useable.hpp" />
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
     <ClInclude Include="src\px\es\light.hpp" />

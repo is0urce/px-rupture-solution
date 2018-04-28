@@ -39,7 +39,7 @@ namespace px {
         friend class                                terrain_release_block;
 
     public:
-        void assign_sprites(sprite_system * system) {
+        void assign_sprites(sprite_system * system) noexcept {
             sprites = system;
         }
 
@@ -193,8 +193,7 @@ namespace px {
 
     public:
         scene_internal()
-            : space(64)
-        {
+            : space(64) {
         }
 
     private:
@@ -236,11 +235,10 @@ namespace px {
             : public abstract_release_block
         {
         public:
-            terrain_release_block(join_release_block * raw, scene_internal * current, point2 grid_cell)
+            terrain_release_block(join_release_block * raw, scene_internal * current, point2 grid_cell) noexcept
                 : original(raw)
                 , scene(current)
-                , grid(grid_cell)
-            {
+                , grid(grid_cell) {
             }
 
         protected:
@@ -267,8 +265,7 @@ namespace px {
 
         public:
             join_release_block(scene_internal * scene, point2 grid)
-                : ctrl(this, scene, grid)
-            {
+                : ctrl(this, scene, grid) {
             }
 
         private:

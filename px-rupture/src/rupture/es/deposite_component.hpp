@@ -35,7 +35,7 @@ namespace px {
         time_type       get_use_duration() const noexcept;
 
     public:
-        virtual ~deposite_component();
+        virtual ~deposite_component() override;
         deposite_component();
         deposite_component(deposite_component const&) = delete;
         deposite_component & operator=(deposite_component const&) = delete;

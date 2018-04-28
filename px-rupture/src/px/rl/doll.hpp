@@ -27,8 +27,7 @@ namespace px::rl {
         // returns nullptr if no equipment
         item_type * operator[](Equipment slot) const {
             auto it = container.find(slot);
-            if (it == container.end()) return nullptr;
-            return it->second.get();
+            return it == container.end() ? nullptr : it->second.get();
         }
 
         // returns removed item (or nullptr if nothing to remove)
@@ -57,6 +56,7 @@ namespace px::rl {
                 archive(kv_pair.first, *kv_pair.second);
             }
         }
+
         template <typename Archive>
         void load(Archive & archive) {
             size_t size;

@@ -12,7 +12,6 @@ namespace px {
 
     class transform_works final {
     public:
-
         uq_ptr<transform_component> make() {
             auto result = pool.make_uq();
             result->incarnate(&space);
@@ -27,8 +26,7 @@ namespace px {
 
     public:
         transform_works() noexcept
-            : space(64)
-        {
+            : space(64) {
         }
 
     private:

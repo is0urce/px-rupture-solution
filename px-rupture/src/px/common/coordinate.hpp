@@ -233,8 +233,7 @@ namespace px {
 
         template <typename... Args>
         constexpr coordinate(Args &&... args) noexcept
-            : m_array{ std::forward<Args>(args)... }
-        {
+            : m_array{ std::forward<Args>(args)... } {
         }
 
     protected:

@@ -17,11 +17,10 @@ namespace px::ui {
         : public inspector_common
     {
     public:
-        virtual ~status() = default;
+        virtual ~status() override = default;
 
         status(environment * game)
-            : context(game)
-        {
+            : context(game) {
         }
 
     protected:

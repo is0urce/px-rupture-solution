@@ -34,7 +34,7 @@ namespace px {
         void load(Document && document) {
             try {
                 for (auto const& action_entry : document) {
-                    long long action_index = action_entry["action"];
+                    const long long action_index = action_entry["action"];
                     for (long long key : action_entry["keys"]) {
                         bind(static_cast<SK>(key), static_cast<VK>(action_index));
                     }

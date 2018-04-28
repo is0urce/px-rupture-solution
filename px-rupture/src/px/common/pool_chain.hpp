@@ -114,9 +114,9 @@ namespace px {
 
     public:
         pool_chain() noexcept
-            : m_chunks(1)
-        {
+            : m_chunks(1) {
         }
+
         pool_chain(pool_chain const&) = delete;
         pool_chain & operator=(pool_chain const&) = delete;
 

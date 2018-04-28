@@ -52,11 +52,11 @@ namespace px {
     }
 
     void shell::load_data() {
-        auto document = document::load_document(settings::texture_path);
-        auto textures = document["textures"];
+        auto const document = document::load_document(settings::texture_path);
+        auto const& textures = document["textures"];
         unsigned int texture_id = 0;
         for (auto const& texture : textures) {
-            std::string atlas = texture["atlas"];	// conversion constructors
+            std::string atlas = texture["atlas"];   // conversion constructors
             std::string bitmap = texture["texture"];
 
             add_texture(bitmap.c_str());
@@ -172,13 +172,13 @@ namespace px {
         std::vector<unsigned char> bits;
         unsigned int texture_width;
         unsigned int texture_height;
-        auto error = lodepng::decode(bits, texture_width, texture_height, name);
+        const auto error = lodepng::decode(bits, texture_width, texture_height, name);
         if (error) throw std::runtime_error("add_texture(name) error while loading image, path=" + std::string(name));
         renderer.add_texture(texture_width, texture_height, bits.data());
     }
 
     void shell::add_atlas(const char * name, unsigned int texture_index) {
-        auto document = document::load_document(name);
+        auto const document = document::load_document(name);
         sprites.load_atlas(document, texture_index, true);
     }
 }

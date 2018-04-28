@@ -19,11 +19,10 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~results() = default;
+        virtual ~results() noexcept override = default;
 
-        results(environment * game)
-            : context(game)
-        {
+        results(environment * game) noexcept
+            : context(game) {
         }
 
     protected:

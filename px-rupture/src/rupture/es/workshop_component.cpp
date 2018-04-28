@@ -34,6 +34,7 @@ namespace px {
     rl::craft_activity workshop_component::activity() const noexcept {
         return activity_variant;
     }
+
     void workshop_component::set_activity(rl::craft_activity variant) {
         activity_variant = variant;
     }

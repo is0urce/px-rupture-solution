@@ -6,18 +6,18 @@
 
 namespace px {
 
-	class body_component;
-	class environment;
+    class body_component;
+    class environment;
 
-	class storage_component
-		: public component
-		, public link_dispatcher<storage_component>
-		, public useable<body_component *, environment *>
-	{
-	public:
-		virtual ~storage_component() = default;
-		storage_component() = default;
-		storage_component(storage_component const&) = delete;
-		storage_component & operator=(storage_component const&) = delete;
-	};
+    class storage_component
+        : public component
+        , public link_dispatcher<storage_component>
+        , public useable<body_component *, environment *>
+    {
+    public:
+        virtual ~storage_component() override = default;
+        storage_component() = default;
+        storage_component(storage_component const&) = delete;
+        storage_component & operator=(storage_component const&) = delete;
+    };
 }

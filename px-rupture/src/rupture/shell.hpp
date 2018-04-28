@@ -42,7 +42,6 @@ namespace px {
     private:
         delta           time;
         engine<delta>   engine;
-
         render_system   renderer;
         ui_system       ui;
         unsigned int    width;

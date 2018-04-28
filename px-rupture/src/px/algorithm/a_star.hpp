@@ -25,16 +25,16 @@ namespace px {
             : public point2
         {
         public:
-            double g_score;
-            double f_score;
-            coord const* came_from;
+            double          g_score;
+            double          f_score;
+            coord const*    came_from;
+
         public:
-            coord(point2 p, double traversed, double heu, coord const* prev)
+            coord(point2 p, double traversed, double heuristic, coord const* prev)
                 : point2(p)
                 , g_score(traversed)
-                , f_score(traversed + heu)
-                , came_from(prev)
-            {
+                , f_score(traversed + heuristic)
+                , came_from(prev) {
             }
         };
 

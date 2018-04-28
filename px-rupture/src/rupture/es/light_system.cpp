@@ -15,8 +15,7 @@ namespace px {
     light_system::~light_system() = default;
 
     light_system::light_system()
-        : works(make_uq<light_works>(20))
-    {
+        : works(make_uq<light_works>(20)) {
     }
 
     // virtual overload

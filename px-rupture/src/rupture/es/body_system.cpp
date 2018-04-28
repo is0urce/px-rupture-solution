@@ -8,6 +8,8 @@
 
 #include <px/memory/memory.hpp>
 
+#include <stdexcept>
+
 namespace px {
 
     // constructor & destructor
@@ -15,8 +17,7 @@ namespace px {
     body_system::~body_system() = default;
 
     body_system::body_system()
-        : works(make_uq<body_works>())
-    {
+        : works(make_uq<body_works>()) {
     }
 
     // virtual overrides
@@ -27,7 +28,7 @@ namespace px {
 
     // methods
 
-    void body_system::assign_environment(environment * game) {
+    void body_system::assign_environment(environment * game) noexcept {
         works->assign_environment(game);
     }
 

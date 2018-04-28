@@ -22,7 +22,7 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~levelup() = default;
+        virtual ~levelup() override = default;
 
         levelup(environment * ctx)
             : context(ctx) {

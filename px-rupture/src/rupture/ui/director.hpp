@@ -67,8 +67,7 @@ namespace px {
         }
 
     public:
-        ~director()
-        {
+        ~director() {
             ImGui::Shutdown();
             release_pipeline();
         }

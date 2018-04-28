@@ -17,12 +17,12 @@ namespace px {
         template <typename Predicate>
         void calculate(point2 source, unsigned int radius, Predicate && predicate) {
             center = source;
-            r = radius;
-            grid.resize(r * 2 + 1, r * 2 + 1);
+            reach = radius;
+            grid.resize(reach * 2 + 1, reach * 2 + 1);
             grid.fill(false);
 
-            recursive_shadowcasting::light(center.x(), center.y(), r, std::forward<Predicate>(predicate), [this](int x, int y) {
-                point2 relative = point2(x, y) - center + point2(r, r);
+            recursive_shadowcasting::light(center.x(), center.y(), reach, std::forward<Predicate>(predicate), [this](int x, int y) {
+                point2 relative = point2(x, y) - center + point2(reach, reach);
                 if (grid.contains(relative)) {
                     grid.set(true, relative);
                 }
@@ -30,23 +30,22 @@ namespace px {
         }
 
         bool contains(point2 const& absolute) const {
-            point2 relative = absolute - center + point2(r, r);
+            point2 relative = absolute - center + point2(reach, reach);
             return grid.contains(relative) ? grid.get(relative) : false;
         }
 
         unsigned int range() const noexcept {
-            return r;
+            return reach;
         }
 
     public:
         fov()
-            : r(0)
-        {
+            : reach(0) {
         }
 
     private:
         matrix2<bool>   grid;
         point2          center;
-        unsigned int    r;      // radius
+        unsigned int    reach;      // radius
     };
 }

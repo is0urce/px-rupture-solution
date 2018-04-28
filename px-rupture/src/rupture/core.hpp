@@ -11,6 +11,7 @@
 #include "es/light_system.hpp"      // lightmap
 #include "es/npc_system.hpp"        // actions
 #include "es/sprite_system.hpp"
+#include "es/sound_system.hpp"
 #include "es/transform_system.hpp"  // store position
 
 #include "script/script.hpp"
@@ -33,6 +34,7 @@ namespace px {
         character_system    characters;
         light_system        lights;
         npc_system          npcs;       // non player characters manager
+        sound_system        sounds;
         sprite_system       sprites;
         transform_system    transforms;
     };

@@ -17,20 +17,10 @@ namespace px {
         using precision_type = decltype(m_query());
 
     public:
-        timer()
-            : m_query(QueryOperator{})
-        {
-            restart();
-        }
-        timer(QueryOperator const& query)
-            : m_query(query)
-        {
-            restart();
-        }
-
         void restart() {
             start = m_query();
         }
+
         void restart(precision_type time) {
             start = time;
         }
@@ -58,6 +48,17 @@ namespace px {
 
         operator typename timer::precision_type() const {
             return measure();
+        }
+
+    public:
+        timer()
+            : m_query(QueryOperator{}) {
+            restart();
+        }
+
+        timer(QueryOperator const& query)
+            : m_query(query) {
+            restart();
         }
 
     private:

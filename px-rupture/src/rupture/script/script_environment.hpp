@@ -123,12 +123,11 @@ namespace px {
 
     public:
         script_environment() noexcept
-            : game(nullptr)
-        {
+            : game(nullptr) {
         }
+
         script_environment(environment * environment) noexcept
-            : game(environment)
-        {
+            : game(environment) {
         }
 
     private:

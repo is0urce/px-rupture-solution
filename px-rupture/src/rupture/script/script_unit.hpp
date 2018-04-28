@@ -37,12 +37,13 @@ namespace px {
         }
 
         float mp() const {
-            if (!body) {
+            float result = 0;
+            if (body) {
                 if (auto && mp = body->energy()) {
-                    return static_cast<float>(mp->current());
+                    result = static_cast<float>(mp->current());
                 }
             }
-            return 0;
+            return result;
         }
 
         float damage(float amount) {

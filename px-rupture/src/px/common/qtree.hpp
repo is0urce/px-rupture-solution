@@ -129,14 +129,14 @@ namespace px {
 
         //std::string to_string() const
         //{
-        //	auto result = std::string("qT(") + std::to_string(m_center_x) + std::string(",") + std::to_string(m_center_y) + std::string(")-") + std::to_string(m_range);
-        //	if (m_bucket) result += std::string(":") + std::to_string(m_bucket->size());
-        //	if (nw) result += std::string(" nw=") + nw->to_string();
-        //	if (ne) result += std::string(" ne=") + ne->to_string();
-        //	if (sw) result += std::string(" sw=") + sw->to_string();
-        //	if (se) result += std::string(" se=") + se->to_string();
-        //	result += ";";
-        //	return result;
+        //  auto result = std::string("qT(") + std::to_string(m_center_x) + std::string(",") + std::to_string(m_center_y) + std::string(")-") + std::to_string(m_range);
+        //  if (m_bucket) result += std::string(":") + std::to_string(m_bucket->size());
+        //  if (nw) result += std::string(" nw=") + nw->to_string();
+        //  if (ne) result += std::string(" ne=") + ne->to_string();
+        //  if (sw) result += std::string(" sw=") + sw->to_string();
+        //  if (se) result += std::string(" se=") + se->to_string();
+        //  result += ";";
+        //  return result;
         //}
 
     public:
@@ -144,13 +144,13 @@ namespace px {
             : m_center_x(x)
             , m_center_y(y)
             , m_range(range)
-            , m_bucket(std::make_unique<bucket>())
-        {
+            , m_bucket(std::make_unique<bucket>()) {
         }
+
         qtree(unsigned int range)
-            : qtree(0, 0, range)
-        {
+            : qtree(0, 0, range) {
         }
+
         qtree(qtree const&) = delete;
         qtree & operator=(qtree const&) = delete;
 
@@ -180,7 +180,7 @@ namespace px {
         ptr & access(int x, int y) {
             auto & branch = select(x, y);
             if (!branch) {
-                int range = m_range / 2;
+                int const range = m_range / 2;
                 auto result = std::make_unique<qtree>(m_center_x + ((x >= m_center_x) ? range : -range), m_center_y + ((y >= m_center_y) ? range : -range), range);
                 std::swap(branch, result);
             }
@@ -191,7 +191,7 @@ namespace px {
         void split() {
             if (!m_bucket) throw std::runtime_error("px::qtree:split() - can't split non-leaf");
 
-            auto &branch = access(m_bucket->x(), m_bucket->y());
+            auto & branch = access(m_bucket->x(), m_bucket->y());
             std::swap(m_bucket, branch->m_bucket);
             m_bucket.release();
         }
@@ -208,31 +208,27 @@ namespace px {
         bool combine(ptr & cleaned) {
             if (!cleaned->m_bucket) throw std::runtime_error("can't collapse at non-leaf");
 
-            bool enw = is_empty(nw);
-            bool ene = is_empty(ne);
-            bool esw = is_empty(sw);
-            bool ese = is_empty(se);
+            bool const enw = is_empty(nw);
+            bool const ene = is_empty(ne);
+            bool const esw = is_empty(sw);
+            bool const ese = is_empty(se);
 
-            if (nw && nw->m_bucket && ene && esw && ese)
-            {
+            if (nw && nw->m_bucket && ene && esw && ese) {
                 std::swap(m_bucket, nw->m_bucket);
                 nw.reset();
                 return true;
             }
-            if (ne && ne->m_bucket && enw && esw && ese)
-            {
+            if (ne && ne->m_bucket && enw && esw && ese) {
                 std::swap(m_bucket, ne->m_bucket);
                 ne.reset();
                 return true;
             }
-            if (sw && sw->m_bucket && ene && enw && ese)
-            {
+            if (sw && sw->m_bucket && ene && enw && ese) {
                 std::swap(m_bucket, sw->m_bucket);
                 sw.reset();
                 return true;
             }
-            if (se && se->m_bucket && ene && esw && enw)
-            {
+            if (se && se->m_bucket && ene && esw && enw) {
                 std::swap(m_bucket, se->m_bucket);
                 se.reset();
                 return true;
@@ -258,7 +254,7 @@ namespace px {
 
         // expand range
         void expand() {
-            int range = static_cast<int>(m_range);
+            int const range = static_cast<int>(m_range);
             if (nw) {
                 auto expand = std::make_unique<qtree>(m_center_x - range, m_center_y + range, range);
                 qtree::expand(nw, expand, expand->se);
@@ -292,7 +288,7 @@ namespace px {
                 }
             }
             else {
-                auto &branch = access(x, y);
+                auto & branch = access(x, y);
                 branch->insert(x, y, e);
             }
         }
@@ -324,7 +320,7 @@ namespace px {
                 return this;
             }
             else {
-                ptr &branch = select(sx, sy);
+                ptr & branch = select(sx, sy);
 
                 if (!branch) throw std::runtime_error("px::qtree::move_hint - no branch");
 
@@ -339,8 +335,8 @@ namespace px {
         }
 
     private:
-        ptr                     nw, ne, se, sw;	// leaves
-        std::unique_ptr<bucket> m_bucket;		// value, not null if it is a leaf
+        ptr                     nw, ne, se, sw; // leaves
+        std::unique_ptr<bucket> m_bucket;       // value, not null if it is a leaf
         int                     m_center_x;
         int                     m_center_y;
         unsigned int            m_range;
@@ -353,18 +349,21 @@ namespace px {
                     fn(m_x, m_y, e);
                 }
             }
+
             template <typename CallbackOperator>
             void enumerate_index(CallbackOperator && fn) const {
                 for (auto const& e : m_elements) {
                     fn(m_x, m_y, e);
                 }
             }
+
             template <typename CallbackOperator>
             void enumerate(CallbackOperator && fn) {
                 for (auto & e : m_elements) {
                     fn(e);
                 }
             }
+
             template <typename CallbackOperator>
             void enumerate(CallbackOperator && fn) const {
                 for (auto const& e : m_elements) {

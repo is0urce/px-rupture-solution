@@ -9,19 +9,19 @@
 #include <ios>
 
 #if SAVE_READABLE
-#define SAVE_INCLUDE_ARCHIVE <cereal/archives/xml.hpp>
-#define SAVE_OUTPUT_ARCHIVE cereal::XMLOutputArchive
-#define SAVE_INPUT_ARCHIVE cereal::XMLInputArchive
-#define SAVE_OUTPUT_MODE std::ios_base::out
-#define SAVE_INPUT_MODE std::ios_base::in
+#define SAVE_INCLUDE_ARCHIVE    <cereal/archives/xml.hpp>
+#define SAVE_OUTPUT_ARCHIVE     cereal::XMLOutputArchive
+#define SAVE_INPUT_ARCHIVE      cereal::XMLInputArchive
+#define SAVE_OUTPUT_MODE        std::ios_base::out
+#define SAVE_INPUT_MODE         std::ios_base::in
 #endif
 
 #if SAVE_BINARY
-#define SAVE_INCLUDE_ARCHIVE <cereal/archives/binary.hpp>
-#define SAVE_OUTPUT_ARCHIVE cereal::BinaryOutputArchive
-#define SAVE_INPUT_ARCHIVE cereal::BinaryInputArchive
-#define SAVE_OUTPUT_MODE std::ios_base::out | std::ios_base::binary
-#define SAVE_INPUT_MODE std::ios_base::in | std::ios_base::binary
+#define SAVE_INCLUDE_ARCHIVE    <cereal/archives/binary.hpp>
+#define SAVE_OUTPUT_ARCHIVE     cereal::BinaryOutputArchive
+#define SAVE_INPUT_ARCHIVE      cereal::BinaryInputArchive
+#define SAVE_OUTPUT_MODE        std::ios_base::out  | std::ios_base::binary
+#define SAVE_INPUT_MODE         std::ios_base::in   | std::ios_base::binary
 #endif
 
 #include SAVE_INCLUDE_ARCHIVE

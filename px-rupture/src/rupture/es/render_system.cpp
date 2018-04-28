@@ -16,8 +16,7 @@ namespace px {
     render_system::~render_system() = default;
 
     render_system::render_system(unsigned int width, unsigned int height)
-        : works(make_uq<renderer>(width, height))
-    {
+        : works(make_uq<renderer>(width, height)) {
     }
 
     // virtual overrides

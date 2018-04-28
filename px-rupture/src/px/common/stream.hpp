@@ -19,20 +19,24 @@ namespace px {
         bool is_loaded() const noexcept {
             return loaded;
         }
+
         void discard() {
             finish_loading();
             loaded = false;
         }
+
         void wait() {
             finish_loading();
             exception_check();
         }
+
         template <typename Operator>
         void load(Operator && function) {
             discard();
             function(userdata);
             loaded = true;
         }
+
         template <typename Operator>
         void load_async(Operator && function) {
             discard();
@@ -47,21 +51,27 @@ namespace px {
                 }
             });
         }
-        data_type const* operator->() const {
+
+        data_type const* operator->() const noexcept {
             return &userdata;
         }
-        data_type * operator->() {
+
+        data_type * operator->() noexcept {
             return &userdata;
         }
-        data_type const* get() const {
+
+        data_type const* get() const noexcept {
             return &userdata;
         }
-        data_type * get() {
+
+        data_type * get() noexcept {
             return &userdata;
         }
-        data_type const& data() const {
+
+        data_type const& data() const noexcept {
             return userdata;
         }
+
         data_type & data() {
             return userdata;
         }
@@ -70,10 +80,11 @@ namespace px {
         ~stream() {
             finish_loading();
         }
+
         stream()
-            : loaded(false)
-        {
+            : loaded(false) {
         }
+
         stream(stream const&) = delete;
         stream & operator=(stream const&) = delete;
 
@@ -84,6 +95,7 @@ namespace px {
             }
             loaded = true;
         }
+
         void exception_check() const {
             if (exc_ptr) {
                 try {

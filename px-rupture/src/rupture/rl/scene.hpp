@@ -24,7 +24,7 @@ namespace px {
 
     class scene final {
     public:
-        void                            assign_sprites(sprite_system * system);
+        void                            assign_sprites(sprite_system * system) noexcept;
         void                            focus(point2 const& location);
         void                            set_enter_event(std::function<void(point2 const&)>);
         void                            set_leave_event(std::function<void(point2 const&)>);

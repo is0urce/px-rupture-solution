@@ -19,22 +19,22 @@ namespace px {
 
     class menu final {
     public:
-        void resize(unsigned int w, unsigned int h);
-        void draw(double delta_time);
-        bool click(unsigned int mouse_button, bool is_down);
-        bool text(unsigned int codepoint);
-        bool hover(unsigned int x, unsigned int y);
-        bool scroll(double horisontal, double vertical);
-        bool takes_input();
-        void toggle_inventory();
-        void rollback();                                        // close active inventory trasfers
+        void                            resize(unsigned int w, unsigned int h);
+        void                            draw(double delta_time);
+        bool                            click(unsigned int mouse_button, bool is_down);
+        bool                            text(unsigned int codepoint);
+        bool                            hover(unsigned int x, unsigned int y);
+        bool                            scroll(double horisontal, double vertical);
+        bool                            takes_input();
+        void                            toggle_inventory();
+        void                            rollback(); // close active inventory trasfers
 
     public:
         ~menu();
         menu(unsigned int w, unsigned int h, environment * game);
 
     private:
-        void combine();
+        void                            combine();
 
     private:
         uq_ptr<director>                nexus;

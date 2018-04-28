@@ -10,16 +10,16 @@ namespace px {
         unsigned int            last_version;
 
     public:
-        bool is_dirty() {
+        bool is_dirty() const noexcept {
             return data && data->version != last_version;
         }
 
-        void notify_cashing() {
+        void notify_cashing() noexcept {
             last_version = data ? data->version : 0;
         }
 
     public:
-        message_control()
+        message_control() noexcept
             : last_version()
             , data(nullptr) {
         }

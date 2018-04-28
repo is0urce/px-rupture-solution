@@ -24,6 +24,7 @@ namespace px {
         b_uint static zero() {
             return b_uint(0);
         }
+
         b_uint static one() {
             return b_uint(1);
         }
@@ -31,12 +32,13 @@ namespace px {
         void increment() {
             increment(0);
         }
+
         void decrement() {
             decrement(0);
         }
 
         void add(b_uint const& n) {
-            auto size = std::max(raw.size(), n.raw.size());
+            const auto size = std::max(raw.size(), n.raw.size());
             raw.resize(size, 0);
 
             I carry = 0;
@@ -52,9 +54,10 @@ namespace px {
                 raw.push_back(carry);
             }
         }
+
         void sub(b_uint const& rh) {
             I carry = 0;
-            size_t size = rh.raw.size(); // less or equal size required!
+            const size_t size = rh.raw.size(); // less or equal size required!
             for (size_t i = 0; i != size; ++i) {
                 D acc = query(i);
                 acc -= carry;
@@ -67,11 +70,12 @@ namespace px {
 
             // if (carry != 0) throw exception
         }
+
         void multiply(b_uint const& n) {
             b_uint result;
 
-            size_t l_size = raw.size();
-            size_t r_size = n.raw.size();
+            const size_t l_size = raw.size();
+            const size_t r_size = n.raw.size();
 
             result.raw.resize(l_size + r_size);
             for (size_t j = 0; j != l_size; ++j) {
@@ -98,19 +102,22 @@ namespace px {
         //		if (raw)
         //	}
         //}
+
         bool less(b_uint const& rh) const {
             return raw.size() <= rh.raw.size() && std::lexicographical_compare(raw.cbegin(), raw.cend(), rh.raw.cbegin(), rh.raw.cend());
         }
-        bool is_zero() const {
+
+        bool is_zero() const noexcept {
             return raw.empty();
         }
+
         container_t const& container() const {
             return raw;
         }
 
     private:
         void increment(size_t index) {
-            size_t size = raw.size();
+            const size_t size = raw.size();
             for (size_t i = index; i != size; ++i) {
                 if (++raw[i] != 0) return;
             }
@@ -118,7 +125,7 @@ namespace px {
         }
 
         void decrement(size_t index) {
-            auto size = raw.size();
+            const auto size = raw.size();
             for (size_t i = index; i != size; ++i) {
                 if (--raw[i] != static_cast<I>(-1)) {
                     if (i + 1 == size) raw.pop_back();
@@ -137,6 +144,7 @@ namespace px {
                 increment(index + 1);
             }
         }
+
         void decrement(size_t index, I carry) {
             D acc = raw[index];
             acc -= carry;
@@ -163,41 +171,45 @@ namespace px {
             add(rh);
             return *this;
         }
+
         b_uint & operator*=(b_uint const& rh) {
             multiply(rh);
             return *this;
         }
+
         b_uint operator+(b_uint rh) const {
             rh.add(*this);
             return rh;
         }
+
         b_uint operator*(b_uint rh) const {
             rh.multiply(*this);
             return rh;
         }
 
     public:
-        b_uint() {}
-        b_uint(unsigned long long start)
-        {
+        b_uint() = default;
+
+        b_uint(unsigned long long start) {
             while (start != 0) {
                 raw.push_back(start % 256);
                 start /= 256;
             }
         }
+
         b_uint(b_uint && that)
-            : raw(std::move(that.raw))
-        {
+            : raw(std::move(that.raw)) {
         }
+
         b_uint(b_uint const& that)
-            : raw(that.raw)
-        {
+            : raw(that.raw) {
         }
 
         b_uint & operator=(b_uint const& lh) {
             raw = lh.raw;
             return *this;
         }
+
         b_uint & operator=(b_uint && lh) {
             raw = std::move(lh.raw);
             return *this;

@@ -33,8 +33,7 @@ namespace px {
         virtual ~player_component() override = default;
 
         player_component()
-            : seed(0)
-        {
+            : seed(0) {
         }
 
     private:

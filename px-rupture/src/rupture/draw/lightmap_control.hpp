@@ -13,7 +13,7 @@ namespace px {
             return current && last && (dirty || current->version != prev_version);
         }
 
-        void notify_cashing() {
+        void notify_cashing() noexcept {
             dirty = false;
             prev_version = current ? current->version : ((unsigned int)-1);
         }
@@ -64,7 +64,7 @@ namespace px {
         bool                    dirty;
 
     public:
-        lightmap_control()
+        lightmap_control() noexcept
             : current(nullptr)
             , dirty(true)
             , last(0)

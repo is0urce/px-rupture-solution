@@ -19,6 +19,7 @@ namespace px::rl {
         bool is_expired() const noexcept {
             return duration <= 0;
         }
+
         bool is_hidden() const noexcept {
             return hidden;
         }
@@ -26,6 +27,7 @@ namespace px::rl {
         void set_duration(Integral remaining) noexcept {
             duration = remaining;
         }
+
         void set_hidden(bool flag) noexcept {
             hidden = flag;
         }
@@ -47,10 +49,10 @@ namespace px::rl {
 
     public:
         ~buff() = default;
+
         buff()
             : duration(0)
-            , hidden(false)
-        {
+            , hidden(false) {
         }
 
     private:

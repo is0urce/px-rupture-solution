@@ -24,6 +24,7 @@ namespace px {
         void assign_scene(scene * world) noexcept {
             stage = world;
         }
+
         uq_ptr<npc_component> make() {
             return pool.make_uq();
         }

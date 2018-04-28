@@ -48,12 +48,11 @@ namespace px::rl {
 
     public:
         constexpr standing(faction_type faction_id) noexcept
-            : faction(faction_id)
-        {
+            : faction(faction_id) {
         }
+
         constexpr standing() noexcept
-            : faction(0)
-        {
+            : faction(0) {
         }
 
     private:

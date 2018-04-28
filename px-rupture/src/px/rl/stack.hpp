@@ -26,7 +26,7 @@ namespace px::rl {
 
             if (source.m_stack < n) n = source.m_stack;
 
-            stack_type total = m_stack + n;
+            const stack_type total = m_stack + n;
 
             if (m_max_stack == 0 || total <= m_max_stack) {
                 m_stack = total;
@@ -40,7 +40,7 @@ namespace px::rl {
         }
 
         stack_type increase(stack_type n) {
-            UInteger total = m_stack + n;
+            const stack_type total = m_stack + n;
             return m_stack = (total < m_max_stack || m_max_stack == 0) ? total : m_max_stack;
         }
 
@@ -103,13 +103,12 @@ namespace px::rl {
     public:
         stack() noexcept
             : m_stack(1)
-            , m_max_stack(1)
-        {
+            , m_max_stack(1) {
         }
+
         stack(UInteger stack, UInteger max) noexcept
             : m_stack(stack)
-            , m_max_stack(max)
-        {
+            , m_max_stack(max) {
         }
 
     private:

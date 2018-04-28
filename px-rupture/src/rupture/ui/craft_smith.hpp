@@ -38,8 +38,7 @@ namespace px {
         virtual ~craft_smith() = default;
         craft_smith(environment * context)
             : craft_station(context)
-            , recipe_current(nullptr)
-        {
+            , recipe_current(nullptr) {
             fill_recipes();
         }
 

@@ -24,7 +24,7 @@ namespace px {
     // create main window from configuration
     glfw_window create_window(configuration const& config, char const* name, GLFWmonitor * monitor) {
         if (monitor && config.fullscreen) {
-            auto *const mode = glfwGetVideoMode(monitor);
+            auto const *const  mode = glfwGetVideoMode(monitor);
             glfwWindowHint(GLFW_RED_BITS, mode->redBits);
             glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
             glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
@@ -47,10 +47,10 @@ namespace px {
         // load settings
 
         auto config = configuration::from_document(document::load_document(settings::configuration_path));
-        auto binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
+        auto const binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
 
-        auto monitor = glfwGetPrimaryMonitor();
-        auto *const mode = glfwGetVideoMode(monitor);
+        auto const monitor = glfwGetPrimaryMonitor();
+        auto const *const mode = glfwGetVideoMode(monitor);
         if (config.fullscreen) {
             config.width = mode->width;
             config.height = mode->height;
@@ -61,7 +61,6 @@ namespace px {
         glfw_window win = create_window(config, settings::application_name, config.fullscreen ? monitor : nullptr);
         create_context(win, config.vsync);
         shell game(config.width, config.height);
-
 
         // register events
 

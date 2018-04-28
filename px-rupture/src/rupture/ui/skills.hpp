@@ -30,7 +30,7 @@ namespace px::ui {
             if (auto target = context->possessed()) {
                 if (auto skillset = target->qlink<character_component, body_component>()) {
 
-                    const float screen_height = ImGui::GetIO().DisplaySize.y;
+                    float const screen_height = ImGui::GetIO().DisplaySize.y;
                     ImGui::SetNextWindowPos({ 16, screen_height - 50 }, ImGuiCond_Always);
 
                     ImGui::Begin("##skillset", nullptr
@@ -74,8 +74,8 @@ namespace px::ui {
                                 ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 500);
                                 ImGui::TextWrapped("%s", state.description().c_str());
                                 ImGui::PopTextWrapPos();
-                                auto cost = state.cost();
-                                auto cd = state.cooldown_duration();
+                                auto const cost = state.cost();
+                                auto const cd = state.cooldown_duration();
                                 if (cost != 0) {
                                     ImGui::Text("cost: %d", cost);
                                 }

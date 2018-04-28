@@ -139,8 +139,7 @@ namespace px {
             , m_min_range(static_cast<Integer>(-1))
             , m_max_range(static_cast<Integer>(-1))
             , m_cost(0)
-            , m_hostile(false)
-        {
+            , m_hostile(false) {
         }
 
     private:

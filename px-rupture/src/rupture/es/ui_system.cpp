@@ -16,8 +16,7 @@ namespace px {
     ui_system::~ui_system() = default;
 
     ui_system::ui_system(unsigned int width, unsigned int height, environment * game)
-        : works(make_uq<menu>(width, height, game))
-    {
+        : works(make_uq<menu>(width, height, game)) {
     }
 
     // virtual overloads

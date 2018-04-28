@@ -14,8 +14,7 @@ namespace px {
     // matrix with varying size
 
     template <typename Element>
-    class matrix2<Element>
-    {
+    class matrix2<Element> {
     public:
         using element_type = Element;
 
@@ -211,37 +210,36 @@ namespace px {
     public:
         matrix2()
             : m_width(0)
-            , m_height(0)
-        {
+            , m_height(0) {
         }
+
         matrix2(size_t w, size_t h)
-            : m_width(w), m_height(h)
-        {
+            : m_width(w), m_height(h) {
             m_data.resize(w * h);
         }
+
         matrix2(size_t w, size_t h, element_type const& initial)
             : m_width(w)
-            , m_height(h)
-        {
+            , m_height(h) {
             m_data.assign(w * h, initial);
         }
+
         template <typename Generator>
         matrix2(size_t w, size_t h, Generator && op, int /*execution_option*/)
-            : matrix2(w, h)
-        {
+            : matrix2(w, h) {
             generate(std::forward<Generator>(op));
         }
+
+        matrix2(matrix2 && that)
+            : matrix2() {
+            swap(that);
+        }
+        matrix2 & operator=(matrix2 && that) {
+            swap(that);
+        }
+
         matrix2(matrix2 const&) = delete;
         matrix2 & operator=(matrix2 const&) = delete;
-        matrix2(matrix2 && that)
-            : matrix2()
-        {
-            swap(that);
-        }
-        matrix2 & operator=(matrix2 && that)
-        {
-            swap(that);
-        }
 
     private:
         std::vector<element_type>   m_data;

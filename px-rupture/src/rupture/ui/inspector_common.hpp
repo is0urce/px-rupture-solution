@@ -18,7 +18,7 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~inspector_common() override = default;
+        virtual ~inspector_common() noexcept override = default;
 
     protected:
         void combine_status(const char * label, ImVec2 const& pos, ImVec2 const& size, body_component const& body) {
@@ -82,18 +82,18 @@ namespace px::ui {
 
         // entity label in status
         void combine_name(body_component const& body) {
-            auto level = body.level();
+            auto const level = body.level();
             ImGui::Text(body.name().c_str());
   
             if (level != 0) {
                 ImGui::SameLine();
-                ImGui::Text(std::string{ " (lvl " + std::to_string(level) + ")" }.c_str());
+                ImGui::Text(std::string(" (lvl " + std::to_string(level) + ")").c_str());
             }
         }
 
         void combine_effect(body_component::buff_type const& buff, rl::effect efx, std::string name) {
             if (buff.has_effect(efx)) {
-                float value = static_cast<float>(buff.accumulate({ efx }).magnitude0);
+                float const value = static_cast<float>(buff.accumulate({ efx }).magnitude0);
                 ImGui::Text(format_effect_name(name, value).c_str());
             }
         }
@@ -103,7 +103,7 @@ namespace px::ui {
         }
 
         std::string format_effect_name(std::string name, float value) const {
-            int floor = static_cast<int>(value);
+            int const floor = static_cast<int>(value);
             return name + ": " + std::to_string(floor);
         }
     };

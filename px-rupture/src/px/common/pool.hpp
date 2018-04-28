@@ -201,12 +201,10 @@ namespace px {
             }
         public:
             ptr_deleter() noexcept
-                : ptr_deleter(nullptr)
-            {
+                : ptr_deleter(nullptr) {
             }
             ptr_deleter(pool * current) noexcept
-                : source(current)
-            {
+                : source(current) {
             }
         private:
             pool * source;

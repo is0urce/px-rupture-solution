@@ -21,7 +21,7 @@ namespace px {
             library[block_id] = { block_id, name, mass };
         }
 
-        void assign_sprites(sprite_system * system) {
+        void assign_sprites(sprite_system * system) noexcept {
             sprites = system;
         }
 

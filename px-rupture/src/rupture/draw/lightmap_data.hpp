@@ -17,7 +17,7 @@ namespace px {
         unsigned int    version;
 
     public:
-        lightmap_data()
+        lightmap_data() noexcept
             : ox(0)
             , oy(0)
             , width(0)

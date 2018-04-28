@@ -22,9 +22,9 @@ namespace px {
 
         template <typename Plot>
         static void line(int x0, int y0, int x1, int y1, Plot && fn) {
-            int dx = std::abs(x1 - x0);
-            int dy = std::abs(y1 - y0);
-            int steps = std::max(dx, dy) + 1;
+            int const dx = std::abs(x1 - x0);
+            int const dy = std::abs(y1 - y0);
+            int const steps = std::max(dx, dy) + 1;
 
             // select resolution
             if (dx >= dy) {

@@ -34,7 +34,7 @@ namespace px {
         return works->spawn(std::forward<uq_ptr<composite_component>>(ptr));
     }
 
-    void scene::assign_sprites(sprite_system * system) {
+    void scene::assign_sprites(sprite_system * system) noexcept {
         works->assign_sprites(system);
     }
 

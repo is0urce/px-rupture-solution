@@ -180,7 +180,7 @@ namespace px {
             diffuse.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
             light.setup(GL_RGBA32F, GL_RGBA, screen_width, screen_height);
 
-            for (auto && batch : sprites) {
+            for (auto & batch : sprites) {
                 setup_batch(batch);
             }
 
@@ -217,14 +217,14 @@ namespace px {
         void prepare_resources(double delta_time) {
             // popups
             if (msg_ctrl.is_dirty()) {
-                const float lm = 0.25f; // lines per tile multiplier
-                const float mm = lm / 64.0f / font_size; // one / freetype pixel-per-unit / font_size / lines-per-tile = multiplier for font-bitmap to world-space mapping
+                float const lm = 0.25f; // lines per tile multiplier
+                float const mm = lm / 64.0f / font_size; // one / freetype pixel-per-unit / font_size / lines-per-tile = multiplier for font-bitmap to world-space mapping
 
                 glyphs.clear();
                 for (auto const& popup : msg_ctrl.data->messages) {
-                    const float center = 0.5f + static_cast<float>(popup.position.x());
-                    const float baseline = 0.5f + lm + static_cast<float>(popup.position.y() + popup.lift * lm);
-                    const glm::vec4 tint = { popup.msg.tint.R, popup.msg.tint.G, popup.msg.tint.B, popup.msg.tint.A };
+                    float const center = 0.5f + static_cast<float>(popup.position.x());
+                    float const baseline = 0.5f + lm + static_cast<float>(popup.position.y() + popup.lift * lm);
+                    glm::vec4 const tint = { popup.msg.tint.R, popup.msg.tint.G, popup.msg.tint.B, popup.msg.tint.A };
 
                     long length = 0;
                     string::enumerate_utf8(popup.msg.text, [&](auto codepoint) {
@@ -256,7 +256,7 @@ namespace px {
         }
 
         void fill_uniforms(double delta_time) {
-            double turn_time = std::min(1.0, delta_time * 5.0);
+            double const turn_time = std::min(1.0, delta_time * 5.0);
             camera.load<camera_uniform>(GL_STREAM_DRAW, {
                 { scale, scale * screen_aspect },
                 { 0.5f, 0.5f },
@@ -279,7 +279,7 @@ namespace px {
             // font bitmap
             if (popup_font.updated()) {
                 unsigned int atlas_width, atlas_height;
-                void const* bitmap = popup_font.download(atlas_width, atlas_height);
+                void const* const bitmap = popup_font.download(atlas_width, atlas_height);
                 popups.texture.image2d(GL_RED, GL_RED, static_cast<GLsizei>(atlas_width), static_cast<GLsizei>(atlas_height), 0, GL_UNSIGNED_BYTE, bitmap);
             }
         }

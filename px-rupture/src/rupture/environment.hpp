@@ -34,20 +34,21 @@ namespace px {
         : public core
     {
     public:
-        point2                              area() const noexcept;              // hovered point
-        transform_component *               target() noexcept;                  // hover point in world
-        void                                target(point2 offset);              // hovered unit
+        point2                              area() const noexcept;                                                  // hovered point
+        transform_component *               target() noexcept;                                                      // hover point in world
+        void                                target(point2 offset);                                                  // hovered unit
         bool                                is_running() const noexcept;
-        void                                shutdown();                         // close game
-        void                                step(point2 const& movement);       // move player
-        void                                advance();                          // move player to target
-        bool                                action(unsigned int action_idx);    // use skill
-        void                                use(unsigned int mods);             // use object
+        void                                shutdown();                                                             // close game
+        void                                step(point2 const& movement);                                           // move player
+        void                                advance();                                                              // move player to target
+        bool                                action(unsigned int action_idx);                                        // use skill
+        void                                use(unsigned int mods);                                                 // use object
         void                                function_edit(std::uint32_t idx);
         void                                start();
         void                                end();
         void                                clear();
         transform_component *               possessed() noexcept;                                                   // get current player
+        bool                                has_control() const;                                                    // returns true if player can act now
         void                                start_turn();                                                           // clear from previous turn
         void                                end_turn(unsigned int turns);                                           // end player turn and sart world processing
         bool                                turn_passed() const noexcept;                                           // true if it's the world processing stage
@@ -94,7 +95,6 @@ namespace px {
         void                                load_scene(point2 const& cell);
         void                                prewarm();                          // start routine
         transform_component *               create_player();                    // start routine
-        bool                                has_control() const;                // returns true if player can act now
 
     protected:
         notification_system                 messages;

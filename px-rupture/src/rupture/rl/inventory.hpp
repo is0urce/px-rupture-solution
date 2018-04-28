@@ -35,7 +35,7 @@ namespace px::rl {
         item_ptr unacquire(size_t idx, item::stack_type n) {
             item_ptr result;
             if (item * current = get(idx)) {
-                auto count = current->count();
+                const auto count = current->count();
                 if (count >= n) {
                     if (count == n) {
                         result = remove(idx);

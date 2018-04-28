@@ -261,12 +261,15 @@ namespace px {
     transform_component	* environment::possessed() noexcept {
         return player;
     }
+
     transform_component	* environment::target() noexcept {
         return target_unit;
     }
+
     point2 environment::area() const noexcept {
         return target_area;
     }
+
     void environment::target(point2 offset) {
         target_hover = offset;
         lock_target();
@@ -353,7 +356,7 @@ namespace px {
     }
 
     rl::hit_result environment::hit(body_component const& source, body_component const& target) {
-        bool diminish = source.linked<transform_component>() == player;
+        bool const diminish = source.linked<transform_component>() == player;
         return mechanic::hit(source, target, diminish, rng);
     }
 
@@ -362,7 +365,7 @@ namespace px {
     }
 
     int environment::damage(body_component & target, int dmg, rl::damage_type source) {
-        int damage_done = mechanic::damage(target, dmg, source);
+        int const damage_done = mechanic::damage(target, dmg, source);
         // send popup notification
         if (auto pawn = target.linked<transform_component>()) {
             popup(std::to_string(damage_done), pawn == player ? 0xff0000 : 0xffff00, pawn->position());

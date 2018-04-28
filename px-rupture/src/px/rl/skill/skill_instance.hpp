@@ -39,7 +39,7 @@ namespace px::rl {
         }
 
     public:
-        virtual ~skill_instance() = default;
+        virtual ~skill_instance() override = default;
 
         skill_instance()
             : m_base(nullptr) {

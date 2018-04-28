@@ -40,8 +40,8 @@ namespace px {
             auto result = factory.request();
 
             // composite unit props
-            std::string name = doc.value("name", std::string{ "" });
-            persistency lifetime = static_cast<persistency>(doc.value("persistency", static_cast<long long>(persistency::serialized)));
+            std::string const name = doc.value("name", std::string(""));
+            persistency const lifetime = static_cast<persistency>(doc.value("persistency", static_cast<long long>(persistency::serialized)));
             result->set_name(name);
             result->set_persistency(lifetime);
 
@@ -81,9 +81,9 @@ namespace px {
             body->join_faction(node.value("faction", 0));
 
             // mass
-            bool is_transparent = node.value("transparent", false);
-            unsigned long long blocking_mask = node.value("traversable", 0);
-            unsigned long long movement_mask = node.value("movement", 0);
+            bool const is_transparent = node.value("transparent", false);
+            unsigned long long const blocking_mask = node.value("traversable", 0);
+            unsigned long long const movement_mask = node.value("movement", 0);
             body->blocking().make_transparent(is_transparent);
             body->blocking().make_traversable(body_component::mass_type::bitset_type{ blocking_mask });
             body->movement().make_traversable(body_component::mass_type::bitset_type{ movement_mask });
@@ -91,12 +91,12 @@ namespace px {
             // resources
             auto hp_node = node.find("hp");
             if (hp_node != node.end()) {
-                int hp = *hp_node;
+                const int hp = *hp_node;
                 body->health().emplace(hp, hp);
             }
             auto mp_node = node.find("mp");
             if (mp_node != node.end()) {
-                int mp = *mp_node;
+                const int mp = *mp_node;
                 body->energy().emplace(mp, mp);
             }
 
@@ -117,7 +117,7 @@ namespace px {
         template <typename Document>
         static void load_container(Document && container_node, builder & factory) {
             auto container = factory.add_container();
-            for (auto const & item_node : container_node["items"]) {
+            for (auto const& item_node : container_node["items"]) {
                 container->add(make_item(item_node));
             }
         }
@@ -193,17 +193,26 @@ namespace px {
             auto item = make_uq<rl::item>();
             load_entity(node, *item);
 
-            load_effect(node, *item, "damage", rl::effect::damage);
-            load_effect(node, *item, "critical", rl::effect::critical);
-            load_effect(node, *item, "accuracy", rl::effect::accuracy);
-            load_effect(node, *item, "dodge", rl::effect::dodge);
-            load_effect(node, *item, "mp_regen", rl::effect::mp_regen);
-            load_effect(node, *item, "hp_regen", rl::effect::hp_regen);
+            load_effect_real(node, *item, "armor", rl::effect::armor);
+            load_effect_real(node, *item, "damage", rl::effect::damage);
+            load_effect_real(node, *item, "vitality", rl::effect::vitality);
+
+            load_effect_real(node, *item, "accuracy", rl::effect::accuracy);
+            load_effect_real(node, *item, "critical", rl::effect::critical);
+            load_effect_real(node, *item, "dodge", rl::effect::dodge);
+            load_effect_real(node, *item, "resistance", rl::effect::resistance);
+
+            load_effect_real(node, *item, "hp_bonus", rl::effect::hp_bonus);
+            load_effect_real(node, *item, "mp_bonus", rl::effect::mp_bonus);
+            load_effect_real(node, *item, "hp_regen", rl::effect::hp_regen);
+            load_effect_real(node, *item, "mp_regen", rl::effect::mp_regen);
+
+            load_effect_bool(node, *item, "useable", rl::effect::useable);
 
             // ingredient properties
             auto ingredient_node = node.find("ingredient");
             if (ingredient_node != node.end()) {
-                rl::craft_activity workshop = ingredient_node->value("activity", { "" }) == "blacksmith" ? rl::craft_activity::blacksmith : rl::craft_activity::alchemy;
+                rl::craft_activity const workshop = ingredient_node->value("activity", { "" }) == "blacksmith" ? rl::craft_activity::blacksmith : rl::craft_activity::alchemy;
                 item->add(rl::item::enhancement_type::real(rl::effect::ingredient_power, static_cast<int>(workshop), ingredient_node->value("power", 0.0f)));
                 item->add(rl::item::enhancement_type::integral(rl::effect::essence, 0x00, ingredient_node->value("essence", 1)));
             }
@@ -217,10 +226,18 @@ namespace px {
 
         // fill effect props
         template <typename Document>
-        static void load_effect(Document && node, rl::item & obj, std::string const& key, rl::effect effect_id) {
+        static void load_effect_real(Document && node, rl::item & obj, std::string const& key, rl::effect effect_id) {
             auto value_node = node.find(key);
             if (value_node != node.end()) {
                 obj.add(rl::item::enhancement_type::real(effect_id, 0x00, *value_node));
+            }
+        }
+
+        // fill effect props
+        template <typename Document>
+        static void load_effect_bool(Document && node, rl::item & obj, std::string const& key, rl::effect effect_id) {
+            if (node.value(key, false)) {
+                obj.add(rl::item::enhancement_type::zero(effect_id, 0x00));
             }
         }
     };

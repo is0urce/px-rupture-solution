@@ -104,8 +104,7 @@ namespace px::rl {
     public:
         constexpr traverse_options() noexcept = default;
         constexpr traverse_options(bitset_type layers) noexcept
-            : bits(layers)
-        {
+            : bits(layers) {
         }
 
     private:

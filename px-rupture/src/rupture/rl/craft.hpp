@@ -45,21 +45,15 @@ namespace px::rl {
         }
 
         uq_ptr<rl::item> equipment(craft_recipe const& recipe, task_type const& task) {
-            int rarity = roll_rarity();
-
-            auto essence = calculate_essence(task);
-            auto reagent_power = calculate_power(task).magnitude0;
-
-            reagent_power *= 1.0 + std::pow(1.1, 1 + rarity);
-
-            auto power_raw = reagent_power * recipe.power_raw;
-            auto power_enh = reagent_power * recipe.power_enhancement;
-
-            auto name = generate_name(recipe, essence, rarity);
+            const auto rarity = roll_rarity();
+            const auto essence = calculate_essence(task);
+            const auto reagent_power = calculate_power(task).magnitude0 * (1.0 + std::pow(1.1, 1 + rarity));
+            const auto power_raw = reagent_power * recipe.power_raw;
+            const auto power_enh = reagent_power * recipe.power_enhancement;
 
             auto item = make_uq<rl::item>();
 
-            item->setup_entity(name, recipe.tag, recipe.description);
+            item->setup_entity(generate_name(recipe, essence, rarity), recipe.tag, recipe.description);
 
             enhance(*item, essence, power_enh);
             if (recipe.equipment_slot != rl::equipment::not_valid) item->add(enhancement_type::zero(effect::equipment, static_cast<integer_type>(recipe.equipment_slot)));
@@ -79,8 +73,8 @@ namespace px::rl {
         }
 
         uq_ptr<rl::item> potion(task_type const& task) {
-            auto essence = calculate_essence(task);
-            auto reagent_power = calculate_power(task).magnitude0;
+            const auto essence = calculate_essence(task);
+            const auto reagent_power = calculate_power(task).magnitude0;
 
             return solution("potion", essence, reagent_power);
         }

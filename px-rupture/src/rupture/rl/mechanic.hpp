@@ -29,7 +29,7 @@ namespace px {
 
             if (std::uniform_real_distribution<double>{}(rng) < score) {
                 result = rl::hit_result::connects;
-                double critical = source.accumulate({ rl::effect::critical }).magnitude0;
+                const auto critical = source.accumulate({ rl::effect::critical }).magnitude0;
                 if (std::uniform_real_distribution<double>{}(rng) < critical) {
                     result = rl::hit_result::critical;
                 }
@@ -45,7 +45,7 @@ namespace px {
 
         template <typename T>
         static std::tuple<float, rl::damage_type> dps(T const& source) {
-            auto efx = source.accumulate({ rl::effect::damage });
+            const auto efx = source.accumulate({ rl::effect::damage });
             return { static_cast<float>(efx.magnitude0), static_cast<rl::damage_type>(efx.sub) };
         }
 

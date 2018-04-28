@@ -109,8 +109,7 @@ namespace px {
 
     public:
         terrain_surface()
-            : current_cell(0, 0)
-        {
+            : current_cell(0, 0) {
         }
 
     private:

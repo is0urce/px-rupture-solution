@@ -21,9 +21,11 @@ namespace px {
         static constexpr size_t width() noexcept {
             return W;
         }
+
         static constexpr size_t height() noexcept {
             return H;
         }
+
         static constexpr size_t size() noexcept {
             return W * H;
         }
@@ -166,17 +168,19 @@ namespace px {
 
     public:
         matrix2() = default;
-        matrix2(element_type const& initial)
-        {
+
+        matrix2(element_type const& initial) {
             fill(initial);
         }
+
         template <typename Generator>
-        matrix2(Generator && op, int /*execution_option*/)
-        {
+        matrix2(Generator && op, int /*execution_option*/) {
             generate(std::forward<Generator>(op));
         }
+
         matrix2(matrix2 const&) = delete;
         matrix2 & operator=(matrix2 const&) = delete;
+
         //matrix2(matrix2 &&) = default;
         //matrix2 & operator=(matrix2 &&) = default;
 
