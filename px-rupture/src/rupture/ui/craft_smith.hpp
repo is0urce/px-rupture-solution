@@ -69,16 +69,16 @@ namespace px {
         }
 
     private:
-        rl::item const* execute_craft() {
-            rl::item const* result = nullptr;
+        void execute_smith() {
             if (can_execute()) {
                 auto item = generator.create(*recipe_current, task);
-                result = item.get();
-                container->acquire(std::move(item));
                 consume_items();
                 recipe_current = nullptr;
+                game->close_workshop();
+                game->popup("+ " + item->name(), { 1, 1, 1 });
+                container->acquire(std::move(item));
+                game->end_turn(1);
             }
-            return result;
         }
 
         void fill_recipes() {
@@ -132,12 +132,7 @@ namespace px {
             ImGui::EndChild();
             ImGui::BeginChild("buttons");
             if (ImGui::Button("smith", { 334, 32 })) {
-                if (can_execute()) {
-                    auto item = execute_craft();
-                    game->close_workshop();
-                    game->popup("+ " + item->name(), { 1, 1, 1 });
-                    game->end_turn(1);
-                }
+                execute_smith();
             }
             if (ImGui::Button("close", { 334, 32 })) {
                 cancel_smith();
