@@ -12,9 +12,9 @@
 
 #include <px/memory/memory.hpp>
 
-#include <functional>   // for hash
+#include <functional>   // for std::hash
 #include <map>
-#include <string>       // for tags
+#include <string>       // for std::string tags
 #include <vector>
 
 namespace px::rl {
@@ -53,7 +53,7 @@ namespace px::rl {
 
             auto item = make_uq<rl::item>();
 
-            item->setup_entity(generate_name(recipe, essence, rarity), recipe.tag, recipe.description);
+            item->setup_entity(generate_equipment_name(recipe, essence, rarity), recipe.tag, recipe.description);
 
             enhance(*item, essence, power_enh);
             if (recipe.equipment_slot != rl::equipment::not_valid) item->add(enhancement_type::zero(effect::equipment, static_cast<integer_type>(recipe.equipment_slot)));
@@ -76,12 +76,12 @@ namespace px::rl {
             const auto essence = calculate_essence(task);
             const auto reagent_power = calculate_power(task).magnitude0;
 
-            return solution("potion", essence, reagent_power);
+            return solution(select_random(name_flack), essence, reagent_power);
         }
 
         uq_ptr<rl::item> solution(std::string const& name, integer_type essence, real_type power) {
             auto item = make_uq<rl::item>();
-            item->setup_entity(name_potion(name, essence), "i_potion#" + std::to_string(essence) + "_" + std::to_string(power));
+            item->setup_entity(generate_potion_name(name, essence), "i_potion#" + std::to_string(essence) + "_" + std::to_string(power));
             item->make_stacking();
 
             item->add(enhancement_type::zero(effect::useable));
@@ -113,25 +113,26 @@ namespace px::rl {
             return std::hash<I>{}(x);
         }
 
-        static unsigned int hash_mod(unsigned int x, unsigned int modulo) {
+        template <typename I>
+        static I hash_mod(I x, I modulo) {
             return hash(x) % modulo;
         }
 
     public:
         craft()
             : context(nullptr) {
-            name_prefix = {
+            name_equipment_prefix = {
                 "boris",
                 "ivan",
                 "nestor",
                 "executor"
             };
-            name_postfix = {
+            name_equipment_postfix = {
                 "slashworks",
                 "intrigue",
                 "equilibriub",
                 "abyss" };
-            name_substance = { 
+            name_substance = {
                 { 3, "numidium" }
             };
             name_color = {
@@ -157,6 +158,28 @@ namespace px::rl {
                 "violet",
                 "white",
                 "yellow"
+            };
+            name_flack = {
+                "brew",
+                "draught",
+                "elixir",
+                "eyedrops",
+                "flack",
+                "fluid",
+                "juice",
+                "lotion",
+                "nostrum",
+                "oil",
+                "ointment",
+                "pastil",
+                "philter",
+                "pill",
+                "potion",
+                "remedy",
+                "serum",
+                "tonic",
+                "vial",
+                "water"
             };
         }
 
@@ -212,11 +235,11 @@ namespace px::rl {
             return quality;
         }
 
-        std::string name_potion(std::string const& base, integer_type essence) const {
-            return select_name(name_color, essence) + " " + base;
+        std::string generate_potion_name(std::string const& base, integer_type essence) const {
+            return select(name_color, essence) + " " + base;
         }
 
-        std::string generate_name(rl::craft_recipe const& recipe, integer_type essence, int rarity) const {
+        std::string generate_equipment_name(rl::craft_recipe const& recipe, integer_type essence, int rarity) {
             std::string result = name_base(recipe);
             result = name_material(result, essence);
             result = name_attributes(result, essence);
@@ -236,27 +259,35 @@ namespace px::rl {
         }
 
         std::string name_attributes(std::string name, integer_type essence) const {
-            return name + " of " + select_name(name_postfix, essence);
+            return name + " of " + select(name_equipment_postfix, essence);
         }
 
-        std::string name_rarity(std::string name, int rarity) const {
+        std::string name_rarity(std::string name, int rarity) {
             if (rarity != 0) {
-                size_t n = context->roll(0, static_cast<int>(name_prefix.size() - 1));
-                return name_prefix[n] + " " + name;
+                return select_random(name_equipment_prefix) + " " + name;
             }
             return name;
         }
 
-        static std::string select_name(std::vector<std::string> const& names, integer_type essence) {
+        // select one of names based on hashed essence value
+        std::string select(std::vector<std::string> const& names, integer_type essence) const {
             if (names.empty()) throw std::runtime_error("craft::select(names, essence) - names is empty");
-            return names[hash_mod(essence, static_cast<unsigned int>(names.size() - 1))];
+            return names[hash_mod(essence, static_cast<integer_type>(names.size() - 1))];
+        }
+
+        // select random item
+        std::string select_random(std::vector<std::string> const& names) {
+            if (names.empty()) throw std::runtime_error("craft::select(names, essence) - names is empty");
+            size_t n = context->roll(0, static_cast<int>(names.size() - 1));
+            return names[n];
         }
 
     private:
         std::map<integer_type, std::string> name_substance;
-        std::vector<std::string>            name_postfix;
-        std::vector<std::string>            name_prefix;
+        std::vector<std::string>            name_equipment_postfix;
+        std::vector<std::string>            name_equipment_prefix;
         std::vector<std::string>            name_color;
+        std::vector<std::string>            name_flack;
         environment *                       context;
     };
 }
