@@ -44,12 +44,17 @@ namespace px {
         }
 
     public:
-        virtual ~craft_station() = default;
+        virtual ~craft_station() override = default;
 
         craft_station(environment * context)
             : game(context)
             , container(nullptr) {
             generator.assign_environment(context);
+        }
+
+    protected:
+        virtual uq_ptr<rl::item> execute() {
+            return nullptr;
         }
 
     protected:

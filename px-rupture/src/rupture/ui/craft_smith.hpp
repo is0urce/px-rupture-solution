@@ -28,14 +28,20 @@ namespace px {
         : public craft_station<rl::craft_activity::blacksmith>
     {
     public:
-        void cancel_task() {
+        void cancel_smith() {
             release_items();
             task.close();
             recipe_current = nullptr;
+            game->close_workshop();
+        }
+
+        bool can_execute() const {
+            return container && task.is_complete() && recipe_current;
         }
 
     public:
-        virtual ~craft_smith() = default;
+        virtual ~craft_smith() override = default;
+
         craft_smith(environment * context)
             : craft_station(context)
             , recipe_current(nullptr) {
@@ -65,7 +71,7 @@ namespace px {
     private:
         rl::item const* execute_craft() {
             rl::item const* result = nullptr;
-            if (container && task.is_complete() && recipe_current) {
+            if (can_execute()) {
                 auto item = generator.create(*recipe_current, task);
                 result = item.get();
                 container->acquire(std::move(item));
@@ -126,7 +132,7 @@ namespace px {
             ImGui::EndChild();
             ImGui::BeginChild("buttons");
             if (ImGui::Button("smith", { 334, 32 })) {
-                if (task.is_complete() && recipe_current) {
+                if (can_execute()) {
                     auto item = execute_craft();
                     game->close_workshop();
                     game->popup("+ " + item->name(), { 1, 1, 1 });
@@ -134,8 +140,7 @@ namespace px {
                 }
             }
             if (ImGui::Button("close", { 334, 32 })) {
-                cancel_task();
-                game->close_workshop();
+                cancel_smith();
             }
             ImGui::EndChild();
             ImGui::EndGroup();

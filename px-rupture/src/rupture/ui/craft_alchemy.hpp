@@ -13,12 +13,18 @@ namespace px {
         : public craft_station<rl::craft_activity::alchemy>
     {
     public:
-        void cancel_task() {
+        void cancel_alchemy() {
             release_items();
+            game->close_workshop();
+        }
+
+        bool can_execute() const {
+            return container && task.is_complete();
         }
 
     public:
-        virtual ~craft_alchemy() = default;
+        virtual ~craft_alchemy() override = default;
+
         craft_alchemy(environment * context)
             : craft_station(context) {
             reset_recipe();
@@ -42,26 +48,29 @@ namespace px {
             combine_inventory(inventory_position, { window_width, window_height });
         }
 
+        virtual uq_ptr<rl::item> execute() override {
+            uq_ptr<rl::item> result;
+            if (can_execute()) {
+                result = generator.create_potion(task);
+                consume_items();
+                reset_recipe();
+            }
+            return result;
+        }
+
     private:
         void reset_recipe() {
             task.reset(3); // three reagent recipes
         }
 
-        void execute_craft() {
-            if (container && task.is_complete()) {
-                auto item = generator.create_potion(task);
-                consume_items();
-                reset_recipe();
+        void execute_alchemy() {
+            if (can_execute()) {
+                auto item = execute();
                 game->close_workshop();
                 game->popup("+ " + item->name(), { 1, 1, 1 });
                 container->acquire(std::move(item));
                 game->end_turn(1);
             }
-        }
-
-        void cancel_craft() {
-            release_items();
-            game->close_workshop();
         }
 
         void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
@@ -76,10 +85,10 @@ namespace px {
 
             ImGui::BeginChild("buttons");
             if (ImGui::Button("brew", { 334, 32 })) {
-                execute_craft();
+                execute_alchemy();
             }
             if (ImGui::Button("close", { 334, 32 })) {
-                cancel_craft();
+                cancel_alchemy();
             }
             ImGui::EndChild();
             ImGui::EndGroup();

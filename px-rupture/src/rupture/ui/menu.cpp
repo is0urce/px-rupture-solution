@@ -100,8 +100,8 @@ namespace px {
     }
 
     void menu::toggle_inventory() {
-        smith_panel->cancel_task();
-        alchemy_panel->cancel_task();
+        smith_panel->cancel_smith();
+        alchemy_panel->cancel_alchemy();
         inventory_open = !inventory_open;
     }
 
@@ -112,8 +112,8 @@ namespace px {
     }
 
     void menu::rollback() {
-        smith_panel->cancel_task();
-        alchemy_panel->cancel_task();
+        smith_panel->cancel_smith();
+        alchemy_panel->cancel_alchemy();
         inventory_open = false;
     }
 }
