@@ -19,7 +19,7 @@ namespace px {
         }
 
         bool can_execute() const {
-            return container && task.is_complete();
+            return game && container && task.is_complete();
         }
 
     public:
@@ -64,8 +64,7 @@ namespace px {
         }
 
         void execute_alchemy() {
-            if (can_execute()) {
-                auto item = execute();
+            if (auto item = execute()) {
                 game->close_workshop();
                 game->popup("+ " + item->name(), { 1, 1, 1 });
                 container->acquire(std::move(item));

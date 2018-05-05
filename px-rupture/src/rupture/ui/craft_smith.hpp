@@ -13,17 +13,6 @@
 
 namespace px {
 
-    namespace {
-        bool recipe_name_getter(void * data, int n, const char** result) {
-            auto & vector = *static_cast<std::vector<rl::craft_recipe>*>(data);
-            if (n >= 0 && n < static_cast<int>(vector.size())) {
-                *result = vector[n].name.c_str();
-                return true;
-            }
-            return false;
-        }
-    }
-
     class craft_smith final
         : public craft_station<rl::craft_activity::blacksmith>
     {
@@ -36,7 +25,7 @@ namespace px {
         }
 
         bool can_execute() const {
-            return container && task.is_complete() && recipe_current;
+            return game && container && task.is_complete() && recipe_current;
         }
 
     public:
@@ -68,12 +57,19 @@ namespace px {
             combine_inventory(inventory_position, { window_width, window_height });
         }
 
-    private:
-        void execute_smith() {
+        virtual uq_ptr<rl::item> execute() override {
+            uq_ptr<rl::item> result;
             if (can_execute()) {
-                auto item = generator.create(*recipe_current, task);
+                result = generator.create(*recipe_current, task);
                 consume_items();
                 recipe_current = nullptr;
+            }
+            return result;
+        }
+
+    private:
+        void execute_smith() {
+            if (auto item = execute()) {
                 game->close_workshop();
                 game->popup("+ " + item->name(), { 1, 1, 1 });
                 container->acquire(std::move(item));
@@ -106,7 +102,7 @@ namespace px {
 
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
             static int recipe_select = -1;
-            if (ImGui::ListBox("##recipes_list", &recipe_select, recipe_name_getter, static_cast<void*>(&recipes), static_cast<int>(recipes.size()), 16)) {
+            if (ImGui::ListBox("##recipes_list", &recipe_select, &recipe_name_getter, static_cast<void*>(&recipes), static_cast<int>(recipes.size()), 16)) {
                 if (recipe_select >= 0) {
                     select_recipe(recipe_select);
                 }
@@ -141,6 +137,15 @@ namespace px {
             ImGui::EndGroup();
 
             ImGui::End();
+        }
+
+        static bool recipe_name_getter(void * data, int n, const char** result) {
+            auto const& vector = *static_cast<std::vector<rl::craft_recipe>*>(data);
+            if (n >= 0 && n < static_cast<int>(vector.size())) {
+                *result = vector[n].name.c_str();
+                return true;
+            }
+            return false;
         }
 
     private:
