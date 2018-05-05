@@ -36,15 +36,15 @@ namespace px::rl {
             switch (recipe.category) {
             case rl::item_category::weapon:
             case rl::item_category::armor:
-                return equipment(recipe, task);
+                return create_equipment(recipe, task);
             case rl::item_category::potion:
-                return potion(task);
+                return create_potion(task);
             default:
                 return nullptr;
             }
         }
 
-        uq_ptr<rl::item> equipment(craft_recipe const& recipe, task_type const& task) {
+        uq_ptr<rl::item> create_equipment(craft_recipe const& recipe, task_type const& task) {
             const auto rarity = roll_rarity();
             const auto essence = calculate_essence(task);
             const auto reagent_power = calculate_power(task).magnitude0 * (1.0 + std::pow(1.1, 1 + rarity));
@@ -72,7 +72,7 @@ namespace px::rl {
             return item;
         }
 
-        uq_ptr<rl::item> potion(task_type const& task) {
+        uq_ptr<rl::item> create_potion(task_type const& task) {
             const auto essence = calculate_essence(task);
             const auto reagent_power = calculate_power(task).magnitude0;
 
@@ -114,7 +114,7 @@ namespace px::rl {
         }
 
         template <typename I>
-        static I hash_mod(I x, I modulo) {
+        static auto hash_mod(I x, I modulo) {
             return hash(x) % modulo;
         }
 

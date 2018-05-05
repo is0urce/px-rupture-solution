@@ -46,17 +46,24 @@ namespace px {
         void reset_recipe() {
             task.reset(3); // three reagent recipes
         }
-        rl::item const* execute_craft() {
-            rl::item const* result = nullptr;
+
+        void execute_craft() {
             if (container && task.is_complete()) {
-                auto item = generator.potion(task);
-                result = item.get();
-                container->acquire(std::move(item));
+                auto item = generator.create_potion(task);
                 consume_items();
                 reset_recipe();
+                game->close_workshop();
+                game->popup("+ " + item->name(), { 1, 1, 1 });
+                container->acquire(std::move(item));
+                game->end_turn(1);
             }
-            return result;
         }
+
+        void cancel_craft() {
+            release_items();
+            game->close_workshop();
+        }
+
         void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(window_size);
@@ -69,16 +76,10 @@ namespace px {
 
             ImGui::BeginChild("buttons");
             if (ImGui::Button("brew", { 334, 32 })) {
-                if (task.is_complete()) {
-                    auto item = execute_craft();
-                    game->close_workshop();
-                    game->popup("+ " + item->name(), { 1, 1, 1 });
-                    game->end_turn(1);
-                }
+                execute_craft();
             }
             if (ImGui::Button("close", { 334, 32 })) {
-                release_items();
-                game->close_workshop();
+                cancel_craft();
             }
             ImGui::EndChild();
             ImGui::EndGroup();
