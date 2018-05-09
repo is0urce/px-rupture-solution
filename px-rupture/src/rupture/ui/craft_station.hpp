@@ -39,7 +39,7 @@ namespace px {
         : public panel
     {
     public:
-        bool is_open() const {
+        bool is_open() const noexcept {
             return game && game->has_access(Activity) && game->possessed();
         }
 

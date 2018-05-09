@@ -175,6 +175,10 @@ namespace px {
             if (item.has_effect(rl::effect::equipment)) {
                 ImGui::Text("Equipment");
             }
+            if (item.has_effect(rl::effect::useable)) {
+                ImGui::Text("Useable");
+            }
+
             if (item.has_effect(rl::effect::ingredient_power)) {
                 switch (static_cast<rl::craft_activity>(item.find_subtype(rl::effect::ingredient_power, 0))) {
                 case rl::craft_activity::blacksmith:
@@ -195,14 +199,21 @@ namespace px {
                 ImGui::Text("Damage: %.0f", item.accumulate({ rl::effect::damage }).magnitude0);
             }
             if (item.has_effect(rl::effect::armor)) {
-                ImGui::Text("Armor: %.0f", item.accumulate({ rl::effect::armor }).magnitude0);
+                ImGui::Text("Armor: %.2f", item.accumulate({ rl::effect::armor }).magnitude0);
+            }
+
+            if (item.has_effect(rl::effect::accuracy)) {
+                ImGui::Text("Accuracy: %.2f", item.accumulate({ rl::effect::accuracy }).magnitude0);
+            }
+            if (item.has_effect(rl::effect::critical)) {
+                ImGui::Text("Critical: %.2f", item.accumulate({ rl::effect::critical }).magnitude0);
+            }
+            if (item.has_effect(rl::effect::dodge)) {
+                ImGui::Text("Dodge: %.2f", item.accumulate({ rl::effect::dodge }).magnitude0);
             }
 
             // useable props
 
-            if (item.has_effect(rl::effect::useable)) {
-                ImGui::Text("Useable");
-            }
             if (item.has_effect(rl::effect::hp_bonus)) {
                 ImGui::Text("Heal: %.0f", item.accumulate({ rl::effect::hp_bonus }).magnitude0);
             }

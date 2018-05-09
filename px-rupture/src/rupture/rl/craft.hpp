@@ -11,6 +11,7 @@
 #include <px/rl/craft_task.hpp>
 
 #include <px/memory/memory.hpp>
+#include <px/dev/assert.hpp>
 
 #include <functional>   // for std::hash
 #include <map>
@@ -73,20 +74,23 @@ namespace px::rl {
         }
 
         uq_ptr<rl::item> create_potion(task_type const& task) {
+
+            // calculate values
+
             const auto essence = calculate_essence(task);
-            const auto reagent_power = calculate_power(task).magnitude0;
+            const auto power = calculate_power(task).magnitude0;
 
-            return solution(select_random(name_flack), essence, reagent_power);
-        }
+            auto h = hash(essence);
+            auto const variation = h % potion_variation.size();
+            h /= potion_variation.size();
+            auto const color = h % potion_color.size();
+            h /= potion_color.size();
+            auto const carrier = h % potion_carrier.size();
 
-        uq_ptr<rl::item> solution(std::string const& name, integer_type essence, real_type power) {
+            // create item
+
             auto item = make_uq<rl::item>();
-            item->setup_entity(generate_potion_name(name, essence), "i_potion#" + std::to_string(essence) + "_" + std::to_string(power));
-            item->make_stacking();
-
-            item->add(enhancement_type::zero(effect::useable));
-
-            switch (hash_mod(essence, 4)) {
+            switch (variation) {
             case 0:
                 item->add(enhancement_type::real(effect::hp_bonus, 0x00, power));
                 break;
@@ -99,20 +103,62 @@ namespace px::rl {
             case 3:
                 item->add(enhancement_type::real(effect::mp_regen, 0x00, power));
                 break;
+            case 4: // rejuvenation
+                item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::mp_bonus, 0x00, power / 2));
+                break;
+            case 5: // stamina
+                item->add(enhancement_type::real(effect::mp_bonus, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::mp_regen, 0x00, power / 2));
+                break;
+            case 6: // endurance
+                item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::mp_regen, 0x00, power / 2));
+                break;
+            case 7: // vivacity
+                item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
+                break;
+            case 8: // lead skin
+                item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
+                break;
+            case 9: // true strike
+                item->add(enhancement_type::real(effect::accuracy, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::critical, 0x00, power / 2));
+                break;
+            case 10: // avoidance
+                item->add(enhancement_type::real(effect::dodge, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
+                break;
+            case 11: // bark skin
+                item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
+                item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
+                break;
+            default:
+                px::debug("potion variant not selected");
+                break;
             }
 
-            // store essence origin
-            item->add(enhancement_type::integral(effect::essence, 0x00, essence));
+            // other item props
+
+            item->add(enhancement_type::integral(effect::essence, 0x00, essence));  // store essence origin
+            item->add(enhancement_type::zero(effect::useable));
+
+            item->set_name(potion_color[color] + " " + potion_carrier[carrier] + " of " + potion_variation[variation]);
+            item->set_tag("i_potion_" + std::to_string(essence) + "_" + std::to_string(power));
+
+            item->make_stacking();
 
             return item;
         }
 
-        // biased in both hash and modulo, but we don't need much accuracy
         template <typename I>
         static auto hash(I x) {
             return std::hash<I>{}(x);
         }
 
+        // biased in both hash and modulo, but we don't need much accuracy
         template <typename I>
         static auto hash_mod(I x, I modulo) {
             return hash(x) % modulo;
@@ -135,7 +181,7 @@ namespace px::rl {
             name_substance = {
                 { 3, "numidium" }
             };
-            name_color = {
+            potion_color = {
                 "amber",
                 "azure",
                 "beige",
@@ -144,7 +190,7 @@ namespace px::rl {
                 "brown",
                 "crimson",
                 "cyan",
-                "gray",
+                "grey",
                 "green",
                 "indigo",
                 "magenta",
@@ -159,7 +205,7 @@ namespace px::rl {
                 "white",
                 "yellow"
             };
-            name_flack = {
+            potion_carrier = {
                 "brew",
                 "draught",
                 "elixir",
@@ -180,6 +226,20 @@ namespace px::rl {
                 "tonic",
                 "vial",
                 "water"
+            };
+            potion_variation = {
+                "health",
+                "regeneration",
+                "innervation",
+                "invigoration",
+                "rejuvenation",
+                "stamina",
+                "endurance",
+                "vivacity",
+                "lead skin",
+                "true strike",
+                "avoidance",
+                "bark skin"
             };
         }
 
@@ -235,10 +295,6 @@ namespace px::rl {
             return quality;
         }
 
-        std::string generate_potion_name(std::string const& base, integer_type essence) const {
-            return select(name_color, essence) + " " + base;
-        }
-
         std::string generate_equipment_name(rl::craft_recipe const& recipe, integer_type essence, int rarity) {
             std::string result = name_base(recipe);
             result = name_material(result, essence);
@@ -286,8 +342,9 @@ namespace px::rl {
         std::map<integer_type, std::string> name_substance;
         std::vector<std::string>            name_equipment_postfix;
         std::vector<std::string>            name_equipment_prefix;
-        std::vector<std::string>            name_color;
-        std::vector<std::string>            name_flack;
+        std::vector<std::string>            potion_variation;
+        std::vector<std::string>            potion_color;
+        std::vector<std::string>            potion_carrier;
         environment *                       context;
     };
 }

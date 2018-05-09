@@ -107,7 +107,9 @@ namespace px {
 
     void menu::combine() {
         for (auto & ptr : stack) {
-            ptr->combine();
+            if (ptr) {
+                ptr->combine();
+            }
         }
     }
 

@@ -55,13 +55,12 @@ namespace px::ui {
         }
 
         void combine_buff(const char * label, ImVec2 const& pos, body_component::buff_type const& buff) {
-            const float window_width = 300.0f;
-            const float window_height = 32.0f;
-
-            ImVec2 size{ window_width, window_height };
+            //const float window_width = 300.0f;
+            //const float window_height = 32.0f;
+            //ImVec2 size{ window_width, window_height };
 
             ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-            ImGui::SetNextWindowSize(size);
+            //ImGui::SetNextWindowSize(size);
             ImGui::Begin(label, nullptr, 
                 ImGuiWindowFlags_NoTitleBar | 
                 ImGuiWindowFlags_NoBringToFrontOnFocus | 
@@ -74,6 +73,13 @@ namespace px::ui {
                 ImGui::Text(buff.name().c_str());
                 ImGui::NewLine();
                 combine_effect(buff, rl::effect::dot, "Damage");
+                combine_effect(buff, rl::effect::armor, "Armor");
+                combine_effect(buff, rl::effect::dodge, "Dodge");
+                combine_effect(buff, rl::effect::resistance, "Resistance");
+                combine_effect(buff, rl::effect::accuracy, "Accuracy");
+                combine_effect(buff, rl::effect::critical, "Critical");
+                combine_effect(buff, rl::effect::hp_regen, "Regeneration");
+                combine_effect(buff, rl::effect::mp_bonus, "Invigoration");
                 ImGui::EndTooltip();
             }
 

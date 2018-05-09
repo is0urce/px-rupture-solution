@@ -18,8 +18,7 @@ namespace px {
     body_component::body_component() noexcept
         : button(nullptr)
         , exp(0)
-        , lvl(0)
-    {
+        , lvl(0) {
     }
 
     // methods
@@ -138,6 +137,7 @@ namespace px {
     }
 
     void body_component::use_potion(rl::item const& potion, environment * context) {
+        buff_type buff;
 
         // hp restore
         if (potion.has_effect(rl::effect::hp_bonus)) {
@@ -155,30 +155,52 @@ namespace px {
 
         // hp regen
         if (potion.has_effect(rl::effect::hp_regen)) {
-            auto effect = potion.accumulate({ rl::effect::hp_regen });
-            body_component::buff_type regen;
-            regen.set_name("regeneration");
-            regen.set_tag("b_hp_regen");
-            regen.set_duration(effect.value0);
-            regen.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0, effect.magnitude0));
-            add(regen);
+            auto efx = potion.accumulate({ rl::effect::hp_regen });
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0x00, efx.magnitude0));
 
             // notify
-            context->popup("+ " + regen.name(), { 0.0, 1.0, 0.0 });
+            context->popup("+ regeneration", { 0.0, 1.0, 0.0 });
         }
 
         // mp regen
         if (potion.has_effect(rl::effect::mp_regen)) {
-            auto effect = potion.accumulate({ rl::effect::mp_regen });
-            body_component::buff_type regen;
-            regen.set_name("invigoration");
-            regen.set_tag("b_mp_regen");
-            regen.set_duration(effect.value0);
-            regen.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0, effect.magnitude0));
-            add(regen);
+            auto efx = potion.accumulate({ rl::effect::mp_regen });
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0x00, efx.magnitude0));
 
             // notify
-            context->popup("+ " + regen.name(), { 0.0, 1.0, 0.0 });
+            context->popup("+ invigoration", { 0.0, 1.0, 0.0 });
+        }
+
+        // accuracy
+        if (potion.has_effect(rl::effect::accuracy)) {
+            auto efx = potion.accumulate({ rl::effect::accuracy });
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::accuracy, 0x00, efx.magnitude0));
+
+            // notify
+            context->popup("+ accuracy", { 0.0, 1.0, 0.0 });
+        }
+        // armor
+        if (potion.has_effect(rl::effect::armor)) {
+            auto efx = potion.accumulate({ rl::effect::armor });
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::armor, 0x00, efx.magnitude0));
+
+            // notify
+            context->popup("+ armor", { 0.0, 1.0, 0.0 });
+        }
+        // dodge
+        if (potion.has_effect(rl::effect::dodge)) {
+            auto efx = potion.accumulate({ rl::effect::dodge });
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::dodge, 0x00, efx.magnitude0));
+
+            // notify
+            context->popup("+ dodge", { 0.0, 1.0, 0.0 });
+        }
+
+        if (buff.size() != 0) {
+            buff.set_name(potion.name());
+            buff.set_tag("b_" + potion.tag());
+            buff.set_duration(5);
+            add(buff);
         }
     }
 }
