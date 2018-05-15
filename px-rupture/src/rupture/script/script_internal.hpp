@@ -47,10 +47,10 @@ namespace px {
                         action(script_unit(user), script_unit(target));
                     }
                     catch (sol::error const& error) {
-                        px::debug(std::string("px::script_internal::impact() - target action closure - lua error: ") + error.what());
+                        px_debug(std::string("px::script_internal::impact() - target action closure - lua error: ") + error.what());
                     }
                     catch (...) {
-                        px::debug("px::script_internal::impact() - target action closure -  unknown error");
+                        px_debug("px::script_internal::impact() - target action closure -  unknown error");
                     }
                 };
                 auto area_action = [action](body_component * user, point2 const& area) -> void {
@@ -58,10 +58,10 @@ namespace px {
                         action(script_unit(user), area);
                     }
                     catch (sol::error const& error) {
-                        px::debug(std::string("px::script_internal::impact() - area action closure - lua error: ") + error.what());
+                        px_debug(std::string("px::script_internal::impact() - area action closure - lua error: ") + error.what());
                     }
                     catch (...) {
-                        px::debug("px::script_internal::impact() - area action closure -  unknown error");
+                        px_debug("px::script_internal::impact() - area action closure -  unknown error");
                     }
                 };
                 auto target_condition = [condition](body_component * user, body_component * target) -> bool {
@@ -69,11 +69,11 @@ namespace px {
                         return condition(script_unit(user), script_unit(target));
                     }
                     catch (sol::error const& error) {
-                        px::debug(std::string("px::script_internal::impact() - target condition closure - lua error: ") + error.what());
+                        px_debug(std::string("px::script_internal::impact() - target condition closure - lua error: ") + error.what());
                         return false;
                     }
                     catch (...) {
-                        px::debug("px::script_internal::impact() - target condition closure -  unknown error");
+                        px_debug("px::script_internal::impact() - target condition closure -  unknown error");
                         return false;
                     }
                 };
@@ -82,11 +82,11 @@ namespace px {
                         return condition(script_unit(user), area);
                     }
                     catch (sol::error const& error) {
-                        px::debug(std::string("px::script_internal::impact() - area condition closure - lua error: ") + error.what());
+                        px_debug(std::string("px::script_internal::impact() - area condition closure - lua error: ") + error.what());
                         return false;
                     }
                     catch (...) {
-                        px::debug("px::script_internal::impact() - area condition closure -  unknown error");
+                        px_debug("px::script_internal::impact() - area condition closure -  unknown error");
                         return false;
                     }
                 };
@@ -95,7 +95,7 @@ namespace px {
                 return { targeted, target_action, target_condition, area_action, area_condition };
             }
             catch (sol::error const& error) {
-                px::debug(error.what());
+                px_debug(error.what());
                 return {};
             }
             catch (...) {

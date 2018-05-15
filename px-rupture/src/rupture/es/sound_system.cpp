@@ -31,6 +31,18 @@ namespace px {
         return works->make();
     }
 
+    void sound_system::target(transform_component const* camera) noexcept {
+        works->target(camera);
+    }
+
+    void sound_system::set_master_volume(double volume) {
+        works->set_master_volume(volume);
+    }
+
+    void sound_system::play_sound(std::string const& name, vector2 const& location, double volume) {
+        works->play_sound(name, location, volume);
+    }
+
     void sound_system::play_music() {
         works->play_music();
     }

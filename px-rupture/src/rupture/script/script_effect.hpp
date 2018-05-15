@@ -43,7 +43,8 @@ namespace px {
         }
 
     protected:
-        script_effect() = default;
+        script_effect() noexcept {
+        }
 
     private:
         void add_effect(rl::effect fx, float value) {

@@ -136,7 +136,7 @@ namespace px::rl {
                 item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
                 break;
             default:
-                px::debug("potion variant not selected");
+                px_debug("potion variant not selected");
                 break;
             }
 

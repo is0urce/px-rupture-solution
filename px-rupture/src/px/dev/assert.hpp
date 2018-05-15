@@ -10,7 +10,7 @@
 namespace px {
 
     namespace {
-        void debug(std::string const& text) {
+        void px_debug(std::string const& text) {
             std::cout << text << std::endl;
         }
     }
@@ -18,10 +18,12 @@ namespace px {
 
 #else
 
+#include <string>
+
 namespace px {
 
     namespace {
-        void debug(std::string const& /* discarded */) {
+        void px_debug(std::string const& /* discarded */) {
         }
     }
 }

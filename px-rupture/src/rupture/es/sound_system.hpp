@@ -8,12 +8,16 @@
 #include <px/es/system.hpp>
 #include <px/es/delta.hpp>
 
+#include <px/common/vector.hpp>
 #include <px/memory/uq_ptr.hpp>
+
+#include <string>
 
 namespace px {
 
     class sound_component;
     class sound_works;
+    class transform_component;
 
     class sound_system
         : public system<delta>
@@ -21,7 +25,10 @@ namespace px {
     public:
         uq_ptr<sound_component> make();
         void                    play_music();
+        void                    play_sound(std::string const& name, vector2 const& position, double volume);
+        void                    set_master_volume(double volume);
         void                    stop_music();
+        void                    target(transform_component const* camera) noexcept;
 
     public:
         virtual                 ~sound_system() override;

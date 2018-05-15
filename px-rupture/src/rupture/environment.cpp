@@ -76,6 +76,7 @@ namespace px {
         player = camera;
         sprites.target(camera);
         messages.target(camera);
+        sounds.target(camera);
         lights.target(camera);
         lights.recalculate();
     }
@@ -171,17 +172,19 @@ namespace px {
         auto body = unit_builder.add_body();
         body->movement().make_traversable(rl::traverse::floor);
         body->blocking().make_transparent();
-        body->health().emplace(50);
+        body->health().emplace(10050);
         body->energy().emplace(100);
         body->set_name("Gnome");
         body->join_faction(1);
         auto character = unit_builder.add_character();
-        character->learn("sk_v_melee", "sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_s_charge", "sk_v_sound", "sk_o_teleport");
+        character->learn("sk_v_melee");                                             // basic attack
+        //character->learn("sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_s_charge");  // class
+        character->learn("sk_v_zap", "sk_v_lash", "sk_v_drain", "sk_v_sling", "sk_v_blink");                            // test
 
         // inventory
         auto container = unit_builder.add_container();
         auto weapon = make_uq<rl::item>();
-        weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0, 6));
+        weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0x00, 6));
         weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
         weapon->set_name("Sword");
         container->add(std::move(weapon));
@@ -189,21 +192,21 @@ namespace px {
         // intrinsic effect item
         auto hide = make_uq<rl::item>();
         hide->setup_entity("intrinsic", "i_hide");
-        hide->add(body_component::enhancement_type::real(rl::effect::accuracy, 0, 0.85));
-        hide->add(body_component::enhancement_type::real(rl::effect::critical, 0, 0.05));
-        hide->add(body_component::enhancement_type::real(rl::effect::dodge, 0, 0.05));
+        hide->add(body_component::enhancement_type::real(rl::effect::accuracy, 0x00, 0.85));
+        hide->add(body_component::enhancement_type::real(rl::effect::critical, 0x00, 0.05));
+        hide->add(body_component::enhancement_type::real(rl::effect::dodge, 0x00, 0.05));
         body->get_mannequin().equip(rl::equipment::hide, std::move(hide));
 
         for (int i = 0; i != 10; ++i) {
             auto item = make_uq<rl::item>();
             item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::alchemy), 1));
-            item->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
+            item->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
             item->set_name("petal");
             item->make_stacking();
             container->acquire(std::move(item));
             auto ore = make_uq<rl::item>();
             ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
-            ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0, 3));
+            ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
             ore->make_stacking();
             ore->set_name("ore");
             container->acquire(std::move(ore));
@@ -391,6 +394,10 @@ namespace px {
     void environment::function_edit(std::uint32_t /*idx*/) {
     }
 
+    void environment::play_sound(std::string const& sound, point2 position, double volume) {
+        sounds.play_sound(sound, position, volume);
+    }
+
     void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track) {
         if (auto sprite = sprites.make(name)) {
             auto pawn = make_uq<transform_component>();
@@ -410,7 +417,7 @@ namespace px {
             vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), nullptr, nullptr, track });
         }
         else {
-            debug("environment::evit_visual(..) - '" + name + "' do not exists");
+            px_debug("environment::evit_visual(..) - '" + name + "' do not exists");
         }
     }
 
@@ -439,7 +446,7 @@ namespace px {
             vfx.push_back({ start, finish, std::move(pawn), std::move(sprite), std::move(animation), nullptr, track });
         }
         else {
-            debug("environment::evit_visual(..) - sprite or animation do not exists, name='" + name + "'");
+            px_debug("environment::evit_visual(..) - sprite or animation do not exists, name='" + name + "'");
         }
     }
 

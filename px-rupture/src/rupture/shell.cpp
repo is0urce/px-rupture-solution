@@ -72,6 +72,7 @@ namespace px {
         engine.add(&animators);
         engine.add(&sprites);
         engine.add(&renderer);
+        engine.add(&sounds);
         engine.add(&ui);
 
         // order is important

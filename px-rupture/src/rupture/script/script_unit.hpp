@@ -128,12 +128,12 @@ namespace px {
         }
 
     public:
-        script_unit()
+        script_unit() noexcept
             : body(nullptr)
             , transform(nullptr) {
         }
 
-        script_unit(body_component * user)
+        script_unit(body_component * user) noexcept
             : body(user)
             , transform(nullptr) {
         }
@@ -142,5 +142,4 @@ namespace px {
         body_component *        body;
         transform_component *   transform;
     };
-
 }
