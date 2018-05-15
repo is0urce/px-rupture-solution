@@ -91,10 +91,10 @@ namespace px::rl {
 
             auto item = make_uq<rl::item>();
             switch (variation) {
-            case 0:
+            case 0:     // health
                 item->add(enhancement_type::real(effect::hp_bonus, 0x00, power));
                 break;
-            case 1:
+            case 1:     // regeneration
                 item->add(enhancement_type::real(effect::hp_regen, 0x00, power));
                 break;
             case 2:
@@ -103,35 +103,35 @@ namespace px::rl {
             case 3:
                 item->add(enhancement_type::real(effect::mp_regen, 0x00, power));
                 break;
-            case 4: // rejuvenation
+            case 4:     // rejuvenation
                 item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::mp_bonus, 0x00, power / 2));
                 break;
-            case 5: // stamina
+            case 5:     // stamina
                 item->add(enhancement_type::real(effect::mp_bonus, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::mp_regen, 0x00, power / 2));
                 break;
-            case 6: // endurance
+            case 6:     // endurance
                 item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::mp_regen, 0x00, power / 2));
                 break;
-            case 7: // vivacity
+            case 7:     // vivacity
                 item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
                 break;
-            case 8: // lead skin
+            case 8:     // lead skin
                 item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
                 break;
-            case 9: // true strike
+            case 9:     // true strike
                 item->add(enhancement_type::real(effect::accuracy, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::critical, 0x00, power / 2));
                 break;
-            case 10: // avoidance
+            case 10:    // avoidance
                 item->add(enhancement_type::real(effect::dodge, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
                 break;
-            case 11: // bark skin
+            case 11:    // bark skin
                 item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
                 item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
                 break;

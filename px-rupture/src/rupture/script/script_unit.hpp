@@ -46,6 +46,36 @@ namespace px {
             return result;
         }
 
+        float max_mp() const {
+            float result = 0;
+            if (body) {
+                if (auto && mp = body->energy()) {
+                    result = static_cast<float>(mp->maximum());
+                }
+            }
+            return result;
+        }
+
+        float hp() const {
+            float result = 0;
+            if (body) {
+                if (auto && resource = body->health()) {
+                    result = static_cast<float>(resource->current());
+                }
+            }
+            return result;
+        }
+
+        float max_hp() const {
+            float result = 0;
+            if (body) {
+                if (auto && resource = body->health()) {
+                    result = static_cast<float>(resource->maximum());
+                }
+            }
+            return result;
+        }
+
         float damage(float amount) {
             float damage_done = 0;
             if (body) {
@@ -91,6 +121,10 @@ namespace px {
 
         transform_component * get_transform() {
             return body ? body->linked<transform_component>() : nullptr;
+        }
+
+        static script_unit not_valid() {
+            return script_unit();
         }
 
     public:

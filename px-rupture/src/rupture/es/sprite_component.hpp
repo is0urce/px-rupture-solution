@@ -21,8 +21,8 @@ namespace px {
         , public sprite
     {
     public:
-        virtual ~sprite_component() override = default;
-        sprite_component() = default;
+        virtual ~sprite_component() noexcept override = default;
+        sprite_component() noexcept = default;
         sprite_component(sprite_component const&) = delete;
         sprite_component & operator=(sprite_component const&) = delete;
     };

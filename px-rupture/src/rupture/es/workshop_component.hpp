@@ -23,7 +23,7 @@ namespace px {
         void                set_activity(rl::craft_activity variant);
 
         template <typename Archive>
-        void serialize(Archive & archive) {
+        void                serialize(Archive & archive) {
             archive(activity_variant);
         }
 

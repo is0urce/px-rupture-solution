@@ -130,12 +130,16 @@ namespace px {
 
             lua.new_usertype<script_unit>("unit"
                 , "mp", &script_unit::mp
+                , "hp", &script_unit::hp
+                , "max_mp", &script_unit::max_mp
+                , "max_hp", &script_unit::max_hp
                 , "damage", &script_unit::damage
                 , "heal", &script_unit::heal
                 , "deplete", &script_unit::deplete
                 , "is_alive", &script_unit::is_alive
                 , "is_enemy", &script_unit::is_enemy
                 , "is_valid", &script_unit::is_valid
+                , "not_valid", &script_unit::not_valid
                 , "place", &script_unit::place
                 , "position", &script_unit::position
                 , "apply_effect", &script_unit::apply_effect

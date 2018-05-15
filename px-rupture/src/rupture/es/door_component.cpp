@@ -8,7 +8,7 @@
 
 namespace px {
 
-    door_component::~door_component() = default;
+    door_component::~door_component() noexcept = default;
 
     door_component::door_component()
         : opened(false)
