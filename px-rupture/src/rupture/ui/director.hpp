@@ -94,9 +94,9 @@ namespace px {
     private:
         void render() {
             // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
-            auto & io = ImGui::GetIO();
-            int framebuffer_width = static_cast<int>(io.DisplaySize.x * io.DisplayFramebufferScale.x);
-            int framebuffer_height = static_cast<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
+            auto const& io = ImGui::GetIO();
+            int const framebuffer_width = static_cast<int>(io.DisplaySize.x * io.DisplayFramebufferScale.x);
+            int const framebuffer_height = static_cast<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
             if (framebuffer_width == 0 || framebuffer_height == 0) return;
 
             // Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, polygon fill
@@ -110,11 +110,11 @@ namespace px {
 
             // Setup viewport, orthographic projection matrix
             glViewport(0, 0, static_cast<GLsizei>(framebuffer_width), static_cast<GLsizei>(framebuffer_height));
-            const float ortho_projection[4][4] = {
-                { 2.0f / io.DisplaySize.x, 0.0f,                   0.0f, 0.0f },
-                { 0.0f,                  2.0f / -io.DisplaySize.y, 0.0f, 0.0f },
-                { 0.0f,                  0.0f,                  -1.0f, 0.0f },
-                { -1.0f,                  1.0f,                   0.0f, 1.0f },
+            float const ortho_projection[4][4] = {
+                {  2.0f / io.DisplaySize.x, 0.0f,                     0.0f, 0.0f },
+                {  0.0f,                    2.0f / -io.DisplaySize.y, 0.0f, 0.0f },
+                {  0.0f,                    0.0f,                    -1.0f, 0.0f },
+                { -1.0f,                    1.0f,                     0.0f, 1.0f },
             };
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -143,7 +143,7 @@ namespace px {
                         pcmd->UserCallback(cmd_list, pcmd);
                     }
                     else {
-                        glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
+                        glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(reinterpret_cast<size_t>(pcmd->TextureId)));
                         glScissor(static_cast<GLint>(pcmd->ClipRect.x), static_cast<GLint>(framebuffer_height - pcmd->ClipRect.w), static_cast<GLsizei>(pcmd->ClipRect.z - pcmd->ClipRect.x), static_cast<GLsizei>(pcmd->ClipRect.w - pcmd->ClipRect.y));
                         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(pcmd->ElemCount), sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, idx_buffer_offset);
                     }
@@ -171,9 +171,9 @@ namespace px {
             glEnableVertexAttribArray(locationColor);
 
 #define PX_OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
-            glVertexAttribPointer(locationPosition, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)PX_OFFSETOF(ImDrawVert, pos));
-            glVertexAttribPointer(locationUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid*)PX_OFFSETOF(ImDrawVert, uv));
-            glVertexAttribPointer(locationColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid*)PX_OFFSETOF(ImDrawVert, col));
+            glVertexAttribPointer(locationPosition, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, pos));
+            glVertexAttribPointer(locationUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, uv));
+            glVertexAttribPointer(locationColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, col));
 #undef PX_OFFSETOF
         }
 
@@ -192,7 +192,7 @@ namespace px {
             font.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(texture_width), static_cast<GLsizei>(texture_height), 0, GL_UNSIGNED_BYTE, pixels);
             font.filters(GL_NEAREST, GL_NEAREST); // required
 
-            io.Fonts->TexID = (void *)(intptr_t)font;
+            io.Fonts->TexID = reinterpret_cast<void*>(static_cast<size_t>(font));
         }
 
     private:

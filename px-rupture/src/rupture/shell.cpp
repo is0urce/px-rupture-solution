@@ -52,17 +52,20 @@ namespace px {
     }
 
     void shell::load_data() {
+
+        // images
         auto const document = document::load_document(settings::texture_path);
         auto const& textures = document["textures"];
-        unsigned int texture_id = 0;
+        unsigned int texture_index = 0;
         for (auto const& texture : textures) {
             std::string atlas = texture["atlas"];   // conversion constructors
             std::string bitmap = texture["texture"];
 
             add_texture(bitmap.c_str());
-            add_atlas(atlas.c_str(), texture_id);
-            ++texture_id;
+            add_atlas(atlas.c_str(), texture_index);
+            ++texture_index;
         }
+        ui.assign_logo(add_texture("data/img/extras/fmod.png"));
 
         characters.load(&mashine);
         animators.load(&sprites);
@@ -169,13 +172,13 @@ namespace px {
         }
     }
 
-    void shell::add_texture(const char * name) {
+    unsigned int shell::add_texture(const char * name) {
         std::vector<unsigned char> bits;
         unsigned int texture_width;
         unsigned int texture_height;
         const auto error = lodepng::decode(bits, texture_width, texture_height, name);
         if (error) throw std::runtime_error("add_texture(name) error while loading image, path=" + std::string(name));
-        renderer.add_texture(texture_width, texture_height, bits.data());
+        return renderer.add_texture(texture_width, texture_height, bits.data());
     }
 
     void shell::add_atlas(const char * name, unsigned int texture_index) {

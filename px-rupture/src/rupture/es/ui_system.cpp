@@ -25,6 +25,12 @@ namespace px {
         works->draw(delta_time.real_delta);
     }
 
+    void ui_system::assign_logo(unsigned int texture_id) noexcept {
+        if (works) {
+            works->assign_logo(texture_id);
+        }
+    }
+
     // methods
 
     void ui_system::rollback() {

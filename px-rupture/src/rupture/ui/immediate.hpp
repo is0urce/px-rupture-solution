@@ -27,8 +27,8 @@ namespace px {
             return true;
         }
 
-        static void print(std::string const& text, float width) {
-            line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f });
+        static bool print(std::string const& text, float width) {
+            return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f });
         }
 
         static bool button(std::string const& text, float width) {

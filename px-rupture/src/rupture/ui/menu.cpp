@@ -62,12 +62,18 @@ namespace px {
         smith_panel = make_panel<craft_smith>(stack, game);
         alchemy_panel = make_panel<craft_alchemy>(stack, game);
 
-        make_panel<ui::title>(stack, game);
+        title_panel = make_panel<title_screen>(stack, game);
         make_panel<ui::levelup>(stack, game);
         make_panel<ui::results>(stack, game);
     }
 
     // methods
+
+    void menu::assign_logo(unsigned int texture_id) noexcept {
+        if (title_panel) {
+            title_panel->assign_logo(texture_id);
+        }
+    }
 
     void menu::resize(unsigned int w, unsigned int h) {
         nexus->resize(w, h);

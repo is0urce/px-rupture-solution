@@ -43,8 +43,8 @@ namespace px {
         works->assign_message_data(data);
     }
 
-    void render_system::add_texture(unsigned int texture_width, unsigned int texture_height, void const* data) {
-        works->add_texture(texture_width, texture_height, data);
+    unsigned int render_system::add_texture(unsigned int texture_width, unsigned int texture_height, void const* data) {
+        return works->add_texture(texture_width, texture_height, data);
     }
 
     void render_system::zoom(bool is_up) {

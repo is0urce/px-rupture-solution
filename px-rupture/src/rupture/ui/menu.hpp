@@ -10,15 +10,18 @@
 
 namespace px {
 
-    class container_component;
     class director;
     class environment;
-    class inventory;
+
+    class container_component;
     class craft_smith;
     class craft_alchemy;
+    class inventory;
+    class title_screen;
 
     class menu final {
     public:
+        void                            assign_logo(unsigned int texture_id) noexcept;
         void                            resize(unsigned int w, unsigned int h);
         void                            draw(double delta_time);
         bool                            click(unsigned int mouse_button, bool is_down);
@@ -44,6 +47,7 @@ namespace px {
         inventory *                     inventory_panel;
         craft_smith *                   smith_panel;
         craft_alchemy *                 alchemy_panel;
+        title_screen *                  title_panel;
         environment *                   context;
     };
 }

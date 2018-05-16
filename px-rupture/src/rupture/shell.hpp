@@ -36,7 +36,7 @@ namespace px {
         void            connect_managers();
         void            load_data();
         void            register_systems();
-        void            add_texture(const char * name);
+        unsigned int    add_texture(const char * name);
         void            add_atlas(const char * name, unsigned int texture_id);
 
     private:

@@ -93,7 +93,7 @@ namespace px {
             msg_ctrl.data = data;
         }
 
-        void add_texture(unsigned int texture_width, unsigned int texture_height, void const* data) {
+        unsigned int add_texture(unsigned int texture_width, unsigned int texture_height, void const* data) {
             if (!data) throw std::runtime_error("px::renderer::load_texture(...) - data is null");
 
             sprites.emplace_back();
@@ -106,6 +106,7 @@ namespace px {
             batch.geometry.swizzle(batch.vertices, sizeof(sprite_vertex), { GL_FLOAT, GL_FLOAT }, { 2, 2 }, { offsetof(sprite_vertex, position), offsetof(sprite_vertex, texture) });
 
             setup_batch(batch);
+            return batch.texture;
         }
 
         void zoom(bool up) {
