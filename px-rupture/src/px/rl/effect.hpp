@@ -20,7 +20,9 @@ namespace px::rl {
         useable = 21,
 
         damage = 30,
-        dot = 31,
+        damage_periodic = 31,
+        damage_thorns = 32,
+        damage_bonus = 33,
 
         accuracy = 40,
         critical = 41,
@@ -44,6 +46,8 @@ namespace px::rl {
         essence = 80,
         ingredient_power = 81,
 
-        potion_intoxication = 90
+        intoxication = 90,
+        intoxication_magnitude = 91,
+        intoxication_duration = 92
     };
 }

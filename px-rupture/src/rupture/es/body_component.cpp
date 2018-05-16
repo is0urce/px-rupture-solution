@@ -199,7 +199,8 @@ namespace px {
         if (buff.size() != 0) {
             buff.set_name(potion.name());
             buff.set_tag("b_" + potion.tag());
-            buff.set_duration(5);
+            buff.set_description("Potion effect");
+            buff.set_duration(potion.accumulate({ rl::effect::duration }).value0);
             add(buff);
         }
     }

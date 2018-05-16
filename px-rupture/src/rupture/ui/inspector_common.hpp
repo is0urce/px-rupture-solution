@@ -71,8 +71,9 @@ namespace px::ui {
             if (ImGui::IsItemHovered()) {
                 ImGui::BeginTooltip();
                 ImGui::Text(buff.name().c_str());
+                ImGui::Text(buff.description().c_str());
                 ImGui::NewLine();
-                combine_effect(buff, rl::effect::dot, "Damage");
+                combine_effect(buff, rl::effect::damage_periodic, "Damage");
                 combine_effect(buff, rl::effect::armor, "Armor");
                 combine_effect(buff, rl::effect::dodge, "Dodge");
                 combine_effect(buff, rl::effect::resistance, "Resistance");

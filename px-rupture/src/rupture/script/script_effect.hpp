@@ -35,7 +35,7 @@ namespace px {
         }
 
         void add_dot(float dmg) {
-            add_effect(rl::effect::dot, dmg);
+            add_effect(rl::effect::damage_periodic, dmg);
         }
 
         void add_resist(float value) {

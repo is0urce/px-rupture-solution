@@ -88,6 +88,20 @@ namespace px::rl {
             archive(container);
         }
 
+        template <typename Operator>
+        void enumerate(Operator && fn) const {
+            for (auto const& item : container) {
+                fn(item);
+            }
+        }
+
+        template <typename Operator>
+        void enumerate(Operator && fn) {
+            for (auto & item : container) {
+                fn(item);
+            }
+        }
+
     private:
         std::vector<enhancement<Effect, Integral, Real>> container;
     };

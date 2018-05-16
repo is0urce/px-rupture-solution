@@ -75,6 +75,15 @@ namespace px::rl {
 
         uq_ptr<rl::item> create_potion(task_type const& task) {
 
+            // 'settings'
+
+            static unsigned int const potion_base_duration = 5;
+
+            static double const hp_bonus_multiplier = 1.0;
+            static double const hp_regen_multiplier = 1.0 / potion_base_duration;
+            static double const armor_multiplier = 1.0;
+            static double const damage_multiplier = 0.2;
+
             // calculate values
 
             const auto essence = calculate_essence(task);
@@ -87,54 +96,186 @@ namespace px::rl {
             h /= potion_color.size();
             auto const carrier = h % potion_carrier.size();
 
+            double const hp_bonus_value = power * hp_bonus_multiplier;
+            double const hp_regen_value = power * hp_regen_multiplier;
+            double const armor_value = power * armor_multiplier;
+            double const damage_value = power * damage_multiplier;
+
+            double const accuracy_value = 0.2;
+            double const critical_value = 0.2;
+            double const dodge_value = 0.2;
+            double const damage_bonus_value = 0.2;
+            double const mp_bonus_value = 20;
+            double const mp_regen_value = mp_bonus_value / potion_base_duration;
+
             // create item
 
             auto item = make_uq<rl::item>();
             switch (variation) {
-            case 0:     // health
-                item->add(enhancement_type::real(effect::hp_bonus, 0x00, power));
+
+            case 0:
+                // hp (health)
+                add<effect::hp_bonus>(*item, hp_bonus_value);
                 break;
-            case 1:     // regeneration
-                item->add(enhancement_type::real(effect::hp_regen, 0x00, power));
+            case 1:
+                // hp_regen (regeneration)
+                add<effect::hp_regen>(*item, hp_regen_value);
                 break;
             case 2:
-                item->add(enhancement_type::real(effect::mp_bonus, 0x00, power));
+                // armor (lead skin)
+                add<effect::armor>(*item, armor_value);
                 break;
             case 3:
-                item->add(enhancement_type::real(effect::mp_regen, 0x00, power));
+                // damage (rage)
+                add<effect::damage>(*item, damage_value);
                 break;
-            case 4:     // rejuvenation
-                item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::mp_bonus, 0x00, power / 2));
+
+            case 4:
+                // hp + accuracy (clarity)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::accuracy>(*item, accuracy_value * 0.5);
                 break;
-            case 5:     // stamina
-                item->add(enhancement_type::real(effect::mp_bonus, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::mp_regen, 0x00, power / 2));
+            case 5:
+                // hp + critical (reaction)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::critical>(*item, critical_value * 0.5);
                 break;
-            case 6:     // endurance
-                item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::mp_regen, 0x00, power / 2));
+            case 6:
+                // hp + dodge (respite)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::dodge>(*item, dodge_value * 0.5);
                 break;
-            case 7:     // vivacity
-                item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
+            case 7:
+                // hp + dmg_bonus (warrior)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::damage_bonus>(*item, damage_bonus_value * 0.5);
                 break;
-            case 8:     // lead skin
-                item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::hp_bonus, 0x00, power / 2));
+            case 8:
+                // hp + mp (rejuvenation)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
                 break;
-            case 9:     // true strike
-                item->add(enhancement_type::real(effect::accuracy, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::critical, 0x00, power / 2));
+            case 9:
+                // hp + mp_regen (soothing)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::mp_regen>(*item, mp_regen_value * 0.5);
                 break;
-            case 10:    // avoidance
-                item->add(enhancement_type::real(effect::dodge, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
+
+            case 10:
+                // hp_regen + accuracy (swirling)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::accuracy>(*item, accuracy_value * 0.5);
                 break;
-            case 11:    // bark skin
-                item->add(enhancement_type::real(effect::armor, 0x00, power / 2));
-                item->add(enhancement_type::real(effect::hp_regen, 0x00, power / 2));
+            case 11:
+                // hp_regen + critical (courage)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::critical>(*item, critical_value * 0.5);
                 break;
+            case 12:
+                // hp_regen + dodge (hope)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::dodge>(*item, dodge_value * 0.5);
+                break;
+            case 13:
+                // hp_regen + dmg_bonus (troll)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::damage_bonus>(*item, damage_bonus_value * 0.5);
+                break;
+            case 14:
+                // hp_regen + mp (vivacity)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
+                break;
+            case 15:
+                // hp_regen + mp_regen (stamina)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::mp_regen>(*item, mp_regen_value * 0.5);
+                break;
+
+            case 16:
+                // hp + hp_regen (vigor)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                break;
+
+            case 17:
+                // hp + armor (guardian)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::armor>(*item, armor_value * 0.5);
+                break;
+            case 18:
+                // hp + damage (venegance)
+                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::damage>(*item, damage_value * 0.5);
+                break;
+            case 19:
+                // hp_regen + armor (bark skin)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::armor>(*item, armor_value * 0.5);
+                break;
+            case 20:
+                // hp_regen + damage (ogre)
+                add<effect::hp_regen>(*item, hp_regen_value * 0.5);
+                add<effect::damage>(*item, damage_value * 0.5);
+                break;
+
+            case 21:
+                // armor + accuracy (knight)
+                add<effect::armor>(*item, armor_value * 0.5);
+                add<effect::accuracy>(*item, accuracy_value * 0.5);
+                break;
+            case 22:
+                // armor + critical (crusader)
+                add<effect::armor>(*item, armor_value * 0.5);
+                add<effect::critical>(*item, critical_value * 0.5);
+                break;
+            case 23:
+                // armor + dmg_bonus (soldier)
+                add<effect::armor>(*item, armor_value * 0.5);
+                add<effect::damage_bonus>(*item, damage_bonus_value * 0.5);
+                break;
+            case 24:
+                // armor + mp (battle)
+                add<effect::armor>(*item, armor_value * 0.5);
+                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
+                break;
+            case 25:
+                // armor + mp_regen (invoker)
+                add<effect::armor>(*item, armor_value * 0.5);
+                add<effect::mp_regen>(*item, mp_regen_value * 0.5);
+                break;
+
+            case 26:
+                // damage + accuracy (slaughter)
+                add<effect::damage>(*item, damage_value * 0.5);
+                add<effect::accuracy>(*item, accuracy_value * 0.5);
+                break;
+            case 27:
+                // damage + critical (sacrifices)
+                add<effect::damage>(*item, damage_value * 0.5);
+                add<effect::critical>(*item, critical_value * 0.5);
+                break;
+            case 28:
+                // damage + dodge (tricks)
+                add<effect::damage>(*item, damage_value * 0.5);
+                add<effect::dodge>(*item, dodge_value * 0.5);
+                break;
+            case 29:
+                // damage + dmg_bonus (violence)
+                add<effect::damage>(*item, damage_value * 0.5);
+                add<effect::damage_bonus>(*item, damage_bonus_value * 0.5);
+                break;
+            case 30:
+                // damage + mp (wrath)
+                add<effect::damage>(*item, damage_value * 0.5);
+                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
+                break;
+            case 31:
+                // damage + mp_regen (brawl)
+                add<effect::damage>(*item, damage_value * 0.5);
+                add<effect::mp_regen>(*item, mp_regen_value * 0.5);
+                break;
+
             default:
                 px_debug("potion variant not selected");
                 break;
@@ -144,6 +285,12 @@ namespace px::rl {
 
             item->add(enhancement_type::integral(effect::essence, 0x00, essence));  // store essence origin
             item->add(enhancement_type::zero(effect::useable));
+
+            bool is_instant = true;
+            item->enumerate([&](auto const& efx) { is_instant &= !has_duration(efx.main); });
+            if (!is_instant) {
+                item->add(enhancement_type::integral(effect::duration, 0x00, potion_base_duration));
+            }
 
             item->set_name(potion_color[color] + " " + potion_carrier[carrier] + " of " + potion_variation[variation]);
             item->set_tag("i_potion_" + std::to_string(essence) + "_" + std::to_string(power));
@@ -230,16 +377,42 @@ namespace px::rl {
             potion_variation = {
                 "health",
                 "regeneration",
-                "innervation",
-                "invigoration",
+                "lead_skin",
+                "rage",
+
+                "clarity",
+                "reaction",
+                "respite",
+                "warrior",
                 "rejuvenation",
-                "stamina",
-                "endurance",
+                "soothing",
+
+                "swirling",
+                "courage",
+                "hope",
+                "troll",
                 "vivacity",
-                "lead skin",
-                "true strike",
-                "avoidance",
-                "bark skin"
+                "stamina",
+
+                "vigor",
+
+                "guardian",
+                "venegance",
+                "bark skin",
+                "ogre",
+
+                "knight",
+                "crusader",
+                "soldier",
+                "battle",
+                "invoker",
+
+                "slaughter",
+                "sacrifices",
+                "tricks",
+                "violence",
+                "wrath",
+                "brawl"
             };
         }
 
@@ -264,6 +437,11 @@ namespace px::rl {
                 power = item.accumulate(power);
             });
             return power;
+        }
+
+        template <rl::effect ID>
+        static void add(rl::item & item, double value) {
+            item.add(enhancement_type::real(ID, 0x00, value));
         }
 
         // add item properties
@@ -336,6 +514,20 @@ namespace px::rl {
             if (names.empty()) throw std::runtime_error("craft::select(names, essence) - names is empty");
             size_t n = context->roll(0, static_cast<int>(names.size() - 1));
             return names[n];
+        }
+
+        bool constexpr has_duration(effect efx) {
+            return efx == effect::damage_periodic
+                || efx == effect::damage_thorns
+                || efx == effect::damage_bonus
+                || efx == effect::accuracy
+                || efx == effect::critical
+                || efx == effect::speed
+                || efx == effect::armor
+                || efx == effect::resistance
+                || efx == effect::dodge
+                || efx == effect::hp_regen
+                || efx == effect::mp_regen;
         }
 
     private:

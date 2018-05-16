@@ -43,7 +43,7 @@ namespace px {
     private:
         void process_effects(body_component & body) {
             // damage-over-time
-            auto dot = body.accumulate({ rl::effect::dot });
+            auto dot = body.accumulate({ rl::effect::damage_periodic });
             if (dot.magnitude0 > 0) {
                 auto damage = static_cast<body_component::resource_value_type>(dot.magnitude0);
                 game->damage(body, damage, static_cast<rl::damage_type>(dot.sub));
