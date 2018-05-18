@@ -25,7 +25,8 @@ namespace px {
     public:
         uq_ptr<sound_component> make();
         void                    play_music();
-        void                    play_sound(std::string const& name, vector2 const& position, double volume);
+        void                    play_sound(std::string const& name, double volume, vector2 const& location);
+        void                    play_sound(std::string const& name, double volume);
         void                    set_master_volume(double volume);
         void                    stop_music();
         void                    target(transform_component const* camera) noexcept;

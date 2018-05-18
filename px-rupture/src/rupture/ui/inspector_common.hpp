@@ -7,6 +7,7 @@
 
 #include "panel.hpp"
 #include "immediate.hpp"
+#include "field_description.hpp"
 
 #include "../es/body_component.hpp"
 
@@ -48,19 +49,14 @@ namespace px::ui {
             for (auto const& buff : body.get_buffs()) {
                 if (buff.is_hidden()) continue;
 
-                ImVec2 pen = { start.x , start.y - 64 - 32 * i };
+                ImVec2 pen = { start.x , start.y - 64 - 48 * i };
                 combine_buff((label + std::to_string(i)).c_str(), pen, buff);
                 ++i;
             }
         }
 
         void combine_buff(const char * label, ImVec2 const& pos, body_component::buff_type const& buff) {
-            //const float window_width = 300.0f;
-            //const float window_height = 32.0f;
-            //ImVec2 size{ window_width, window_height };
-
             ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-            //ImGui::SetNextWindowSize(size);
             ImGui::Begin(label, nullptr, 
                 ImGuiWindowFlags_NoTitleBar | 
                 ImGuiWindowFlags_NoBringToFrontOnFocus | 
@@ -73,14 +69,7 @@ namespace px::ui {
                 ImGui::Text(buff.name().c_str());
                 ImGui::Text(buff.description().c_str());
                 ImGui::NewLine();
-                combine_effect(buff, rl::effect::damage_periodic, "Damage");
-                combine_effect(buff, rl::effect::armor, "Armor");
-                combine_effect(buff, rl::effect::dodge, "Dodge");
-                combine_effect(buff, rl::effect::resistance, "Resistance");
-                combine_effect(buff, rl::effect::accuracy, "Accuracy");
-                combine_effect(buff, rl::effect::critical, "Critical");
-                combine_effect(buff, rl::effect::hp_regen, "Regeneration");
-                combine_effect(buff, rl::effect::mp_bonus, "Invigoration");
+                field_description::display_collection(buff);
                 ImGui::EndTooltip();
             }
 
@@ -98,20 +87,8 @@ namespace px::ui {
             }
         }
 
-        void combine_effect(body_component::buff_type const& buff, rl::effect efx, std::string name) {
-            if (buff.has_effect(efx)) {
-                float const value = static_cast<float>(buff.accumulate({ efx }).magnitude0);
-                ImGui::Text(format_effect_name(name, value).c_str());
-            }
-        }
-
         std::string format_buff_name(body_component::buff_type const& buff) const {
             return buff.name() + " (" + std::to_string(buff.timer()) + ")";
-        }
-
-        std::string format_effect_name(std::string name, float value) const {
-            int const floor = static_cast<int>(value);
-            return name + ": " + std::to_string(floor);
         }
     };
 }

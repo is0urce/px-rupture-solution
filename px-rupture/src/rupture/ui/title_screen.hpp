@@ -75,7 +75,7 @@ namespace px {
             ImGui::SetNextWindowSize({ screen_width, 100 });
             ImGui::Begin("##title_version", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
             ImGui::PushStyleColor(ImGuiCol_Text, { 0.6f, 0.6f, 0.6f, 1.0f });
-            ImGui::Text("Gnomi: Caves of Nschryldamdshuncz, y. 2018, v. 0.0.9.0 ");
+            ImGui::Text("Gnomi: Caves of Nschryldamdshuncz, 2018, version 0.0.9.0 (x64)");
             ImGui::PopStyleColor(1);
             ImGui::End();
         }

@@ -27,7 +27,7 @@ namespace px::rl {
         }
 
         template <Effect MainType>
-        enhancement_type accumulate() {
+        enhancement_type accumulate() const {
             enhancement_type accumulator{ MainType };
             for (auto const& element : container) {
                 if (element.main == MainType) {
@@ -36,6 +36,16 @@ namespace px::rl {
                 }
             }
             return accumulator;
+        }
+
+        template <Effect Efx>
+        bool has_effect() const {
+            for (enhancement_type const& element : container) {
+                if (element.main == Efx) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         bool has_effect(Effect efx) const {

@@ -75,7 +75,8 @@ namespace px {
         void                                emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track);
         void                                emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track);
         void                                emit_light(point2 position, color const& light);
-        void                                play_sound(std::string const& sound, point2 position, double volume);
+        void                                play_sound(std::string const& sound, double volume, point2 const& location);
+        void                                play_sound(std::string const& sound, double volume);
         rl::hit_result                      hit(body_component const& source, body_component const& target);
         std::tuple<float, rl::damage_type>  dps(body_component const& source) const;
         int                                 damage(body_component & target, int damage, rl::damage_type source);    // returns damage done

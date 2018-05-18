@@ -7,6 +7,8 @@
 
 #include "panel.hpp"
 
+#include "field_description.hpp"
+
 #include "../environment.hpp"
 #include "../es/transform_component.hpp"
 #include "../es/body_component.hpp"
@@ -97,7 +99,7 @@ namespace px {
                     if (auto ptr = container.get(selected)) {
 
                         // equipment
-                        if (ptr->has_effect(rl::effect::equipment)) {
+                        if (ptr->has_effect<rl::effect::equipment>()) {
                             if (game->has_control()) {
                                 game->start_turn();
                                 body.equip(selected);
@@ -106,7 +108,7 @@ namespace px {
                         }
 
                         // useable
-                        if (ptr->has_effect(rl::effect::useable)) {
+                        if (ptr->has_effect<rl::effect::useable>()) {
                             auto useable = ptr->find({ rl::effect::useable });
                             if (game->has_control()) {
                                 game->start_turn();
@@ -164,77 +166,7 @@ namespace px {
                 nullptr,
                 ImGuiWindowFlags_NoTitleBar |
                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-            // main props
-
-            ImGui::Text(item.name().c_str());
-            ImGui::Text(item.description().c_str());
-
-            // generic props
-
-            if (item.has_effect(rl::effect::equipment)) {
-                ImGui::Text("Equipment");
-            }
-            if (item.has_effect(rl::effect::useable)) {
-                ImGui::Text("Useable");
-            }
-
-            if (item.has_effect(rl::effect::ingredient_power)) {
-                switch (static_cast<rl::craft_activity>(item.find_subtype(rl::effect::ingredient_power, 0))) {
-                case rl::craft_activity::blacksmith:
-                    ImGui::Text("Reagent: Blacksmith");
-                    break;
-                case rl::craft_activity::alchemy:
-                    ImGui::Text("Reagent: Alchemy");
-                    break;
-                default:
-                    ImGui::Text("Reagent");
-                    break;
-                }
-            }
-
-            // equipment props
-
-            if (item.has_effect(rl::effect::damage)) {
-                ImGui::Text("Damage: %.0f", item.accumulate({ rl::effect::damage }).magnitude0);
-            }
-            if (item.has_effect(rl::effect::armor)) {
-                ImGui::Text("Armor: %.2f", item.accumulate({ rl::effect::armor }).magnitude0);
-            }
-
-            if (item.has_effect(rl::effect::accuracy)) {
-                ImGui::Text("Accuracy: %.2f", item.accumulate({ rl::effect::accuracy }).magnitude0);
-            }
-            if (item.has_effect(rl::effect::critical)) {
-                ImGui::Text("Critical: %.2f", item.accumulate({ rl::effect::critical }).magnitude0);
-            }
-            if (item.has_effect(rl::effect::dodge)) {
-                ImGui::Text("Dodge: %.2f", item.accumulate({ rl::effect::dodge }).magnitude0);
-            }
-
-            // useable props
-
-            if (item.has_effect(rl::effect::hp_bonus)) {
-                ImGui::Text("Heal: %.0f", item.accumulate({ rl::effect::hp_bonus }).magnitude0);
-            }
-            if (item.has_effect(rl::effect::mp_bonus)) {
-                ImGui::Text("Innervate: %.0f", item.accumulate({ rl::effect::mp_bonus }).magnitude0);
-            }
-            if (item.has_effect(rl::effect::hp_regen)) {
-                auto effect = item.accumulate({ rl::effect::hp_regen });
-                ImGui::Text("Regenerate: %.0f for %d", effect.magnitude0, effect.value0);
-            }
-            if (item.has_effect(rl::effect::mp_regen)) {
-                auto effect = item.accumulate({ rl::effect::mp_regen });
-                ImGui::Text("Invigorate: %.0f for %d", effect.magnitude0, effect.value0);
-            }
-
-            // stack
-
-            if (item.maximum() > 1) {
-                ImGui::Text("Quantity: %d/%d", item.count(), item.maximum());
-            }
-
+            field_description::display_item(item);
             ImGui::End();
         }
 

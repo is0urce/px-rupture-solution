@@ -394,8 +394,12 @@ namespace px {
     void environment::function_edit(std::uint32_t /*idx*/) {
     }
 
-    void environment::play_sound(std::string const& sound, point2 position, double volume) {
-        sounds.play_sound(sound, position, volume);
+    void environment::play_sound(std::string const& sound, double volume, point2 const& location) {
+        sounds.play_sound(sound, volume, location);
+    }
+
+    void environment::play_sound(std::string const& sound, double volume) {
+        sounds.play_sound(sound, volume);
     }
 
     void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track) {

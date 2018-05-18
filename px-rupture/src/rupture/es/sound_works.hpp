@@ -73,30 +73,12 @@ namespace px {
         }
 
         // returns channel_id
-        unsigned int play_sound(std::string const& name, vector2 const& location, double volume) {
-            unsigned int const id = ++channel_id;
+        unsigned int play_sound(std::string const& name, double volume, vector2 const& location) {
+            return play_sound(name, volume, location, false);
+        }
 
-            FMOD::Channel * channel = nullptr;
-            if (auto snd = acquire_sound(name, true, false, false)) {
-                system->playSound(snd, master, true, &channel);
-            }
-            else {
-                px_debug("px::sound_works::play_sound(..) - no sound by name=" + name);
-            }
-
-            if (channel) {
-
-                FMOD_VECTOR const position = to_fmod(location);
-                static FMOD_VECTOR const velocity{ 0, 0, 0 };
-
-                channel->set3DAttributes(&position, &velocity);
-                channel->setVolume(static_cast<float>(volume));
-                channel->setPaused(false);
-
-                channels[id] = channel;
-            }
-
-            return id;
+        unsigned int play_sound(std::string const& name, double volume) {
+            return play_sound(name, volume, { 0, 0 }, true);
         }
 
         void load_sound(std::string const& name, bool positioned, bool looped, bool streamed) {
@@ -166,6 +148,33 @@ namespace px {
                 sound.second->release();
             }
             sounds.clear();
+        }
+
+        // returns channel_id
+        unsigned int play_sound(std::string const& name, double volume, vector2 const& location, bool relative) {
+            unsigned int const id = ++channel_id;
+
+            FMOD::Channel * channel = nullptr;
+            if (auto snd = acquire_sound(name, true, false, false)) {
+                system->playSound(snd, master, true, &channel);
+            }
+            else {
+                px_debug("px::sound_works::play_sound(..) - no sound by name=" + name);
+            }
+
+            if (channel) {
+                FMOD_VECTOR const position = to_fmod(location);
+                static FMOD_VECTOR const velocity{ 0, 0, 0 };
+                channel->set3DAttributes(&position, &velocity);
+                channel->setVolume(static_cast<float>(volume));
+                channel->setPaused(false);
+                if (relative) {
+                    channel->setMode(FMOD_3D_HEADRELATIVE);
+                }
+                channels[id] = channel;
+            }
+
+            return id;
         }
 
         FMOD::Sound * acquire_sound(std::string const& name, bool positioned, bool looped, bool streamed) {

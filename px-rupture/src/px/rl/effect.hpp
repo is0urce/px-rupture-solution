@@ -47,7 +47,7 @@ namespace px::rl {
         ingredient_power = 81,
 
         intoxication = 90,
-        intoxication_magnitude = 91,
+        intoxication_power = 91,
         intoxication_duration = 92
     };
 }

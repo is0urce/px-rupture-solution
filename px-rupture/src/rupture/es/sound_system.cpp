@@ -39,8 +39,11 @@ namespace px {
         works->set_master_volume(volume);
     }
 
-    void sound_system::play_sound(std::string const& name, vector2 const& location, double volume) {
-        works->play_sound(name, location, volume);
+    void sound_system::play_sound(std::string const& name, double volume, vector2 const& location) {
+        works->play_sound(name, volume, location);
+    }
+    void sound_system::play_sound(std::string const& name, double volume) {
+        works->play_sound(name, volume);
     }
 
     void sound_system::play_music() {

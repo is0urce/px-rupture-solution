@@ -9,6 +9,8 @@
 #include "../environment.hpp"
 #include "../rl/mechanic.hpp"
 
+#include <cmath>
+
 namespace px {
 
     // ctor & dtor
@@ -139,58 +141,63 @@ namespace px {
     void body_component::use_potion(rl::item const& potion, environment * context) {
         buff_type buff;
 
+        auto current_intoxication = accumulate({ rl::effect::intoxication_power });
+        double power = std::pow(0.5, current_intoxication.magnitude0);
+
         // hp restore
-        if (potion.has_effect(rl::effect::hp_bonus)) {
+        if (potion.has_effect<rl::effect::hp_bonus>()) {
             auto efx = potion.accumulate({ rl::effect::hp_bonus });
-            auto done = mechanic::heal(*this, static_cast<int>(efx.magnitude0), static_cast<rl::damage_type>(efx.sub));
+            auto restore = efx.magnitude0 * power;
+            auto done = mechanic::heal(*this, static_cast<int>(restore), static_cast<rl::damage_type>(efx.sub));
             context->popup("+ " + std::to_string(done), { 0.0, 1.0, 0.0 });
         }
 
         // mp restore
-        if (potion.has_effect(rl::effect::mp_bonus)) {
+        if (potion.has_effect<rl::effect::mp_bonus>()) {
             auto efx = potion.accumulate({ rl::effect::mp_bonus });
-            auto done = mechanic::innervate(*this, static_cast<int>(efx.magnitude0), static_cast<rl::damage_type>(efx.sub));
+            auto restore = efx.magnitude0 * power;
+            auto done = mechanic::innervate(*this, static_cast<int>(restore), static_cast<rl::damage_type>(efx.sub));
             context->popup("+ " + std::to_string(done), { 0.0, 0.0, 1.0 });
         }
 
         // hp regen
-        if (potion.has_effect(rl::effect::hp_regen)) {
+        if (potion.has_effect<rl::effect::hp_regen>()) {
             auto efx = potion.accumulate({ rl::effect::hp_regen });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0x00, efx.magnitude0));
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ regeneration", { 0.0, 1.0, 0.0 });
         }
 
         // mp regen
-        if (potion.has_effect(rl::effect::mp_regen)) {
+        if (potion.has_effect<rl::effect::mp_regen>()) {
             auto efx = potion.accumulate({ rl::effect::mp_regen });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0x00, efx.magnitude0));
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ invigoration", { 0.0, 1.0, 0.0 });
         }
 
         // accuracy
-        if (potion.has_effect(rl::effect::accuracy)) {
+        if (potion.has_effect<rl::effect::accuracy>()) {
             auto efx = potion.accumulate({ rl::effect::accuracy });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::accuracy, 0x00, efx.magnitude0));
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::accuracy, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ accuracy", { 0.0, 1.0, 0.0 });
         }
         // armor
-        if (potion.has_effect(rl::effect::armor)) {
+        if (potion.has_effect<rl::effect::armor>()) {
             auto efx = potion.accumulate({ rl::effect::armor });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::armor, 0x00, efx.magnitude0));
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::armor, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ armor", { 0.0, 1.0, 0.0 });
         }
         // dodge
-        if (potion.has_effect(rl::effect::dodge)) {
+        if (potion.has_effect<rl::effect::dodge>()) {
             auto efx = potion.accumulate({ rl::effect::dodge });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::dodge, 0x00, efx.magnitude0));
+            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::dodge, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ dodge", { 0.0, 1.0, 0.0 });
@@ -202,6 +209,20 @@ namespace px {
             buff.set_description("Potion effect");
             buff.set_duration(potion.accumulate({ rl::effect::duration }).value0);
             add(buff);
+        }
+
+        if (potion.has_effect<rl::effect::intoxication>()) {
+            buff_type side_effects;
+            auto intoxication = potion.accumulate({ rl::effect::intoxication_power });
+            auto duration = potion.accumulate({ rl::effect::intoxication_duration });
+
+            side_effects.add(intoxication);
+
+            side_effects.set_name("intoxication saturation");
+            side_effects.set_tag("b_intoxication_" + potion.tag());
+            side_effects.set_description("potion side effect");
+            side_effects.set_duration(duration.value0);
+            add(side_effects);
         }
     }
 }

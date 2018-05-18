@@ -286,6 +286,10 @@ namespace px::rl {
             item->add(enhancement_type::integral(effect::essence, 0x00, essence));  // store essence origin
             item->add(enhancement_type::zero(effect::useable));
 
+            item->add(enhancement_type::zero(effect::intoxication));
+            item->add(enhancement_type::real(effect::intoxication_power, 0x00, 1));
+            item->add(enhancement_type::integral(effect::intoxication_duration, 0x00, 20));
+
             bool is_instant = true;
             item->enumerate([&](auto const& efx) { is_instant &= !has_duration(efx.main); });
             if (!is_instant) {

@@ -16,7 +16,7 @@
 #include "performance.hpp"
 #include "status.hpp"
 #include "skills.hpp"
-#include "title.hpp"
+#include "title_screen.hpp"
 #include "levelup.hpp"
 #include "results.hpp"
 
