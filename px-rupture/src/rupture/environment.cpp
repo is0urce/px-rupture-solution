@@ -76,8 +76,8 @@ namespace px {
         player = camera;
         sprites.target(camera);
         messages.target(camera);
-        sounds.target(camera);
         lights.target(camera);
+        sounds.target(camera);
         lights.recalculate();
     }
 
@@ -87,7 +87,6 @@ namespace px {
 
         if (auto body = player->linked<body_component>()) {
             point2 destination = player->position() + movement;
-            stage.focus(destination);
             if (stage.is_traversable(destination, body->movement())) {
                 start_turn();
                 player->place(destination);
@@ -293,6 +292,11 @@ namespace px {
 
     // execute after npc turn
     void environment::return_turn() {
+
+        // stream world
+        if (player) {
+            stage.focus(player->position());
+        }
 
         // death of units
         stage.discard([&](composite_component & composite) {

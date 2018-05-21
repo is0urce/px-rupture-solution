@@ -42,7 +42,7 @@ namespace px {
         static void display_collection(Collection const& collection) {
 
             print_bool<rl::effect::equipment>(collection, "Equipment");
-            print_bool<rl::effect::equipment>(collection, "Useable");
+            print_bool<rl::effect::useable>(collection, "Useable");
 
             if (collection.has_effect(rl::effect::ingredient_power)) {
                 switch (static_cast<rl::craft_activity>(collection.find_subtype(rl::effect::ingredient_power, 0))) {

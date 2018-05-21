@@ -163,7 +163,7 @@ namespace px {
         // hp regen
         if (potion.has_effect<rl::effect::hp_regen>()) {
             auto efx = potion.accumulate({ rl::effect::hp_regen });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::hp_regen, 0x00, efx.magnitude0 * power));
+            buff.add(enhancement_type::real(rl::effect::hp_regen, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ regeneration", { 0.0, 1.0, 0.0 });
@@ -172,7 +172,7 @@ namespace px {
         // mp regen
         if (potion.has_effect<rl::effect::mp_regen>()) {
             auto efx = potion.accumulate({ rl::effect::mp_regen });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::mp_regen, 0x00, efx.magnitude0 * power));
+            buff.add(enhancement_type::real(rl::effect::mp_regen, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ invigoration", { 0.0, 1.0, 0.0 });
@@ -181,7 +181,7 @@ namespace px {
         // accuracy
         if (potion.has_effect<rl::effect::accuracy>()) {
             auto efx = potion.accumulate({ rl::effect::accuracy });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::accuracy, 0x00, efx.magnitude0 * power));
+            buff.add(enhancement_type::real(rl::effect::accuracy, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ accuracy", { 0.0, 1.0, 0.0 });
@@ -189,7 +189,7 @@ namespace px {
         // armor
         if (potion.has_effect<rl::effect::armor>()) {
             auto efx = potion.accumulate({ rl::effect::armor });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::armor, 0x00, efx.magnitude0 * power));
+            buff.add(enhancement_type::real(rl::effect::armor, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ armor", { 0.0, 1.0, 0.0 });
@@ -197,7 +197,7 @@ namespace px {
         // dodge
         if (potion.has_effect<rl::effect::dodge>()) {
             auto efx = potion.accumulate({ rl::effect::dodge });
-            buff.add(body_component::buff_type::enhancement_type::real(rl::effect::dodge, 0x00, efx.magnitude0 * power));
+            buff.add(enhancement_type::real(rl::effect::dodge, 0x00, efx.magnitude0 * power));
 
             // notify
             context->popup("+ dodge", { 0.0, 1.0, 0.0 });
@@ -213,10 +213,10 @@ namespace px {
 
         if (potion.has_effect<rl::effect::intoxication>()) {
             buff_type side_effects;
-            auto intoxication = potion.accumulate({ rl::effect::intoxication_power });
+            //auto intoxication = potion.accumulate({ rl::effect::intoxication_power });
             auto duration = potion.accumulate({ rl::effect::intoxication_duration });
 
-            side_effects.add(intoxication);
+            side_effects.add(enhancement_type::real(rl::effect::intoxication_power, 0x00, 1.0));
 
             side_effects.set_name("intoxication saturation");
             side_effects.set_tag("b_intoxication_" + potion.tag());
