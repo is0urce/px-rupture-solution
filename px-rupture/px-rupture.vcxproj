@@ -231,6 +231,7 @@
     <ClInclude Include="src\px\es\values.hpp" />
     <ClInclude Include="src\rupture\es\sound_system.hpp" />
     <ClInclude Include="src\rupture\es\sound_works.hpp" />
+    <ClInclude Include="src\rupture\es\value_component.hpp" />
     <ClInclude Include="src\rupture\snd\sound.hpp" />
     <ClInclude Include="src\px\es\useable.hpp" />
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
