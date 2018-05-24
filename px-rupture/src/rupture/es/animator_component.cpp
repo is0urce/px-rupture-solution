@@ -24,7 +24,7 @@ namespace px {
     // methods
 
     bool animator_component::play(size_t animation_index) {
-        if (animation_index <= animations->clips.size()) {
+        if (animation_index < animations->clips.size()) {
             current_index = animation_index;
             current_ptr = &animations->clips[current_index];
             playing = true;

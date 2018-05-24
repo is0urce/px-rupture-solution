@@ -9,7 +9,6 @@
 #include <px/es/link_dispatcher.hpp>
 
 #include <string>
-#include <vector>
 
 namespace px {
 
@@ -36,7 +35,8 @@ namespace px {
         size_t                          size() const;
 
         template <typename Archive>
-        void                            serialize(Archive & /*archive*/) {
+        void                            serialize(Archive & archive) {
+            archive(playing, current_index);
         }
 
     public:
@@ -48,8 +48,8 @@ namespace px {
     private:
         char const*                     name;           // label
         animation_set const*            animations;
-        bool                            playing;
-        size_t                          current_index;
         animation const*                current_ptr;
+        size_t                          current_index;
+        bool                            playing;
     };
 }
