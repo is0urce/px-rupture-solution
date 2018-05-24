@@ -202,8 +202,8 @@ namespace px {
             load_effect_real(node, *item, "dodge", rl::effect::dodge);
             load_effect_real(node, *item, "resistance", rl::effect::resistance);
 
-            load_effect_real(node, *item, "hp_bonus", rl::effect::hp_bonus);
-            load_effect_real(node, *item, "mp_bonus", rl::effect::mp_bonus);
+            load_effect_real(node, *item, "hp_heal", rl::effect::hp_heal);
+            load_effect_real(node, *item, "mp_bonus", rl::effect::mp_heal);
             load_effect_real(node, *item, "hp_regen", rl::effect::hp_regen);
             load_effect_real(node, *item, "mp_regen", rl::effect::mp_regen);
 

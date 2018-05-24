@@ -817,8 +817,8 @@ namespace px::ui {
                 if (item.has_effect(rl::effect::damage)) {
                     ImGui::Text("damage:    %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::damage)).magnitude0);
                 }
-                if (item.has_effect(rl::effect::hp_bonus)) {
-                    ImGui::Text("hp bonus:  %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::hp_bonus)).magnitude0);
+                if (item.has_effect(rl::effect::hp_heal)) {
+                    ImGui::Text("hp bonus:  %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::hp_heal)).magnitude0);
                 }
                 if (item.has_effect(rl::effect::ingredient_power)) {
                     ImGui::Text("ingredient power: %f", item.accumulate(rl::item::enhancement_type::zero(rl::effect::ingredient_power)).magnitude0);

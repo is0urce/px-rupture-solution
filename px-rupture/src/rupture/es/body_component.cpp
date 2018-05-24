@@ -145,16 +145,16 @@ namespace px {
         double power = std::pow(0.5, current_intoxication.magnitude0);
 
         // hp restore
-        if (potion.has_effect<rl::effect::hp_bonus>()) {
-            auto efx = potion.accumulate<rl::effect::hp_bonus>();
+        if (potion.has_effect<rl::effect::hp_heal>()) {
+            auto efx = potion.accumulate<rl::effect::hp_heal>();
             auto restore = efx.magnitude0 * power;
             auto done = mechanic::heal(*this, static_cast<int>(restore), static_cast<rl::damage_type>(efx.sub));
             context->popup("+ " + std::to_string(done), { 0.0, 1.0, 0.0 });
         }
 
         // mp restore
-        if (potion.has_effect<rl::effect::mp_bonus>()) {
-            auto efx = potion.accumulate<rl::effect::mp_bonus>();
+        if (potion.has_effect<rl::effect::mp_heal>()) {
+            auto efx = potion.accumulate<rl::effect::mp_heal>();
             auto restore = efx.magnitude0 * power;
             auto done = mechanic::innervate(*this, static_cast<int>(restore), static_cast<rl::damage_type>(efx.sub));
             context->popup("+ " + std::to_string(done), { 0.0, 0.0, 1.0 });

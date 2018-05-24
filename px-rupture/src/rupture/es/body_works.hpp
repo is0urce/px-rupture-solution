@@ -8,6 +8,8 @@
 #include "animator_component.hpp"
 #include "body_component.hpp"
 #include "composite_component.hpp"
+#include "character_component.hpp"
+#include "transform_component.hpp"
 
 #include "../environment.hpp"
 
@@ -82,6 +84,11 @@ namespace px {
                     if (body.is_dead()) {
                         if (auto animations = unit->query<animator_component>()) {
                             animations->play("death");
+                        }
+                        auto person = unit->query<character_component>();
+                        auto pawn = body.linked<transform_component>();
+                        if (pawn && person && person->has_trait("t_red_blood")) {
+                            game->spawn("d_blood_red", pawn->position());
                         }
                     }
                     break;

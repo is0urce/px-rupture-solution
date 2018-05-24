@@ -68,8 +68,8 @@ namespace px {
 
             // potion props
 
-            print_real<rl::effect::hp_bonus>(collection, "Heal: %.2f");
-            print_real<rl::effect::mp_bonus>(collection, "Innervate: %.2f");
+            print_real<rl::effect::hp_heal>(collection, "Heal: %.2f");
+            print_real<rl::effect::mp_heal>(collection, "Innervate: %.2f");
             print_real<rl::effect::hp_regen>(collection, "Regenerate: %.2f");
             print_real<rl::effect::mp_regen>(collection, "Invigorate: %.2f");
 

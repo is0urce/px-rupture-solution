@@ -214,7 +214,7 @@ namespace px {
 
             auto pot = make_uq<rl::item>();
             pot->add(body_component::enhancement_type::zero(rl::effect::useable, 0x00));
-            pot->add(body_component::enhancement_type::real(rl::effect::hp_bonus, 0x00, 100.0));
+            pot->add(body_component::enhancement_type::real(rl::effect::hp_heal, 0x00, 100.0));
             pot->set_name("healing potion");
             pot->set_tag("i_hp_potion_dev");
             pot->make_stacking();

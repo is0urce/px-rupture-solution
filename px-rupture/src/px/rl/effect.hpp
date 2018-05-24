@@ -38,10 +38,15 @@ namespace px::rl {
         resistance = 62,
         dodge = 63,
 
-        hp_bonus = 70,
+        hp_heal = 70,
         hp_regen = 71,
-        mp_bonus = 72,
-        mp_regen = 73,
+        hp_bonus = 72,
+        hp_drain = 73,
+
+        mp_heal = 75,
+        mp_regen = 76,
+        mp_bonus = 77,
+        mp_drain = 78,
 
         essence = 80,
         ingredient_power = 81,

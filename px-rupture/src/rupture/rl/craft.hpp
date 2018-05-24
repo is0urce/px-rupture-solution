@@ -115,7 +115,7 @@ namespace px::rl {
 
             case 0:
                 // hp (health)
-                add<effect::hp_bonus>(*item, hp_bonus_value);
+                add<effect::hp_heal>(*item, hp_bonus_value);
                 break;
             case 1:
                 // hp_regen (regeneration)
@@ -132,32 +132,32 @@ namespace px::rl {
 
             case 4:
                 // hp + accuracy (clarity)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::accuracy>(*item, accuracy_value * 0.5);
                 break;
             case 5:
                 // hp + critical (reaction)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::critical>(*item, critical_value * 0.5);
                 break;
             case 6:
                 // hp + dodge (respite)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::dodge>(*item, dodge_value * 0.5);
                 break;
             case 7:
                 // hp + dmg_bonus (warrior)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::damage_bonus>(*item, damage_bonus_value * 0.5);
                 break;
             case 8:
                 // hp + mp (rejuvenation)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
-                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
+                add<effect::mp_heal>(*item, mp_bonus_value * 0.5);
                 break;
             case 9:
                 // hp + mp_regen (soothing)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::mp_regen>(*item, mp_regen_value * 0.5);
                 break;
 
@@ -184,7 +184,7 @@ namespace px::rl {
             case 14:
                 // hp_regen + mp (vivacity)
                 add<effect::hp_regen>(*item, hp_regen_value * 0.5);
-                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
+                add<effect::mp_heal>(*item, mp_bonus_value * 0.5);
                 break;
             case 15:
                 // hp_regen + mp_regen (stamina)
@@ -194,18 +194,18 @@ namespace px::rl {
 
             case 16:
                 // hp + hp_regen (vigor)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::hp_regen>(*item, hp_regen_value * 0.5);
                 break;
 
             case 17:
                 // hp + armor (guardian)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::armor>(*item, armor_value * 0.5);
                 break;
             case 18:
                 // hp + damage (venegance)
-                add<effect::hp_bonus>(*item, hp_bonus_value * 0.5);
+                add<effect::hp_heal>(*item, hp_bonus_value * 0.5);
                 add<effect::damage>(*item, damage_value * 0.5);
                 break;
             case 19:
@@ -237,7 +237,7 @@ namespace px::rl {
             case 24:
                 // armor + mp (battle)
                 add<effect::armor>(*item, armor_value * 0.5);
-                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
+                add<effect::mp_heal>(*item, mp_bonus_value * 0.5);
                 break;
             case 25:
                 // armor + mp_regen (invoker)
@@ -268,7 +268,7 @@ namespace px::rl {
             case 30:
                 // damage + mp (wrath)
                 add<effect::damage>(*item, damage_value * 0.5);
-                add<effect::mp_bonus>(*item, mp_bonus_value * 0.5);
+                add<effect::mp_heal>(*item, mp_bonus_value * 0.5);
                 break;
             case 31:
                 // damage + mp_regen (brawl)
