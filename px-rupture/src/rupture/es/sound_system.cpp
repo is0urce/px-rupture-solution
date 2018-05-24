@@ -42,6 +42,7 @@ namespace px {
     void sound_system::play_sound(std::string const& name, double volume, vector2 const& location) {
         works->play_sound(name, volume, location);
     }
+
     void sound_system::play_sound(std::string const& name, double volume) {
         works->play_sound(name, volume);
     }

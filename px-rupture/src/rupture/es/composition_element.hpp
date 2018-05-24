@@ -17,7 +17,7 @@ namespace px {
         sprite      = 'S',
         animator    = 'A',
         light       = 'L',
-        sound       = 'W',
+        sound       = 'W',  // w for wave
         body        = 'B',
         container   = 'I',  // inventory
         character   = 'C',
@@ -31,6 +31,10 @@ namespace px {
         // controls
         player      = 'P',
         npc         = 'M',
+
+        // script data
+        value       = 'V',  // v for value vault
+        script      = 'E',  // e for execute
 
         undefined   = '!'   // unspecified, used mostly for indicating components that is not serialized
     };

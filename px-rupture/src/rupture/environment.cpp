@@ -43,8 +43,8 @@ namespace px {
         parent = make_uq<repository>(std::string(settings::save_path) + "base");
         current = make_uq<repository>(std::string(settings::save_path) + "current", parent.get());
 
-        stage.set_leave_event([&](point2 const& cell) { save_scene(cell); });
-        stage.set_enter_event([&](point2 const& cell) { load_scene(cell); });
+        stage.set_leave_event([this](point2 const& cell) { save_scene(cell); });
+        stage.set_enter_event([this](point2 const& cell) { load_scene(cell); });
 
         clear();
         seed(0);
@@ -492,14 +492,14 @@ namespace px {
     }
 
     bool environment::in_line(body_component const& body, point2 const& destination) const {
-        auto pawn = body.linked<transform_component>();
-        if (!pawn) return false;
-
-        bool traverse = true;
-        bresenham::line(pawn->position(), destination, [&](int x, int y) {
-            point2 position(x, y);
-            if (position != pawn->position()) traverse &= stage.is_traversable(position, body.movement());
-        });
+        bool traverse = false;
+        if (auto pawn = body.linked<transform_component>()) {
+            traverse = true;
+            bresenham::line(pawn->position(), destination, [&](int x, int y) {
+                point2 position(x, y);
+                traverse &= position == pawn->position() || is_traversable(position, body);
+            });
+        }
         return traverse;
     }
 

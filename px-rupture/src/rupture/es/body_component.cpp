@@ -70,7 +70,7 @@ namespace px {
     bool body_component::equip(size_t idx) {
         if (auto cont = linked<container_component>()) {
             if (auto selected_item = cont->get(idx)) {
-                auto enh = selected_item->accumulate({ rl::effect::equipment });
+                auto enh = selected_item->accumulate<rl::effect::equipment>();
                 auto slot = static_cast<rl::equipment>(enh.sub);
 
                 if (slot == rl::equipment::not_valid) return false;
@@ -146,7 +146,7 @@ namespace px {
 
         // hp restore
         if (potion.has_effect<rl::effect::hp_bonus>()) {
-            auto efx = potion.accumulate({ rl::effect::hp_bonus });
+            auto efx = potion.accumulate<rl::effect::hp_bonus>();
             auto restore = efx.magnitude0 * power;
             auto done = mechanic::heal(*this, static_cast<int>(restore), static_cast<rl::damage_type>(efx.sub));
             context->popup("+ " + std::to_string(done), { 0.0, 1.0, 0.0 });
@@ -154,7 +154,7 @@ namespace px {
 
         // mp restore
         if (potion.has_effect<rl::effect::mp_bonus>()) {
-            auto efx = potion.accumulate({ rl::effect::mp_bonus });
+            auto efx = potion.accumulate<rl::effect::mp_bonus>();
             auto restore = efx.magnitude0 * power;
             auto done = mechanic::innervate(*this, static_cast<int>(restore), static_cast<rl::damage_type>(efx.sub));
             context->popup("+ " + std::to_string(done), { 0.0, 0.0, 1.0 });
@@ -162,7 +162,7 @@ namespace px {
 
         // hp regen
         if (potion.has_effect<rl::effect::hp_regen>()) {
-            auto efx = potion.accumulate({ rl::effect::hp_regen });
+            auto efx = potion.accumulate<rl::effect::hp_regen>();
             buff.add(enhancement_type::real(rl::effect::hp_regen, 0x00, efx.magnitude0 * power));
 
             // notify
@@ -171,7 +171,7 @@ namespace px {
 
         // mp regen
         if (potion.has_effect<rl::effect::mp_regen>()) {
-            auto efx = potion.accumulate({ rl::effect::mp_regen });
+            auto efx = potion.accumulate<rl::effect::mp_regen>();
             buff.add(enhancement_type::real(rl::effect::mp_regen, 0x00, efx.magnitude0 * power));
 
             // notify
@@ -180,7 +180,7 @@ namespace px {
 
         // accuracy
         if (potion.has_effect<rl::effect::accuracy>()) {
-            auto efx = potion.accumulate({ rl::effect::accuracy });
+            auto efx = potion.accumulate<rl::effect::accuracy>();
             buff.add(enhancement_type::real(rl::effect::accuracy, 0x00, efx.magnitude0 * power));
 
             // notify
@@ -188,7 +188,7 @@ namespace px {
         }
         // armor
         if (potion.has_effect<rl::effect::armor>()) {
-            auto efx = potion.accumulate({ rl::effect::armor });
+            auto efx = potion.accumulate<rl::effect::armor>();
             buff.add(enhancement_type::real(rl::effect::armor, 0x00, efx.magnitude0 * power));
 
             // notify
@@ -196,7 +196,7 @@ namespace px {
         }
         // dodge
         if (potion.has_effect<rl::effect::dodge>()) {
-            auto efx = potion.accumulate({ rl::effect::dodge });
+            auto efx = potion.accumulate<rl::effect::dodge>();
             buff.add(enhancement_type::real(rl::effect::dodge, 0x00, efx.magnitude0 * power));
 
             // notify
@@ -207,14 +207,14 @@ namespace px {
             buff.set_name(potion.name());
             buff.set_tag("b_" + potion.tag());
             buff.set_description("Potion effect");
-            buff.set_duration(potion.accumulate({ rl::effect::duration }).value0);
+            buff.set_duration(potion.accumulate<rl::effect::duration>().value0);
             add(buff);
         }
 
         if (potion.has_effect<rl::effect::intoxication>()) {
             buff_type side_effects;
-            //auto intoxication = potion.accumulate({ rl::effect::intoxication_power });
-            auto duration = potion.accumulate({ rl::effect::intoxication_duration });
+            //auto intoxication = potion.accumulate<rl::effect::intoxication_power>();
+            auto duration = potion.accumulate<rl::effect::intoxication_duration>();
 
             side_effects.add(enhancement_type::real(rl::effect::intoxication_power, 0x00, 1.0));
 

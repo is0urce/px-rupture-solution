@@ -228,6 +228,7 @@
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
     <ClInclude Include="src\px\es\light_source.hpp" />
+    <ClInclude Include="src\px\es\values.hpp" />
     <ClInclude Include="src\rupture\es\sound_system.hpp" />
     <ClInclude Include="src\rupture\es\sound_works.hpp" />
     <ClInclude Include="src\rupture\snd\sound.hpp" />
