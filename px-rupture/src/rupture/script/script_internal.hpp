@@ -119,6 +119,7 @@ namespace px {
             lua.new_usertype<point2>("point"
                 , "x", &point2::x
                 , "y", &point2::y
+                , "moved", &point2::moved
                 );
 
             lua.new_usertype<script_effect>("effect"

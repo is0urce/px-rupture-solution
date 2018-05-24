@@ -62,7 +62,7 @@ namespace px::rl {
         }
 
     public:
-        constitution() = default;
+        constitution() noexcept = default;
 
     private:
         resource_type hp;

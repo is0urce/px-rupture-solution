@@ -22,21 +22,22 @@ namespace px {
         , public link_dispatcher<animator_component>
     {
     public:
-        void                            assign(animation_set const* ptr);
+        void                            assign(animation_set const* ptr) noexcept;
         bool                            play(size_t animation_index);
         bool                            play(std::string const& animation_name);
-        void                            stop();
-        void                            resume();
+        void                            stop() noexcept;
+        void                            resume() noexcept;
         bool                            is_playing() const noexcept;
         char const* const               get_id() const noexcept;
         void                            set_id(char const * const) noexcept;
         void                            clear();
-        animation const*                current() const;
+        animation const*                current() const noexcept;
         size_t                          size() const;
 
         template <typename Archive>
         void                            serialize(Archive & archive) {
             archive(playing, current_index);
+            select();
         }
 
     public:
@@ -44,6 +45,9 @@ namespace px {
         animator_component() noexcept;
         animator_component(animator_component const&) = delete;
         animator_component & operator=(animator_component const&) = delete;
+
+    private:
+        void                            select();
 
     private:
         char const*                     name;           // label

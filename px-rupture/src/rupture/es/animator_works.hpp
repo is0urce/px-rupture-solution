@@ -45,10 +45,11 @@ namespace px {
                 if (!animator.is_active()) return;
                 if (!animator.is_playing()) return;
 
-                if (auto img = animator.linked<sprite_component>()) {
-                    auto current = animator.current();
+                if (auto current = animator.current()) {
                     if (auto frame = current->select_frame(time)) {
-                        *static_cast<sprite*>(img) = *frame;
+                        if (auto img = animator.linked<sprite_component>()) {
+                            *static_cast<sprite*>(img) = *frame;
+                        }
                     }
                 }
             });

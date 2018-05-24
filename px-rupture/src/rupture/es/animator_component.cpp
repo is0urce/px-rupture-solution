@@ -23,10 +23,14 @@ namespace px {
 
     // methods
 
+    void animator_component::select() {
+        current_ptr = &animations->clips[current_index];
+    }
+
     bool animator_component::play(size_t animation_index) {
         if (animation_index < animations->clips.size()) {
             current_index = animation_index;
-            current_ptr = &animations->clips[current_index];
+            select();
             playing = true;
             return true;
         }
@@ -41,11 +45,11 @@ namespace px {
         return false;
     }
 
-    void animator_component::stop() {
+    void animator_component::stop() noexcept {
         playing = false;
     }
 
-    void animator_component::resume() {
+    void animator_component::resume() noexcept {
         playing = true;
     }
 
@@ -68,11 +72,11 @@ namespace px {
         stop();
     }
 
-    void animator_component::assign(animation_set const* ptr) {
+    void animator_component::assign(animation_set const* ptr) noexcept {
         animations = ptr;
     }
 
-    animation const* animator_component::current() const {
+    animation const* animator_component::current() const noexcept {
         return current_ptr;
     }
 

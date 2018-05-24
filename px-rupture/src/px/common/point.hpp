@@ -26,8 +26,7 @@ namespace px {
     public:
         // default constructor is for uninitialized state
         // use point2(0, 0) for constexpr
-        point2() noexcept {
-        }
+        point2() noexcept = default;
 
         constexpr point2(component x, component y) noexcept
             : coordinate(x, y) {

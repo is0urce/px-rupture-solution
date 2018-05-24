@@ -104,8 +104,9 @@ namespace px {
                 m_bucket->enumerate(fn);
             }
             else {
-                auto const& branch = select(x, y);
-                if (branch) branch->find(x, y, std::forward<Operator>(fn));
+                if (auto const& branch = select(x, y)) {
+                    branch->find(x, y, std::forward<Operator>(fn));
+                }
             }
         }
 

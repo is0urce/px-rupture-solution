@@ -80,18 +80,22 @@ namespace px {
     public:
         // default constructor is for uninitialized state
         // use vector2(0.0, 0.0) for constexpr
-        vector2() noexcept {
-        }
+        vector2() noexcept = default;
+
         constexpr vector2(component x, component y) noexcept
             : coordinate(x, y) {
         }
+
         constexpr vector2(component i) noexcept
             : coordinate(i, i) {
         }
+
         constexpr vector2(point2 const& that) noexcept
             : coordinate(static_cast<component>(that.x()), static_cast<component>(that.y())) {
         }
+
         constexpr vector2(vector2 const&) noexcept = default;
+        vector2 & operator=(vector2 const&) noexcept = default;
     };
 
     namespace {

@@ -16,7 +16,7 @@ namespace px {
             if (frames.empty()) return nullptr;
 
             if (loop) {
-                time = std::fmod(std::max<decltype(time)>(0, time), frames.back().time);
+                time = std::fmod(std::max<decltype(time)>(time, 0), frames.back().time);
             }
 
             return frame(time);

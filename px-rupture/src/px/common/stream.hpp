@@ -112,7 +112,7 @@ namespace px {
 
     private:
         data_type           userdata;
-        volatile bool       loaded;		// flag set is data loaded
+        volatile bool       loaded;     // flag set is data loaded
         std::thread         thread;
         std::exception_ptr  exc_ptr;
     };

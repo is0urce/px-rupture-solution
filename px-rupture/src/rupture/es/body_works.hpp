@@ -78,7 +78,7 @@ namespace px {
 
         // death of unit
         void process_death(body_component & body) {
-            if (composite_component * unit = body.linked<composite_component>()) {
+            if (auto unit = body.linked<composite_component>()) {
                 switch (unit->lifetime()) {
                 case persistency::permanent:    // skip for permanent entities (player and controllers)
                     if (body.is_dead()) {
@@ -87,7 +87,7 @@ namespace px {
                         }
                         auto person = unit->query<character_component>();
                         auto pawn = body.linked<transform_component>();
-                        if (pawn && person && person->has_trait("t_red_blood")) {
+                        if (game && pawn && person && person->has_trait("t_red_blood")) {
                             game->spawn("d_blood_red", pawn->position());
                         }
                     }
@@ -98,7 +98,9 @@ namespace px {
                 default:
                     if (body.is_dead()) {
                         // give experience
-                        game->give_experience(body.experience(), body.level());
+                        if (game) {
+                            game->give_experience(body.experience(), body.level());
+                        }
                         body.set_experience(0);
 
                         // set destroying persistency status
