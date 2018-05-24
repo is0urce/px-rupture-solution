@@ -167,11 +167,13 @@ namespace px {
         light->elevation = 0.5;
         light->is_on = true;
 
+        unit_builder.add_animator("a_gnome_warrior");
+
         // stats
         auto body = unit_builder.add_body();
         body->movement().make_traversable(rl::traverse::floor);
         body->blocking().make_transparent();
-        body->health().emplace(10050);
+        body->health().emplace(50);
         body->energy().emplace(100);
         body->set_name("Gnome");
         body->join_faction(1);

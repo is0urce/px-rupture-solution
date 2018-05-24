@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "animator_component.hpp"
 #include "body_component.hpp"
 #include "composite_component.hpp"
 
@@ -36,8 +37,7 @@ namespace px {
 
     public:
         body_works()
-            : game(nullptr)
-        {
+            : game(nullptr) {
         }
 
     private:
@@ -78,7 +78,12 @@ namespace px {
         void process_death(body_component & body) {
             if (composite_component * unit = body.linked<composite_component>()) {
                 switch (unit->lifetime()) {
-                case persistency::permanent:    // skip for permanent entities
+                case persistency::permanent:    // skip for permanent entities (player and controllers)
+                    if (body.is_dead()) {
+                        if (auto animations = unit->query<animator_component>()) {
+                            animations->play("death");
+                        }
+                    }
                     break;
                 case persistency::destroying:
                     unit->decay(1);

@@ -11,6 +11,7 @@
 
 #include "../app/document.hpp"
 #include "../draw/animation.hpp"
+#include "../draw/animation_set.hpp"
 
 #include <px/common/pool_chain.hpp>
 
@@ -21,18 +22,18 @@
 namespace px {
 
     class animator_works final {
+    private:
+        struct animator_record {
+
+        };
     public:
         uq_ptr<animator_component> make(std::string const& name) {
             auto kv_it = animations.find(name);
             if (kv_it != animations.end()) {
                 auto animator = pool.make_uq();
 
-                auto const& v = kv_it->second;
                 animator->set_id(kv_it->first.c_str());
-                animator->clear();
-                for (animation const& a : v) {
-                    animator->push_animation(&a);
-                }
+                animator->assign(&kv_it->second);
 
                 return animator;
             }
@@ -44,13 +45,11 @@ namespace px {
                 if (!animator.is_active()) return;
                 if (!animator.is_playing()) return;
 
-                auto img = animator.linked<sprite_component>();
-                if (!img) return;
-
-                auto current = animator.current();
-                auto frame = current->select_frame(time);
-                if (frame) {
-                    *static_cast<sprite*>(img) = *frame;
+                if (auto img = animator.linked<sprite_component>()) {
+                    auto current = animator.current();
+                    if (auto frame = current->select_frame(time)) {
+                        *static_cast<sprite*>(img) = *frame;
+                    }
                 }
             });
         }
@@ -91,21 +90,30 @@ namespace px {
                     }
 
                     std::string name = animation_node["name"];
-                    std::vector<animation> & clip_set = animations[name];  // create entry
+                    auto & set = animations[name];  // create entry
+                    auto & keyframe_array = set.clips;  // create entry
+
+                    size_t clip_index = 0;
 
                     for (auto const& clip_node : animation_node["animations"]) {
+                        auto & clip = keyframe_array.emplace_back();
 
-                        clip_set.emplace_back();
-                        animation & clip = clip_set.back();
+                        // settings and accessors
+                        clip.loop = clip_node.value("loop", false);
+                        std::string clip_name = clip_node.value("name", "");
+                        if (!clip_name.empty()) {
+                            set.names[clip_name] = clip_index;
+                        }
 
-                        clip.loop = clip_node["loop"];
-
+                        // fill keyframes
                         for (auto const& keyframe_node : clip_node["frames"]) {
-                            double time = keyframe_node["time"];
-                            unsigned int frame_id = keyframe_node["frame"];
+                            double time = keyframe_node.value("time", 0.0);
+                            unsigned int frame_id = keyframe_node.value("frame", 0);
 
                             clip.frames.push_back({ frames.at(frame_id), time });
                         }
+
+                        ++clip_index;
                     }
                 }
             }
@@ -123,6 +131,6 @@ namespace px {
 
     private:
         pool_chain<animator_component, 1024>            pool;
-        std::map<std::string, std::vector<animation>>   animations;
+        std::map<std::string, animation_set>            animations;
     };
 }

@@ -10,7 +10,7 @@
 
 namespace px {
 
-    class animation {
+    struct animation {
     public:
         sprite const* select_frame(double time) const {
             if (frames.empty()) return nullptr;
