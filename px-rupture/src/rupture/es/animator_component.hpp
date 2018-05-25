@@ -36,7 +36,7 @@ namespace px {
 
         template <typename Archive>
         void                            serialize(Archive & archive) {
-            archive(playing, current_index);
+            archive(current_index, playing);
             select();
         }
 

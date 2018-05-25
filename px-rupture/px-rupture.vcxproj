@@ -421,6 +421,7 @@
     <None Include="data\controls.json" />
     <None Include="data\schemata\mobile_t0.json" />
     <None Include="data\scripts\lib_rupture.lua" />
+    <None Include="data\scripts\sk_i_lightning.lua" />
     <None Include="data\scripts\sk_o_teleport.lua" />
     <None Include="data\scripts\sk_s_charge.lua" />
     <None Include="data\scripts\sk_s_flurry.lua" />
@@ -428,11 +429,15 @@
     <None Include="data\scripts\sk_s_smite.lua" />
     <None Include="data\scripts\sk_v_acid.lua" />
     <None Include="data\scripts\sk_v_bite.lua" />
+    <None Include="data\scripts\sk_v_blink.lua" />
     <None Include="data\scripts\sk_v_disease.lua" />
+    <None Include="data\scripts\sk_v_drain.lua" />
     <None Include="data\scripts\sk_v_fire.lua" />
+    <None Include="data\scripts\sk_v_lash.lua" />
     <None Include="data\scripts\sk_v_melee.lua" />
     <None Include="data\scripts\sk_v_needle.lua" />
     <None Include="data\scripts\sk_v_poison.lua" />
+    <None Include="data\scripts\sk_v_sling.lua" />
     <None Include="data\scripts\sk_v_sound.lua" />
     <None Include="data\scripts\sk_v_sting.lua" />
     <None Include="data\scripts\sk_v_swipe.lua" />

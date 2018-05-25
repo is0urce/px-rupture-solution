@@ -162,12 +162,12 @@ namespace px {
 
         // appearance
         unit_builder.add_sprite("m_gnome_warrior");
+        unit_builder.add_animator("a_gnome_warrior");
+
         auto light = unit_builder.add_light();
         light->tint = color(0.7, 0.7, 0.7);
         light->elevation = 0.5;
         light->is_on = true;
-
-        unit_builder.add_animator("a_gnome_warrior");
 
         // stats
         auto body = unit_builder.add_body();
@@ -180,7 +180,7 @@ namespace px {
         auto character = unit_builder.add_character();
         character->learn("sk_v_melee");                                             // basic attack
         //character->learn("sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_s_charge");  // class
-        character->learn("sk_v_zap", "sk_v_lash", "sk_v_drain", "sk_v_sling", "sk_v_blink");                            // test
+        character->learn("sk_i_lightning", "sk_v_lash", "sk_v_drain", "sk_v_sling", "sk_v_blink");                            // test
 
         // inventory
         auto container = unit_builder.add_container();
@@ -235,8 +235,8 @@ namespace px {
     }
 
     void environment::prewarm() {
-        spawn("anvil", { 1966, 861 });
-        spawn("alchemy", { 1967, 861 });
+        //spawn("anvil", { 1966, 861 });
+        //spawn("alchemy", { 1967, 861 });
     }
 
     void environment::end() {
@@ -246,6 +246,7 @@ namespace px {
     void environment::clear() {
         stage.unload();
         stage.clear_units();
+        vfx.clear();
         current->clear();
 
         player = nullptr;

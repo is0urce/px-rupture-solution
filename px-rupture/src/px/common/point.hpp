@@ -23,6 +23,14 @@ namespace px {
             return m_array[1];
         }
 
+        void set_x(component value) noexcept {
+            m_array[0] = value;
+        }
+
+        void set_y(component value)  noexcept {
+            m_array[1] = value;
+        }
+
     public:
         // default constructor is for uninitialized state
         // use point2(0, 0) for constexpr

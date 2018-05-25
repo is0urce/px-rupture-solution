@@ -787,5 +787,10 @@
     <None Include="data\scripts\sk_v_poison.lua" />
     <None Include="data\scripts\sk_s_charge.lua" />
     <None Include="data\scripts\sk_v_vampiric.lua" />
+    <None Include="data\scripts\sk_i_lightning.lua" />
+    <None Include="data\scripts\sk_v_blink.lua" />
+    <None Include="data\scripts\sk_v_lash.lua" />
+    <None Include="data\scripts\sk_v_sling.lua" />
+    <None Include="data\scripts\sk_v_drain.lua" />
   </ItemGroup>
 </Project>

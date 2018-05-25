@@ -24,23 +24,30 @@ namespace px {
     // methods
 
     void animator_component::select() {
-        current_ptr = &animations->clips[current_index];
+        if (animations) {
+            current_ptr = &animations->clips[current_index];
+        }
     }
 
     bool animator_component::play(size_t animation_index) {
-        if (animation_index < animations->clips.size()) {
-            current_index = animation_index;
-            select();
-            playing = true;
-            return true;
-        }
+        if (animations && animation_index < animations->clips.size()) {
+                current_index = animation_index;
+                current_ptr = &animations->clips[current_index];
+                playing = true;
+                return true;
+            }
         return false;
     }
 
     bool animator_component::play(std::string const& animation_name) {
-        auto it = animations->names.find(animation_name);
-        if (it != animations->names.end()) {
-            return play(it->second);
+        if (animations) {
+            auto it = animations->names.find(animation_name);
+            if (it != animations->names.end()) {
+                current_index = it->second;
+                current_ptr = &animations->clips[current_index];
+                playing = true;
+                return true;
+            }
         }
         return false;
     }
