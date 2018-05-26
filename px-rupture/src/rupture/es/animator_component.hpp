@@ -32,7 +32,7 @@ namespace px {
         void                            set_id(char const * const) noexcept;
         void                            clear();
         animation const*                current() const noexcept;
-        size_t                          size() const;
+        size_t                          size() const noexcept;
 
         template <typename Archive>
         void                            serialize(Archive & archive) {

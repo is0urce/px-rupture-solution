@@ -27,7 +27,7 @@ namespace px {
             m_array[0] = value;
         }
 
-        void set_y(component value)  noexcept {
+        void set_y(component value) noexcept {
             m_array[1] = value;
         }
 

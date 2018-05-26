@@ -87,7 +87,7 @@ namespace px {
         return current_ptr;
     }
 
-    size_t animator_component::size() const {
-        return animations->clips.size();
+    size_t animator_component::size() const noexcept {
+        return animations ? animations->clips.size() : 0;
     }
 }
