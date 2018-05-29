@@ -39,28 +39,21 @@ namespace px::ui {
 
                     ImGui::NewLine();
 
-                    auto locked_pawn = context->target();
-                    auto locked = locked_pawn ? locked_pawn->linked<body_component>() : nullptr;
-                    auto user = target->linked<body_component>();
+                    auto const locked_pawn = context->target();
+                    auto const locked = locked_pawn ? locked_pawn->linked<body_component>() : nullptr;
+                    auto const user = target->linked<body_component>();
 
                     for (size_t i = 1, size = skillset->size(); i != size; ++i) {
                         skill * ability = skillset->get(i);
                         if (ability) {
+
+                            bool const is_useable = context->has_control() && (ability->is_targeted()
+                                ? ability->useable(user, locked)
+                                : ability->useable(user, context->area()));
                             auto const& state = ability->state();
+
+                            ImVec4 color = is_useable ? ImVec4{ 1.0, 0.5, 0.5, 1 } : ImVec4{ 0.5, 0.5, 0.5, 1 };
                             ImGui::SameLine();
-
-                            ImVec4 color = { 0.5, 0.5, 0.5, 1 };
-
-                            if (ability->is_targeted()) {
-                                if (ability->useable(user, locked)) {
-                                    color = { 1.0, 0.5, 0.5, 1 };
-                                }
-                            }
-                            else {
-                                if (ability->useable(user, context->area())) {
-                                    color = { 1.0, 0.5, 0.5, 1 };
-                                }
-                            }
                             ImGui::PushStyleColor(ImGuiCol_Button, color);
                             ImGui::PushStyleColor(ImGuiCol_ButtonActive, color);
                             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, color);

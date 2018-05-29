@@ -70,11 +70,10 @@ namespace px {
 
         glfw_callback evt(win);
         evt.on_resize([&](int width, int height) {
-            window_width = width;
-            window_height = height;
+            game.resize(width, height);
+            // store size in configuration file
             config["width"] = width;
             config["height"] = height;
-            game.resize(width, height);
         });
         evt.on_click([&](int mouse_button, int action, int /* mods */) {
             game.click(mouse_button, action == GLFW_PRESS);
@@ -105,7 +104,6 @@ namespace px {
 
     int run_application() {
         logger log(settings::log_path);
-
         try {
             process();
         }
@@ -117,7 +115,6 @@ namespace px {
             log.message("unhandled exception");
             return -1;
         }
-
         return 0;
     }
 }
