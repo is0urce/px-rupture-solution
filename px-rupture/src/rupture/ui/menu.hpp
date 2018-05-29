@@ -13,6 +13,7 @@ namespace px {
     class director;
     class environment;
 
+    class cfg;
     class container_component;
     class craft_smith;
     class craft_alchemy;
@@ -34,7 +35,7 @@ namespace px {
 
     public:
         ~menu();
-        menu(unsigned int w, unsigned int h, environment * game);
+        menu(unsigned int w, unsigned int h, environment * game, cfg * config);
 
     private:
         void                            combine();
@@ -43,11 +44,13 @@ namespace px {
         uq_ptr<director>                nexus;
         std::vector<uq_ptr<panel>>      stack;
         environment *                   game;
-        bool                            inventory_open;
+        bool                            open_inventory;
+        bool                            open_options;
         inventory *                     inventory_panel;
         craft_smith *                   smith_panel;
         craft_alchemy *                 alchemy_panel;
         title_screen *                  title_panel;
         environment *                   context;
+        cfg *                           configuration;
     };
 }

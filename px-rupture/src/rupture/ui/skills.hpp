@@ -28,11 +28,10 @@ namespace px::ui {
         virtual void combine_panel() override {
             if (!context) return;
             if (auto target = context->possessed()) {
-                if (auto skillset = target->qlink<character_component, body_component>()) {
+                if (character_component const* const person = target->qlink<character_component, body_component>()) {
 
                     float const screen_height = ImGui::GetIO().DisplaySize.y;
                     ImGui::SetNextWindowPos({ 16, screen_height - 50 }, ImGuiCond_Always);
-
                     ImGui::Begin("##skillset", nullptr
                         , ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse
                         | ImGuiWindowFlags_AlwaysAutoResize);
@@ -43,23 +42,21 @@ namespace px::ui {
                     auto const locked = locked_pawn ? locked_pawn->linked<body_component>() : nullptr;
                     auto const user = target->linked<body_component>();
 
-                    for (size_t i = 1, size = skillset->size(); i != size; ++i) {
-                        skill * ability = skillset->get(i);
-                        if (ability) {
-
+                    for (size_t i = 1, total = person->size(); i != total; ++i) {
+                        if (skill const* const ability = person->get(i)) {
                             bool const is_useable = context->has_control() && (ability->is_targeted()
                                 ? ability->useable(user, locked)
                                 : ability->useable(user, context->area()));
                             auto const& state = ability->state();
 
                             ImVec4 color = is_useable ? ImVec4{ 1.0, 0.5, 0.5, 1 } : ImVec4{ 0.5, 0.5, 0.5, 1 };
+
                             ImGui::SameLine();
                             ImGui::PushStyleColor(ImGuiCol_Button, color);
                             ImGui::PushStyleColor(ImGuiCol_ButtonActive, color);
                             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, color);
                             ImGui::Button(state.alias().c_str(), { 128, 32 });
                             ImGui::PopStyleColor(3);
-
                             if (ImGui::IsItemHovered()) {
                                 ImGui::BeginTooltip();
                                 ImGui::Text("%d) %s", i, state.name().c_str());
@@ -75,7 +72,6 @@ namespace px::ui {
                                 if (cd != 0) {
                                     ImGui::Text("cooldown: %d/%d", state.cooldown_remaining(), cd);
                                 }
-
                                 ImGui::EndTooltip();
                             }
                         }

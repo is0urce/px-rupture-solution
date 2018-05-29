@@ -19,6 +19,7 @@
 #include "title_screen.hpp"
 #include "levelup.hpp"
 #include "results.hpp"
+#include "options.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -40,10 +41,12 @@ namespace px {
 
     menu::~menu() = default;
 
-    menu::menu(unsigned int w, unsigned int h, environment * game)
+    menu::menu(unsigned int w, unsigned int h, environment * game, cfg * config)
         : context(game)
+        , configuration(config)
         , nexus(make_uq<director>(w, h))
-        , inventory_open(false)
+        , open_options(false)
+        , open_inventory(false)
         , inventory_panel(nullptr)
         , smith_panel(nullptr)
         , alchemy_panel(nullptr) {
@@ -58,13 +61,15 @@ namespace px {
         make_panel<ui::status>(stack, game);
         make_panel<ui::inspector>(stack, game);
 
-        inventory_panel = make_panel<inventory>(stack, game, &inventory_open);
+        inventory_panel = make_panel<inventory>(stack, game, &open_inventory);
         smith_panel = make_panel<craft_smith>(stack, game);
         alchemy_panel = make_panel<craft_alchemy>(stack, game);
 
         title_panel = make_panel<title_screen>(stack, game);
         make_panel<ui::levelup>(stack, game);
         make_panel<ui::results>(stack, game);
+
+        make_panel<ui::options>(stack, game, config);
     }
 
     // methods
@@ -108,7 +113,7 @@ namespace px {
     void menu::toggle_inventory() {
         smith_panel->cancel_smith();
         alchemy_panel->cancel_alchemy();
-        inventory_open = !inventory_open;
+        open_inventory = !open_inventory;
     }
 
     void menu::combine() {
@@ -122,6 +127,6 @@ namespace px {
     void menu::rollback() {
         smith_panel->cancel_smith();
         alchemy_panel->cancel_alchemy();
-        inventory_open = false;
+        open_inventory = false;
     }
 }

@@ -663,6 +663,12 @@
     <ClInclude Include="src\px\app\cfg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rupture\ui\options.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\snd\sound_channel.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">

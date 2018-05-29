@@ -13,6 +13,8 @@ namespace px {
     class environment;
     class container_component;
 
+    class cfg;
+
     class ui_system
         : public system<delta>
     {
@@ -29,7 +31,7 @@ namespace px {
 
     public:
         virtual         ~ui_system() override;
-        ui_system(unsigned int width, unsigned int height, environment * game);
+        ui_system(unsigned int width, unsigned int height, environment * game, cfg * config);
 
     protected:
         virtual void    update_system(delta_type const& delta_time) override;

@@ -377,6 +377,7 @@
     <ClInclude Include="src\rupture\script\script.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
     <ClInclude Include="src\rupture\script\script_unit.hpp" />
+    <ClInclude Include="src\px\snd\sound_channel.hpp" />
     <ClInclude Include="src\rupture\ui\craft_alchemy.hpp" />
     <ClInclude Include="src\rupture\rl\craft.hpp" />
     <ClInclude Include="src\rupture\ui\craft_smith.hpp" />
@@ -396,6 +397,7 @@
     <ClInclude Include="src\rupture\rl\tile_prototype.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
     <ClInclude Include="src\rupture\ui\director.hpp" />
+    <ClInclude Include="src\rupture\ui\options.hpp" />
     <ClInclude Include="src\rupture\ui\panel.hpp" />
     <ClInclude Include="src\rupture\ui\performance.hpp" />
     <ClInclude Include="src\rupture\ui\results.hpp" />

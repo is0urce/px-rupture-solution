@@ -24,7 +24,7 @@ namespace px {
     shell::shell(unsigned int start_width, unsigned int start_height, cfg * settings)
         : renderer(start_width, start_height)
         , config(settings)
-        , ui(start_width, start_height, this)
+        , ui(start_width, start_height, this, settings)
         , width(start_width)
         , height(start_height) {
         connect_managers();
@@ -104,6 +104,7 @@ namespace px {
         if (!is_running() || turn_passed()) return;
         ui.text(codepoint);
     }
+
     void shell::click(int mouse_button, bool is_down) {
         if (!is_running() || turn_passed()) return;
         if (ui.click(mouse_button, is_down)) return;
@@ -111,6 +112,7 @@ namespace px {
             advance();
         }
     }
+
     void shell::hover(int x, int y) {
         if (!is_running() || turn_passed()) return;
         if (ui.hover(x, y)) return;
@@ -123,6 +125,7 @@ namespace px {
         position += { 0.5, 0.5 };                   // tile center offset
         target(position.floor());
     }
+
     void shell::scroll(double horisontal, double vertical) {
         if (!is_running() || turn_passed()) return;
         if (ui.scroll(horisontal, vertical)) return;
