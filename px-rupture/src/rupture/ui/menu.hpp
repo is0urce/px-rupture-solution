@@ -30,8 +30,9 @@ namespace px {
         bool                            hover(unsigned int x, unsigned int y);
         bool                            scroll(double horisontal, double vertical);
         bool                            takes_input();
-        void                            toggle_inventory();
+        bool                            toggle_inventory();
         void                            rollback(); // close active inventory trasfers
+        void                            escape_command();
 
     public:
         ~menu();
@@ -46,6 +47,7 @@ namespace px {
         environment *                   game;
         bool                            open_inventory;
         bool                            open_options;
+        bool                            open_escape;
         inventory *                     inventory_panel;
         craft_smith *                   smith_panel;
         craft_alchemy *                 alchemy_panel;

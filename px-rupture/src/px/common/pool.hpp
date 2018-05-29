@@ -31,7 +31,7 @@ namespace px {
     public:
         // returns nullptr if all object in pool were requested, full() returns true
         template <typename... Args>
-        T * request(Args ...args) {
+        T * request(Args &&... args) {
             T * result = nullptr;
             links * rec = m_free;
             if (rec) {
@@ -89,7 +89,7 @@ namespace px {
         }
 
         template <typename... Args>
-        uq_ptr make_uq(Args ... args) {
+        uq_ptr make_uq(Args &&... args) {
             T * ptr = request(std::forward<Args>(args)...);
             return { ptr, &m_links[to_index(ptr)].ctrl };
         }
@@ -147,9 +147,11 @@ namespace px {
         ~pool() {
             destroy_existing();
         }
+
         pool() {
             startup();
         }
+
         pool(pool const&) = delete;
         pool & operator=(pool const&) = delete;
 
@@ -175,7 +177,7 @@ namespace px {
         }
 
         template <typename... Args>
-        void create(T & item, Args... args) {
+        void create(T & item, Args &&... args) {
             new (&item) T(std::forward<Args>(args)...);
         }
 

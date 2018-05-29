@@ -13,9 +13,9 @@ namespace px {
         : public craft_station<rl::craft_activity::alchemy>
     {
     public:
-        void cancel_alchemy() {
+        bool cancel_alchemy() {
             release_items();
-            game->close_workshop();
+            return game->close_workshop();
         }
 
         bool can_execute() const {

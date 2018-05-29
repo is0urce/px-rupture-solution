@@ -41,6 +41,10 @@ namespace px {
         works->toggle_inventory();
     }
 
+    void ui_system::escape() {
+        works->escape_command();
+    }
+
     void ui_system::resize(unsigned int w, unsigned int h) {
         works->resize(w, h);
     }

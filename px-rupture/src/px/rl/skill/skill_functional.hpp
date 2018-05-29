@@ -24,7 +24,8 @@ namespace px::rl {
         enum class v_area { mark };
 
     public:
-        virtual ~skill_functional() = default;
+        virtual ~skill_functional() override = default;
+
         skill_functional()
             : m_targeted(false) {
         }

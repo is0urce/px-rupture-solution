@@ -60,7 +60,7 @@ namespace px {
         }
 
         template <typename... Args>
-        T * request(Args ...args) {
+        T * request(Args &&...args) {
             return aquire_free_pool().request(std::forward<Args>(args)...);
         }
 
@@ -75,7 +75,7 @@ namespace px {
         }
 
         template <typename... Args>
-        uq_ptr make_uq(Args ... args) {
+        uq_ptr make_uq(Args &&... args) {
             return acquire_free_pool().make_uq(std::forward<Args>(args)...);
         }
 

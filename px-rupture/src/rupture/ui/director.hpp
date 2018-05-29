@@ -128,7 +128,7 @@ namespace px {
             auto draw_data = ImGui::GetDrawData();
             draw_data->ScaleClipRects(io.DisplayFramebufferScale);
             for (int n = 0, size = draw_data->CmdListsCount; n != size; ++n) {
-                ImDrawList const* cmd_list = draw_data->CmdLists[n];
+                ImDrawList const* const cmd_list = draw_data->CmdLists[n];
                 ImDrawIdx const* idx_buffer_offset = 0;
 
                 glBindBuffer(GL_ARRAY_BUFFER, vbo);

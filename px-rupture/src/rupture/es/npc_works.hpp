@@ -83,7 +83,7 @@ namespace px {
 
                     // or advance
                     if (!cast) {
-                        const unsigned int iteration_steps = 150;
+                        unsigned int const iteration_steps = 150;
                         auto path = a_star::find(pawn->position(), npc.destination(), [opts = body->movement(), this](point2 const& location) { return stage->is_traversable(location, opts); }, iteration_steps);
 
                         if (path.size() != 0) {

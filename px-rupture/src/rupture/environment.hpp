@@ -60,7 +60,7 @@ namespace px {
         void                                give_experience(unsigned int experience, unsigned int level);
         bool                                has_access(rl::craft_activity station) const noexcept;
         void                                open_workshop(rl::craft_activity station);
-        void                                close_workshop();
+        bool                                close_workshop();
         bool                                save(std::string const& name);
         bool                                load(std::string const& name);
         uq_ptr<composite_component> &       spawn(uq_ptr<composite_component> unit);

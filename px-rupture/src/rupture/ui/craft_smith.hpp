@@ -17,11 +17,11 @@ namespace px {
         : public craft_station<rl::craft_activity::blacksmith>
     {
     public:
-        void cancel_smith() {
+        bool cancel_smith() {
             release_items();
             task.close();
             recipe_current = nullptr;
-            game->close_workshop();
+            return game->close_workshop();
         }
 
         bool can_execute() const {

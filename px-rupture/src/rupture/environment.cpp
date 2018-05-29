@@ -394,8 +394,10 @@ namespace px {
     }
 
     // finish any workshop activity
-    void environment::close_workshop() {
+    bool environment::close_workshop() {
+        bool was_active = opened_workshop != rl::craft_activity::none;
         opened_workshop = rl::craft_activity::none;
+        return was_active;
     }
 
     void environment::function_edit(std::uint32_t /*idx*/) {

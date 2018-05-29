@@ -24,14 +24,16 @@ namespace px {
     public:
         virtual ~title_screen() noexcept override = default;
 
-        title_screen(environment * game) noexcept
+        title_screen(environment * game, bool * options_flag) noexcept
             : context(game)
+            , open_options(options_flag)
             , logo_texture_id(0) {
         }
 
     protected:
         virtual void combine_panel() override {
             if (!context || context->possessed()) return;
+            if (open_options && *open_options) return;
 
             float const screen_width = ImGui::GetIO().DisplaySize.x;
             float const screen_height = ImGui::GetIO().DisplaySize.y;
@@ -45,7 +47,10 @@ namespace px {
             immediate::print("Gnomi##title_name", options_length);
             ImGui::NewLine();
             ImGui::PushStyleColor(ImGuiCol_Text, { 0.8f, 0.8f, 0.8f, 1.0f });
-            if (immediate::button("Start##titile_start", options_length)) {
+            if (immediate::button("Continue##title_continue", options_length)) {
+                press_continue();
+            }
+            if (immediate::button("New Game##titile_start", options_length)) {
                 press_start();
             }
             if (immediate::button("Options##title_options", options_length)) {
@@ -81,19 +86,32 @@ namespace px {
         }
 
     private:
+        void press_continue() {
+            if (context) {
+                context->load("quicksave");
+            }
+        }
+
         void press_start() {
-            context->start();
+            if (context) {
+                context->start();
+            }
         }
 
         void press_exit() {
-            context->shutdown();
+            if (context) {
+                context->shutdown();
+            }
         }
 
         void press_options() {
-
+            if (open_options) {
+                *open_options = true;
+            }
         }
 
     private:
+        bool *          open_options;
         environment *   context;
         unsigned int    logo_texture_id;
     };

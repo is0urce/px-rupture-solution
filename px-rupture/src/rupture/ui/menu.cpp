@@ -11,6 +11,7 @@
 #include "craft_smith.hpp"
 #include "craft_alchemy.hpp"
 #include "editor.hpp"
+#include "escape_screen.hpp"
 #include "inspector.hpp"
 #include "inventory.hpp"
 #include "performance.hpp"
@@ -18,8 +19,8 @@
 #include "skills.hpp"
 #include "title_screen.hpp"
 #include "levelup.hpp"
-#include "results.hpp"
 #include "options.hpp"
+#include "results.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -47,6 +48,7 @@ namespace px {
         , nexus(make_uq<director>(w, h))
         , open_options(false)
         , open_inventory(false)
+        , open_escape(false)
         , inventory_panel(nullptr)
         , smith_panel(nullptr)
         , alchemy_panel(nullptr) {
@@ -65,11 +67,12 @@ namespace px {
         smith_panel = make_panel<craft_smith>(stack, game);
         alchemy_panel = make_panel<craft_alchemy>(stack, game);
 
-        title_panel = make_panel<title_screen>(stack, game);
+        title_panel = make_panel<title_screen>(stack, game, &open_options);
         make_panel<ui::levelup>(stack, game);
         make_panel<ui::results>(stack, game);
 
-        make_panel<ui::options>(stack, game, config);
+        make_panel<ui::escape_screen>(stack, game, &open_escape, &open_options);
+        make_panel<ui::options>(stack, game, config, &open_options);
     }
 
     // methods
@@ -110,10 +113,33 @@ namespace px {
         return nexus->takes_input();
     }
 
-    void menu::toggle_inventory() {
+    bool menu::toggle_inventory() {
         smith_panel->cancel_smith();
         alchemy_panel->cancel_alchemy();
-        open_inventory = !open_inventory;
+        return open_inventory = !open_inventory;
+    }
+
+    void menu::escape_command() {
+        // close craft panels
+        bool something_closed = smith_panel->cancel_smith() || alchemy_panel->cancel_alchemy();
+        // close inventory panel
+        if (!something_closed) {
+            if (open_inventory) {
+                toggle_inventory();
+                something_closed = true;
+            }
+        }
+        // close submenu
+        if (!something_closed) {
+            if (open_options) {
+                open_options = false;
+                something_closed = true;
+            }
+        }
+        // toggle escape options
+        if (!something_closed) {
+            open_escape = !open_escape;
+        }
     }
 
     void menu::combine() {

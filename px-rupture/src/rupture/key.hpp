@@ -37,7 +37,7 @@ namespace px {
         action_alt = 21,
 
         command_ok          = 50,   // enter
-        command_cancel      = 51,   // escape
+        escape              = 51,   // escape
         command_backspace   = 52,   // backspace
 
         navigate_next = 60,

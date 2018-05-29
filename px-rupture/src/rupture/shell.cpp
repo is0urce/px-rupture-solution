@@ -171,6 +171,7 @@ namespace px {
         case key::action5: ui.rollback(); action(5); break;
 
         case key::panel_inventory: ui.toggle_inventory(); break;
+        case key::escape: ui.escape(); break;
 
         case key::function_edit: function_edit(0); break;
         }

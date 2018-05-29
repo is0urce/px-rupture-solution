@@ -1,4 +1,4 @@
-// name: options.hpp
+// name: escape_screen.hpp
 // type: c++
 // auth: is0urce
 // desc: class
@@ -9,39 +9,37 @@
 
 #include "../environment.hpp"
 
-#include <px/app/cfg.hpp>
-
 #include <imgui/imgui.h>
 
 namespace px::ui {
 
-    class options final
+    class escape_screen final
         : public panel
     {
     public:
-        virtual ~options() override = default;
+        virtual ~escape_screen() override = default;
 
-        options(environment * ctx, cfg * config, bool * flag)
+        escape_screen(environment * ctx, bool * flag, bool * options_flag)
             : context(ctx)
-            , configuration(config)
-            , open_flag(flag) {
+            , open_flag(flag)
+            , open_options(options_flag) {
         }
 
     protected:
         virtual void combine_panel() override {
-            if (!context || !configuration || !is_open()) return;
-            ImGui::Begin("##options");
+            if (!context || !is_open()) return;
+            ImGui::Begin("esc##escape");
             ImGui::End();
         }
 
     private:
         bool is_open() const noexcept {
-            return open_flag && *open_flag;
+            return (open_flag && *open_flag) && (open_options && !*open_options);
         }
 
     private:
         environment *   context;
-        cfg *           configuration;
         bool *          open_flag;
+        bool *          open_options;
     };
 }

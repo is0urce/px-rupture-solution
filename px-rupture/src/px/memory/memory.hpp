@@ -27,8 +27,7 @@ namespace px {
         public:
             join_block(Args &&... args)
                 : element(std::forward<Args>(args)...)
-                , ctrl(this)
-            {
+                , ctrl(this) {
             }
         private:
             element_type                        element;

@@ -22,15 +22,21 @@ namespace px {
     // methods
 
     void script::assign_environment(environment * game) {
-        works->assign_environment(game);
+        if (works) {
+            works->assign_environment(game);
+        }
     }
 
     void script::execute(std::string const& name) {
-        works->execute(name);
+        if (works) {
+            works->execute(name);
+        }
     }
 
     void script::run(std::string const& code) {
-        works->run(code);
+        if (works) {
+            works->run(code);
+        }
     }
 
     rl::skill_functional<body_component *, body_component *, point2> script::impact(std::string const& name) {
