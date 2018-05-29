@@ -35,6 +35,10 @@ namespace px {
         works->target(camera);
     }
 
+    void sound_system::set_volume(sound_channel group, double volume) {
+        works->set_volume(group, volume);
+    }
+
     void sound_system::set_master_volume(double volume) {
         works->set_master_volume(volume);
     }

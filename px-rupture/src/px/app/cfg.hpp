@@ -111,7 +111,7 @@ namespace px {
 
         float_type & set_float(std::string const& key, float_type value) {
             dirty = true;
-            f[key] = value;
+            return f[key] = value;
         }
 
         string_type & set_string(std::string const& key, string_type value) {

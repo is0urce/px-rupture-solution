@@ -9,6 +9,7 @@
 
 #include "es/notification_system.hpp"
 #include "rl/scene.hpp"
+#include <px/snd/sound_channel.hpp>
 
 #include <px/common/point.hpp>
 #include <px/memory/uq_ptr.hpp>
@@ -67,6 +68,7 @@ namespace px {
         uq_ptr<composite_component> &       spawn(std::string const& blueprint, point2 const& position);
         void                                update_blueprints(std::string const& out_path, std::string const& blueprint);
         void                                seed(unsigned int);
+        void                                set_volume(sound_channel channel, double volume);
 
         // script bindings
     public:

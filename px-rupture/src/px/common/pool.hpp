@@ -10,10 +10,11 @@
 // constant request() and release() methods
 // for general performanse there is no internal support for concurrent requests and/or releases
 
-#include <array>
-
 #include <px/memory/uq_ptr.hpp>
 #include <px/memory/op_release_block.hpp>
+
+#include <array>
+#include <utility>
 
 namespace px {
 

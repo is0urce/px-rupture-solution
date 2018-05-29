@@ -72,6 +72,16 @@ namespace px {
             }
         }
 
+        void set_volume(sound_channel group, double volume) {
+            switch (group) {
+            case sound_channel::master:
+                if (master) {
+                    master->setVolume(static_cast<float>(volume));
+                }
+                break;
+            }
+        }
+
         // returns channel_id
         unsigned int play_sound(std::string const& name, double volume, vector2 const& location) {
             return play_sound(name, volume, location, false);

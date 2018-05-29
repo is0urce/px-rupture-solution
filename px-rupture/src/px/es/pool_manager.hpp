@@ -15,8 +15,8 @@ namespace px {
         using element_type = Element;
 
     public:
-        template <typename ... Args>
-        uq_ptr<element_type> make(Args &&... args) {
+        template <typename ...Args>
+        uq_ptr<element_type> make(Args && ...args) {
             return static_cast<Implementation&>(*this).setup(objects.make_uq(), std::forward<Args>(args)...);
         }
 

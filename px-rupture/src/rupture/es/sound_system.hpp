@@ -10,6 +10,7 @@
 
 #include <px/common/vector.hpp>
 #include <px/memory/uq_ptr.hpp>
+#include <px/snd/sound_channel.hpp>
 
 #include <string>
 
@@ -28,6 +29,7 @@ namespace px {
         void                    play_sound(std::string const& name, double volume, vector2 const& location);
         void                    play_sound(std::string const& name, double volume);
         void                    set_master_volume(double volume);
+        void                    set_volume(sound_channel channel, double volume);
         void                    stop_music();
         void                    target(transform_component const* camera) noexcept;
 

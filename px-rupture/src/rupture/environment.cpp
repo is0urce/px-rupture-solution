@@ -558,4 +558,8 @@ namespace px {
         std::seed_seq seq(std::begin(noize), std::end(noize));
         rng = std::mt19937(seq);
     }
+
+    void environment::set_volume(sound_channel group, double volume) {
+        sounds.set_volume(group, volume);
+    }
 }
