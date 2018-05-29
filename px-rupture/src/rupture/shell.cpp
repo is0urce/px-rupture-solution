@@ -21,8 +21,9 @@ namespace px {
 
     shell::~shell() = default;
 
-    shell::shell(unsigned int start_width, unsigned int start_height)
+    shell::shell(unsigned int start_width, unsigned int start_height, cfg * settings)
         : renderer(start_width, start_height)
+        , config(settings)
         , ui(start_width, start_height, this)
         , width(start_width)
         , height(start_height) {

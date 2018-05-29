@@ -3,8 +3,9 @@
 // auth: is0urce
 // desc: programm entry point
 
+#include <px/app/cfg.hpp>
+
 #include "app/bootstrap.hpp"
-#include "app/configuration.hpp"
 #include "app/document.hpp"
 #include "app/settings.hpp"
 #include "draw/glew_options.hpp"
@@ -22,15 +23,15 @@
 namespace px {
 
     // create main window from configuration
-    glfw_window create_window(configuration const& config, char const* name, GLFWmonitor * monitor) {
-        if (monitor && config.fullscreen) {
-            auto const *const  mode = glfwGetVideoMode(monitor);
+    glfw_window create_window(char const* name, bool is_fullscreen, unsigned int width, unsigned int height, GLFWmonitor * monitor) {
+        if (monitor && is_fullscreen) {
+            auto const* const mode = glfwGetVideoMode(monitor);
             glfwWindowHint(GLFW_RED_BITS, mode->redBits);
             glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
             glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
             glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
         }
-        return glfwCreateWindow(config.width, config.height, name, monitor, nullptr);
+        return glfwCreateWindow(width, height, name, monitor, nullptr);
     }
 
     // enable context and load opengl extensions
@@ -43,30 +44,37 @@ namespace px {
     // prepare and start main loop
     void process() {
         glfw_instance glfw;
+        cfg config(settings::configuration_path);
+        auto const binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
+        bool is_fullscreen = config["fullscreen"];
+        int window_width = config["width"];
+        int window_height = config["height"];
+        int vsync = config["vsync"];
 
         // load settings
 
-        auto config = configuration::from_document(document::load_document(settings::configuration_path));
-        auto const binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
-
         auto const monitor = glfwGetPrimaryMonitor();
         auto const *const mode = glfwGetVideoMode(monitor);
-        if (config.fullscreen) {
-            config.width = mode->width;
-            config.height = mode->height;
+        if (is_fullscreen) {
+            window_width = mode->width;
+            window_height = mode->height;
         }
 
         // create windows
 
-        glfw_window win = create_window(config, settings::application_name, config.fullscreen ? monitor : nullptr);
-        create_context(win, config.vsync);
-        shell game(config.width, config.height);
+        glfw_window win = create_window(settings::application_name, is_fullscreen, window_width, window_height, is_fullscreen ? monitor : nullptr);
+        create_context(win, vsync);
+        shell game(window_width, window_height, &config);
 
         // register events
 
         glfw_callback evt(win);
-        evt.on_resize([&](int widht, int height) {
-            game.resize(widht, height);
+        evt.on_resize([&](int width, int height) {
+            window_width = width;
+            window_height = height;
+            config["width"] = width;
+            config["height"] = height;
+            game.resize(width, height);
         });
         evt.on_click([&](int mouse_button, int action, int /* mods */) {
             game.click(mouse_button, action == GLFW_PRESS);

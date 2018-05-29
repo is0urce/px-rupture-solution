@@ -11,6 +11,7 @@
 #include "es/render_system.hpp"
 #include "es/ui_system.hpp"
 
+#include <px/app/cfg.hpp>
 #include <px/es/engine.hpp>
 #include <px/es/delta.hpp>
 
@@ -30,7 +31,7 @@ namespace px {
 
     public:
         virtual         ~shell() override;
-        shell(unsigned int start_widht, unsigned int start_height);
+        shell(unsigned int start_widht, unsigned int start_height, cfg * settings);
 
     private:
         void            connect_managers();
@@ -46,5 +47,6 @@ namespace px {
         ui_system       ui;
         unsigned int    width;
         unsigned int    height;
+        cfg *           config;
     };
 }

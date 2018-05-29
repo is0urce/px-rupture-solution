@@ -174,9 +174,6 @@
     <ClInclude Include="src\rupture\draw\image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\app\configuration.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\app\document.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -661,6 +658,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\draw\animation_set.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\app\cfg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

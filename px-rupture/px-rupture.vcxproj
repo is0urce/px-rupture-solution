@@ -49,7 +49,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -202,6 +202,7 @@
     <ClInclude Include="src\px\algorithm\bresenham.hpp" />
     <ClInclude Include="src\px\algorithm\fov.hpp" />
     <ClInclude Include="src\px\algorithm\recursive_shadowcasting.hpp" />
+    <ClInclude Include="src\px\app\cfg.hpp" />
     <ClInclude Include="src\px\common\b_uint.hpp" />
     <ClInclude Include="src\px\common\bindings.hpp" />
     <ClInclude Include="src\px\common\color.hpp" />
@@ -334,7 +335,6 @@
     <ClInclude Include="src\px\rgl\compilation.hpp" />
     <ClInclude Include="src\px\rglfw\rglfw.hpp" />
     <ClInclude Include="src\px\rgl\rgl.hpp" />
-    <ClInclude Include="src\rupture\app\configuration.hpp" />
     <ClInclude Include="src\rupture\app\document.hpp" />
     <ClInclude Include="src\rupture\draw\camera_uniform.hpp" />
     <ClInclude Include="src\rupture\draw\renderer.hpp" />
