@@ -50,7 +50,7 @@ namespace px {
             return state == rl::ai_state::idle;
         }
 
-        void alert() {
+        void alert() noexcept {
             state = rl::ai_state::alert;
         }
 
@@ -60,7 +60,7 @@ namespace px {
         }
 
     public:
-        virtual ~npc_component() = default;
+        virtual ~npc_component() override = default;
 
         npc_component()
             : state(rl::ai_state::idle)

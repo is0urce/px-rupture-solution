@@ -16,6 +16,7 @@ namespace px {
     // constructor & desctuctor
 
     notification_system::~notification_system() = default;
+
     notification_system::notification_system()
         : works(make_uq<message_works>()) {
     }

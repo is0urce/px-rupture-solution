@@ -10,7 +10,7 @@
 #include "sprite_component.hpp"
 #include "transform_component.hpp"
 
-#include <px/common/pool_chain.hpp>
+#include <px/es/pool_manager.hpp>
 #include <px/common/vector.hpp>
 
 #include <map>
@@ -19,17 +19,15 @@
 
 namespace px {
 
-    class sprite_works final {
+    class sprite_works final
+        : public pool_manager<sprite_works, sprite_component, 10000> {
     public:
-        uq_ptr<sprite_component> make(std::string const& name) {
-            uq_ptr<sprite_component> result;
-
-            if (sprite const* img = frame(name)) {
-                result = pool.make_uq();
-                static_cast<sprite&>(*result) = *img;
+        uq_ptr<sprite_component> setup(uq_ptr<sprite_component> element, std::string const& name) {
+            if (sprite const* const img = frame(name)) {
+                static_cast<sprite&>(*element) = *img;
+                return std::move(element);
             }
-
-            return result;
+            return nullptr;
         }
 
         sprite const* frame(std::string const& name) const {
@@ -50,7 +48,7 @@ namespace px {
                 cluster.clear();
             }
 
-            pool.enumerate([&](sprite_component & sprite) {
+            objects.enumerate([&](sprite_component & sprite) {
                 if (!sprite.is_active()) return;
 
                 if (transform_component * location = sprite.linked<transform_component>()) {
@@ -112,7 +110,6 @@ namespace px {
         }
 
     private:
-        pool_chain<sprite_component, 10000>     pool;       // sprite pool
         transform_component const*              camera;     // focus camera transform
         std::map<std::string, sprite>           lib;        // name to sprite mapping
         std::vector<std::vector<sprite_vertex>> vertices;   // batch vertices data

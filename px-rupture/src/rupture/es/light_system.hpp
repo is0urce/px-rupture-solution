@@ -21,7 +21,7 @@ namespace px {
     public:
         void                    assign_scene(scene const* stage) noexcept;
         void                    target(transform_component const* camera) noexcept;
-        uq_ptr<light_component>make();
+        uq_ptr<light_component> make();
         lightmap_data const*    current_data() noexcept;
         lightmap_data const*    last_data() noexcept;
         void                    clear_lightmap();

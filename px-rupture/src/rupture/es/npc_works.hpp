@@ -12,27 +12,24 @@
 
 #include "../rl/scene.hpp"
 
-#include <px/common/pool_chain.hpp>
+#include <px/es/pool_manager.hpp>
 #include <px/common/qtree.hpp>
 #include <px/algorithm/fov.hpp>
 #include <px/algorithm/a_star.hpp>
 
 namespace px {
 
-    class npc_works {
+    class npc_works final
+        : public pool_manager<npc_works, npc_component, 1024> {
     public:
         void assign_scene(scene * world) noexcept {
             stage = world;
         }
 
-        uq_ptr<npc_component> make() {
-            return pool.make_uq();
-        }
-
     public:
         void turn() {
             fov sight;
-            pool.enumerate([&](npc_component & npc) {
+            objects.enumerate([&](npc_component & npc) {
                 if (!npc.is_active()) return;
 
                 // ensure valid composition
@@ -119,7 +116,6 @@ namespace px {
         }
 
     private:
-        pool_chain<npc_component, 1024> pool;
         scene *                         stage;
     };
 }

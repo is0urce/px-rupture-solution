@@ -18,18 +18,15 @@
 #include <px/algorithm/fov.hpp>
 #include <px/common/matrix.hpp>
 #include <px/common/color.hpp>
-#include <px/common/pool_chain.hpp>
+#include <px/es/pool_manager.hpp>
 
 namespace px {
 
-    class light_works {
+    class light_works
+        : public pool_manager<light_works, light_component, 1024> {
     public:
         void assign_scene(scene const* blocking) noexcept {
             stage = blocking;
-        }
-
-        uq_ptr<light_component> make() {
-            return lights.make_uq();
         }
 
         void target(transform_component const* target) {
@@ -50,7 +47,7 @@ namespace px {
 
             // illuminate light matrix
             map.fill({ 0, 0, 0, 0 });
-            lights.enumerate([&](light_component & light) {
+            objects.enumerate([&](light_component & light) {
                 if (!light.is_active()) return;
                 if (!light.is_on) return;
                 transform_component * location = light.linked<transform_component>();
@@ -221,7 +218,6 @@ namespace px {
         scene const*                        stage;
 
         matrix2<color>                      map;
-        pool_chain<light_component, 1000>   lights;
         unsigned int                        radius;
         size_t                              width;
 
@@ -231,7 +227,7 @@ namespace px {
         std::vector<float>                  current_texels;
         std::vector<float>                  last_texels;
 
-        std::vector<bool>                   painted_flags;	// exclude diagonals hack
+        std::vector<bool>                   painted_flags;  // exclude diagonals hack
         int                                 ox;
         int                                 oy;
 

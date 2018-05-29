@@ -34,9 +34,6 @@ namespace px::ui {
         }
 
     private:
-
-
-    private:
         environment *   context;
         cfg *           configuration;
     };

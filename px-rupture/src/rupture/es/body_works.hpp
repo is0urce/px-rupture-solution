@@ -13,25 +13,21 @@
 
 #include "../environment.hpp"
 
-#include <px/common/pool_chain.hpp>
+#include <px/es/pool_manager.hpp>
 
 #include <algorithm>
 
 namespace px {
 
-    class body_works final {
+    class body_works final
+        : public pool_manager<body_works, body_component, 1024> {
     public:
-
         void assign_environment(environment * env) noexcept {
             game = env;
         }
 
-        uq_ptr<body_component> make() {
-            return pool.make_uq();
-        }
-
         void tick() {
-            pool.enumerate([&](body_component & body) {
+            objects.enumerate([&](body_component & body) {
                 process_effects(body);
                 process_death(body);
             });
@@ -112,7 +108,6 @@ namespace px {
         }
 
     private:
-        pool_chain<body_component, 1024>    pool;
-        environment *                       game;
+        environment * game;
     };
 }

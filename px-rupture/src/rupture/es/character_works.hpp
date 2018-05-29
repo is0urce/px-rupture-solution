@@ -7,27 +7,27 @@
 
 #include "../rl/skill.hpp"
 
-#include <px/common/pool_chain.hpp>
+#include <px/es/pool_manager.hpp>
 #include <px/rl/skill/skill_functional.hpp>
 
 #include <map>
 #include <string>
 #include <tuple>
+#include <utility>
 
 namespace px {
 
-    class character_works {
+    class character_works
+        : public pool_manager<character_works, character_component, 1024> {
     public:
-        uq_ptr<character_component> make() {
-            auto result = pool.make_uq();
-            result->assign_book(&book);
-            return result;
-
+        uq_ptr<character_component> setup(uq_ptr<character_component> element) {
+            element->assign_book(&book);
+            return std::move(element);
         }
 
         void turn(int time_span) {
-            pool.enumerate([&](character_component & character) {
-                character.reduce_cooldown(time_span);
+            objects.enumerate([&](character_component & element) {
+                element.reduce_cooldown(time_span);
             });
         }
 
@@ -39,6 +39,5 @@ namespace px {
     private:
         std::map<std::string, rl::skill_functional<body_component *, body_component *, point2>> lib;
         std::map<std::string, std::tuple<skill::state_type, skill::impact_type * >> book;
-        pool_chain<character_component, 1024> pool;
     };
 }

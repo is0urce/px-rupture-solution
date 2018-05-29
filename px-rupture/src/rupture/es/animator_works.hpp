@@ -13,7 +13,7 @@
 #include "../draw/animation.hpp"
 #include "../draw/animation_set.hpp"
 
-#include <px/common/pool_chain.hpp>
+#include <px/es/pool_manager.hpp>
 
 #include <map>
 #include <string>
@@ -21,27 +21,21 @@
 
 namespace px {
 
-    class animator_works final {
-    private:
-        struct animator_record {
-
-        };
+    class animator_works final
+        : public pool_manager<animator_works, animator_component, 1024> {
     public:
-        uq_ptr<animator_component> make(std::string const& name) {
+        uq_ptr<animator_component> setup(uq_ptr<animator_component> element, std::string const& name) {
             auto kv_it = animations.find(name);
             if (kv_it != animations.end()) {
-                auto animator = pool.make_uq();
-
-                animator->set_id(kv_it->first.c_str());
-                animator->assign(&kv_it->second);
-
-                return animator;
+                element->set_id(kv_it->first.c_str());
+                element->assign(&kv_it->second);
+                return std::move(element);
             }
             return nullptr;
         }
 
         void update(double time) {
-            pool.enumerate([&](animator_component & animator) {
+            objects.enumerate([&](animator_component & animator) {
                 if (!animator.is_active()) return;
                 if (!animator.is_playing()) return;
 
@@ -56,7 +50,7 @@ namespace px {
         }
 
         void finish_animations() {
-            pool.enumerate([&](animator_component & animator) {
+            objects.enumerate([&](animator_component & animator) {
                 if (!animator.is_active()) return;
                 if (!animator.is_playing()) return;
 
@@ -131,7 +125,7 @@ namespace px {
         animator_works() = default;
 
     private:
-        pool_chain<animator_component, 1024>            pool;
+        //pool_chain<animator_component, 1024>            objects;
         std::map<std::string, animation_set>            animations;
     };
 }
