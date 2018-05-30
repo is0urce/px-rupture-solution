@@ -6,18 +6,17 @@
 #pragma once
 
 #include "panel.hpp"
+#include "immediate.hpp"
+#include "design.hpp"
 
 #include "../environment.hpp"
 
 #include <px/app/cfg.hpp>
 
-#include <imgui/imgui.h>
-
 namespace px::ui {
 
     class options final
-        : public panel
-    {
+        : public panel {
     public:
         virtual ~options() noexcept override = default;
 
@@ -40,10 +39,13 @@ namespace px::ui {
 
     private:
         void combine_options(ImVec2 position, float width) {
+            immediate::dim();
+
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
             ImGui::SetNextWindowSize({ width, 600 });
-            ImGui::Begin("##options", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
-
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
+            ImGui::Begin("##options", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
+            ImGui::SetWindowFocus();
             float const content_width = width * 0.9f;
 
             immediate::print("Master Volume", content_width);
@@ -74,17 +76,17 @@ namespace px::ui {
             if (immediate::button("Back##options_back", content_width)) {
                 press_back();
             }
+
             ImGui::End();
+            ImGui::PopStyleColor(1);
         }
 
         bool is_open() const noexcept {
-            return context && configuration && open_flag && *open_flag;
+            return context && configuration && is_true(open_flag);
         }
 
         void close() noexcept {
-            if (open_flag) {
-                *open_flag = false;
-            }
+            set_flag(open_flag, false);
         }
 
         void apply_configuration() {

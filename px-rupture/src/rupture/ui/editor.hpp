@@ -37,7 +37,7 @@
 #include <string>
 #include <vector>
 
-#define PX_BUILD(OP)	{ \
+#define PX_BUILD(OP)    { \
                             builder factory(game); \
                             factory.begin(std::move(current)); \
                             factory.OP; \
@@ -57,10 +57,9 @@ namespace px::ui {
     }
 
     class editor final
-        : public panel
-    {
+        : public panel {
     public:
-        virtual ~editor() override = default;
+        virtual ~editor() noexcept override = default;
 
         editor(environment * env)
             : game(env) {
@@ -105,7 +104,6 @@ namespace px::ui {
             // object props
 
             if (current) {
-
                 transform_component * transform = current->query<transform_component>();
                 sprite_component * sprite = current->query<sprite_component>();
                 body_component * body = current->query<body_component>();

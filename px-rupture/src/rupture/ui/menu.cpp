@@ -113,7 +113,10 @@ namespace px {
     }
 
     bool menu::takes_input() {
-        return nexus->takes_input();
+        return nexus->takes_input()
+            || open_credits
+            || open_escape
+            || open_options;
     }
 
     bool menu::toggle_inventory() {
@@ -132,23 +135,18 @@ namespace px {
                 something_closed = true;
             }
         }
-        if (!something_closed && title_panel) {
-            something_closed = title_panel->escape();
-        }
-        // close submenu
+        // close submenus
         if (!something_closed) {
-            if (open_options) {
+            if (open_options || open_credits) {
                 open_options = false;
+                open_credits = false;
                 something_closed = true;
             }
         }
-
         // toggle escape options
         if (!something_closed) {
             open_escape = !open_escape;
         }
-
-        //nexus->
     }
 
     void menu::combine() {

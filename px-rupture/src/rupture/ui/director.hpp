@@ -87,6 +87,7 @@ namespace px {
             style.ScrollbarRounding = 0;
             style.AntiAliasedLines = false;
             style.GrabMinSize = 20.0f;
+            style.WindowPadding = { 0, 0 };
 
             style.Colors[ImGuiCol_WindowBg] = { 0, 0, 0, 0.67f };
         }

@@ -7,6 +7,7 @@
 
 #include "panel.hpp"
 #include "immediate.hpp"
+#include "design.hpp"
 
 #include "../environment.hpp"
 #include "../es/transform_component.hpp"
@@ -14,24 +15,10 @@
 namespace px {
 
     class title_screen final
-        : public panel
-    {
+        : public panel {
     public:
         void assign_logo(unsigned int texture_id) noexcept {
             logo_texture_id = texture_id;
-        }
-
-        bool escape() noexcept {
-            bool something_closed = false;
-            if (open_options) {
-                *open_options = false;
-                something_closed = true;
-            }
-            if (open_credits) {
-                *open_credits = false;
-                something_closed = true;
-            }
-            return something_closed;
         }
 
     public:
@@ -49,21 +36,19 @@ namespace px {
             if (is_open()) {
                 float const screen_width = ImGui::GetIO().DisplaySize.x;
                 float const screen_height = ImGui::GetIO().DisplaySize.y;
-                float const options_width = 200.0f;
-
-                combine_title({ screen_width / 2 - options_width / 2, screen_height / 3 }, options_width);
+                combine_title({ screen_width / 2 - design::options_width() / 2, screen_height / 3 }, design::options_width());
                 combine_logo({ 20, screen_height - 100 });
-                combine_version({ 20, screen_height - 50 }, { screen_width, 100 });
+                immediate::splash_version();
             }
         }
 
     private:
         bool is_hidden_by_options() const noexcept {
-            return open_options && *open_options;
+            return is_true(open_options);
         }
 
         bool is_hidden_by_credits() const noexcept {
-            return open_credits && *open_credits;
+            return is_true(open_credits);
         }
 
         bool is_hidden_by_ingame() const noexcept {
@@ -74,10 +59,6 @@ namespace px {
             return !is_hidden_by_options()
                 && !is_hidden_by_credits()
                 && !is_hidden_by_ingame();
-        }
-
-        void combine_credits() {
-
         }
 
         void combine_title(ImVec2 const& position, float width) {
@@ -113,26 +94,16 @@ namespace px {
 
         void combine_logo(ImVec2 const& position) {
             if (logo_texture_id != 0) {
-                float const logo_width = 72;
+                float const logo_width = 72;    // logo bitmap is hardcoded
                 float const logo_height = 19;
                 ImGui::SetNextWindowPos(position, ImGuiCond_Always);
                 ImGui::SetNextWindowSize({ logo_width + 10, logo_height + 10 });
-                ImGui::Begin("##title_extras_logo", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
+                ImGui::Begin("##title_extras_logo", nullptr, design::window_flat());
                 ImGui::PushStyleColor(ImGuiCol_Text, { 1, 1, 1, 1 });
                 ImGui::Image(reinterpret_cast<void*>(static_cast<size_t>(logo_texture_id)), { logo_width, logo_height });
                 ImGui::PopStyleColor(1);
                 ImGui::End();
             }
-        }
-
-        void combine_version(ImVec2 const& position, ImVec2 const& size) {
-            ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-            ImGui::SetNextWindowSize(size);
-            ImGui::Begin("##title_version", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
-            ImGui::PushStyleColor(ImGuiCol_Text, { 0.6f, 0.6f, 0.6f, 1.0f });
-            ImGui::Text("Gnomi: Caves of Nschryldamdshuncz, 2018, version 0.0.9.0 (x64)");
-            ImGui::PopStyleColor(1);
-            ImGui::End();
         }
 
         void press_continue() {
@@ -154,15 +125,11 @@ namespace px {
         }
 
         void press_options() {
-            if (open_options) {
-                *open_options = true;
-            }
+            set_flag(open_options);
         }
 
         void press_credits() {
-            if (open_credits) {
-                *open_credits = true;
-            }
+            set_flag(open_credits);
         }
 
     private:
