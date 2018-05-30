@@ -33,11 +33,6 @@ namespace px {
             camera = pan;
         }
 
-        uq_ptr<sound_component> make(/*std::string const&*/ /*name*/) {
-            auto result = pool.make_uq();
-            return result;
-        }
-
         void update() {
             std::vector<channel_map::iterator> releasing;
             for (auto it = channels.begin(), end = channels.end(); it != end; ++it) {
@@ -78,6 +73,19 @@ namespace px {
                 if (master) {
                     master->setVolume(static_cast<float>(volume));
                 }
+                break;
+            case sound_channel::music:
+                if (music) {
+                    music->setVolume(static_cast<float>(volume));
+                }
+                break;
+            case sound_channel::sfx:
+                if (sfx) {
+                    sfx->setVolume(static_cast<float>(volume));
+                }
+                break;
+            default:
+                px_debug("invalid sound channel group");
                 break;
             }
         }
@@ -140,17 +148,18 @@ namespace px {
         void init() {
             FMOD_RESULT result = FMOD::System_Create(&system);
             if (result != FMOD_OK) {
-                throw std::runtime_error(std::string("px::sound_works::ctor() - cannot create sound system, error=") + std::string(FMOD_ErrorString(result)));
+                throw std::runtime_error(std::string("px::sound_works::init() - cannot create sound system, error=") + std::string(FMOD_ErrorString(result)));
             }
             result = system->init(64, FMOD_INIT_NORMAL, nullptr);
             if (result != FMOD_OK) {
-                throw std::runtime_error(std::string("px::sound_works::ctor() - cannot init sound system, error=") + std::string(FMOD_ErrorString(result)));
+                throw std::runtime_error(std::string("px::sound_works::init() - cannot init sound system, error=") + std::string(FMOD_ErrorString(result)));
             }
 
-            result = system->createChannelGroup("master", &master);
-            if (result != FMOD_OK) {
-                throw std::runtime_error(std::string("px::sound_works::ctor() - cannot init sound group, error=") + std::string(FMOD_ErrorString(result)));
-            }
+            create_group("master", &master);
+            create_group("music", &music);
+            create_group("sfx", &sfx);
+            master->addGroup(music);
+            master->addGroup(sfx);
         }
 
         void clear_sounds() {
@@ -196,6 +205,15 @@ namespace px {
             return it == sounds.end() ? nullptr : it->second;
         }
 
+        bool create_group(const char* name, FMOD::ChannelGroup ** group) {
+            FMOD_RESULT result = system->createChannelGroup(name, group);
+            if (result != FMOD_OK) {
+                throw std::runtime_error(std::string("px::sound_works::create_group() - cannot init sound group name=") + std::string(name) + ", error=" + std::string(FMOD_ErrorString(result)));
+            }
+            return true;
+        }
+
+
         // +X = right, +Y = up, +Z = forward.
         static FMOD_VECTOR to_fmod(vector2 const& location) {
             FMOD_VECTOR result;
@@ -216,10 +234,12 @@ namespace px {
     private:
         FMOD::System *                      system;
         FMOD::ChannelGroup *                master;
+        FMOD::ChannelGroup *                music;
+        FMOD::ChannelGroup *                sfx;
         sound_map                           sounds;
         channel_map                         channels;
         unsigned int                        channel_id;
-        pool_chain<sound_component, 10000>  pool;
         transform_component const*          camera;
+        double                              volume_master;
     };
 }

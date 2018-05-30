@@ -10,6 +10,7 @@
 
 #include "craft_smith.hpp"
 #include "craft_alchemy.hpp"
+#include "credits_screen.hpp"
 #include "editor.hpp"
 #include "escape_screen.hpp"
 #include "inspector.hpp"
@@ -46,6 +47,7 @@ namespace px {
         : context(game)
         , configuration(config)
         , nexus(make_uq<director>(w, h))
+        , open_credits(false)
         , open_options(false)
         , open_inventory(false)
         , open_escape(false)
@@ -67,12 +69,13 @@ namespace px {
         smith_panel = make_panel<craft_smith>(stack, game);
         alchemy_panel = make_panel<craft_alchemy>(stack, game);
 
-        title_panel = make_panel<title_screen>(stack, game, &open_options);
+        title_panel = make_panel<title_screen>(stack, game, &open_options, &open_credits);
         make_panel<ui::levelup>(stack, game);
         make_panel<ui::results>(stack, game);
 
         make_panel<ui::escape_screen>(stack, game, &open_escape, &open_options);
         make_panel<ui::options>(stack, game, config, &open_options);
+        make_panel<credits_screen>(stack, &open_credits);
     }
 
     // methods
@@ -129,6 +132,9 @@ namespace px {
                 something_closed = true;
             }
         }
+        if (!something_closed && title_panel) {
+            something_closed = title_panel->escape();
+        }
         // close submenu
         if (!something_closed) {
             if (open_options) {
@@ -136,10 +142,13 @@ namespace px {
                 something_closed = true;
             }
         }
+
         // toggle escape options
         if (!something_closed) {
             open_escape = !open_escape;
         }
+
+        //nexus->
     }
 
     void menu::combine() {

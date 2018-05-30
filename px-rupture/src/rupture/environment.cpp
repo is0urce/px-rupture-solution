@@ -187,7 +187,7 @@ namespace px {
         auto weapon = make_uq<rl::item>();
         weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0x00, 6));
         weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
-        weapon->set_name("Sword");
+        weapon->set_name("fireplace poker");
         container->add(std::move(weapon));
 
         // intrinsic effect item

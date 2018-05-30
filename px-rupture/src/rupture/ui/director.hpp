@@ -5,8 +5,7 @@
 
 #include <imgui/imgui.h>
 
-#define GLEW_STATIC
-#include <GL/glew.h>
+#include "../draw/glew_options.hpp"
 
 #include <px/rgl/rgl.hpp>
 #include <px/rgl/compilation.hpp>
@@ -87,6 +86,7 @@ namespace px {
             style.WindowRounding = 0;
             style.ScrollbarRounding = 0;
             style.AntiAliasedLines = false;
+            style.GrabMinSize = 20.0f;
 
             style.Colors[ImGuiCol_WindowBg] = { 0, 0, 0, 0.67f };
         }

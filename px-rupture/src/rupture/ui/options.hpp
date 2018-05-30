@@ -19,7 +19,7 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~options() override = default;
+        virtual ~options() noexcept override = default;
 
         options(environment * ctx, cfg * config, bool * flag)
             : context(ctx)
@@ -30,44 +30,83 @@ namespace px::ui {
 
     protected:
         virtual void combine_panel() override {
-            if (!context || !configuration || !is_open()) return;
-            ImGui::Begin("##options");
-            if (ImGui::SliderFloat("##volume_master", &volume_master, 0, 1, "%.2f")) {
-                configuration->set_float("volume.master", volume_master);
-                context->set_volume(sound_channel::master, volume_master);
+            if (is_open()) {
+                float const screen_width = ImGui::GetIO().DisplaySize.x;
+                float const screen_height = ImGui::GetIO().DisplaySize.y;
+                float const options_width = 600.0f;
+                combine_options({ screen_width / 2 - options_width / 2, screen_height / 3 }, options_width);
             }
-            if (ImGui::SliderFloat("##volume_music", &volume_music, 0, 1, "%.2f")) {
-                configuration->set_float("volume.music", volume_music);
-                context->set_volume(sound_channel::music, volume_music);
+        }
+
+    private:
+        void combine_options(ImVec2 position, float width) {
+            ImGui::SetNextWindowPos(position, ImGuiCond_Always);
+            ImGui::SetNextWindowSize({ width, 600 });
+            ImGui::Begin("##options", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
+
+            float const content_width = width * 0.9f;
+
+            immediate::print("Master Volume", content_width);
+            ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.9f);
+            if (ImGui::SliderFloat("##volume_master", &volume_master, 0, 100, "%3.0f%%")) {
+                configuration->set_float("volume.master", volume_master * 0.01);
+                context->set_volume(sound_channel::master, volume_master * 0.01);
             }
-            if (ImGui::SliderFloat("##volume_sfx", &volume_sfx, 0, 1, "%.2f")) {
-                configuration->set_float("volume.sfx", volume_sfx);
-                context->set_volume(sound_channel::sfx, volume_sfx);
+            ImGui::PopItemWidth();
+
+            immediate::print("Music Volume", content_width);
+            ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.9f);
+            if (ImGui::SliderFloat("##volume_music", &volume_music, 0, 100, "%3.0f%%")) {
+                configuration->set_float("volume.music", volume_music * 0.01);
+                context->set_volume(sound_channel::music, volume_music * 0.01);
+            }
+            ImGui::PopItemWidth();
+
+            immediate::print("EFX Volume", content_width);
+            ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.9f);
+            if (ImGui::SliderFloat("##volume_sfx", &volume_sfx, 0, 100, "%3.0f%%")) {
+                configuration->set_float("volume.sfx", volume_sfx * 0.01);
+                context->set_volume(sound_channel::sfx, volume_sfx * 0.01);
+            }
+            ImGui::PopItemWidth();
+
+            ImGui::NewLine();
+            if (immediate::button("Back##options_back", content_width)) {
+                press_back();
             }
             ImGui::End();
         }
 
-    private:
         bool is_open() const noexcept {
-            return open_flag && *open_flag;
+            return context && configuration && open_flag && *open_flag;
+        }
+
+        void close() noexcept {
+            if (open_flag) {
+                *open_flag = false;
+            }
         }
 
         void apply_configuration() {
-            volume_master = static_cast<float>(configuration->value("volume.master", 1.0));
-            volume_music = static_cast<float>(configuration->value("volume.music", 1.0));
-            volume_sfx = static_cast<float>(configuration->value("volume.sfx", 1.0));
+            volume_master = static_cast<float>(configuration->value("volume.master", 1.0) * 100);
+            volume_music = static_cast<float>(configuration->value("volume.music", 1.0) * 100);
+            volume_sfx = static_cast<float>(configuration->value("volume.sfx", 1.0) * 100);
             if (context) {
-                context->set_volume(sound_channel::master, volume_master);
-                context->set_volume(sound_channel::music, volume_music);
-                context->set_volume(sound_channel::sfx, volume_sfx);
+                context->set_volume(sound_channel::master, volume_master * 0.01);
+                context->set_volume(sound_channel::music, volume_music * 0.01);
+                context->set_volume(sound_channel::sfx, volume_sfx * 0.01);
             }
+        }
+
+        void press_back() {
+            close();
         }
 
     private:
         environment *   context;
         cfg *           configuration;
         bool *          open_flag;
-        float           volume_master;
+        float           volume_master; // volume mediators in multipliers of 100 (percents)
         float           volume_music;
         float           volume_sfx;
     };

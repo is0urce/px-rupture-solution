@@ -24,7 +24,7 @@ namespace px {
         : public system<delta>
     {
     public:
-        uq_ptr<sound_component> make();
+        //uq_ptr<sound_component> make();
         void                    play_music();
         void                    play_sound(std::string const& name, double volume, vector2 const& location);
         void                    play_sound(std::string const& name, double volume);

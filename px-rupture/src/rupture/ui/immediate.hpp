@@ -35,7 +35,10 @@ namespace px {
             return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.1f, 0.0f, 1.0f }, { 1.0f, 0.3f, 0.0f, 1.0f });
         }
 
-    private:
+        static bool button(std::string const& text, float width, bool enabled) {
+            return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, enabled ? ImVec4{ 0.1f, 0.1f, 0.0f, 1.0f } : ImVec4{ 0.1f, 0.1f, 0.0f, 1.0f }, { 0.1f, 0.1f, 0.0f, 1.0f });
+        }
+
         static bool line(std::string const& name, float width, ImVec4 const& bg, ImVec4 const& hover, ImVec4 active) {
             bool result;
             ImGui::PushStyleColor(ImGuiCol_Button, bg);

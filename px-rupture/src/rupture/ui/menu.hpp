@@ -48,6 +48,7 @@ namespace px {
         bool                            open_inventory;
         bool                            open_options;
         bool                            open_escape;
+        bool                            open_credits;
         inventory *                     inventory_panel;
         craft_smith *                   smith_panel;
         craft_alchemy *                 alchemy_panel;
