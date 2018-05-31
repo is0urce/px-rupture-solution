@@ -13,7 +13,7 @@ namespace px::ui {
         : public panel
     {
     public:
-        virtual ~performance() override = default;
+        virtual ~performance() noexcept override = default;
 
         performance()
             : metrics(false)
@@ -22,14 +22,13 @@ namespace px::ui {
 
     protected:
         virtual void combine_panel() override {
-
             ImGui::SetNextWindowSize({ 150, 100 });
             ImGui::SetNextWindowPos({ 50, 50 });
             ImGui::Begin("performance", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-            if (ImGui::Button("metrics")) {
+            if (ImGui::Button("metrics##performance_metrics_btn")) {
                 metrics = !metrics;
             }
-            if (ImGui::Button("test")) {
+            if (ImGui::Button("test##performance_test_btn")) {
                 dbg = !dbg;
             }
             ImGui::SetWindowFontScale(0.5f);

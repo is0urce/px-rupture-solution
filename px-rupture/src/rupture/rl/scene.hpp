@@ -24,10 +24,13 @@ namespace px {
 
     class scene final {
     public:
+        using visit_event = std::function<void(point2 const&)>;
+        using area_query = std::function<void(point2 const&, body_component*)>;
+    public:
         void                            assign_sprites(sprite_system * system) noexcept;
         void                            focus(point2 const& location);
-        void                            set_enter_event(std::function<void(point2 const&)>);
-        void                            set_leave_event(std::function<void(point2 const&)>);
+        void                            set_enter_event(std::function<void(point2 const&)> fn);
+        void                            set_leave_event(std::function<void(point2 const&)> fn);
         void                            unload();
         bool                            is_transparent(point2 const& location) const;
         bool                            is_traversable(point2 const& location, rl::traverse_options<rl::traverse> const& opts) const;
@@ -37,6 +40,7 @@ namespace px {
 
         transform_component *           any(point2 const& location) const;
         body_component *                anybody(point2 const& location) const;
+        void                            query_targets(point2 const& location, unsigned int radius, std::function<void(point2 const&, body_component*)> fn) const;
 
         uq_ptr<composite_component> &   spawn(uq_ptr<composite_component> && ptr);                                  // add object
         void                            clear_units();                                                              // remove all objects

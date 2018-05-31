@@ -1,5 +1,7 @@
 // name: scene_internal.hpp
 // type: c++
+// auth: is0urce
+// type: internal class
 
 #pragma once
 
@@ -21,6 +23,7 @@
 #include <random>
 #include <string>
 #include <vector>
+#include <utility>
 
 namespace px {
 
@@ -55,8 +58,16 @@ namespace px {
             enter_fn = evt;
         }
 
+        void set_enter_event(patch_event && evt) {
+            enter_fn = std::move(evt);
+        }
+
         void set_leave_event(patch_event evt) {
             leave_fn = evt;
+        }
+
+        void set_leave_event(patch_event && evt) {
+            leave_fn = std::move(evt);
         }
 
         size_t size() const {
@@ -122,10 +133,20 @@ namespace px {
         body_component * anybody(point2 const& location) const {
             body_component * found = nullptr;
             space.find(location, [&](transform_component * pawn) {
-                body_component * body = pawn->linked<body_component>();
-                if (body) found = body;
+                if (body_component * body = pawn->linked<body_component>()) {
+                    found = body;
+                }
             });
             return found;
+        }
+
+        template <typename Operator>
+        void query_targets(point2 const& location, unsigned int radius, Operator && fn) const {
+            space.find(location, radius, [&](int x, int y, transform_component * pawn) {
+                if (auto body = pawn->linked<body_component>()) {
+                    fn(point2{ x, y }, body);
+                }
+            });
         }
 
         uq_ptr<composite_component> & spawn(uq_ptr<composite_component> && ptr) {
@@ -232,8 +253,7 @@ namespace px {
 
         // nested class
         class terrain_release_block final
-            : public abstract_release_block
-        {
+            : public abstract_release_block {
         public:
             terrain_release_block(join_release_block * raw, scene_internal * current, point2 grid_cell) noexcept
                 : original(raw)

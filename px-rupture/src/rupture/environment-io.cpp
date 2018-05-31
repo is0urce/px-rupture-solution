@@ -13,8 +13,14 @@
 
 namespace px {
 
+    namespace {
+        std::string save_path(std::string const& name) {
+            return settings::save_path + name;
+        }
+    }
+
     uq_ptr<composite_component>	& environment::spawn(std::string const& blueprint_name, point2 const& position) {
-        auto input = input_stream("data/blueprints/" + blueprint_name + ".dat");
+        auto input = input_stream(settings::blueprints_path + blueprint_name + ".dat");
         SAVE_INPUT_ARCHIVE archive(input);
 
         builder factory(this);
@@ -25,14 +31,14 @@ namespace px {
         return spawn(std::move(unit));
     }
 
+    // unload stage to populate repository data, then copy to save, then reload that save
     bool environment::save(std::string const& name) {
-
         stage.unload();
 
         save_main();
 
         // copy directory
-        repository out_directory(std::string(settings::save_path) + name);
+        repository out_directory(save_path(name));
         out_directory.clear();
         current->save(out_directory);
 
@@ -41,11 +47,10 @@ namespace px {
     }
 
     bool environment::load(std::string const& name) {
-
         end();
 
         // copy directory
-        repository in_directory(std::string(settings::save_path) + name);
+        repository in_directory(save_path(name));
         if (!in_directory.has_main()) return false;
         current->clear();
         current->load(in_directory);
@@ -55,6 +60,10 @@ namespace px {
         return_turn();
 
         return true;
+    }
+
+    bool environment::has_save(std::string const& name) const {
+        return repository::exists(save_path(name));
     }
 
     void environment::save_main() {

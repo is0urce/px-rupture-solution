@@ -46,10 +46,10 @@ namespace px {
         glfw_instance glfw;
         cfg configuration(settings::configuration_path);
         auto const binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
-        bool is_fullscreen = configuration["fullscreen"];
-        int window_width = configuration["width"];
-        int window_height = configuration["height"];
-        int vsync = configuration["vsync"];
+        bool is_fullscreen = configuration["screen.fullscreen"];
+        int window_width = configuration["screen.width"];
+        int window_height = configuration["screen.height"];
+        int vsync = configuration["screen.vsync"];
 
         // load settings
 
@@ -72,8 +72,8 @@ namespace px {
         evt.on_resize([&](int width, int height) {
             game.resize(width, height);
             // store size in configuration file
-            configuration["width"] = width;
-            configuration["height"] = height;
+            configuration["screen.width"] = width;
+            configuration["screen.height"] = height;
         });
         evt.on_click([&](int mouse_button, int action, int /* mods */) {
             game.click(mouse_button, action == GLFW_PRESS);

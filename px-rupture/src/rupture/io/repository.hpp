@@ -19,17 +19,24 @@ namespace px {
 
     class repository final {
     public:
+        static bool exists(std::string const& repo_name) {
+            return fs::exists(repo_name);
+        }
+
         bool exists() const {
             return fs::exists(name);
         }
+
         void remove() {
             fs::remove_all(name);
         }
+
         void create() {
             if (!exists()) {
                 fs::create_directory(name);
             }
         }
+
         void clear() {
             // fs::create_directory sometime fails after fs::remove_all
 
@@ -46,6 +53,7 @@ namespace px {
         void save(repository & destination) const {
             copy(*this, destination);
         }
+
         void load(repository const& destination) {
             if (!destination.exists()) throw std::runtime_error("repository not exists");
 
@@ -57,9 +65,11 @@ namespace px {
         std::string depot_scene(point2 const& cell) const {
             return query("scene_" + to_string(cell));
         }
+
         std::string depot_main() const {
             return query("main");
         }
+
         std::string depot_meta() const {
             return query("meta");
         }
@@ -67,9 +77,11 @@ namespace px {
         bool has_scene(point2 const& cell) const {
             return record_exists("scene_" + to_string(cell));
         }
+
         bool has_main() const {
             return record_exists("main");
         }
+
         bool has_meta() const {
             return record_exists("meta");
         }
@@ -77,9 +89,11 @@ namespace px {
         bool clear_scene(std::string const& scene_name) {
             return clear(scene_name);
         }
+
         bool clear_main() {
             return clear("main");
         }
+
         bool clear_meta() {
             return clear("meta");
         }
@@ -87,16 +101,16 @@ namespace px {
     public:
         repository(std::string const& name, repository const* base)
             : name(name)
-            , parent(base)
-        {
+            , parent(base) {
             if (!exists()) {
                 create();
             }
         }
+
         repository(std::string const& name)
-            : repository(name, nullptr)
-        {
+            : repository(name, nullptr) {
         }
+
         repository(repository const&) = delete;
         repository & operator=(repository const&) = delete;
 
@@ -106,6 +120,7 @@ namespace px {
             filename.replace_extension(".sav");
             return (name / filename).string();
         }
+
         std::string query(std::string const& record_name) const {
             auto current_path = record_path(record_name);
 
@@ -116,6 +131,7 @@ namespace px {
 
             return current_path;
         }
+
         bool pull(std::string const& dest_path, std::string const& record_name, repository const& base) const {
             if (base.record_exists(record_name)) {
                 fs::copy(base.record_path(record_name), dest_path);
@@ -123,12 +139,15 @@ namespace px {
             }
             return false;
         }
+
         bool record_exists(std::string const& record_name) const {
             return fs::exists(record_path(record_name));
         }
+
         bool clear(std::string const& record_name) const {
             return fs::remove(record_path(record_name));
         }
+
         static void move(repository & source, repository & destination) {
             destination.clear();
 
@@ -137,6 +156,7 @@ namespace px {
                 fs::rename(path, destination.name / path.filename());
             }
         }
+
         static void copy(repository const& source, repository & destination) {
             destination.clear();
 
@@ -145,6 +165,7 @@ namespace px {
                 fs::copy_file(path, destination.name / path.filename());
             }
         }
+
         static std::string to_string(point2 const& location) {
             return std::to_string(location.x() + coordinate_bias) + "_" + std::to_string(location.y() + coordinate_bias);
         }

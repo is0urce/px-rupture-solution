@@ -146,6 +146,7 @@ namespace px {
         // toggle escape options
         if (!something_closed) {
             open_escape = !open_escape;
+            title_panel->update_saves();    // update save flag in case of returning to title
         }
     }
 

@@ -64,6 +64,7 @@ namespace px {
         bool                                close_workshop();
         bool                                save(std::string const& name);
         bool                                load(std::string const& name);
+        bool                                has_save(std::string const& name) const;
         uq_ptr<composite_component> &       spawn(uq_ptr<composite_component> unit);
         uq_ptr<composite_component> &       spawn(std::string const& blueprint, point2 const& position);
         void                                update_blueprints(std::string const& out_path, std::string const& blueprint);
@@ -74,6 +75,7 @@ namespace px {
     public:
         bool                                in_sight(body_component const& body, point2 const& location) const;     // in line of sight
         bool                                in_line(body_component const& body, point2 const& location) const;      // in line of movement
+        void                                query_targets(point2 const& location, unsigned int radius, bool require_los, scene::area_query fn) const;
         void                                emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track);
         void                                emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track);
         void                                emit_light(point2 position, color const& light);

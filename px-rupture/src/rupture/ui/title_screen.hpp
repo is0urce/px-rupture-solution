@@ -5,6 +5,8 @@
 
 #pragma once
 
+// store cashed save flags in attributes to avoid extra directory queries
+
 #include "panel.hpp"
 #include "immediate.hpp"
 #include "design.hpp"
@@ -20,6 +22,12 @@ namespace px {
         void assign_logo(unsigned int texture_id) noexcept {
             logo_texture_id = texture_id;
         }
+    public:
+        void update_saves() {
+            quicksave = context && context->has_save("quicksave");
+            autosave = context && context->has_save("autosave");
+            exitsave = context && context->has_save("exitsave");
+        }
 
     public:
         virtual ~title_screen() noexcept override = default;
@@ -28,7 +36,11 @@ namespace px {
             : context(game)
             , open_options(options_flag)
             , open_credits(credits_flag)
-            , logo_texture_id(0) {
+            , logo_texture_id(0)
+            , exitsave(false)
+            , quicksave(false)
+            , autosave(false) {
+            update_saves();
         }
 
     protected:
@@ -69,14 +81,15 @@ namespace px {
             immediate::print("Gnomi##title_name_txt", width);
             ImGui::NewLine();
 
-            //if (context->)
-            //ImGui::PushStyleColor(ImGuiCol_Text, { 0.8f, 0.8f, 0.8f, 1.0f });
-            //if (immediate::line("Continue...##title_continue_btn", width,)) {
-                //press_continue();
-            //}
+            bool show_continue = exitsave || autosave || quicksave;
 
             ImGui::PushStyleColor(ImGuiCol_Text, { 0.8f, 0.8f, 0.8f, 1.0f });
-            if (immediate::button("New Game##titile_start_btn", width)) {
+            if (show_continue) {
+                if (immediate::button("Continue##title_continue_btn", width)) {
+                    press_continue();
+                }
+            }
+            if (immediate::button(show_continue ? "New Game##titile_start_btn" : "Start##title_start_btn", width)) {
                 press_start();
             }
             if (immediate::button("Options##title_options_btn", width)) {
@@ -107,8 +120,17 @@ namespace px {
         }
 
         void press_continue() {
+            update_saves();
             if (context) {
-                context->load("quicksave");
+                if (exitsave) {
+                    context->load("exitsave");
+                }
+                else if (quicksave) {
+                    context->load("quicksave");
+                }
+                else if (autosave) {
+                    context->load("autosave");
+                }
             }
         }
 
@@ -137,5 +159,8 @@ namespace px {
         bool *          open_credits;
         environment *   context;
         unsigned int    logo_texture_id;
+        bool            quicksave;// = context->has_save("quicksave");
+        bool            autosave;// = context->has_save("autosave");
+        bool            exitsave;// = context->has_save("exitsave");
     };
 }

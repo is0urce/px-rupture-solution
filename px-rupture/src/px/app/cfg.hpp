@@ -193,51 +193,46 @@ namespace px {
             clear();
             std::ifstream file(path);
             auto jsn = nlohmann::json::parse(file);
-            parse(jsn);
-
+            parse("", jsn);
             return true;
         }
 
         bool write(std::string const& path) {
             nlohmann::json jsn;
-
-            for (auto const& kv : i) {
-                jsn[kv.first] = kv.second;
-            }
-            for (auto const& kv : f) {
-                jsn[kv.first] = kv.second;
-            }
-            for (auto const& kv : s) {
-                jsn[kv.first] = kv.second;
-            }
-            for (auto const& kv : b) {
-                jsn[kv.first] = kv.second;
-            }
-
+            populate(jsn, i);
+            populate(jsn, f);
+            populate(jsn, s);
+            populate(jsn, b);
             std::ofstream file(path);
             file << jsn;
-
             return true;
         }
 
         template <typename Document>
-        void parse(Document const& doc) {
+        void parse(std::string const& prefix, Document const& doc) {
             for (auto it = doc.begin(), last = doc.end(); it != last; ++it) {
                 if (it->is_object()) {
-                    parse(it.value());
+                    parse(prefix + it.key() + ".", it.value());
                 }
                 else if (it->is_number_integer()) {
-                    i[it.key()] = it.value();
+                    i[prefix + it.key()] = it.value();
                 }
                 else if (it->is_number_float()) {
-                    f[it.key()] = it.value();
+                    f[prefix + it.key()] = it.value();
                 }
                 else if (it->is_string()) {
-                    s[it.key()] = it.value();
+                    s[prefix + it.key()] = it.value();
                 }
                 else if (it->is_boolean()) {
-                    b[it.key()] = it.value();
+                    b[prefix + it.key()] = it.value();
                 }
+            }
+        }
+
+        template <typename Document, typename Container>
+        void populate(Document & doc, Container const& container) {
+            for (auto const& kv : container) {
+                doc[kv.first] = kv.second;
             }
         }
 

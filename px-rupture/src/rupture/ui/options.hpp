@@ -51,7 +51,7 @@ namespace px::ui {
             immediate::print("Master Volume", content_width);
             ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.9f);
             if (ImGui::SliderFloat("##volume_master", &volume_master, 0, 100, "%3.0f%%")) {
-                configuration->set_float("volume.master", volume_master * 0.01);
+                configuration->set_float("sound.volume.master", volume_master * 0.01);
                 context->set_volume(sound_channel::master, volume_master * 0.01);
             }
             ImGui::PopItemWidth();
@@ -59,7 +59,7 @@ namespace px::ui {
             immediate::print("Music Volume", content_width);
             ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.9f);
             if (ImGui::SliderFloat("##volume_music", &volume_music, 0, 100, "%3.0f%%")) {
-                configuration->set_float("volume.music", volume_music * 0.01);
+                configuration->set_float("sound.volume.music", volume_music * 0.01);
                 context->set_volume(sound_channel::music, volume_music * 0.01);
             }
             ImGui::PopItemWidth();
@@ -67,7 +67,7 @@ namespace px::ui {
             immediate::print("EFX Volume", content_width);
             ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.9f);
             if (ImGui::SliderFloat("##volume_sfx", &volume_sfx, 0, 100, "%3.0f%%")) {
-                configuration->set_float("volume.sfx", volume_sfx * 0.01);
+                configuration->set_float("sound.volume.sfx", volume_sfx * 0.01);
                 context->set_volume(sound_channel::sfx, volume_sfx * 0.01);
             }
             ImGui::PopItemWidth();
@@ -90,9 +90,9 @@ namespace px::ui {
         }
 
         void apply_configuration() {
-            volume_master = static_cast<float>(configuration->value("volume.master", 1.0) * 100);
-            volume_music = static_cast<float>(configuration->value("volume.music", 1.0) * 100);
-            volume_sfx = static_cast<float>(configuration->value("volume.sfx", 1.0) * 100);
+            volume_master = static_cast<float>(configuration->value("sound.volume.master", 1.0) * 100);
+            volume_music = static_cast<float>(configuration->value("sound.volume.music", 1.0) * 100);
+            volume_sfx = static_cast<float>(configuration->value("sound.volume.sfx", 1.0) * 100);
             if (context) {
                 context->set_volume(sound_channel::master, volume_master * 0.01);
                 context->set_volume(sound_channel::music, volume_music * 0.01);

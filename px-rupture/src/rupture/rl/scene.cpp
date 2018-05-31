@@ -54,6 +54,14 @@ namespace px {
         return works->anybody(location);
     }
 
+    void scene::query_targets(point2 const& location, unsigned int radius, std::function<void(point2 const&, body_component*)> fn) const {
+        works->query_targets(location, radius, fn);
+    }
+
+    //void scene::query_targets(point2 const& location, unsigned int radius, area_query && fn) {
+    //    works->query_targets(location, radius, std::move(fn));
+    //}
+
     void scene::discard(std::function<void(composite_component&)> fn) {
         works->discard(fn);
     }

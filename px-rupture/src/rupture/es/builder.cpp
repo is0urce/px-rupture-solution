@@ -21,6 +21,7 @@
 #include "storage_component.hpp"
 #include "transform_component.hpp"
 #include "workshop_component.hpp"
+#include "value_component.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -155,6 +156,14 @@ namespace px {
         return workshop;
     }
 
+    value_component * builder::add_value() {
+        auto part = make_uq<value_component>();
+        value = part.get();
+        unit->add(std::move(part));
+
+        return value;
+    }
+
     void builder::remove_animator() {
         unit->remove<animator_component>();
         animator = nullptr;
@@ -174,43 +183,54 @@ namespace px {
         unit->remove<body_component>();
         body = nullptr;
     }
+
     void builder::remove_character() {
         unit->remove<character_component>();
         character = nullptr;
     }
+
     void builder::remove_container() {
         unit->remove<container_component>();
         container = nullptr;
     }
+
     void builder::remove_deposite() {
         unit->remove<deposite_component>();
         deposite = nullptr;
     }
+
     void builder::remove_door() {
         unit->remove<door_component>();
         door = nullptr;
     }
+
     void builder::remove_light() {
         unit->remove<light_component>();
         light = nullptr;
     }
+
     void builder::remove_npc() {
         unit->remove<npc_component>();
         npc = nullptr;
     }
+
     void builder::remove_player() {
         unit->remove<player_component>();
         player = nullptr;
     }
+
     void builder::remove_workshop() {
         unit->remove<workshop_component>();
         workshop = nullptr;
     }
 
+    void builder::remove_value() {
+        unit->remove<value_component>();
+        value = nullptr;
+    }
+
     void builder::link_components() {
-
         // presentation
-
         if (transform) {
             transform->connect(body);
         }
@@ -225,7 +245,6 @@ namespace px {
         }
 
         // rpg
-
         if (body) {
             body->connect(transform);
             body->connect(character);
@@ -239,7 +258,6 @@ namespace px {
         }
 
         // useables
-
         if (deposite) {
             deposite->connect(container);
             deposite->connect(unit.get());
@@ -250,7 +268,6 @@ namespace px {
         }
 
         // controls
-
         if (npc) {
             npc->connect(transform);
         }
@@ -261,15 +278,14 @@ namespace px {
         unit->connect(transform);
     }
 
-    uq_ptr<composite_component> builder::request()
-    {
+    uq_ptr<composite_component> builder::request() {
         link_components();
         auto result = std::move(unit);
         begin();
         return result;
     }
-    void builder::begin()
-    {
+
+    void builder::begin() {
         animator = nullptr;
         body = nullptr;
         character = nullptr;
@@ -283,13 +299,13 @@ namespace px {
         storage = nullptr;
         transform = nullptr;
         workshop = nullptr;
+        value = nullptr;
 
         unit = make_uq<composite_component>();
     }
-    void builder::begin(uq_ptr<composite_component> strip)
-    {
-        unit = std::move(strip);
 
+    void builder::begin(uq_ptr<composite_component> strip) {
+        unit = std::move(strip);
         if (unit) {
             animator = unit->query<animator_component>();
             body = unit->query<body_component>();
@@ -309,6 +325,7 @@ namespace px {
             begin();
         }
     }
+
     bool builder::has_player() const noexcept {
         return player;
     }
