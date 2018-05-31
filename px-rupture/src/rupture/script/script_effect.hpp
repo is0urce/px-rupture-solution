@@ -21,6 +21,10 @@ namespace px {
             buff.set_name(text);
         }
 
+        void set_description(std::string const& text) {
+            buff.set_description(text);
+        }
+
         void set_duration(unsigned int time) {
             buff.set_duration(time);
         }

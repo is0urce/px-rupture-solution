@@ -134,10 +134,9 @@ namespace px {
 
     void shell::press(key action_index) {
         if (!is_running() || turn_passed()) return;
-        if (ui.takes_input()) return;
+        if (ui.takes_input() && action_index != key::escape) return;    // escape is special
 
         switch (action_index) {
-
         case key::quick_save: {
             ui.rollback();
             //popup("quicksave...", { 1, 1, 1 });
@@ -151,29 +150,78 @@ namespace px {
             time.advance_turn(current_turn());
             break;
         }
-        case key::move_east: ui.rollback(); step({ 1, 0 }); break;
-        case key::move_west: ui.rollback(); step({ -1, 0 }); break;
-        case key::move_north: ui.rollback(); step({ 0, 1 }); break;
-        case key::move_south: ui.rollback(); step({ 0, -1 }); break;
+        case key::move_east:
+            ui.rollback();
+            step({ 1, 0 });
+            break;
+        case key::move_west:
+            ui.rollback();
+            step({ -1, 0 });
+            break;
+        case key::move_north:
+            ui.rollback();
+            step({ 0, 1 });
+            break;
+        case key::move_south:
+            ui.rollback();
+            step({ 0, -1 });
+            break;
+        case key::move_northeast:
+            ui.rollback();
+            step({ 1, 1 });
+            break;
+        case key::move_northwest:
+            ui.rollback();
+            step({ -1, 1 });
+            break;
+        case key::move_southeast:
+            ui.rollback();
+            step({ 1, -1 });
+            break;
+        case key::move_southwest:
+            ui.rollback();
+            step({ -1, -1 });
+            break;
+        case key::action_use:
+            ui.rollback();
+            use(0);
+            break;
+        case key::action0:
+            ui.rollback();
+            action(0);
+            break;
+        case key::action1:
+            ui.rollback();
+            action(1);
+            break;
+        case key::action2:
+            ui.rollback();
+            action(2);
+            break;
+        case key::action3:
+            ui.rollback();
+            action(3);
+            break;
+        case key::action4:
+            ui.rollback();
+            action(4);
+            break;
+        case key::action5:
+            ui.rollback();
+            action(5);
+            break;
+        case key::panel_inventory:
+            ui.toggle_inventory();
+            break;
+        case key::escape:
+            ui.escape();
+            break;
 
-        case key::move_northeast: ui.rollback(); step({ 1, 1 }); break;
-        case key::move_northwest: ui.rollback(); step({ -1, 1 }); break;
-        case key::move_southeast: ui.rollback(); step({ 1, -1 }); break;
-        case key::move_southwest: ui.rollback(); step({ -1, -1 }); break;
-
-        case key::action_use: ui.rollback(); use(0); break;
-
-        case key::action0: ui.rollback(); action(0); break;
-        case key::action1: ui.rollback(); action(1); break;
-        case key::action2: ui.rollback(); action(2); break;
-        case key::action3: ui.rollback(); action(3); break;
-        case key::action4: ui.rollback(); action(4); break;
-        case key::action5: ui.rollback(); action(5); break;
-
-        case key::panel_inventory: ui.toggle_inventory(); break;
-        case key::escape: ui.escape(); break;
-
-        case key::function_edit: function_edit(0); break;
+        case key::function_edit:
+            function_edit(0);
+            break;
+        default:
+            break;
         }
     }
 
@@ -181,7 +229,7 @@ namespace px {
         std::vector<unsigned char> bits;
         unsigned int texture_width;
         unsigned int texture_height;
-        const auto error = lodepng::decode(bits, texture_width, texture_height, name);
+        auto const error = lodepng::decode(bits, texture_width, texture_height, name);
         if (error) throw std::runtime_error("add_texture(name) error while loading image, path=" + std::string(name));
         return renderer.add_texture(texture_width, texture_height, bits.data());
     }

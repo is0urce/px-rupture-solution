@@ -36,7 +36,11 @@ namespace px {
         }
         static constexpr int window_flat() {
             return 0
-                | window_caption()
+                | ImGuiWindowFlags_NoResize
+                | ImGuiWindowFlags_NoMove
+                | ImGuiWindowFlags_NoScrollbar
+                | ImGuiWindowFlags_NoScrollWithMouse
+                | ImGuiWindowFlags_NoCollapse
                 | ImGuiWindowFlags_NoTitleBar;
         }
         static ImVec2 menu_position() {

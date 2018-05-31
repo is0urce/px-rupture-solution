@@ -88,7 +88,7 @@ namespace px {
             style.AntiAliasedLines = false;
             style.GrabMinSize = 20.0f;
             style.WindowPadding = { 0, 0 };
-
+            style.Colors[ImGuiCol_SliderGrabActive] = { 1.0f, 1.0f, 1.0f, 0.75f };
             style.Colors[ImGuiCol_WindowBg] = { 0, 0, 0, 0.67f };
         }
 
@@ -121,8 +121,8 @@ namespace px {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glActiveTexture(GL_TEXTURE0);
             glUseProgram(shader);
-            glUniform1i(locationTex, 0);
-            glUniformMatrix4fv(locationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
+            glUniform1i(location_texture, 0);
+            glUniformMatrix4fv(location_projection, 1, GL_FALSE, &ortho_projection[0][0]);
             glBindVertexArray(vao);
             glBindSampler(0, 0); // Rely on combined texture/sampler state.
 
@@ -155,11 +155,11 @@ namespace px {
 
         void create_pipeline() {
             shader = compile_program("data/shaders/ui");
-            locationTex = glGetUniformLocation(shader, "Texture");
-            locationProjMtx = glGetUniformLocation(shader, "ProjMtx");
-            locationPosition = glGetAttribLocation(shader, "Position");
-            locationUV = glGetAttribLocation(shader, "UV");
-            locationColor = glGetAttribLocation(shader, "Color");
+            location_texture = glGetUniformLocation(shader, "Texture");
+            location_projection = glGetUniformLocation(shader, "ProjMtx");
+            location_position = glGetAttribLocation(shader, "Position");
+            location_uv = glGetAttribLocation(shader, "UV");
+            location_color = glGetAttribLocation(shader, "Color");
 
             glGenBuffers(1, &vbo);
             glGenBuffers(1, &elements);
@@ -167,14 +167,14 @@ namespace px {
             glGenVertexArrays(1, &vao);
             glBindVertexArray(vao);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glEnableVertexAttribArray(locationPosition);
-            glEnableVertexAttribArray(locationUV);
-            glEnableVertexAttribArray(locationColor);
+            glEnableVertexAttribArray(location_position);
+            glEnableVertexAttribArray(location_uv);
+            glEnableVertexAttribArray(location_color);
 
 #define PX_OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
-            glVertexAttribPointer(locationPosition, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, pos));
-            glVertexAttribPointer(locationUV, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, uv));
-            glVertexAttribPointer(locationColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, col));
+            glVertexAttribPointer(location_position, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, pos));
+            glVertexAttribPointer(location_uv, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, uv));
+            glVertexAttribPointer(location_color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (GLvoid const*)PX_OFFSETOF(ImDrawVert, col));
 #undef PX_OFFSETOF
         }
 
@@ -187,7 +187,8 @@ namespace px {
         void load_font() {
             auto & io = ImGui::GetIO();
             unsigned char * pixels;
-            int texture_width, texture_height;
+            int texture_width;
+            int texture_height;
             io.Fonts->GetTexDataAsRGBA32(&pixels, &texture_width, &texture_height);
 
             font.image2d(GL_RGBA, GL_RGBA, static_cast<GLsizei>(texture_width), static_cast<GLsizei>(texture_height), 0, GL_UNSIGNED_BYTE, pixels);
@@ -201,12 +202,11 @@ namespace px {
         unsigned int    height;
         gl_texture      font;
         gl_program      shader;
-
-        int             locationTex;
-        int             locationProjMtx;
-        int             locationPosition;
-        int             locationUV;
-        int             locationColor;
+        int             location_texture;
+        int             location_projection;
+        int             location_position;
+        int             location_uv;
+        int             location_color;
         unsigned int    vbo;
         unsigned int    vao;
         unsigned int    elements;

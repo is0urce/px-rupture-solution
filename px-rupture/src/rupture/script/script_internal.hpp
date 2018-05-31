@@ -125,6 +125,7 @@ namespace px {
 
             lua.new_usertype<script_effect>("effect"
                 , "set_name", &script_effect::set_name
+                , "set_description", &script_effect::set_description
                 , "set_duration", &script_effect::set_duration
                 , "set_hidden", &script_effect::set_hidden
                 , "add", &script_effect::add

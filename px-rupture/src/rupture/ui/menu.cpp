@@ -128,6 +128,7 @@ namespace px {
     void menu::escape_command() {
         // close craft panels
         bool something_closed = smith_panel->cancel_smith() || alchemy_panel->cancel_alchemy();
+
         // close inventory panel
         if (!something_closed) {
             if (open_inventory) {
@@ -143,10 +144,14 @@ namespace px {
                 something_closed = true;
             }
         }
+
         // toggle escape options
         if (!something_closed) {
-            open_escape = !open_escape;
-            title_panel->update_saves();    // update save flag in case of returning to title
+            // require ingame
+            if (context && context->possessed()) {
+                open_escape = !open_escape;
+                title_panel->update_saves();    // update save flag in case of returning to title
+            }
         }
     }
 

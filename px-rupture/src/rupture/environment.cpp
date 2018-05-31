@@ -559,7 +559,7 @@ namespace px {
             fov los;
             los.calculate(center, radius + 1, [&](int x, int y) { return stage.is_transparent({ x, y }); });
             stage.query_targets(center, radius, [&](point2 const& location, body_component * target) {
-                if (distance(center, location) < static_cast<int>(radius) && los.contains(location)) {
+                if (distance(center, location) <= static_cast<int>(radius) && los.contains(location)) {
                     fn(location, target);
                 }
             });
