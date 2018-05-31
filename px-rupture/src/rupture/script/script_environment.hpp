@@ -14,6 +14,7 @@
 
 #include <string>
 #include <tuple>
+#include <vector>
 
 namespace px {
 
@@ -121,6 +122,25 @@ namespace px {
             return game->neighbour(location, direction);
         }
 
+        script_unit get_first(point2 const& location, unsigned int radius, bool require_los) {
+            targets.clear();
+            if (game) {
+                game->query_targets(location, radius, require_los, [&](point2 const& /*location*/, body_component * body) {
+                    targets.push_back(body);
+                });
+            }
+            return get_next();
+        }
+
+        script_unit get_next() {
+            body_component * target = nullptr;
+            if (!targets.empty()) {
+                target = targets.back();
+                targets.pop_back();
+            }
+            return script_unit(target);
+        }
+
     public:
         script_environment() noexcept
             : game(nullptr) {
@@ -131,6 +151,7 @@ namespace px {
         }
 
     private:
-        environment * game;
+        std::vector<body_component*>    targets;
+        environment *                   game;
     };
 }

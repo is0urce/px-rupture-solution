@@ -491,8 +491,8 @@ namespace px {
         auto pawn = body.linked<transform_component>();
         if (!pawn) return false;
 
-        int max_distance = pawn->position().king_distance(location);
-        if (max_distance > 100) return false;
+        int max_distance = pawn->position().king_distance(location) + 1; // plus one to be included
+        if (max_distance > 25) return false;
 
         fov sight;
         sight.calculate(pawn->position(), max_distance, [&](int x, int y) { return stage.is_transparent({ x, y }); });
@@ -557,9 +557,9 @@ namespace px {
     void environment::query_targets(point2 const& center, unsigned int radius, bool require_los, scene::area_query fn) const {
         if (require_los) {
             fov los;
-            los.calculate(center, radius, [&](int x, int y) { return stage.is_transparent({ x, y }); });
+            los.calculate(center, radius + 1, [&](int x, int y) { return stage.is_transparent({ x, y }); });
             stage.query_targets(center, radius, [&](point2 const& location, body_component * target) {
-                if (distance(center, location) <= static_cast<int>(radius) && los.contains(location)) {
+                if (distance(center, location) < static_cast<int>(radius) && los.contains(location)) {
                     fn(location, target);
                 }
             });

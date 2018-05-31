@@ -305,8 +305,7 @@ namespace px {
     }
 
     void builder::begin(uq_ptr<composite_component> strip) {
-        unit = std::move(strip);
-        if (unit) {
+        if (unit = std::move(strip)) {
             animator = unit->query<animator_component>();
             body = unit->query<body_component>();
             character = unit->query<character_component>();

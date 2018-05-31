@@ -19,7 +19,6 @@ namespace px {
 
     class script_internal final {
     public:
-
         void assign_environment(environment * context) {
             lua["game"] = script_environment(context);
         }
@@ -163,6 +162,8 @@ namespace px {
                 , "create_effect", &script_environment::create_effect
                 , "is_traversable", &script_environment::is_traversable
                 , "neighbour", &script_environment::neighbour
+                , "get_first", &script_environment::get_first
+                , "get_next", &script_environment::get_next
                 );
         }
 

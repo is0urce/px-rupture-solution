@@ -75,7 +75,7 @@ namespace px {
     public:
         bool                                in_sight(body_component const& body, point2 const& location) const;     // in line of sight
         bool                                in_line(body_component const& body, point2 const& location) const;      // in line of movement
-        void                                query_targets(point2 const& location, unsigned int radius, bool require_los, scene::area_query fn) const;
+        void                                query_targets(point2 const& location, unsigned int radius, bool require_los, std::function<void(point2 const&, body_component*)> fn) const;
         void                                emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track);
         void                                emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track);
         void                                emit_light(point2 position, color const& light);

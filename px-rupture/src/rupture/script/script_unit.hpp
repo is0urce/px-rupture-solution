@@ -23,7 +23,7 @@ namespace px {
         }
 
         bool is_valid() const noexcept {
-            return body != nullptr;
+            return body;
         }
 
         bool is_enemy(script_unit const& subject) const {
