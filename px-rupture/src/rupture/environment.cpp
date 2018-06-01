@@ -76,8 +76,8 @@ namespace px {
         player = camera;
         sprites.target(camera);
         messages.target(camera);
-        lights.target(camera);
         sounds.target(camera);
+        lights.target(camera);
         lights.recalculate();
     }
 
@@ -142,6 +142,7 @@ namespace px {
     unsigned int environment::current_turn() const noexcept {
         return turn_number;
     }
+
     bool environment::turn_passed() const noexcept {
         return turn_pass;
     }

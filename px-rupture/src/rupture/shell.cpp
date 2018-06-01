@@ -113,9 +113,9 @@ namespace px {
         }
     }
 
-    void shell::hover(int x, int y) {
+    void shell::hover(double x, double y) {
         if (!is_running() || turn_passed()) return;
-        if (ui.hover(x, y)) return;
+        if (ui.hover(static_cast<unsigned int>(x), static_cast<unsigned int>(y))) return;
 
         vector2 position(x, y);
         position /= vector2(width, height);         // (0, 1) screen space

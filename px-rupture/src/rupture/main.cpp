@@ -79,7 +79,7 @@ namespace px {
             game.click(mouse_button, action == GLFW_PRESS);
         });
         evt.on_hover([&](double x, double y) {
-            game.hover(static_cast<int>(x), static_cast<int>(y));
+            game.hover(x, y);
         });
         evt.on_scroll([&](double horisontal, double vertical) {
             game.scroll(horisontal, vertical);

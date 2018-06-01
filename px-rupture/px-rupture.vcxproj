@@ -462,7 +462,10 @@
     <None Include="data\skills.json" />
     <None Include="data\textures.json" />
     <None Include="data\tiles.json" />
+    <None Include="fmod64.dll" />
     <None Include="lua53.dll" />
+    <None Include="msvcp140.dll" />
+    <None Include="vcruntime140.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
