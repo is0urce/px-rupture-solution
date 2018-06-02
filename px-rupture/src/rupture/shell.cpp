@@ -150,6 +150,7 @@ namespace px {
             time.advance_turn(current_turn());
             break;
         }
+
         case key::move_east:
             ui.rollback();
             step({ 1, 0 });
@@ -182,10 +183,12 @@ namespace px {
             ui.rollback();
             step({ -1, -1 });
             break;
+
         case key::action_use:
             ui.rollback();
             use(0);
             break;
+
         case key::action0:
             ui.rollback();
             action(0);
@@ -210,6 +213,7 @@ namespace px {
             ui.rollback();
             action(5);
             break;
+
         case key::panel_inventory:
             ui.toggle_inventory();
             break;

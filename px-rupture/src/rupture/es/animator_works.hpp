@@ -16,6 +16,7 @@
 #include <px/es/pool_manager.hpp>
 
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -100,10 +101,17 @@ namespace px {
                             set.names[clip_name] = clip_index;
                         }
 
+                        double time_last = -1;
                         // fill keyframes
                         for (auto const& keyframe_node : clip_node["frames"]) {
                             double time = keyframe_node.value("time", 0.0);
                             unsigned int frame_id = keyframe_node.value("frame", 0);
+
+                            // check frame order
+                            if (time <= time_last) {
+                                throw std::runtime_error("px::animator_works::load(..) - frame time > time last, clip_name=" + clip_name + " frame_id=" + std::to_string(frame_id));
+                            }
+                            time_last = time;
 
                             clip.frames.push_back({ frames.at(frame_id), time });
                         }

@@ -54,7 +54,7 @@ namespace px {
         // load settings
 
         auto const monitor = glfwGetPrimaryMonitor();
-        auto const *const mode = glfwGetVideoMode(monitor);
+        auto const* const mode = glfwGetVideoMode(monitor);
         if (is_fullscreen) {
             window_width = mode->width;
             window_height = mode->height;

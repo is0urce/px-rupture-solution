@@ -1,4 +1,7 @@
 // name: animation.hpp
+// type: c++
+// auth: is0urce
+// desc: one animation clip
 
 #pragma once
 
@@ -32,13 +35,16 @@ namespace px {
 
     private:
         sprite const* frame(double time) const {
+            return frames[frame_index(time)].frame;
+        }
+
+        size_t frame_index(double time) const {
             size_t i = 0;
             for (auto const& key : frames) {
                 if (key.time > time) break;
                 ++i;
             }
-            i = (i == 0) ? 0 : (i - 1);
-            return frames[i].frame;
+            return (i == 0) ? 0 : (i - 1);
         }
 
     public:
