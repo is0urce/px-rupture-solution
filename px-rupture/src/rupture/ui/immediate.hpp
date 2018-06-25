@@ -49,6 +49,14 @@ namespace px {
             return result;
         }
 
+        static bool line(std::string const& name, float width, ImVec4 const& bg, ImVec4 const& hover) {
+            return line(name, width, bg, hover, hover);
+        }
+
+        static bool line(std::string const& name, float width, ImVec4 const& bg) {
+            return line(name, width, bg, bg, bg);
+        }
+
         // dim
         static void dim() {
             ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_Always);

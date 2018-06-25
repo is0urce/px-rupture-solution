@@ -40,8 +40,15 @@ namespace px {
             m_height = height;
         }
 
-        void clears(GLbitfield bits) noexcept {
+        void clear(GLbitfield bits) noexcept {
             m_clear = bits;
+        }
+
+        void clear_color(GLclampf r, GLclampf g, GLclampf b, GLclampf a) noexcept {
+            m_clear_color[0] = r;
+            m_clear_color[1] = g;
+            m_clear_color[2] = b;
+            m_clear_color[3] = a;
         }
 
         void bind_texture(GLuint texture, GLuint index) {
@@ -75,6 +82,7 @@ namespace px {
             glViewport(0, 0, m_width, m_height);
             glScissor(0, 0, m_width, m_height);
             if (m_clear) {
+                glClearColor(m_clear_color[0], m_clear_color[1], m_clear_color[2], m_clear_color[3]);
                 glClear(m_clear);
             }
             glBindVertexArray(m_vao);
@@ -118,6 +126,7 @@ namespace px {
             : pass() {
             swap(that);
         }
+
         pass & operator=(pass && that) noexcept {
             swap(that);
             return *this;
@@ -126,12 +135,12 @@ namespace px {
         pass(pass const&) = delete;
         pass & operator=(pass const&) = delete;
 
-
     private:
         GLuint                  m_framebuffer;
         GLuint                  m_vao;
         GLsizei                 m_width;
         GLsizei                 m_height;
+        GLclampf                m_clear_color[4];
         std::vector<attachment> m_textures;
         std::vector<attachment> m_uniforms;
         GLbitfield              m_clear;

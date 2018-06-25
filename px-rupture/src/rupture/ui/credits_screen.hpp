@@ -45,7 +45,6 @@ namespace px {
         void combine_credits(ImVec2 const& position, float width) {
             // main options
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-            ImGui::SetNextWindowSize({ width + 100, 600 });
             ImGui::Begin("##credits_screen", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
             ImGui::NewLine();
             ImGui::PushStyleColor(ImGuiCol_Text, { 0.8f, 0.8f, 0.8f, 1.0f });

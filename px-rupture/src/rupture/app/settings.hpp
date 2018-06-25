@@ -1,6 +1,11 @@
 // name: settings.hpp
+// auth: is0urce
+// type: c++
+// desc: constants
 
 #pragma once
+
+// set global setting values
 
 #include <string>
 

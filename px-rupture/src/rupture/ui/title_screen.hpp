@@ -22,6 +22,7 @@ namespace px {
         void assign_logo(unsigned int texture_id) noexcept {
             logo_texture_id = texture_id;
         }
+
     public:
         void update_saves() {
             quicksave = context && context->has_save("quicksave");
@@ -76,7 +77,6 @@ namespace px {
         void combine_title(ImVec2 const& position, float width) {
             // main options
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-            ImGui::SetNextWindowSize({ width + 100, 300 });
             ImGui::Begin("##title_screen", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
             immediate::print("Gnomi##title_name_txt", width);
             ImGui::NewLine();
@@ -159,8 +159,8 @@ namespace px {
         bool *          open_credits;
         environment *   context;
         unsigned int    logo_texture_id;
-        bool            quicksave;// = context->has_save("quicksave");
-        bool            autosave;// = context->has_save("autosave");
-        bool            exitsave;// = context->has_save("exitsave");
+        bool            quicksave;  // = context->has_save("quicksave");
+        bool            autosave;   // = context->has_save("autosave");
+        bool            exitsave;   // = context->has_save("exitsave");
     };
 }

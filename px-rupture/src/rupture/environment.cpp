@@ -184,8 +184,6 @@ namespace px {
 
         incarnate(create_player());
         prewarm();
-
-        ingame = true;
     }
 
     transform_component * environment::create_player() {
@@ -269,8 +267,8 @@ namespace px {
     }
 
     void environment::prewarm() {
-        //spawn("anvil", { 1966, 861 });
-        //spawn("alchemy", { 1967, 861 });
+        spawn("anvil", { 1966, 861 });
+        spawn("alchemy", { 1967, 861 });
     }
 
     uq_ptr<composite_component>	& environment::spawn(uq_ptr<composite_component> unit) {

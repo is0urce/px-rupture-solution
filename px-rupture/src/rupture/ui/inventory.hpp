@@ -6,6 +6,7 @@
 #pragma once
 
 #include "panel.hpp"
+#include "immediate.hpp"
 
 #include "field_description.hpp"
 
@@ -86,13 +87,16 @@ namespace px {
     private:
         // inventory list window draw
         void combine_list(ImVec2 const& position, ImVec2 const& size, body_component & body, container_component & container) {
-            ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-            ImGui::SetNextWindowSize(size);
-            ImGui::Begin((body.name() + " inventory##inventory_panel").c_str()
-                , nullptr
-                , ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
             format_names(container, names);
             selected = -1;
+
+            ImGui::SetNextWindowPos(position, ImGuiCond_Always);
+            ImGui::SetNextWindowSize(size);
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0, 0.0, 0.0, 0.0 });
+            ImGui::Begin("##inventory_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+            immediate::line(body.name() + " inventory", size.x, { 0.5, 0.5, 0.5, 1.0 });
+
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
             if (ImGui::ListBox("##inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
                 if (selected >= 0) {
@@ -123,11 +127,12 @@ namespace px {
             }
             ImGui::PopItemWidth();
 
-            if (ImGui::Button("close##close_inventory", { 334, 32 })) {
+            if (immediate::line("close##close_inventory", size.x, { 0.5, 0.5, 0.5, 1.0 }, { 1.0, 0.5, 0.5, 1.0 })) {
                 *opened = false;
             }
 
             ImGui::End();
+            ImGui::PopStyleColor(1);
         }
 
         // equipment slots drawing
@@ -162,12 +167,14 @@ namespace px {
         // item inspector window draw
         void combine_inspector(rl::item const& item, ImVec2 const& position) {
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-            ImGui::Begin((item.name() + "##item_inspector_title").c_str(),
-                nullptr,
-                ImGuiWindowFlags_NoTitleBar |
-                ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            //ImGui::SetNextWindowSize({ size, 0 });
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 1, 1, 1, 0.5 });
+            ImGui::Begin((item.name() + "##item_inspector_title").c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
             field_description::display_item(item);
+
             ImGui::End();
+            ImGui::PopStyleColor(1);
         }
 
     private:

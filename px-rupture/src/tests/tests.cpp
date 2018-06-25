@@ -20,11 +20,17 @@
 #include "case/rl/traverse_test.hpp"
 #include "case/rl/craft_test.hpp"
 
+#include <px/dev/benchmark.hpp>
+
 namespace px {
 
     unsigned int test::total = 0;
     unsigned int test::fails = 0;
     const char * test::lastmsg = "not specified";
+
+    void xrun() {
+        std::cout << "run" << '\n';
+    }
 
     void run_tests() {
         test_coordinate();
