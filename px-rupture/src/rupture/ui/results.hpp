@@ -27,13 +27,10 @@ namespace px::ui {
 
     protected:
         virtual void combine_panel() override {
-            if (!context) return;
-            transform_component * player = context->possessed();
+            transform_component * player = context ? context->controlled() : nullptr;
             if (!player) return;
-            body_component * body = player->linked<body_component>();
-            if (!body) return;
-            character_component * character = body->linked<character_component>();
-            bool show = character->has_trait("game_over");
+            auto[body, character] = player->unwind<body_component, character_component>();
+            bool show = body && character && character->has_trait("c_game_over");
             if (!show) return;
 
             const float screen_width = ImGui::GetIO().DisplaySize.x;

@@ -438,6 +438,7 @@
     <None Include="data\scripts\sk_v_blink.lua" />
     <None Include="data\scripts\sk_v_disease.lua" />
     <None Include="data\scripts\sk_v_drain.lua" />
+    <None Include="data\scripts\sk_v_explosives.lua" />
     <None Include="data\scripts\sk_v_fire.lua" />
     <None Include="data\scripts\sk_v_lash.lua" />
     <None Include="data\scripts\sk_v_melee.lua" />

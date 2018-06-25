@@ -33,7 +33,7 @@ namespace px {
     protected:
         virtual void combine_panel() override {
             if (!is_open()) return;
-            container = game->possessed()->qlink<container_component, body_component>();
+            container = game->controlled()->qlink<container_component, body_component>();
             if (!container) return;
 
             const float screen_width = ImGui::GetIO().DisplaySize.x;

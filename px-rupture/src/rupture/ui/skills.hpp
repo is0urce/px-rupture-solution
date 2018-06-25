@@ -26,8 +26,7 @@ namespace px::ui {
 
     protected:
         virtual void combine_panel() override {
-            if (!context) return;
-            if (auto target = context->possessed()) {
+            if (auto target = context ? context->controlled() : nullptr) {
                 if (character_component const* const person = target->qlink<character_component, body_component>()) {
 
                     float const screen_height = ImGui::GetIO().DisplaySize.y;

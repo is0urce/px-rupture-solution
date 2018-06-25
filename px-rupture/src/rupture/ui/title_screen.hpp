@@ -64,7 +64,7 @@ namespace px {
         }
 
         bool is_hidden_by_ingame() const noexcept {
-            return context && context->possessed();
+            return context && context->is_ingame();
         }
 
         bool is_open() const noexcept {

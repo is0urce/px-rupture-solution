@@ -15,8 +15,22 @@ namespace px {
 
     class specialty {
     public:
-        void add_trait(std::string trait) {
-            traits.push_back(trait);
+        bool add_trait(std::string const& new_trait) {
+            bool insert = true;
+
+            // check if trait already in array
+            for (std::string const& old_trait : traits) {
+                if (new_trait == old_trait) {
+                    insert = false;
+                    break;
+                }
+            }
+
+            if (insert) {
+                traits.push_back(new_trait);
+            }
+
+            return insert;
         }
 
         void remove_trait(size_t idx) {

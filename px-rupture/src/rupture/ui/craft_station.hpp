@@ -40,7 +40,7 @@ namespace px {
     {
     public:
         bool is_open() const noexcept {
-            return game && game->has_access(Activity) && game->possessed();
+            return game && game->is_ingame() && game->has_access(Activity);
         }
 
     public:

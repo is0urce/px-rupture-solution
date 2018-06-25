@@ -38,7 +38,7 @@ namespace px {
         virtual void combine_panel() override {
             if (!game || !(*opened)) return;
 
-            transform_component * target = game->possessed();
+            transform_component * target = game->controlled();
             if (!target) return;
             auto[body, container] = target->unwind<body_component, container_component>();
             if (!container) return;

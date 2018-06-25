@@ -40,10 +40,11 @@ namespace px {
             if (screen_width == 0 || screen_height == 0) return;
             prepare_resources(delta_time);
 
+            glEnable(GL_BLEND);
+
             // sprites drawed to offscreen A
 
             glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
-            glClear(GL_COLOR_BUFFER_BIT);
             if (sprite_data) {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // alpha blending for sprites
                 glUseProgram(sprite_program);
@@ -54,22 +55,21 @@ namespace px {
 
             // lightmap drawed to offscreen B
 
-            glBindFramebuffer(GL_FRAMEBUFFER, light.framebuffer);
-            glClear(GL_COLOR_BUFFER_BIT);
-            glBlendFunc(GL_ONE, GL_ONE); // additive blending for lights
+            glBlendFunc(GL_ONE, GL_ONE);            // for additive blending
+            glClearColor(0, 0, 0, 1);               // start black
             glUseProgram(light_program);
-            light_pass.draw_arrays(GL_QUADS, 8); // two quads for current and last lightmap overlays
+            light_pass.draw_arrays(GL_QUADS, 8);    // two quads for current and last lightmap overlays
 
             // combining diffuse with lights, postprocessing, writing to main screen
 
-            glUseProgram(postprocess_program);
-            glBlendFunc(GL_ONE, GL_ZERO); // overwrite
+            glBlendFunc(GL_ONE, GL_ZERO);           // 'overwrite' blending
+            glUseProgram(postprocess_program);      // into final screen
             postprocess.draw_arrays(GL_QUADS, 4);
 
             // popup notification message overlay
 
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // ''standard'' additive blending for rest
             glUseProgram(popup_program);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             popups.pass.draw_arrays(GL_QUADS, static_cast<GLsizei>(glyphs.size()));
 
             gl_assert();
@@ -156,6 +156,7 @@ namespace px {
 
             glClearColor(0, 0, 0, 1);
             glEnable(GL_BLEND);
+            glEnable(GL_TEXTURE_2D);
 
             // compile shaders
 
@@ -188,9 +189,11 @@ namespace px {
             light_pass.output(light.framebuffer, screen_width, screen_height);
             light_pass.bind_textures({ light_current, light_last });
             light_pass.bind_uniform(camera);
+            light_pass.clears(GL_COLOR_BUFFER_BIT);
 
             postprocess = { 0, 0, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) }; // main framebuffer, no vao
             postprocess.bind_textures({ diffuse.texture, light.texture });
+            postprocess.clears(GL_COLOR_BUFFER_BIT);
 
             popups.pass = { 0, popups.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
             popups.pass.bind_texture(popups.texture);

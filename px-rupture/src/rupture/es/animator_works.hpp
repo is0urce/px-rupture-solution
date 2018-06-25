@@ -86,8 +86,8 @@ namespace px {
                     }
 
                     std::string name = animation_node["name"];
-                    auto & set = animations[name];  // create entry
-                    auto & keyframe_array = set.clips;  // create entry
+                    auto & set = animations[name];
+                    auto & keyframe_array = set.clips;
 
                     size_t clip_index = 0;
 

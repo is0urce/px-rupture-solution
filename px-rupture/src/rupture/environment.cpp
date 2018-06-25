@@ -39,7 +39,9 @@ namespace px {
         clear();
     }
 
-    environment::environment() {
+    environment::environment()
+        : run(true)
+        , ingame(false) {
         parent = make_uq<repository>(std::string(settings::save_path) + "base");
         current = make_uq<repository>(std::string(settings::save_path) + "current", parent.get());
 
@@ -52,12 +54,39 @@ namespace px {
 
     // methods
 
+    bool environment::is_ingame() const noexcept {
+        return ingame;
+    }
+
     bool environment::is_running() const noexcept {
         return run;
     }
 
     void environment::shutdown() {
         run = false;
+    }
+
+    void environment::end() {
+        clear();
+    }
+
+    void environment::clear() {
+        stage.unload();
+        stage.clear_units();
+        vfx.clear();
+        lights.clear_lightmap();
+        current->clear();
+
+        player = nullptr;
+        ingame = false;
+
+        target_unit = nullptr;
+        target_area = { 0, 0 };
+        target_hover = { 0, 0 };
+        opened_workshop = rl::craft_activity::none;
+
+        turn_number = 0;
+        turn_pass = true;
     }
 
     bool environment::has_control() const {
@@ -79,6 +108,8 @@ namespace px {
         sounds.target(camera);
         lights.target(camera);
         lights.recalculate();
+
+        ingame = camera != nullptr;
     }
 
     // player move action
@@ -153,6 +184,8 @@ namespace px {
 
         incarnate(create_player());
         prewarm();
+
+        ingame = true;
     }
 
     transform_component * environment::create_player() {
@@ -181,7 +214,7 @@ namespace px {
         auto character = unit_builder.add_character();
         character->learn("sk_v_melee");                                             // basic attack
         //character->learn("sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_s_charge");  // class
-        character->learn("sk_i_lightning", "sk_v_lash", "sk_v_drain", "sk_v_sling", "sk_v_blink");                            // test
+        character->learn("sk_i_lightning", "sk_v_drain", "sk_v_explosives", "sk_v_blink");                            // test
 
         // inventory
         auto container = unit_builder.add_container();
@@ -240,31 +273,11 @@ namespace px {
         //spawn("alchemy", { 1967, 861 });
     }
 
-    void environment::end() {
-        clear();
-    }
-
-    void environment::clear() {
-        stage.unload();
-        stage.clear_units();
-        vfx.clear();
-        current->clear();
-
-        player = nullptr;
-        target_unit = nullptr;
-        target_area = { 0, 0 };
-        target_hover = { 0, 0 };
-        opened_workshop = rl::craft_activity::none;
-        run = true;
-        turn_number = 0;
-        turn_pass = true;
-    }
-
     uq_ptr<composite_component>	& environment::spawn(uq_ptr<composite_component> unit) {
         return stage.spawn(std::move(unit));
     }
 
-    transform_component	* environment::possessed() noexcept {
+    transform_component	* environment::controlled() noexcept {
         return player;
     }
 
@@ -297,9 +310,15 @@ namespace px {
     // execute after npc turn
     void environment::return_turn() {
 
-        // stream world
         if (player) {
+            // stream world
             stage.focus(player->position());
+
+            // results screen
+            auto[body, person] = player->unwind<body_component, character_component>();
+            if (body && person && body->is_dead()) {
+                person->add_trait("c_game_over");
+            }
         }
 
         // death of units

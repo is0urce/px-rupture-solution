@@ -53,8 +53,13 @@ namespace px::ui {
             //if (immediate::button("Credits##escape_credits_btn", width)) {
             //    press_credits();
             //}
-            if (immediate::button("Exit##escape_exit_btn", width)) {
-                press_exit();
+
+            if (immediate::button("Title##escape_exit_title_btn", width)) {
+                press_title();
+            }
+
+            if (immediate::button("Exit##escape_exit_desctop_btn", width)) {
+                press_desctop();
             }
             ImGui::PopStyleColor(1);
 
@@ -79,7 +84,14 @@ namespace px::ui {
             set_flag(open_options, true);
         }
 
-        void press_exit() {
+        void press_title() {
+            if (context) {
+                context->clear();
+            }
+            set_flag(open_flag, false);
+        }
+
+        void press_desctop() {
             if (context) {
                 context->shutdown();
             }

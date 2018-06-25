@@ -813,5 +813,6 @@
     <None Include="fmod64.dll" />
     <None Include="msvcp140.dll" />
     <None Include="vcruntime140.dll" />
+    <None Include="data\scripts\sk_v_explosives.lua" />
   </ItemGroup>
 </Project>

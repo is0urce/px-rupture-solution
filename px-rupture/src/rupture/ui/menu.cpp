@@ -148,7 +148,7 @@ namespace px {
         // toggle escape options
         if (!something_closed) {
             // require ingame
-            if (context && context->possessed()) {
+            if (context && context->is_ingame()) {
                 open_escape = !open_escape;
                 title_panel->update_saves();    // update save flag in case of returning to title
             }

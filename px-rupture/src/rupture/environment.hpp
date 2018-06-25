@@ -39,6 +39,7 @@ namespace px {
         transform_component *               target() noexcept;                                                      // hover point in world
         void                                target(point2 offset);                                                  // hovered unit
         bool                                is_running() const noexcept;
+        bool                                is_ingame() const noexcept;
         void                                shutdown();                                                             // close game
         void                                step(point2 const& movement);                                           // move player
         void                                advance();                                                              // move player to target
@@ -48,7 +49,7 @@ namespace px {
         void                                start();
         void                                end();
         void                                clear();
-        transform_component *               possessed() noexcept;                                                   // get current player
+        transform_component *               controlled() noexcept;                                                  // get current player
         bool                                has_control() const;                                                    // returns true if player can act now
         void                                start_turn();                                                           // clear from previous turn
         void                                end_turn(unsigned int turns);                                           // end player turn and sart world processing
@@ -110,7 +111,6 @@ namespace px {
         transform_component *               player;
         uq_ptr<repository>                  current;
         uq_ptr<repository>                  parent;
-        bool                                run;
         unsigned int                        turn_number;
         bool                                turn_pass;                          // true if it's the world processing stage
         point2                              target_hover;                       // offset of target area
@@ -119,5 +119,7 @@ namespace px {
         rl::craft_activity                  opened_workshop;
         std::vector<visual>                 vfx;                                // current visual effects
         std::mt19937                        rng;                                // random number generator engine
+        bool                                run;
+        bool                                ingame;
     };
 }

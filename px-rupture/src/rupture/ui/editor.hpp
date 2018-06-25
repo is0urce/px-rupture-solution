@@ -70,7 +70,7 @@ namespace px::ui {
         virtual void combine_panel() override {
             if (!game) return;
 
-            transform_component * camera = game->possessed();
+            transform_component * camera = game->controlled();
 
             const float window_width = 250.0f;
             const float screen_width = ImGui::GetIO().DisplaySize.x;

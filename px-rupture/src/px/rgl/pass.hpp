@@ -40,6 +40,10 @@ namespace px {
             m_height = height;
         }
 
+        void clears(GLbitfield bits) noexcept {
+            m_clear = bits;
+        }
+
         void bind_texture(GLuint texture, GLuint index) {
             if (texture == 0) throw std::runtime_error("px::gl_pass::bind_texture(..) - texture is 0");
             m_textures.push_back({ index, texture });
@@ -70,6 +74,9 @@ namespace px {
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer);
             glViewport(0, 0, m_width, m_height);
             glScissor(0, 0, m_width, m_height);
+            if (m_clear) {
+                glClear(m_clear);
+            }
             glBindVertexArray(m_vao);
             for (auto const& uniform : m_uniforms) {
                 glBindBufferBase(GL_UNIFORM_BUFFER, uniform.binding, uniform.element);
@@ -96,7 +103,8 @@ namespace px {
             : m_framebuffer(0)
             , m_vao(0)
             , m_width(0)
-            , m_height(0) {
+            , m_height(0)
+            , m_clear(0) {
         }
 
         pass(GLuint framebuffer, GLuint vao, GLsizei width, GLsizei height) noexcept
@@ -126,5 +134,6 @@ namespace px {
         GLsizei                 m_height;
         std::vector<attachment> m_textures;
         std::vector<attachment> m_uniforms;
+        GLbitfield              m_clear;
     };
 }

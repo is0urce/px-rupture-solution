@@ -30,7 +30,7 @@ namespace px::ui {
 
     protected:
         virtual void combine_panel() override {
-            auto pawn = context ? context->possessed() : nullptr;
+            auto pawn = context ? context->controlled() : nullptr;
             auto body = pawn ? pawn->linked<body_component>() : nullptr;
 
             if (body && features.levelup_required(*body)) {
