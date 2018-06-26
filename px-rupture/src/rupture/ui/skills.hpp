@@ -31,6 +31,7 @@ namespace px::ui {
 
                     float const screen_height = ImGui::GetIO().DisplaySize.y;
                     ImGui::SetNextWindowPos({ 16, screen_height - 50 }, ImGuiCond_Always);
+                    ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0, 0.0, 0.0, 0.0 });
                     ImGui::Begin("##skillset", nullptr
                         , ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse
                         | ImGuiWindowFlags_AlwaysAutoResize);
@@ -57,8 +58,9 @@ namespace px::ui {
                             ImGui::Button(state.alias().c_str(), { 128, 32 });
                             ImGui::PopStyleColor(3);
                             if (ImGui::IsItemHovered()) {
+                                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 20, 20 });
                                 ImGui::BeginTooltip();
-                                ImGui::Text("%d) %s", i, state.name().c_str());
+                                ImGui::Text("%d. %s", i, state.name().c_str());
                                 ImGui::Separator();
                                 ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 500);
                                 ImGui::TextWrapped("%s", state.description().c_str());
@@ -72,11 +74,13 @@ namespace px::ui {
                                     ImGui::Text("cooldown: %d/%d", state.cooldown_remaining(), cd);
                                 }
                                 ImGui::EndTooltip();
+                                ImGui::PopStyleVar(1);
                             }
                         }
                     }
 
                     ImGui::End();
+                    ImGui::PopStyleColor(1);
                 }
             }
         }

@@ -17,7 +17,9 @@
 
 #include <imgui/imgui.h>
 
+#include <array>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace px {
@@ -44,43 +46,37 @@ namespace px {
             auto[body, container] = target->unwind<body_component, container_component>();
             if (!container) return;
 
-            const float screen_width = ImGui::GetIO().DisplaySize.x;
-            const float screen_height = ImGui::GetIO().DisplaySize.y;
-            const float window_width = 350.0f;
-            const float window_height = 538.0f;
-            ImVec2 inventory_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
-            ImVec2 inventory_size{ window_width, window_height };
-
-            ImVec2 slot_position = inventory_position;
-            ImVec2 slot_size{ 200, 32 };
-            slot_position.x -= slot_size.x + 32;
-            slot_position.y += 64;
-
-            ImVec2 inspector_position = inventory_position;
-            inspector_position.x += inventory_size.x + 32;
-            inspector_position.y += 64;
+            float const screen_width = ImGui::GetIO().DisplaySize.x;
+            float const screen_height = ImGui::GetIO().DisplaySize.y;
+            float const window_width = 350.0f;
+            float const window_height = 538.0f;
+            ImVec2 const inventory_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
+            ImVec2 const inventory_size{ window_width, window_height };
 
             combine_list(inventory_position, inventory_size, *body, *container);
 
+            // inventory slots
+
             selected_slot = nullptr; // reset hovered equipment slot
+            ImVec2 const slot_size{ 200, 32 };
+            ImVec2 const slot_position{ inventory_position.x - slot_size.x - 32, inventory_position.y + slot_size.y };
+            unsigned int i = 0;
+            for (auto const& examined_slot : std::array<std::tuple<std::string, rl::equipment>, 3>{ {
+                { "weapon", rl::equipment::hand },
+                { "helmet", rl::equipment::head },
+                { "armor", rl::equipment::chest } } }) {
+                combine_slot(std::get<0>(examined_slot), { slot_position.x, slot_position.y + (slot_size.y + 8) * i }, slot_size, *body, std::get<1>(examined_slot));
+                ++i;
+            }
 
-            combine_slot("hands", slot_position, slot_size, *body, rl::equipment::hand);
-            slot_position.y += slot_size.y;
+            // item inspector
 
-            slot_position.y += 8;
-            combine_slot("head", slot_position, slot_size, *body, rl::equipment::head);
-            slot_position.y += slot_size.y;
-
-            slot_position.y += 8;
-            combine_slot("chest", slot_position, slot_size, *body, rl::equipment::chest);
-            slot_position.y += slot_size.y;
-
-            rl::item const* inspect = nullptr;
-            if (selected >= 0) inspect = container->get(selected);
-            if (selected_slot) inspect = selected_slot;
-
-            if (inspect) {
-                combine_inspector(*inspect, inspector_position);
+            rl::item const* inspect_item = nullptr;
+            if (selected >= 0) inspect_item = container->get(selected);
+            if (selected_slot) inspect_item = selected_slot;
+            if (inspect_item) {
+                ImVec2 const inspector_position{ inventory_position.x + inventory_size.x + 32, slot_position.y };
+                combine_inspector(*inspect_item, inspector_position);
             }
         }
 
@@ -95,7 +91,7 @@ namespace px {
             ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0, 0.0, 0.0, 0.0 });
             ImGui::Begin("##inventory_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-            immediate::line(body.name() + " inventory", size.x, { 0.5, 0.5, 0.5, 1.0 });
+            immediate::line(body.name() + " inventory", size.x, { 0.0, 0.0, 0.0, 1.0 });
 
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
             if (ImGui::ListBox("##inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
@@ -127,7 +123,7 @@ namespace px {
             }
             ImGui::PopItemWidth();
 
-            if (immediate::line("close##close_inventory", size.x, { 0.5, 0.5, 0.5, 1.0 }, { 1.0, 0.5, 0.5, 1.0 })) {
+            if (immediate::line("close##close_inventory", size.x, { 0.0, 0.0, 0.0, 1.0 })) {
                 *opened = false;
             }
 
@@ -141,23 +137,28 @@ namespace px {
             ImGui::SetNextWindowSize(size);
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-            ImGui::Begin((name + "title").c_str(),
-                nullptr,
-                ImGuiWindowFlags_NoTitleBar |
-                ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            ImGui::Begin((name + "title").c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
             if (rl::item * ptr = body.equipment(slot)) {
                 ImGui::PushID(ptr);
+                ImGui::PushStyleColor(ImGuiCol_Button, { 0.0, 0.0, 0.0, 1 });
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.0, 0.0, 0.0, 1 });
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.0, 0.0, 0.0, 1 });
                 if (ImGui::Button(ptr->name().c_str(), size)) {
                     body.unequip(slot);
                 }
                 else if (ImGui::IsItemHovered()) {
                     selected_slot = ptr;
                 }
+                ImGui::PopStyleColor(3);
                 ImGui::PopID();
             }
             else {
-                ImGui::Button(name.c_str(), size);
+                ImGui::PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 1 });
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.0, 0.0, 0.0, 1 });
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.0, 0.0, 0.0, 1 });
+                ImGui::Button((name + ": no").c_str(), size);
+                ImGui::PopStyleColor(3);
             }
 
             ImGui::End();
@@ -167,8 +168,7 @@ namespace px {
         // item inspector window draw
         void combine_inspector(rl::item const& item, ImVec2 const& position) {
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-            //ImGui::SetNextWindowSize({ size, 0 });
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 1, 1, 1, 0.5 });
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0, 0, 0, 0 });
             ImGui::Begin((item.name() + "##item_inspector_title").c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
             field_description::display_item(item);

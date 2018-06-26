@@ -62,7 +62,6 @@ namespace px {
             // combining diffuse with lights, postprocessing, writing to main screen
 
             glBlendFunc(GL_ONE, GL_ZERO);           // 'overwrite' blending
-            //glBlendFunc(GL_ZERO, GL_ONE);           // ::REMOVE!::
             glUseProgram(postprocess_program);      // into final screen
             postprocess.clear_color(1, 0, 1, 1);
             postprocess.draw_arrays(GL_QUADS, 4);

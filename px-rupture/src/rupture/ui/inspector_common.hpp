@@ -26,12 +26,14 @@ namespace px::ui {
 
             ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
             ImGui::SetNextWindowSize(size);
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0, 0, 0, 0 });
             ImGui::Begin(label, nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
             combine_name(body);
             combine_attributes(body);
 
             ImGui::End();
+            ImGui::PopStyleColor(1);
 
             combine_buffs(label, pos, body);
         }
@@ -40,28 +42,23 @@ namespace px::ui {
             immediate::bar(body.health(), "hp", { 0.5f, 0.0f, 0.0f, 1.0f });
             immediate::bar(body.energy(), "mp", { 0.0f, 0.0f, 0.5f, 1.0f });
             if (body.is_useable()) {
-                ImGui::Text("useable [e]");
+                ImGui::Text("- useable [E]");
             }
         }
 
         void combine_buffs(const char * label, ImVec2 const& start, body_component const& body) {
-            int i = 0;
-            for (auto const& buff : body.get_buffs()) {
-                if (buff.is_hidden()) continue;
-
-                ImVec2 pen = { start.x , start.y - 64 - 48 * i };
-                combine_buff((label + std::to_string(i)).c_str(), pen, buff);
-                ++i;
+            unsigned int i = 0;
+            for (auto const& affect : body.get_buffs()) {
+                if (!affect.is_hidden()) {
+                    combine_buff((label + std::to_string(i)).c_str(), { start.x , start.y - 64 - 48 * i }, affect);
+                    ++i;
+                }
             }
         }
 
         void combine_buff(const char * label, ImVec2 const& pos, body_component::buff_type const& buff) {
             ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-            ImGui::Begin(label, nullptr, 
-                ImGuiWindowFlags_NoTitleBar | 
-                ImGuiWindowFlags_NoBringToFrontOnFocus | 
-                ImGuiWindowFlags_NoResize | 
-                ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
+            ImGui::Begin(label, nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
             ImGui::Text(format_buff_name(buff).c_str());
             if (ImGui::IsItemHovered()) {
