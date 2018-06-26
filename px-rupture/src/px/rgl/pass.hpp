@@ -49,6 +49,7 @@ namespace px {
             m_clear_color[1] = g;
             m_clear_color[2] = b;
             m_clear_color[3] = a;
+            m_clear |= GL_COLOR_BUFFER_BIT;
         }
 
         void bind_texture(GLuint texture, GLuint index) {

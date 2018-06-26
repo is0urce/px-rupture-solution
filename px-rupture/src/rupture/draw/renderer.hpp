@@ -40,8 +40,6 @@ namespace px {
             if (screen_width == 0 || screen_height == 0) return;
             prepare_resources(delta_time);
 
-            glEnable(GL_BLEND);
-
             // sprites drawed to offscreen A
 
             glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
@@ -59,11 +57,10 @@ namespace px {
             glUseProgram(light_program);
             light_pass.draw_arrays(GL_QUADS, 8);    // two quads for current and last lightmap overlays
 
-            // combining diffuse with lights, postprocessing, writing to main screen
+            // combine diffuse with lights, postprocess, write to main screen
 
             glBlendFunc(GL_ONE, GL_ZERO);           // 'overwrite' blending
             glUseProgram(postprocess_program);      // into final screen
-            postprocess.clear_color(1, 0, 1, 1);
             postprocess.draw_arrays(GL_QUADS, 4);
 
             // popup notification message overlay
@@ -189,12 +186,11 @@ namespace px {
             light_pass.output(light.framebuffer, screen_width, screen_height);
             light_pass.bind_textures({ light_current, light_last });
             light_pass.bind_uniform(camera);
-            light_pass.clear(GL_COLOR_BUFFER_BIT);
             light_pass.clear_color(0.0, 0.0, 0.0, 1.0);
 
             postprocess = { 0, 0, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) }; // main framebuffer, no vao
             postprocess.bind_textures({ diffuse.texture, light.texture });
-            postprocess.clear(GL_COLOR_BUFFER_BIT);
+            postprocess.clear_color(0.0, 0.0, 0.0, 1.0);
 
             popups.pass = { 0, popups.geometry, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) };
             popups.pass.bind_texture(popups.texture);

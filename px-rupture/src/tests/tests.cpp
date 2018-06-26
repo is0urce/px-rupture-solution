@@ -28,10 +28,6 @@ namespace px {
     unsigned int test::fails = 0;
     const char * test::lastmsg = "not specified";
 
-    void xrun() {
-        std::cout << "run" << '\n';
-    }
-
     void run_tests() {
         test_coordinate();
         test_pool();
