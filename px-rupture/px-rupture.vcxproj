@@ -409,7 +409,7 @@
     <ClInclude Include="src\rupture\ui\skills.hpp" />
     <ClInclude Include="src\rupture\ui\status.hpp" />
     <ClInclude Include="src\rupture\ui\title_screen.hpp" />
-    <ClInclude Include="src\rupture\ui\levelup.hpp" />
+    <ClInclude Include="src\rupture\ui\levelup_screen.hpp" />
     <ClInclude Include="src\tests\case\common\bigint_test.hpp" />
     <ClInclude Include="src\tests\case\common\coordinate_test.hpp" />
     <ClInclude Include="src\tests\case\common\label_test.hpp" />

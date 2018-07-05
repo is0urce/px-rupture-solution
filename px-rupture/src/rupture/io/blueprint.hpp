@@ -1,6 +1,11 @@
 // name: blueprint.hpp
+// type: c++
+// auth: is0urce
+// desc: class for static functions
 
 #pragma once
+
+// serialization of units
 
 #include "../es/builder.hpp"
 #include "../es/composite_component.hpp"

@@ -51,8 +51,18 @@ namespace px::rl {
             return m_current - last;
         }
 
-        void modify(T magnitude) noexcept {
+        void modify_current(T magnitude) noexcept {
             m_current = cap(m_current + magnitude);
+        }
+
+        void modify_maximum(T magnitude) noexcept {
+            m_max += magnitude;
+            cap();
+        }
+
+        void modify_values(T magnitude) noexcept {
+            m_max += magnitude;
+            m_current += magnitude;
         }
 
         T damage(T magnitude) noexcept {
@@ -162,6 +172,9 @@ namespace px::rl {
     private:
         constexpr T cap(T val) const noexcept {
             return std::min(val, m_max);
+        }
+        void cap() noexcept {
+            m_current = cap(m_current);
         }
 
     private:

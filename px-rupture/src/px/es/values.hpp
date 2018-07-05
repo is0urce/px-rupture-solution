@@ -23,6 +23,11 @@ namespace px {
             return ints[key];
         }
 
+        I int_value(std::string const& key, I fallback) const {
+            auto it = ints.find(key);
+            return it == ints.end() ? fallback : it->second;
+        }
+
         void set_float(std::string const& key, F value) {
             floats[key] = value;
         }
@@ -31,12 +36,22 @@ namespace px {
             return floats[key];
         }
 
+        F float_value(std::string const& key, F fallback) const {
+            auto it = floats.find(key);
+            return it == floats.end() ? fallback : it->second;
+        }
+
         void set_string(std::string const& key, std::string const& value) {
             strings[key] = value;
         }
 
         std::string string_value(std::string const& key) {
             return strings[key];
+        }
+
+        std::string string_value(std::string const& key, std::string const& fallback) const {
+            auto it = strings.find(key);
+            return it == strings.end() ? fallback : it->second;
         }
 
         template <typename Archive>

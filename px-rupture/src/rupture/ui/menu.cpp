@@ -19,7 +19,7 @@
 #include "status.hpp"
 #include "skills.hpp"
 #include "title_screen.hpp"
-#include "levelup.hpp"
+#include "levelup_screen.hpp"
 #include "options.hpp"
 #include "results.hpp"
 
@@ -70,7 +70,7 @@ namespace px {
         alchemy_panel = make_panel<craft_alchemy>(stack, game);
 
         title_panel = make_panel<title_screen>(stack, game, &open_options, &open_credits);
-        make_panel<ui::levelup>(stack, game);
+        make_panel<ui::levelup_screen>(stack, game);
         make_panel<ui::results>(stack, game);
 
         make_panel<ui::escape_screen>(stack, game, &open_escape, &open_options);
