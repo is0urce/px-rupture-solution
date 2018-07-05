@@ -40,14 +40,16 @@ namespace px {
         void                                target(point2 offset);                                                  // hovered unit
         bool                                is_running() const noexcept;
         bool                                is_ingame() const noexcept;
+        void                                begin();
+        void                                end();
+        transform_component *               create_player(unsigned int specialization);                             // start routine
+        void                                incarnate(transform_component * target);
         void                                shutdown();                                                             // close game
         void                                step(point2 const& movement);                                           // move player
         void                                advance();                                                              // move player to target
         bool                                action(unsigned int action_idx);                                        // use skill
         void                                use(unsigned int mods);                                                 // use object
         void                                function_edit(std::uint32_t idx);
-        void                                start();
-        void                                end();
         void                                clear();
         transform_component *               controlled() noexcept;                                                  // get current player
         bool                                has_control() const;                                                    // returns true if player can act now
@@ -94,14 +96,12 @@ namespace px {
         environment();
 
     private:
-        void                                incarnate(transform_component * target);
         void                                lock_target();
         void                                save_main();
         void                                load_main();
         void                                save_scene(point2 const& cell);
         void                                load_scene(point2 const& cell);
-        void                                prewarm();                          // start routine
-        transform_component *               create_player();                    // start routine
+        void                                prewarm();                                  // start routine
 
     protected:
         notification_system                 messages;

@@ -47,7 +47,7 @@ namespace px {
     }
 
     bool environment::load(std::string const& name) {
-        end();
+        begin();
 
         // copy directory
         repository in_directory(save_path(name));

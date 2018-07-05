@@ -135,11 +135,12 @@ namespace px {
                     context->load("autosave");
                 }
             }
+            greetings = false;
         }
 
         void press_start() {
             if (context) {
-                context->start();
+                context->begin();
                 greetings = false;
             }
         }

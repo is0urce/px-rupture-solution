@@ -86,7 +86,7 @@ namespace px::ui {
 
         void press_title() {
             if (context) {
-                context->clear();
+                context->end();
             }
             set_flag(open_flag, false);
         }

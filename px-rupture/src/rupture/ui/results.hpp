@@ -103,7 +103,7 @@ namespace px::ui {
         void press_restart() {
             if (context) {
                 context->end();
-                context->start();
+                context->begin();
             }
         }
 

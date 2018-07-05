@@ -36,7 +36,7 @@ namespace px {
     // ctor & dtor
 
     environment::~environment() {
-        clear();
+        end();
     }
 
     environment::environment()
@@ -66,8 +66,15 @@ namespace px {
         run = false;
     }
 
+    void environment::begin() {
+        // clear repository and reset environment variables
+        end();
+        ingame = true;
+    }
+
     void environment::end() {
         clear();
+        ingame = false;
     }
 
     void environment::clear() {
@@ -78,7 +85,6 @@ namespace px {
         current->clear();
 
         player = nullptr;
-        ingame = false;
 
         target_unit = nullptr;
         target_area = { 0, 0 };
@@ -97,7 +103,6 @@ namespace px {
     }
 
     void environment::incarnate(transform_component * camera) {
-
         if (camera) {
             stage.focus(camera->position());
         }
@@ -108,8 +113,6 @@ namespace px {
         sounds.target(camera);
         lights.target(camera);
         lights.recalculate();
-
-        ingame = camera != nullptr;
     }
 
     // player move action
@@ -178,23 +181,11 @@ namespace px {
         return turn_pass;
     }
 
-    void environment::start() {
-        // clear repository and reset environment variables
-        clear();
-
-        incarnate(create_player());
-        prewarm();
-    }
-
-    transform_component * environment::create_player() {
+    transform_component * environment::create_player(unsigned int specialization) {
         builder unit_builder(this);
 
         // position
         auto pawn = unit_builder.add_transform({ 1966, 860 });
-
-        // appearance
-        unit_builder.add_sprite("m_gnome_warrior");
-        unit_builder.add_animator("a_gnome_warrior");
 
         auto light = unit_builder.add_light();
         light->tint = color(0.7, 0.7, 0.7);
@@ -203,24 +194,90 @@ namespace px {
 
         // stats
         auto body = unit_builder.add_body();
+        body->set_name("Gnome");
+        body->set_level(0);
+        body->set_experience(0);
+        body->join_faction(1);
         body->movement().make_traversable(rl::traverse::floor);
         body->blocking().make_transparent();
         body->health().emplace(50);
         body->energy().emplace(100);
-        body->set_name("Gnome");
-        body->join_faction(1);
+
         auto character = unit_builder.add_character();
         character->learn("sk_v_melee");                                             // basic attack
-        //character->learn("sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_s_charge");  // class
-        character->learn("sk_i_lightning", "sk_v_drain", "sk_v_explosives", "sk_v_blink");                            // test
 
         // inventory
         auto container = unit_builder.add_container();
-        auto weapon = make_uq<rl::item>();
-        weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0x00, 6));
-        weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
-        weapon->set_name("fireplace poker");
-        container->add(std::move(weapon));
+
+        // value vault
+        unit_builder.add_value();
+
+        // as player
+        unit_builder.add_player();
+
+        // specialization select
+
+        if (specialization == 1) {
+            unit_builder.add_sprite("m_gnome_warrior");
+            unit_builder.add_animator("a_gnome_warrior");
+            character->learn("sk_s_smite", "sk_s_rend", "sk_s_flurry", "sk_s_charge");          // class
+
+            auto weapon = make_uq<rl::item>();
+            weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0x00, 6));
+            weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
+            weapon->set_name("rusty shortsword");
+            body->get_mannequin().equip(rl::equipment::hand, std::move(weapon));
+        }
+        else if (specialization == 2) {
+            unit_builder.add_sprite("m_gnome_archer");
+            unit_builder.add_animator("a_gnome_archer");
+            character->learn("sk_i_lightning", "sk_v_drain", "sk_v_explosives", "sk_v_blink");  // test
+
+            auto weapon = make_uq<rl::item>();
+            weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0x00, 6));
+            weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
+            weapon->set_name("throwing knife");
+            body->get_mannequin().equip(rl::equipment::hand, std::move(weapon));
+
+            auto item = make_uq<rl::item>();
+            item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::alchemy), 1));
+            item->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
+            item->set_name("salt");
+            item->make_stacking();
+            item->set_current_stack(5);
+            container->acquire(std::move(item));
+
+            auto ore = make_uq<rl::item>();
+            ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
+            ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
+            ore->make_stacking();
+            ore->set_name("smuggled alloy");
+            ore->set_current_stack(6);
+            container->acquire(std::move(ore));
+
+            auto pot = make_uq<rl::item>();
+            pot->add(body_component::enhancement_type::zero(rl::effect::useable, 0x00));
+            pot->add(body_component::enhancement_type::real(rl::effect::hp_heal, 0x00, 100.0));
+            pot->set_name("purified & certified potion");
+            pot->set_tag("i_hp_potion_dev");
+            pot->make_stacking();
+            container->acquire(std::move(pot));
+        }
+        else if (specialization == 3) {
+            unit_builder.add_sprite("m_gnome_mage");
+            unit_builder.add_animator("a_gnome_mage");
+
+            auto weapon = make_uq<rl::item>();
+            weapon->add(body_component::enhancement_type::real(rl::effect::damage, 0x00, 6));
+            weapon->add(body_component::enhancement_type::zero(rl::effect::equipment, static_cast<body_component::enhancement_type::integer_type>(rl::equipment::hand)));
+            weapon->set_name("fireplace poker");
+            body->get_mannequin().equip(rl::equipment::hand, std::move(weapon));
+        }
+        else {
+            unit_builder.add_sprite("m_gnome_warrior");
+            unit_builder.add_animator("a_gnome_warrior");
+            px_debug("no specialization");
+        }
 
         // intrinsic effect item
         auto hide = make_uq<rl::item>();
@@ -230,41 +287,10 @@ namespace px {
         hide->add(body_component::enhancement_type::real(rl::effect::dodge, 0x00, 0.05));
         body->get_mannequin().equip(rl::equipment::hide, std::move(hide));
 
-        for (int i = 0; i != 10; ++i) {
-            auto item = make_uq<rl::item>();
-            item->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::alchemy), 1));
-            item->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
-            item->set_name("petal");
-            item->make_stacking();
-            container->acquire(std::move(item));
-
-            auto ore = make_uq<rl::item>();
-            ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
-            ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
-            ore->make_stacking();
-            ore->set_name("ore");
-            container->acquire(std::move(ore));
-
-            auto pot = make_uq<rl::item>();
-            pot->add(body_component::enhancement_type::zero(rl::effect::useable, 0x00));
-            pot->add(body_component::enhancement_type::real(rl::effect::hp_heal, 0x00, 100.0));
-            pot->set_name("healing potion");
-            pot->set_tag("i_hp_potion_dev");
-            pot->make_stacking();
-            container->acquire(std::move(pot));
-        }
-
-        // value vault
-        unit_builder.add_value();
-
-        // as player
-        unit_builder.add_player();
-
         // compose unit
         auto composite = unit_builder.request();
         composite->set_persistency(persistency::permanent);
 
-        body->equip(0); // equip after linking equipment and body
         stage.spawn(std::move(composite));
 
         return pawn;

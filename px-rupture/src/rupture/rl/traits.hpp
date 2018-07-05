@@ -130,7 +130,6 @@ namespace px {
             if (auto character = body.linked<character_component>()) {
                 character->add_trait(feature.tag);
             }
-            mod_stats(feature.index, body);
         }
 
         void register_traits() {
@@ -142,28 +141,6 @@ namespace px {
         void register_options() {
             trait_selection[0][0] = { 1, 2, 3 };
         }
-
-        void mod_stats(unsigned int trait_id, body_component & body) const {
-            switch (trait_id) {
-            case 1: {
-                if (auto resource = body.health()) {
-                    resource->modify_values(10);
-                }
-                break;
-            }
-            case 2:
-                // ::TODO::
-                break;
-            case 3:
-                if (auto resource = body.energy()) {
-                    resource->modify_values(10);
-                }
-                break;
-            default:
-                break;
-            }
-        }
-
 
     private:
         std::vector<trait>                                          library;
