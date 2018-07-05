@@ -44,7 +44,7 @@ namespace px {
             print_bool<rl::effect::equipment>(collection, "Equipment");
             print_bool<rl::effect::useable>(collection, "Useable");
 
-            if (collection.has_effect(rl::effect::ingredient_power)) {
+            if (collection.has_effect<rl::effect::ingredient_power>()) {
                 switch (static_cast<rl::craft_activity>(collection.find_subtype(rl::effect::ingredient_power, 0))) {
                 case rl::craft_activity::blacksmith:
                     ImGui::Text("Reagent: Blacksmith");
@@ -73,7 +73,8 @@ namespace px {
             print_real<rl::effect::hp_regen>(collection, "Regenerate: %.2f");
             print_real<rl::effect::mp_regen>(collection, "Invigorate: %.2f");
 
-            print_bool<rl::effect::intoxication>(collection, "Intoxication");
+            print_bool<rl::effect::intoxication>(collection, "Toxic");
+            print_bool<rl::effect::intoxication_power>(collection, "Intoxication");
         }
 
         template <typename Stack>

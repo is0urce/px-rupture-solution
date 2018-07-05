@@ -40,7 +40,8 @@ namespace px {
             , logo_texture_id(0)
             , exitsave(false)
             , quicksave(false)
-            , autosave(false) {
+            , autosave(false)
+            , greetings(true) {
             update_saves();
         }
 
@@ -50,8 +51,10 @@ namespace px {
                 float const screen_width = ImGui::GetIO().DisplaySize.x;
                 float const screen_height = ImGui::GetIO().DisplaySize.y;
                 combine_title({ screen_width / 2 - design::options_width() / 2, screen_height / 3 }, design::options_width());
-                combine_logo({ 20, screen_height - 100 });
-                immediate::splash_version();
+                if (greetings) {
+                    combine_logo({ 20, screen_height - 100 });
+                    immediate::splash_version();
+                }
             }
         }
 
@@ -81,7 +84,7 @@ namespace px {
             immediate::print("Gnomi##title_name_txt", width);
             ImGui::NewLine();
 
-            bool show_continue = exitsave || autosave || quicksave;
+            bool const show_continue = exitsave || autosave || quicksave;
 
             ImGui::PushStyleColor(ImGuiCol_Text, { 0.8f, 0.8f, 0.8f, 1.0f });
             if (show_continue) {
@@ -137,21 +140,25 @@ namespace px {
         void press_start() {
             if (context) {
                 context->start();
+                greetings = false;
             }
         }
 
         void press_exit() {
             if (context) {
                 context->shutdown();
+                greetings = false;
             }
         }
 
         void press_options() {
             set_flag(open_options);
+            greetings = false;
         }
 
         void press_credits() {
             set_flag(open_credits);
+            greetings = false;
         }
 
     private:
@@ -159,8 +166,9 @@ namespace px {
         bool *          open_credits;
         environment *   context;
         unsigned int    logo_texture_id;
-        bool            quicksave;  // = context->has_save("quicksave");
-        bool            autosave;   // = context->has_save("autosave");
-        bool            exitsave;   // = context->has_save("exitsave");
+        bool            quicksave;
+        bool            autosave;
+        bool            exitsave;
+        bool            greetings;  // title opened at start shows extra info
     };
 }

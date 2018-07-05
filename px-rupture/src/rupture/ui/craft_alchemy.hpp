@@ -7,6 +7,9 @@
 
 #include "craft_station.hpp"
 
+#include "design.hpp"
+#include "immediate.hpp"
+
 namespace px {
 
     class craft_alchemy final
@@ -71,20 +74,31 @@ namespace px {
         }
 
         void combine_slots(ImVec2 const& window_position, ImVec2 const& size) {
+            immediate::style_color bg_color(ImGuiCol_WindowBg, design::panel_background());
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(size);
-            ImGui::Begin("alchemy##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            ImGui::Begin("alchemy##alchemy_craft_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            immediate::line("alchemy##alchemy_title", size.x, design::panel_title_color());
+
             ImGui::BeginGroup();
 
             ImGui::BeginChild("alchemy_slots", { 0.0f, -2.0f * ImGui::GetItemsLineHeightWithSpacing() }); // leave room for 1 line below
+            immediate::line("recipe: potion", size.x, { 0.0f, 0.0f, 0.0f, 0.0f });
             combine_reagents(size.x);
+            ImGui::NewLine();
+            ImGui::TextWrapped("fill all the slots with preferred reagents from the inventory on the right and press 'brew'");
             ImGui::EndChild();
 
             ImGui::BeginChild("alchemy_buttons");
-            if (ImGui::Button("brew##alchemy_execute", { 334, 32 })) {
-                execute_alchemy();
+            if (can_execute()) {
+                if (immediate::line("brew##alchemy_execute", size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
+                    execute_alchemy();
+                }
             }
-            if (ImGui::Button("close##alchemy_close", { 334, 32 })) {
+            else {
+                immediate::line("brew##alchemy_execute", size.x, design::button_disabled_color(), design::button_disabled_color(), design::button_disabled_color());
+            }
+            if (immediate::line("close##alchemy_close", size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
                 cancel_alchemy();
             }
             ImGui::EndChild();

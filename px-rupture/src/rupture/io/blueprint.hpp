@@ -18,6 +18,7 @@
 #include "../es/sprite_component.hpp"
 #include "../es/transform_component.hpp"
 #include "../es/workshop_component.hpp"
+#include "../es/value_component.hpp"
 
 namespace px {
 
@@ -78,6 +79,10 @@ namespace px {
                 else if (npc_component const* npc = dynamic_cast<npc_component const*>(raw)) {
                     archive(composition_element::npc);
                     archive(*npc);
+                }
+                else if (value_component const * values = dynamic_cast<value_component const*>(raw)) {
+                    archive(composition_element::values);
+                    archive(*values);
                 }
                 else {
                     archive(composition_element::undefined);
@@ -150,8 +155,12 @@ namespace px {
                     archive(*factory.add_npc());
                     break;
                 }
+                case composition_element::values: {
+                    archive(*factory.add_value());
+                    break;
+                }
                 case composition_element::undefined: {
-                    break; // there was unserilized (temporary) component, just skip it
+                    break; // there was unserializable (i.e. temporary) component, just silently skip it
                 }
                 default:
                     // component defined, but not supported (version conflict?)

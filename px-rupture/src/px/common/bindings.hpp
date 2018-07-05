@@ -14,8 +14,8 @@ namespace px {
     template <typename SK, typename VK>
     class bindings final {
     public:
-        using sys_key = SK;
-        using v_key = VK;
+        using key_type = SK;
+        using value_type = VK;
 
     public:
         ~bindings() = default;
@@ -34,7 +34,7 @@ namespace px {
         void load(Document && document) {
             try {
                 for (auto const& action_entry : document) {
-                    const long long action_index = action_entry["action"];
+                    long long const action_index = action_entry["action"];
                     for (long long key : action_entry["keys"]) {
                         bind(static_cast<SK>(key), static_cast<VK>(action_index));
                     }
@@ -66,7 +66,7 @@ namespace px {
             return it == m_bindings.end() ? {} : it->second;
         }
 
-        VK get_or(SK key, VK or_else) const {
+        VK value(SK key, VK or_else) const noexcept {
             find(key, or_else);
             return or_else;
         }

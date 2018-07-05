@@ -237,6 +237,7 @@ namespace px {
             item->set_name("petal");
             item->make_stacking();
             container->acquire(std::move(item));
+
             auto ore = make_uq<rl::item>();
             ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
             ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
@@ -252,6 +253,9 @@ namespace px {
             pot->make_stacking();
             container->acquire(std::move(pot));
         }
+
+        // value vault
+        unit_builder.add_value();
 
         // as player
         unit_builder.add_player();

@@ -27,10 +27,10 @@ namespace px::ui {
 
     protected:
         virtual void combine_panel() override {
-            transform_component * player = context ? context->controlled() : nullptr;
-            if (!player) return;
-            auto[body, character] = player->unwind<body_component, character_component>();
-            bool show = body && character && character->has_trait("c_game_over");
+            auto pawn = context ? context->controlled() : nullptr;
+            if (!pawn) return;
+            auto[body, character] = pawn->unwind<body_component, character_component>();
+            bool const show = body && character && character->has_trait("c_game_over");
             if (!show) return;
 
             float const screen_width = ImGui::GetIO().DisplaySize.x;
@@ -40,9 +40,9 @@ namespace px::ui {
             float const padding_x = ImGui::GetStyle().FramePadding.x * 2; // multiplier from pixel size multiplication
             float const padding_y = ImGui::GetStyle().FramePadding.y * 2;
 
+            immediate::style_color bg_transparent(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 1.0f });
             ImGui::SetNextWindowPos({ screen_width / 2 - window_width / 2 - padding_x, screen_height / 4 - padding_y }, ImGuiCond_Always);
             ImGui::SetNextWindowSize({ window_width + padding_x * 2, window_height + padding_y * 2 });
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 1.0f });
             ImGui::Begin("##results_content", nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
             if (body->is_alive()) {
@@ -64,12 +64,13 @@ namespace px::ui {
             }
 
             ImGui::End();
-            ImGui::PopStyleColor(1); // window style
         }
 
     private:
         void press_load() {
-            context->load("quicksave");
+            if (context) {
+                context->load("quicksave");
+            }
         }
 
         void press_resume(character_component & character) {
@@ -77,12 +78,16 @@ namespace px::ui {
         }
 
         void press_restart() {
-            context->end();
-            context->start();
+            if (context) {
+                context->end();
+                context->start();
+            }
         }
 
         void press_title() {
-            context->end();
+            if (context) {
+                context->end();
+            }
         }
 
     private:

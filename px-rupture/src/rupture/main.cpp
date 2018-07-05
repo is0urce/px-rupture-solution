@@ -25,7 +25,7 @@ namespace px {
     // create main window from configuration
     glfw_window create_window(char const* name, bool is_fullscreen, unsigned int width, unsigned int height, GLFWmonitor * monitor) {
         if (monitor && is_fullscreen) {
-            auto const* const mode = glfwGetVideoMode(monitor);
+            auto const mode = glfwGetVideoMode(monitor);
             glfwWindowHint(GLFW_RED_BITS, mode->redBits);
             glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
             glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
@@ -43,30 +43,30 @@ namespace px {
 
     // prepare and start main loop
     void process() {
+
+        // load window manager
+
         glfw_instance glfw;
-        cfg configuration(settings::configuration_path);
-        auto const binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
-        bool is_fullscreen = configuration["screen.fullscreen"];
-        int window_width = configuration["screen.width"];
-        int window_height = configuration["screen.height"];
-        int vsync = configuration["screen.vsync"];
+        auto const monitor = glfwGetPrimaryMonitor();
+        auto const video_mode = glfwGetVideoMode(monitor);
 
         // load settings
 
-        auto const monitor = glfwGetPrimaryMonitor();
-        auto const* const mode = glfwGetVideoMode(monitor);
-        if (is_fullscreen) {
-            window_width = mode->width;
-            window_height = mode->height;
-        }
+        auto const binds = bindings<int, key>::from_document(document::load_document(settings::bindings_path));
+        cfg configuration(settings::configuration_path);
 
         // create windows
 
-        glfw_window win = create_window(settings::application_name, is_fullscreen, window_width, window_height, is_fullscreen ? monitor : nullptr);
-        create_context(win, vsync);
-        shell game(window_width, window_height, &configuration);
+        bool const is_fullscreen = configuration["screen.fullscreen"];
+        int const window_width = is_fullscreen ? video_mode->width : configuration["screen.width"];
+        int const window_height = is_fullscreen ? video_mode->height : configuration["screen.height"];
 
-        // register events
+        glfw_window win = create_window(settings::application_name, is_fullscreen, window_width, window_height, is_fullscreen ? monitor : nullptr);
+        create_context(win, configuration["screen.vsync"]);
+
+        // create environment & register events
+
+        shell game(window_width, window_height, &configuration);
 
         glfw_callback evt(win);
         evt.on_resize([&](int width, int height) {
@@ -89,7 +89,7 @@ namespace px {
         });
         evt.on_key([&](int os_code, int /* scancode */, int action, int /* mods */) {
             if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-                game.press(binds.get_or(os_code, key::not_valid));
+                game.press(binds.value(os_code, key::not_valid));
             }
         });
 

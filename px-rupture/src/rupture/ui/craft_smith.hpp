@@ -7,11 +7,12 @@
 
 #include "craft_station.hpp"
 
+#include "immediate.hpp"
+#include "design.hpp"
+
 #include "../es/transform_component.hpp"
 #include "../es/body_component.hpp"
 #include "../es/container_component.hpp"
-
-#include "immediate.hpp"
 
 namespace px {
 
@@ -46,11 +47,9 @@ namespace px {
                 float const screen_height = ImGui::GetIO().DisplaySize.y;
                 float const window_width = 350.0f;
                 float const window_height = 538.0f;
-
-                ImVec2 const craft_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
-                ImVec2 const recipes_position{ craft_position.x - 64 - window_width, craft_position.y };
-                ImVec2 const inventory_position{ craft_position.x + 64 + window_width, craft_position.y };
-
+                ImVec2 const craft_position(screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2);
+                ImVec2 const recipes_position(craft_position.x - 64 - window_width, craft_position.y);
+                ImVec2 const inventory_position(craft_position.x + 64 + window_width, craft_position.y);
                 combine_recipes(recipes_position, { window_width, window_height });
                 combine_slots(craft_position, { window_width, window_height });
                 combine_inventory(inventory_position, { window_width, window_height });
@@ -96,9 +95,11 @@ namespace px {
         }
 
         void combine_recipes(ImVec2 const& window_position, ImVec2 const& window_size) {
+            immediate::style_color bg_transparent(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(window_size);
-            ImGui::Begin("recipes##recipes_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            ImGui::Begin("##blacksmith_recipes_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            immediate::line("recipes##blacksmith_recipes_title", window_size.x, design::panel_title_color());
 
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
             int recipe_select = -1;
@@ -112,33 +113,38 @@ namespace px {
             ImGui::End();
         }
 
-        void combine_slots(ImVec2 const& window_position, ImVec2 const& size) {
-            immediate::style_color(ImGuiCol_WindowBg, { 1.0f, 1.0f, 1.0f, 0.25f });
+        void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
+            immediate::style_color bg_color(ImGuiCol_WindowBg, design::panel_background());
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
-            ImGui::SetNextWindowSize(size);
+            ImGui::SetNextWindowSize(window_size);
             ImGui::Begin("##blacksmith_craft_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-            immediate::line("blacksmith", size.x, { 0.0f, 0.0f, 0.0f, 1.0f });
+            immediate::line("blacksmith##blacksmith_title", window_size.x, design::panel_title_color());
 
             ImGui::BeginGroup();
             ImGui::BeginChild("blacksmith_slots", { 0.0f, -2.0f * ImGui::GetItemsLineHeightWithSpacing() }); // Leave room for 1 line below us
             if (recipe_current) {
-                combine_reagents(size.x);
+                immediate::line("recipe: " + recipe_current->name, window_size.x, { 0.0f, 0.0f, 0.0f, 0.0f });
+                combine_reagents(window_size.x);
                 ImGui::NewLine();
                 ImGui::TextWrapped("fill all the slots with preferred reagents from the inventory on the right and press 'smith'");
             }
             else {
-                ImGui::NewLine();
                 ImGui::TextWrapped("select a recipe from the left panel, than fill slots with reagents from the inventory on the right");
             }
             ImGui::EndChild();
             ImGui::BeginChild("blacksmith_buttons");
-            if (immediate::line("smith##blacksmith_execute", size.x, { 0.0f, 0.0f, 0.0f, 1.0f })) {
-                execute_smith();
+            if (can_execute()) {
+                if (immediate::line("smith##blacksmith_execute", window_size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
+                    execute_smith();
+                }
             }
-            if (immediate::line("cancel##blacksmith_close", size.x, { 0.0f, 0.0f, 0.0f, 1.0f })) {
+            else {
+                immediate::line("smith##blacksmith_execute", window_size.x, design::button_disabled_color(), design::button_disabled_color(), design::button_disabled_color());
+            }
+            if (immediate::line("cancel##blacksmith_close", window_size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
                 cancel_smith();
             }
+
             ImGui::EndChild();
             ImGui::EndGroup();
 

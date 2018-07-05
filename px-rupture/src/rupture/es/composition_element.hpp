@@ -33,7 +33,7 @@ namespace px {
         npc         = 'M',
 
         // script data
-        value       = 'V',  // v for value vault
+        values      = 'V',  // v for value vault
         script      = 'E',  // e for execute
 
         undefined   = '!'   // unspecified, used mostly for indicating components that is not serialized

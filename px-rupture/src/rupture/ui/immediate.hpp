@@ -6,6 +6,7 @@
 #pragma once
 
 #include <imgui/imgui.h>
+
 #include <string>
 
 namespace px {
@@ -45,7 +46,7 @@ namespace px {
         }
 
         static bool button(std::string const& text, float width) {
-            return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.1f, 0.0f, 1.0f }, { 1.0f, 0.3f, 0.0f, 1.0f });
+            return line(text, width, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.15f, 0.0f, 1.0f }, { 1.0f, 0.3f, 0.0f, 1.0f });
         }
 
         static bool button(std::string const& text, float width, bool enabled) {

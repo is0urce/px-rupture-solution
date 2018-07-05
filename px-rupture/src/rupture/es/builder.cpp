@@ -319,6 +319,7 @@ namespace px {
             storage = unit->query<storage_component>();
             transform = unit->query<transform_component>();
             workshop = unit->query<workshop_component>();
+            value = unit->query<value_component>();
         }
         else {
             begin();

@@ -681,7 +681,7 @@
     <ClInclude Include="src\px\dev\benchmark.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\inventory_common.hpp">
+    <ClInclude Include="src\rupture\ui\item_names.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

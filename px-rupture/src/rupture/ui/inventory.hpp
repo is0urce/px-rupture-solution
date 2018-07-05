@@ -6,18 +6,16 @@
 #pragma once
 
 #include "panel.hpp"
+
+#include "design.hpp"
 #include "immediate.hpp"
-
-#include "inventory_common.hpp"
-
+#include "item_names.hpp"
 #include "field_description.hpp"
 
 #include "../environment.hpp"
 #include "../es/transform_component.hpp"
 #include "../es/body_component.hpp"
 #include "../es/container_component.hpp"
-
-#include <imgui/imgui.h>
 
 #include <array>
 #include <string>
@@ -52,16 +50,19 @@ namespace px {
             float const screen_height = ImGui::GetIO().DisplaySize.y;
             float const window_width = 350.0f;
             float const window_height = 538.0f;
-            ImVec2 const inventory_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
-            ImVec2 const inventory_size{ window_width, window_height };
+            ImVec2 const inventory_size(window_width, window_height);
+            ImVec2 const slot_size(200, 32);
+            ImVec2 const inventory_position(screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2);
+            ImVec2 const slot_position(inventory_position.x - slot_size.x - 32, inventory_position.y + slot_size.y);
+            ImVec2 const inspector_position(inventory_position.x + inventory_size.x + 32, slot_position.y);
+
+            // inventory list
 
             combine_list(inventory_position, inventory_size, *body, *container);
 
-            // inventory slots
+            // equipment slots
 
             selected_slot = nullptr; // reset hovered equipment slot
-            ImVec2 const slot_size{ 200, 32 };
-            ImVec2 const slot_position{ inventory_position.x - slot_size.x - 32, inventory_position.y + slot_size.y };
             unsigned int i = 0;
             for (auto const& examined_slot : std::array<std::tuple<std::string, rl::equipment>, 3>{ {
                 { "weapon", rl::equipment::hand },
@@ -77,7 +78,6 @@ namespace px {
             if (selected >= 0) inspect_item = container->get(selected);
             if (selected_slot) inspect_item = selected_slot;
             if (inspect_item) {
-                ImVec2 const inspector_position{ inventory_position.x + inventory_size.x + 32, slot_position.y };
                 combine_inspector(*inspect_item, inspector_position);
             }
         }
@@ -92,13 +92,12 @@ namespace px {
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(size);
             ImGui::Begin("##inventory_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-            immediate::line(body.name() + " inventory", size.x, { 0.0f, 0.0f, 0.0f, 1.0f });
+            immediate::line(body.name() + " inventory", size.x, design::panel_title_color());
 
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-            format_names(container, names);
+            item_names::format(container, names);
             selected = -1;
-            if (ImGui::ListBox("##inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
+            if (ImGui::ListBox("##inventory_list", &selected, item_names::getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
                 if (selected >= 0) {
                     if (auto ptr = container.get(selected)) {
 
@@ -127,7 +126,7 @@ namespace px {
             }
             ImGui::PopItemWidth();
 
-            if (immediate::line("close##close_inventory", size.x, { 0.0, 0.0, 0.0, 1.0 })) {
+            if (immediate::line("close##close_inventory", size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
                 *opened = false;
             }
 
@@ -171,21 +170,20 @@ namespace px {
 
         // item inspector window draw
         void combine_inspector(rl::item const& item, ImVec2 const& position) {
+            immediate::style_color bg_transparent(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0, 0, 0, 0 });
             ImGui::Begin((item.name() + "##item_inspector_title").c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
             field_description::display_item(item);
 
             ImGui::End();
-            ImGui::PopStyleColor(1);
         }
 
     private:
         std::vector<std::string>    names;
         bool *                      opened;
-        int                         selected;       // hovered item in container list
         rl::item *                  selected_slot;  // hovered item is equipment slot
+        int                         selected;       // hovered item in container list
         environment *               game;           // context
     };
 }

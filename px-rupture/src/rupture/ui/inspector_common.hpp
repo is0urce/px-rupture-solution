@@ -56,17 +56,20 @@ namespace px::ui {
         }
 
         void combine_buff(const char * label, ImVec2 const& pos, body_component::buff_type const& buff) {
+            immediate::style_color bg_transparent(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
             ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
             ImGui::Begin(label, nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
             ImGui::Text(format_buff_name(buff).c_str());
             if (ImGui::IsItemHovered()) {
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 20, 20 });
                 ImGui::BeginTooltip();
                 ImGui::Text(buff.name().c_str());
                 ImGui::Text(buff.description().c_str());
                 ImGui::NewLine();
                 field_description::display_collection(buff);
                 ImGui::EndTooltip();
+                ImGui::PopStyleVar(1);
             }
 
             ImGui::End();

@@ -1,3 +1,5 @@
+// name: design.hpp
+
 #pragma once
 
 #include <imgui/imgui.h>
@@ -43,11 +45,31 @@ namespace px {
                 | ImGuiWindowFlags_NoCollapse
                 | ImGuiWindowFlags_NoTitleBar;
         }
+
         static ImVec2 menu_position() {
             float const screen_width = ImGui::GetIO().DisplaySize.x;
             float const screen_height = ImGui::GetIO().DisplaySize.y;
             float constexpr menu_width = options_width();
-            return ImVec2{ screen_width / 2 - menu_width / 2, screen_height / 3 };
+            return { screen_width / 2 - menu_width / 2, screen_height / 3 };
+        }
+
+        static constexpr ImVec4 panel_background() {
+            return { 0.1f, 0.1f, 0.1f, 0.5f };
+        }
+        static constexpr ImVec4 panel_title_color() {
+            return { 0.5f, 0.15f, 0.0f, 1.0f };
+        }
+        static constexpr ImVec4 button_idle_color() {
+            return { 0.0f, 0.0f, 0.0f, 1.0f };
+        }
+        static constexpr ImVec4 button_hover_color() {
+            return { 0.0f, 0.0f, 0.0f, 1.0f };
+        }
+        static constexpr ImVec4 button_active_color() {
+            return { 0.0f, 0.0f, 0.0f, 1.0f };
+        }
+        static constexpr ImVec4 button_disabled_color() {
+            return { 0.0f, 0.0f, 0.0f, 1.0f };
         }
     };
 }
