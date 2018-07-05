@@ -26,7 +26,7 @@ namespace px {
 
     unsigned int test::total = 0;
     unsigned int test::fails = 0;
-    const char * test::lastmsg = "not specified";
+    char const* test::lastmsg = "not specified";
 
     void run_tests() {
         test_coordinate();

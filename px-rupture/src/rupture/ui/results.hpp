@@ -33,12 +33,12 @@ namespace px::ui {
             bool show = body && character && character->has_trait("c_game_over");
             if (!show) return;
 
-            const float screen_width = ImGui::GetIO().DisplaySize.x;
-            const float screen_height = ImGui::GetIO().DisplaySize.y;
-            const float	window_width = 200.0f;
-            const float window_height = screen_height / 2;
-            const float padding_x = ImGui::GetStyle().FramePadding.x * 2; // multiplier from pixel size multiplication
-            const float padding_y = ImGui::GetStyle().FramePadding.y * 2;
+            float const screen_width = ImGui::GetIO().DisplaySize.x;
+            float const screen_height = ImGui::GetIO().DisplaySize.y;
+            float const window_width = 200.0f;
+            float const window_height = screen_height / 2;
+            float const padding_x = ImGui::GetStyle().FramePadding.x * 2; // multiplier from pixel size multiplication
+            float const padding_y = ImGui::GetStyle().FramePadding.y * 2;
 
             ImGui::SetNextWindowPos({ screen_width / 2 - window_width / 2 - padding_x, screen_height / 4 - padding_y }, ImGuiCond_Always);
             ImGui::SetNextWindowSize({ window_width + padding_x * 2, window_height + padding_y * 2 });

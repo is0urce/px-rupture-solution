@@ -112,7 +112,7 @@ namespace px {
                 ImGui::SetNextWindowPos(position, ImGuiCond_Always);
                 ImGui::SetNextWindowSize({ logo_width + 10, logo_height + 10 });
                 ImGui::Begin("##title_extras_logo", nullptr, design::window_flat());
-                ImGui::PushStyleColor(ImGuiCol_Text, { 1, 1, 1, 1 });
+                ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 1.0f, 1.0f, 1.0f });
                 ImGui::Image(reinterpret_cast<void*>(static_cast<size_t>(logo_texture_id)), { logo_width, logo_height });
                 ImGui::PopStyleColor(1);
                 ImGui::End();

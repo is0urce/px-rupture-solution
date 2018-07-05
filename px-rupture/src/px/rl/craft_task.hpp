@@ -70,17 +70,11 @@ namespace px::rl {
         }
 
         bool is_empty() const noexcept {
-            for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
-                if (slots[idx]) return false;
-            }
-            return true;
+            return std::none_of(std::begin(slots), std::end(slots), [](ptr const& slot) -> bool { return slot; });
         }
 
         bool is_complete() const noexcept {
-            for (size_t idx = 0, size = slots.size(); idx != size; ++idx) {
-                if (!slots[idx]) return false;
-            }
-            return true;
+            return std::all_of(std::begin(slots), std::end(slots), [](ptr const& slot) -> bool { return slot; });
         }
 
         template <typename Operator>

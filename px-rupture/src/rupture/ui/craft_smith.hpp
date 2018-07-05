@@ -11,6 +11,8 @@
 #include "../es/body_component.hpp"
 #include "../es/container_component.hpp"
 
+#include "immediate.hpp"
+
 namespace px {
 
     class craft_smith final
@@ -39,22 +41,20 @@ namespace px {
 
     protected:
         virtual void combine_panel() override {
-            if (!game || !game->has_access(rl::craft_activity::blacksmith)) return;
-            container = game->controlled()->qlink<container_component, body_component>();
-            if (!container) return;
+            if (container = is_open() ? acquire_container() : nullptr) {
+                float const screen_width = ImGui::GetIO().DisplaySize.x;
+                float const screen_height = ImGui::GetIO().DisplaySize.y;
+                float const window_width = 350.0f;
+                float const window_height = 538.0f;
 
-            const float screen_width = ImGui::GetIO().DisplaySize.x;
-            const float screen_height = ImGui::GetIO().DisplaySize.y;
-            const float window_width = 350.0f;
-            const float window_height = 538.0f;
+                ImVec2 const craft_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
+                ImVec2 const recipes_position{ craft_position.x - 64 - window_width, craft_position.y };
+                ImVec2 const inventory_position{ craft_position.x + 64 + window_width, craft_position.y };
 
-            ImVec2 craft_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
-            ImVec2 recipes_position{ craft_position.x - 64 - window_width, craft_position.y };
-            ImVec2 inventory_position{ craft_position.x + 64 + window_width, craft_position.y };
-
-            combine_recipes(recipes_position, { window_width, window_height });
-            combine_slots(craft_position, { window_width, window_height });
-            combine_inventory(inventory_position, { window_width, window_height });
+                combine_recipes(recipes_position, { window_width, window_height });
+                combine_slots(craft_position, { window_width, window_height });
+                combine_inventory(inventory_position, { window_width, window_height });
+            }
         }
 
         virtual uq_ptr<rl::item> execute() override {
@@ -101,7 +101,7 @@ namespace px {
             ImGui::Begin("recipes##recipes_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-            static int recipe_select = -1;
+            int recipe_select = -1;
             if (ImGui::ListBox("##recipes_list", &recipe_select, &recipe_name_getter, static_cast<void*>(&recipes), static_cast<int>(recipes.size()), 16)) {
                 if (recipe_select >= 0) {
                     select_recipe(recipe_select);
@@ -112,25 +112,31 @@ namespace px {
             ImGui::End();
         }
 
-        void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
+        void combine_slots(ImVec2 const& window_position, ImVec2 const& size) {
+            immediate::style_color(ImGuiCol_WindowBg, { 1.0f, 1.0f, 1.0f, 0.25f });
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
-            ImGui::SetNextWindowSize(window_size);
-            ImGui::Begin("blacksmith##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            ImGui::SetNextWindowSize(size);
+            ImGui::Begin("##blacksmith_craft_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+            immediate::line("blacksmith", size.x, { 0.0f, 0.0f, 0.0f, 1.0f });
 
             ImGui::BeginGroup();
-            ImGui::BeginChild("slots view", ImVec2(0, -2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us
+            ImGui::BeginChild("blacksmith_slots", { 0.0f, -2.0f * ImGui::GetItemsLineHeightWithSpacing() }); // Leave room for 1 line below us
             if (recipe_current) {
-                combine_reagents();
+                combine_reagents(size.x);
+                ImGui::NewLine();
+                ImGui::TextWrapped("fill all the slots with preferred reagents from the inventory on the right and press 'smith'");
             }
             else {
-                ImGui::Text("select recipe");
+                ImGui::NewLine();
+                ImGui::TextWrapped("select a recipe from the left panel, than fill slots with reagents from the inventory on the right");
             }
             ImGui::EndChild();
-            ImGui::BeginChild("buttons");
-            if (ImGui::Button("smith", { 334, 32 })) {
+            ImGui::BeginChild("blacksmith_buttons");
+            if (immediate::line("smith##blacksmith_execute", size.x, { 0.0f, 0.0f, 0.0f, 1.0f })) {
                 execute_smith();
             }
-            if (ImGui::Button("close", { 334, 32 })) {
+            if (immediate::line("cancel##blacksmith_close", size.x, { 0.0f, 0.0f, 0.0f, 1.0f })) {
                 cancel_smith();
             }
             ImGui::EndChild();
@@ -139,8 +145,8 @@ namespace px {
             ImGui::End();
         }
 
-        static bool recipe_name_getter(void * data, int n, const char** result) {
-            auto const& vector = *static_cast<std::vector<rl::craft_recipe>*>(data);
+        static bool recipe_name_getter(void * data, int n, char const* * result) {
+            auto const& vector = *static_cast<std::vector<rl::craft_recipe> const*>(data);
             if (n >= 0 && n < static_cast<int>(vector.size())) {
                 *result = vector[n].name.c_str();
                 return true;

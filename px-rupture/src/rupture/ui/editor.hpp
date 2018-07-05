@@ -47,8 +47,8 @@
 
 namespace px::ui {
 
-    inline bool vector_getter(void * data, int n, const char** result) {
-        auto & vector = *static_cast<std::vector<std::string>*>(data);
+    inline bool vector_getter(void * data, int n, char const** result) {
+        auto const& vector = *static_cast<std::vector<std::string> const*>(data);
         if (n >= 0 && n < static_cast<int>(vector.size())) {
             *result = vector[n].c_str();
             return true;

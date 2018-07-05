@@ -12,6 +12,19 @@ namespace px {
 
     class immediate final {
     public:
+        class style_color final {
+        public:
+            style_color(ImGuiCol idx, ImVec4 const& color) {
+                ImGui::PushStyleColor(idx, color);
+            }
+            ~style_color() {
+                ImGui::PopStyleColor(1);
+            }
+            style_color(style_color const&) = delete;
+            style_color & operator=(style_color const&) = delete;
+        };
+
+    public:
         // draw resource bar
         template <typename ResourceOption>
         static bool bar(ResourceOption const& resource, std::string const& prefix, ImVec4 const& tint) {

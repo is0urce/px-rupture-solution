@@ -18,7 +18,7 @@ namespace px {
             return game->close_workshop();
         }
 
-        bool can_execute() const {
+        bool can_execute() const noexcept {
             return game && container && task.is_complete();
         }
 
@@ -32,20 +32,18 @@ namespace px {
 
     protected:
         virtual void combine_panel() override {
-            if (!is_open()) return;
-            container = game->controlled()->qlink<container_component, body_component>();
-            if (!container) return;
+            if (container = is_open() ? acquire_container() : nullptr) {
+                float const screen_width = ImGui::GetIO().DisplaySize.x;
+                float const screen_height = ImGui::GetIO().DisplaySize.y;
+                float const window_width = 350.0f;
+                float const window_height = 538.0f;
 
-            const float screen_width = ImGui::GetIO().DisplaySize.x;
-            const float screen_height = ImGui::GetIO().DisplaySize.y;
-            const float window_width = 350.0f;
-            const float window_height = 538.0f;
+                ImVec2 const craft_position(screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2);
+                ImVec2 const inventory_position(craft_position.x + 64 + window_width, craft_position.y);
 
-            ImVec2 craft_position{ screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2 };
-            ImVec2 inventory_position{ craft_position.x + 64 + window_width, craft_position.y };
-
-            combine_slots(craft_position, { window_width, window_height });
-            combine_inventory(inventory_position, { window_width, window_height });
+                combine_slots(craft_position, { window_width, window_height });
+                combine_inventory(inventory_position, { window_width, window_height });
+            }
         }
 
         virtual uq_ptr<rl::item> execute() override {
@@ -72,25 +70,26 @@ namespace px {
             }
         }
 
-        void combine_slots(ImVec2 const& window_position, ImVec2 const& window_size) {
+        void combine_slots(ImVec2 const& window_position, ImVec2 const& size) {
             ImGui::SetNextWindowPos(window_position, ImGuiCond_Always);
-            ImGui::SetNextWindowSize(window_size);
+            ImGui::SetNextWindowSize(size);
             ImGui::Begin("alchemy##craft_panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
             ImGui::BeginGroup();
 
-            ImGui::BeginChild("slots view", ImVec2(0, -2 * ImGui::GetItemsLineHeightWithSpacing())); // Leave room for 1 line below us
-            combine_reagents();
+            ImGui::BeginChild("alchemy_slots", { 0.0f, -2.0f * ImGui::GetItemsLineHeightWithSpacing() }); // leave room for 1 line below
+            combine_reagents(size.x);
             ImGui::EndChild();
 
-            ImGui::BeginChild("buttons");
-            if (ImGui::Button("brew", { 334, 32 })) {
+            ImGui::BeginChild("alchemy_buttons");
+            if (ImGui::Button("brew##alchemy_execute", { 334, 32 })) {
                 execute_alchemy();
             }
-            if (ImGui::Button("close", { 334, 32 })) {
+            if (ImGui::Button("close##alchemy_close", { 334, 32 })) {
                 cancel_alchemy();
             }
             ImGui::EndChild();
             ImGui::EndGroup();
+
             ImGui::End();
         }
     };

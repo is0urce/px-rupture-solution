@@ -34,14 +34,12 @@ namespace px::ui {
             auto body = pawn ? pawn->linked<body_component>() : nullptr;
 
             if (body && features.levelup_required(*body)) {
-
-                const float screen_width = ImGui::GetIO().DisplaySize.x;
-                const float screen_height = ImGui::GetIO().DisplaySize.y;
-                const float padding_x = 16;
-                const float padding_y = 65;
-
-                const float window_width = screen_width / 3 - padding_x * 3;
-                const float window_height = screen_height * 2 / 3 - padding_y;
+                float const screen_width = ImGui::GetIO().DisplaySize.x;
+                float const screen_height = ImGui::GetIO().DisplaySize.y;
+                float const padding_x = 16;
+                float const padding_y = 65;
+                float const window_width = screen_width / 3 - padding_x * 3;
+                float const window_height = screen_height * 2 / 3 - padding_y;
 
                 auto[trait_1, trait_2, trait_3] = features.select_traits(*body);
 

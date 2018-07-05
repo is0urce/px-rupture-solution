@@ -384,7 +384,7 @@
     <ClInclude Include="src\rupture\rl\craft.hpp" />
     <ClInclude Include="src\rupture\ui\craft_smith.hpp" />
     <ClInclude Include="src\rupture\ui\craft_station.hpp" />
-    <ClInclude Include="src\rupture\ui\craft_common.hpp" />
+    <ClInclude Include="src\rupture\ui\inventory_common.hpp" />
     <ClInclude Include="src\rupture\ui\credits_screen.hpp" />
     <ClInclude Include="src\rupture\ui\design.hpp" />
     <ClInclude Include="src\rupture\ui\editor.hpp" />

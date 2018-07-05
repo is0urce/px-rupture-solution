@@ -27,7 +27,6 @@ namespace px::ui {
         virtual void combine_panel() override {
             if (auto target = game ? game->target() : nullptr) {
                 if (auto body = target->linked<body_component>()) {
-
                     float const screen_width = ImGui::GetIO().DisplaySize.x;
                     float const screen_height = ImGui::GetIO().DisplaySize.y;
                     float const window_width = 300.0f;

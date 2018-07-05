@@ -25,17 +25,17 @@ namespace px::ui {
 
     protected:
         virtual void combine_panel() override {
-            if (auto target = context ? context->controlled() : nullptr) {
-                if (auto body = target->linked<body_component>()) {
-                    const float screen_width = ImGui::GetIO().DisplaySize.x;
-                    const float screen_height = ImGui::GetIO().DisplaySize.y;
-                    const float window_width = 300.0f;
-                    const float window_height = 125.0f;
-                    const float window_padding_x = 16;
-                    const float window_padding_y = 65;
-                    ImVec2 position{ window_padding_x, screen_height - window_height - window_padding_y };
-                    ImVec2 size{ window_width, window_height };
-                    combine_status("##status", position, size, *body);
+            if (auto pawn = context ? context->controlled() : nullptr) {
+                if (auto body = pawn->linked<body_component>()) {
+                    float const screen_width = ImGui::GetIO().DisplaySize.x;
+                    float const screen_height = ImGui::GetIO().DisplaySize.y;
+                    float const window_width = 300.0f;
+                    float const window_height = 125.0f;
+                    float const window_padding_x = 16;
+                    float const window_padding_y = 65;
+                    ImVec2 const position(window_padding_x, screen_height - window_height - window_padding_y);
+                    ImVec2 const size(window_width, window_height);
+                    combine_status("##player_status", position, size, *body);
                 }
             }
         }

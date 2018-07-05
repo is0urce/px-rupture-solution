@@ -1,9 +1,12 @@
-// name: craft_common.hpp
+// name: inventory_common.hpp
+// type: c++
+// auth: is0urce
+// desc: aux functions
 
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "../es/container_component.hpp"
 
@@ -17,7 +20,7 @@ namespace px {
             container.enumerate([&](auto const& item) {
                 if (predicate(item)) {
                     auto count = item.count();
-                    names.push_back(item.name() + ((count == 1) ? std::string{ "" } : " x" + std::to_string(count)));
+                    names.push_back(item.name() + ((count == 1) ? std::string("") : std::string(" x") + std::to_string(count)));
                 }
             });
         }

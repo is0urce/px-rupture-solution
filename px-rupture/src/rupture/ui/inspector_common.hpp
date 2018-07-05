@@ -23,10 +23,9 @@ namespace px::ui {
 
     protected:
         void combine_status(const char * label, ImVec2 const& pos, ImVec2 const& size, body_component const& body) {
-
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0, 0, 0, 0 });
             ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
             ImGui::SetNextWindowSize(size);
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0, 0, 0, 0 });
             ImGui::Begin(label, nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
 
             combine_name(body);

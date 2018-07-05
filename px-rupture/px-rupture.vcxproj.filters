@@ -543,9 +543,6 @@
     <ClInclude Include="src\rupture\draw\visual.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\craft_common.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\ui\craft_smith.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -682,6 +679,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\px\dev\benchmark.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\inventory_common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

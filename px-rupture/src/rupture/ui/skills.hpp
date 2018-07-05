@@ -32,9 +32,7 @@ namespace px::ui {
                     float const screen_height = ImGui::GetIO().DisplaySize.y;
                     ImGui::SetNextWindowPos({ 16, screen_height - 50 }, ImGuiCond_Always);
                     ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0, 0.0, 0.0, 0.0 });
-                    ImGui::Begin("##skillset", nullptr
-                        , ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse
-                        | ImGuiWindowFlags_AlwaysAutoResize);
+                    ImGui::Begin("##skillset", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
 
                     ImGui::NewLine();
 
@@ -49,7 +47,7 @@ namespace px::ui {
                                 : ability->useable(user, context->area()));
                             auto const& state = ability->state();
 
-                            ImVec4 color = is_useable ? ImVec4{ 1.0, 0.5, 0.5, 1 } : ImVec4{ 0.5, 0.5, 0.5, 1 };
+                            ImVec4 color = is_useable ? ImVec4(1.0f, 0.5f, 0.5f, 1.0f) : ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
 
                             ImGui::SameLine();
                             ImGui::PushStyleColor(ImGuiCol_Button, color);

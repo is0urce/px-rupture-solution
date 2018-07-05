@@ -8,6 +8,8 @@
 #include "panel.hpp"
 #include "immediate.hpp"
 
+#include "inventory_common.hpp"
+
 #include "field_description.hpp"
 
 #include "../environment.hpp"
@@ -83,17 +85,19 @@ namespace px {
     private:
         // inventory list window draw
         void combine_list(ImVec2 const& position, ImVec2 const& size, body_component & body, container_component & container) {
-            format_names(container, names);
-            selected = -1;
-
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, { 1.0f, 1.0f, 1.0f, 0.25f });
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, { 1.0f, 1.0f, 1.0f, 0.25f });
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, { 1.0f, 1.0f, 1.0f, 0.25f });
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(size);
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0, 0.0, 0.0, 0.0 });
             ImGui::Begin("##inventory_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-            immediate::line(body.name() + " inventory", size.x, { 0.0, 0.0, 0.0, 1.0 });
+            immediate::line(body.name() + " inventory", size.x, { 0.0f, 0.0f, 0.0f, 1.0f });
 
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
+            format_names(container, names);
+            selected = -1;
             if (ImGui::ListBox("##inventory_list", &selected, name_getter, static_cast<void*>(&names), static_cast<int>(names.size()), 15)) {
                 if (selected >= 0) {
                     if (auto ptr = container.get(selected)) {
@@ -128,7 +132,7 @@ namespace px {
             }
 
             ImGui::End();
-            ImGui::PopStyleColor(1);
+            ImGui::PopStyleColor(4);
         }
 
         // equipment slots drawing
@@ -137,7 +141,7 @@ namespace px {
             ImGui::SetNextWindowSize(size);
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-            ImGui::Begin((name + "title").c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            ImGui::Begin((name + "##equipment_slot_" + std::to_string(static_cast<long long>(slot))).c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
             if (rl::item * ptr = body.equipment(slot)) {
                 ImGui::PushID(ptr);

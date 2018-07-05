@@ -39,7 +39,7 @@ namespace px {
             return ctrl;
         }
 
-        explicit operator bool() const noexcept {
+        operator bool() const noexcept {
             return ptr != nullptr;
         }
 
