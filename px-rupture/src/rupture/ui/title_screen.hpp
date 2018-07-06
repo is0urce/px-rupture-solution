@@ -91,6 +91,7 @@ namespace px {
                 if (immediate::button("Continue##title_continue_btn", width)) {
                     press_continue();
                 }
+                ImGui::NewLine();
             }
             if (immediate::button(show_continue ? "New Game##titile_start_btn" : "Start##title_start_btn", width)) {
                 press_start();

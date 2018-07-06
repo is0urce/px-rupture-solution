@@ -91,7 +91,7 @@ namespace px {
             ImGui::PushStyleColor(ImGuiCol_FrameBgActive, { 1.0f, 1.0f, 1.0f, 0.25f });
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
             ImGui::SetNextWindowSize(size);
-            ImGui::Begin("##inventory_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+            ImGui::Begin("##inventory_panel", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
             immediate::line(body.name() + " inventory", size.x, design::panel_title_color());
 
             ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());

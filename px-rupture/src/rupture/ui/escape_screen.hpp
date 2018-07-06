@@ -44,7 +44,7 @@ namespace px::ui {
             ImGui::NewLine();
 
             ImGui::PushStyleColor(ImGuiCol_Text, { 0.8f, 0.8f, 0.8f, 1.0f });
-            if (immediate::button("Continue##escape_continue_btn", width)) {
+            if (immediate::button("Resume##escape_continue_btn", width)) {
                 press_contunue();
             }
             if (immediate::button("Options##escape_options_btn", width)) {
@@ -54,7 +54,7 @@ namespace px::ui {
             //    press_credits();
             //}
 
-            if (immediate::button("Title##escape_exit_title_btn", width)) {
+            if (immediate::button("To Title##escape_exit_title_btn", width)) {
                 press_title();
             }
 

@@ -54,22 +54,22 @@ namespace px {
         }
 
         static constexpr ImVec4 panel_background() {
-            return { 0.1f, 0.1f, 0.1f, 0.5f };
+            return { 0.02f, 0.23f, 0.38f, 0.25f };
         }
         static constexpr ImVec4 panel_title_color() {
-            return { 0.5f, 0.15f, 0.0f, 1.0f };
+            return { 0.03f, 0.39f, 0.64f, 1.0f };
         }
         static constexpr ImVec4 button_idle_color() {
-            return { 0.0f, 0.0f, 0.0f, 1.0f };
+            return { 0.61f, 0.34f, 0.00f, 1.0f };
         }
         static constexpr ImVec4 button_hover_color() {
-            return { 0.0f, 0.0f, 0.0f, 1.0f };
+            return { 0.78f, 0.44f, 0.00f, 1.0f };
         }
         static constexpr ImVec4 button_active_color() {
-            return { 0.0f, 0.0f, 0.0f, 1.0f };
+            return { 0.99f, 0.56f, 0.00f, 1.0f };
         }
         static constexpr ImVec4 button_disabled_color() {
-            return { 0.0f, 0.0f, 0.0f, 1.0f };
+            return { 0.30f, 0.30f, 0.30f, 1.0f };
         }
     };
 }
