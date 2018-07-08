@@ -15,6 +15,11 @@ namespace px {
     public:
         class style_color final {
         public:
+            void assign(ImGuiCol idx, ImVec4 const& color) {
+                ImGui::PopStyleColor(1);
+                ImGui::PushStyleColor(idx, color);
+            }
+        public:
             style_color(ImGuiCol idx, ImVec4 const& color) {
                 ImGui::PushStyleColor(idx, color);
             }

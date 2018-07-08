@@ -56,7 +56,7 @@ namespace px::ui {
                         traits = features.select_traits(*body);
                     }
 
-                    ImVec2 const screen_size = ImGui::GetIO().DisplaySize;
+                    ImVec2 const& screen_size = ImGui::GetIO().DisplaySize;
                     ImVec2 const gz_position(0, 50);
                     ImVec2 const gz_size(screen_size.x, 75);
                     ImVec2 const cards_offset(gz_position.x, gz_position.y + gz_size.y);

@@ -570,9 +570,6 @@
     <ClInclude Include="src\rupture\rl\trait.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\results.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\ui\immediate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -682,6 +679,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\ui\levelup_screen.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\screen\screen_results.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -405,7 +405,7 @@
     <ClInclude Include="src\rupture\ui\options.hpp" />
     <ClInclude Include="src\rupture\ui\panel.hpp" />
     <ClInclude Include="src\rupture\ui\performance.hpp" />
-    <ClInclude Include="src\rupture\ui\results.hpp" />
+    <ClInclude Include="src\rupture\ui\screen\screen_results.hpp" />
     <ClInclude Include="src\rupture\ui\skills.hpp" />
     <ClInclude Include="src\rupture\ui\status.hpp" />
     <ClInclude Include="src\rupture\ui\title_screen.hpp" />

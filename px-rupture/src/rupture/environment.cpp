@@ -251,7 +251,7 @@ namespace px {
             ore->add(body_component::enhancement_type::real(rl::effect::ingredient_power, static_cast<body_component::enhancement_type::integer_type>(rl::craft_activity::blacksmith), 1));
             ore->add(body_component::enhancement_type::integral(rl::effect::essence, 0x00, 3));
             ore->make_stacking();
-            ore->set_name("smuggled alloy");
+            ore->set_name("smuggled paperweight");
             ore->set_current_stack(6);
             container->acquire(std::move(ore));
 
