@@ -402,7 +402,7 @@
     <ClInclude Include="src\rupture\rl\tile_prototype.hpp" />
     <ClInclude Include="src\rupture\shell.hpp" />
     <ClInclude Include="src\rupture\ui\director.hpp" />
-    <ClInclude Include="src\rupture\ui\options.hpp" />
+    <ClInclude Include="src\rupture\ui\screen\screen_options.hpp" />
     <ClInclude Include="src\rupture\ui\panel.hpp" />
     <ClInclude Include="src\rupture\ui\screen\screen_performance.hpp" />
     <ClInclude Include="src\rupture\ui\screen\screen_results.hpp" />

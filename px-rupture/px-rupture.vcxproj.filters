@@ -648,9 +648,6 @@
     <ClInclude Include="src\px\app\cfg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\options.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\px\snd\sound_channel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -682,6 +679,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rupture\ui\screen\screen_levelup.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\screen\screen_options.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

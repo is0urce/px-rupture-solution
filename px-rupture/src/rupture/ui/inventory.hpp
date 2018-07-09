@@ -119,6 +119,10 @@ namespace px {
                                 game->end_turn(1);
                             }
                         }
+
+                        if (game) {
+                            game->play_sound(settings::sound_path + std::string("snd_ui_select.wav"), 1.0f);
+                        }
                     }
                 }
                 selected = -1;
@@ -126,7 +130,7 @@ namespace px {
             ImGui::PopItemWidth();
 
             if (immediate::line("close##close_inventory", size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
-                *opened = false;
+                press_close();
             }
 
             ImGui::End();
@@ -148,6 +152,7 @@ namespace px {
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.0, 0.0, 0.0, 1 });
                 if (ImGui::Button(ptr->name().c_str(), size)) {
                     body.unequip(slot);
+                    game->play_sound(settings::sound_path + std::string("snd_ui_select.wav"), 1.0f);
                 }
                 else if (ImGui::IsItemHovered()) {
                     selected_slot = ptr;
@@ -176,6 +181,13 @@ namespace px {
             field_description::display_item(item);
 
             ImGui::End();
+        }
+
+        void press_close() {
+            clear_flag(opened);
+            if (game) {
+                game->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+            }
         }
 
     private:

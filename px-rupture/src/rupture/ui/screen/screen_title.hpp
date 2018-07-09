@@ -169,7 +169,7 @@ namespace px {
         void press_credits() {
             if (context) {
                 context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
-                set_flag(open_options);
+                set_flag(open_credits);
                 greetings = false;
             }
         }

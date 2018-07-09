@@ -15,10 +15,10 @@
 #include "inventory.hpp"
 #include "status.hpp"
 #include "skills.hpp"
-#include "options.hpp"
 #include "screen/screen_credits.hpp"
 #include "screen/screen_escape.hpp"
 #include "screen/screen_levelup.hpp"
+#include "screen/screen_options.hpp"
 #include "screen/screen_performance.hpp"
 #include "screen/screen_results.hpp"
 #include "screen/screen_title.hpp"
@@ -55,7 +55,7 @@ namespace px {
         , smith_panel(nullptr)
         , alchemy_panel(nullptr) {
 #if PX_INGAME_PERFORMANCE_TEST == 1
-        make_panel<ui::performance>(stack);
+        make_panel<performance>(stack);
 #endif
 #if PX_INGAME_EDITOR == 1
         make_panel<ui::editor>(stack, game);
@@ -74,7 +74,7 @@ namespace px {
         make_panel<ui::screen_results>(stack, game);
 
         make_panel<ui::screen_escape>(stack, game, &open_escape, &open_options);
-        make_panel<ui::options>(stack, game, config, &open_options);
+        make_panel<screen_options>(stack, game, config, &open_options);
         make_panel<screen_credits>(stack, &open_credits);
     }
 

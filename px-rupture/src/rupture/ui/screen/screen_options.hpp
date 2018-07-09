@@ -1,26 +1,29 @@
-// name: options.hpp
+// name: screen_options.hpp
 // type: c++
 // auth: is0urce
 // desc: class
 
 #pragma once
 
-#include "panel.hpp"
-#include "immediate.hpp"
-#include "design.hpp"
+// configuration options ui
 
-#include "../environment.hpp"
+#include "../panel.hpp"
+#include "../immediate.hpp"
+#include "../design.hpp"
+
+#include "../../app/settings.hpp"
+#include "../../environment.hpp"
 
 #include <px/app/cfg.hpp>
 
-namespace px::ui {
+namespace px {
 
-    class options final
+    class screen_options final
         : public panel {
     public:
-        virtual ~options() noexcept override = default;
+        virtual ~screen_options() noexcept override = default;
 
-        options(environment * ctx, cfg * config, bool * flag)
+        screen_options(environment * ctx, cfg * config, bool * flag)
             : context(ctx)
             , configuration(config)
             , open_flag(flag) {
@@ -30,10 +33,9 @@ namespace px::ui {
     protected:
         virtual void combine_panel() override {
             if (is_open()) {
-                float const screen_width = ImGui::GetIO().DisplaySize.x;
-                float const screen_height = ImGui::GetIO().DisplaySize.y;
+                ImVec2 const& screen = ImGui::GetIO().DisplaySize;
                 float const options_width = 600.0f;
-                combine_options({ screen_width / 2 - options_width / 2, screen_height / 3 }, options_width);
+                combine_options({ screen.x * 0.5f - options_width * 0.5f, screen.y * 0.33f }, options_width);
             }
         }
 
@@ -86,7 +88,7 @@ namespace px::ui {
         }
 
         void close() noexcept {
-            set_flag(open_flag, false);
+            clear_flag(open_flag);
         }
 
         void apply_configuration() {
@@ -101,6 +103,9 @@ namespace px::ui {
         }
 
         void press_back() {
+            if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+            }
             close();
         }
 

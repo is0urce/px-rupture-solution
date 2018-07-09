@@ -25,7 +25,7 @@ namespace px {
             release_items();
             task.close();
             recipe_current = nullptr;
-            return game->close_workshop();
+            return game && game->close_workshop();
         }
 
         bool can_execute() const {
@@ -74,7 +74,6 @@ namespace px {
                 game->popup("+ " + item->name(), { 1, 1, 1 });
                 container->acquire(std::move(item));
                 game->end_turn(1);
-                game->play_sound(settings::sound_path + std::string("snd_ui_smith.wav"), 1.0f);
             }
         }
 
@@ -93,6 +92,9 @@ namespace px {
             if (recipe_idx < recipes.size()) {
                 recipe_current = &recipes[recipe_idx];
                 task.reset(recipe_current->reagent_count);
+                if (game) {
+                    game->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                }
             }
         }
 
@@ -137,20 +139,34 @@ namespace px {
             ImGui::BeginChild("blacksmith_buttons");
             if (can_execute()) {
                 if (immediate::line("smith##blacksmith_execute", window_size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
-                    execute_smith();
+                    press_execute();
                 }
             }
             else {
                 immediate::line("smith##blacksmith_execute", window_size.x, design::button_disabled_color(), design::button_disabled_color(), design::button_disabled_color());
             }
             if (immediate::line("cancel##blacksmith_close", window_size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
-                cancel_smith();
+                press_cancel();
             }
 
             ImGui::EndChild();
             ImGui::EndGroup();
 
             ImGui::End();
+        }
+
+        void press_execute() {
+            if (game) {
+                game->play_sound(settings::sound_path + std::string("snd_ui_smith.wav"), 1.0f);
+                execute_smith();
+            }
+        }
+
+        void press_cancel() {
+            if (game) {
+                game->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                cancel_smith();
+            }
         }
 
         static bool recipe_name_getter(void * data, int n, char const* * result) {

@@ -71,6 +71,9 @@ namespace px {
                     if (immediate::line((ptr->name() + "##craft_slot_n_" + std::to_string(idx)).c_str(), width, { 0.5f, 0.5f, 0.5f, 1.0f })) {
                         if (container) {
                             container->acquire(task.remove(idx));
+                            if (game) {
+                                game->play_sound(settings::sound_path + std::string("snd_ui_select.wav"), 1.0f);
+                            }
                         }
                     }
                 }
@@ -113,6 +116,9 @@ namespace px {
                     if (!task.is_complete()) {
                         if (auto item = container->unacquire(absolute_idx, 1)) {
                             task.add(std::move(item));
+                            if (game) {
+                                game->play_sound(settings::sound_path + std::string("snd_ui_select.wav"), 1.0f);
+                            }
                         }
                     }
                 }

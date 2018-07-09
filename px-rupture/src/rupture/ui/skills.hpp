@@ -31,7 +31,7 @@ namespace px::ui {
 
                     float const screen_height = ImGui::GetIO().DisplaySize.y;
                     ImGui::SetNextWindowPos({ 16, screen_height - 50 }, ImGuiCond_Always);
-                    ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0, 0.0, 0.0, 0.0 });
+                    ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
                     ImGui::Begin("##skillset", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
 
                     ImGui::NewLine();

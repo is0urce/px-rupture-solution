@@ -72,7 +72,6 @@ namespace px {
                 game->popup("+ " + item->name(), { 1, 1, 1 });
                 container->acquire(std::move(item));
                 game->end_turn(1);
-                game->play_sound(settings::sound_path + std::string("snd_ui_brew_0") + std::to_string(game->roll(0, 7)) + ".wav", 1.0f);
             }
         }
 
@@ -95,19 +94,33 @@ namespace px {
             ImGui::BeginChild("alchemy_buttons");
             if (can_execute()) {
                 if (immediate::line("brew##alchemy_execute", size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
-                    execute_alchemy();
+                    press_execute();
                 }
             }
             else {
                 immediate::line("brew##alchemy_execute", size.x, design::button_disabled_color(), design::button_disabled_color(), design::button_disabled_color());
             }
             if (immediate::line("close##alchemy_close", size.x, design::button_idle_color(), design::button_hover_color(), design::button_active_color())) {
-                cancel_alchemy();
+                press_cancel();
             }
             ImGui::EndChild();
             ImGui::EndGroup();
 
             ImGui::End();
+        }
+
+        void press_execute() {
+            if (game) {
+                game->play_sound(settings::sound_path + std::string("snd_ui_brew_0") + std::to_string(game->roll(0, 7)) + ".wav", 1.0f);
+                execute_alchemy();
+            }
+        }
+
+        void press_cancel() {
+            if (game) {
+                game->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                cancel_alchemy();
+            }
         }
     };
 }

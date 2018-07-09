@@ -105,7 +105,7 @@ namespace px {
             if (system) {
                 auto it = sounds.find(name);
                 if (it == sounds.end()) {
-                    FMOD::Sound * sound = nullptr;
+                    FMOD::Sound * sound(nullptr);
                     FMOD_MODE const mode = FMOD_DEFAULT
                         | (positioned ? FMOD_2D : FMOD_3D)
                         | (looped ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF)
@@ -204,7 +204,7 @@ namespace px {
         // returns channel_id
         unsigned int play(FMOD::Sound * sound, FMOD::ChannelGroup * group, double volume, vector2 const& location, bool head_relative) {
             unsigned int const id = ++channel_id;
-            if (system) {
+            if (system && sound) {
                 FMOD::Channel * channel(nullptr);
                 FMOD_RESULT result_code = system->playSound(sound, group, true, &channel);
                 if (result_code != FMOD_OK) {
@@ -258,10 +258,9 @@ namespace px {
         FMOD::ChannelGroup *                master;
         FMOD::ChannelGroup *                music;
         FMOD::ChannelGroup *                sfx;
+        transform_component const*          camera;
         sound_map                           sounds;
         channel_map                         channels;
         unsigned int                        channel_id;
-        transform_component const*          camera;
-        double                              volume_master;
     };
 }

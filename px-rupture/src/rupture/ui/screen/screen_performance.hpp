@@ -11,7 +11,7 @@
 
 #include <imgui/imgui.h>
 
-namespace px::ui {
+namespace px {
 
     class performance final
         : public panel
