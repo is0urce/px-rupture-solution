@@ -5,6 +5,8 @@
 
 #pragma once
 
+// ui for game results and death screen
+
 #include "../panel.hpp"
 #include "../immediate.hpp"
 

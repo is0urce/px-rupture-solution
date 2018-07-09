@@ -1,45 +1,43 @@
-// name: credits_screen.hpp
+// name: screen_credits.hpp
 // type: c++
 // auth: is0urce
 // desc: class
 
 #pragma once
 
-#include "panel.hpp"
-#include "immediate.hpp"
+#include "../panel.hpp"
+#include "../immediate.hpp"
+#include "../design.hpp"
 
 namespace px {
 
-    class credits_screen final
+    class screen_credits final
         : public panel
     {
     public:
-        virtual ~credits_screen() noexcept override = default;
+        virtual ~screen_credits() noexcept override = default;
 
-        credits_screen(bool * flag) noexcept
+        screen_credits(bool * flag) noexcept
             : open_flag(flag) {
         }
 
     protected:
         virtual void combine_panel() override {
             if (is_open()) {
-                float const screen_width = ImGui::GetIO().DisplaySize.x;
-                float const screen_height = ImGui::GetIO().DisplaySize.y;
+                ImVec2 const& screen = ImGui::GetIO().DisplaySize;
                 float const options_width = 600.0f;
 
-                combine_credits({ screen_width / 2 - options_width / 2, screen_height / 3 }, options_width);
+                combine_credits({ screen.x * 0.5f - options_width * 0.5f, screen.y * 0.25f }, options_width);
             }
         }
 
     private:
         bool is_open() const noexcept {
-            return open_flag && *open_flag;
+            return is_true(open_flag);
         }
 
         void close() noexcept {
-            if (open_flag) {
-                *open_flag = false;
-            }
+            clear_flag(open_flag);
         }
 
         void combine_credits(ImVec2 const& position, float width) {

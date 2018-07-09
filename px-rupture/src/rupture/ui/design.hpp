@@ -23,6 +23,12 @@ namespace px {
         }
     }
 
+    void clear_flag(bool * flag) noexcept {
+        if (flag) {
+            *flag = false;
+        }
+    }
+
     class design {
     public:
         static constexpr float options_width() {

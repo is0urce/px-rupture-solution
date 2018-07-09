@@ -1,22 +1,23 @@
-// name: title_screen.hpp
+// name: screen_title.hpp
 // type: c++
 // auth: is0urce
 // desc: class
 
 #pragma once
 
+// ui for starting title menu
 // store cashed save flags in attributes to avoid extra directory queries
 
-#include "panel.hpp"
-#include "immediate.hpp"
-#include "design.hpp"
+#include "../panel.hpp"
+#include "../immediate.hpp"
+#include "../design.hpp"
 
-#include "../environment.hpp"
-#include "../es/transform_component.hpp"
+#include "../../environment.hpp"
+#include "../../es/transform_component.hpp"
 
 namespace px {
 
-    class title_screen final
+    class screen_title final
         : public panel {
     public:
         void assign_logo(unsigned int texture_id) noexcept {
@@ -31,10 +32,10 @@ namespace px {
         }
 
     public:
-        virtual ~title_screen() noexcept override = default;
+        virtual ~screen_title() noexcept override = default;
 
-        title_screen(environment * game, bool * options_flag, bool * credits_flag) noexcept
-            : context(game)
+        screen_title(environment * ctx, bool * options_flag, bool * credits_flag) noexcept
+            : context(ctx)
             , open_options(options_flag)
             , open_credits(credits_flag)
             , logo_texture_id(0)

@@ -39,20 +39,19 @@ namespace px {
 
     protected:
         virtual void combine_panel() override {
-            if (!game || !(*opened)) return;
+            if (!game || !(is_true(opened))) return;
 
             transform_component * target = game->controlled();
             if (!target) return;
             auto[body, container] = target->unwind<body_component, container_component>();
             if (!container) return;
 
-            float const screen_width = ImGui::GetIO().DisplaySize.x;
-            float const screen_height = ImGui::GetIO().DisplaySize.y;
+            ImVec2 const& screen = ImGui::GetIO().DisplaySize;
             float const window_width = 350.0f;
             float const window_height = 538.0f;
             ImVec2 const inventory_size(window_width, window_height);
             ImVec2 const slot_size(200, 32);
-            ImVec2 const inventory_position(screen_width / 2 - window_width / 2, screen_height / 2 - window_height / 2);
+            ImVec2 const inventory_position(screen.x * 0.5f - window_width * 0.5f, screen.y * 0.5f - window_height * 0.5f);
             ImVec2 const slot_position(inventory_position.x - slot_size.x - 32, inventory_position.y + slot_size.y);
             ImVec2 const inspector_position(inventory_position.x + inventory_size.x + 32, slot_position.y);
 

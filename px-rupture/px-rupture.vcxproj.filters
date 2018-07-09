@@ -444,9 +444,6 @@
     <ClInclude Include="src\rupture\ui\inspector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\performance.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\ui\status.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -636,9 +633,6 @@
     <ClInclude Include="src\rupture\es\sound_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\title_screen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\ui\field_description.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -663,12 +657,6 @@
     <ClInclude Include="src\px\es\pool_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\escape_screen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rupture\ui\credits_screen.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rupture\ui\design.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -678,10 +666,22 @@
     <ClInclude Include="src\rupture\ui\item_names.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\levelup_screen.hpp">
+    <ClInclude Include="src\rupture\ui\screen\screen_results.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rupture\ui\screen\screen_results.hpp">
+    <ClInclude Include="src\rupture\ui\screen\screen_title.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\screen\screen_escape.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\screen\screen_performance.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\screen\screen_credits.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rupture\ui\screen\screen_levelup.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -817,5 +817,34 @@
     <None Include="msvcp140.dll" />
     <None Include="vcruntime140.dll" />
     <None Include="data\scripts\sk_v_explosives.lua" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\snd\snd_ui_brew_00.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_brew_01.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_brew_02.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_brew_03.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_brew_04.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_brew_05.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_brew_06.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_brew_07.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="data\snd\snd_ui_smith.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

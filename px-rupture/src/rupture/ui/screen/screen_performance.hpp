@@ -1,9 +1,13 @@
-// name: performance.hpp
+// name: screen_performance.hpp
 // type: c++
+// auth: is0urce
+// type: class
 
 #pragma once
 
-#include "panel.hpp"
+// ui class for performance measure (fps) and testing
+
+#include "../panel.hpp"
 
 #include <imgui/imgui.h>
 

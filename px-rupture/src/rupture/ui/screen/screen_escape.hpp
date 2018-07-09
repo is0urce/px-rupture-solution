@@ -1,25 +1,27 @@
-// name: escape_screen.hpp
+// name: screen_escape.hpp
 // type: c++
 // auth: is0urce
 // desc: class
 
 #pragma once
 
-#include "panel.hpp"
+// ui class for ingame menu
 
-#include "immediate.hpp"
-#include "design.hpp"
+#include "../panel.hpp"
 
-#include "../environment.hpp"
+#include "../immediate.hpp"
+#include "../design.hpp"
+
+#include "../../environment.hpp"
 
 namespace px::ui {
 
-    class escape_screen final
+    class screen_escape final
         : public panel {
     public:
-        virtual ~escape_screen() noexcept override = default;
+        virtual ~screen_escape() noexcept override = default;
 
-        escape_screen(environment * ctx, bool * flag, bool * options_flag)
+        screen_escape(environment * ctx, bool * flag, bool * options_flag)
             : context(ctx)
             , open_flag(flag)
             , open_options(options_flag) {

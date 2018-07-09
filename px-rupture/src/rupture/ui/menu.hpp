@@ -18,7 +18,7 @@ namespace px {
     class craft_smith;
     class craft_alchemy;
     class inventory;
-    class title_screen;
+    class screen_title;
 
     class menu final {
     public:
@@ -52,7 +52,7 @@ namespace px {
         inventory *                     inventory_panel;
         craft_smith *                   smith_panel;
         craft_alchemy *                 alchemy_panel;
-        title_screen *                  title_panel;
+        screen_title *                  title_panel;
         environment *                   context;
         cfg *                           configuration;
     };

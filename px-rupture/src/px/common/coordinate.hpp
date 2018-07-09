@@ -46,7 +46,7 @@ namespace px {
             m_array[Index] = val;
         }
 
-        bool empty() const noexcept {
+        bool is_empty() const noexcept {
             bool result = true;
             for (size_t i = 0; i != Dim; ++i) {
                 result &= m_array[i] == 0;

@@ -1,33 +1,35 @@
-// name: levelup.hpp
+// name: screen_levelup.hpp
 // type: c++
 // auth: is0urce
 // desc: class
 
 #pragma once
 
-#include "panel.hpp"
+// levelup congratulations and perk selection
 
-#include "design.hpp"
-#include "immediate.hpp"
+#include "../panel.hpp"
 
-#include "../environment.hpp"
-#include "../es/transform_component.hpp"
-#include "../es/body_component.hpp"
-#include "../es/character_component.hpp"
+#include "../design.hpp"
+#include "../immediate.hpp"
 
-#include "../rl/traits.hpp"
+#include "../../environment.hpp"
+#include "../../es/transform_component.hpp"
+#include "../../es/body_component.hpp"
+#include "../../es/character_component.hpp"
+
+#include "../../rl/traits.hpp"
 
 #include <cmath>
 
 namespace px::ui {
 
-    class levelup_screen final
+    class screen_levelup final
         : public panel
     {
     public:
-        virtual ~levelup_screen() noexcept override = default;
+        virtual ~screen_levelup() noexcept override = default;
 
-        levelup_screen(environment * ctx) noexcept
+        screen_levelup(environment * ctx) noexcept
             : context(ctx)
             , body(nullptr) {
         }

@@ -10,18 +10,18 @@
 
 #include "craft_smith.hpp"
 #include "craft_alchemy.hpp"
-#include "credits_screen.hpp"
 #include "editor.hpp"
-#include "escape_screen.hpp"
 #include "inspector.hpp"
 #include "inventory.hpp"
-#include "performance.hpp"
 #include "status.hpp"
 #include "skills.hpp"
-#include "title_screen.hpp"
-#include "levelup_screen.hpp"
 #include "options.hpp"
+#include "screen/screen_credits.hpp"
+#include "screen/screen_escape.hpp"
+#include "screen/screen_levelup.hpp"
+#include "screen/screen_performance.hpp"
 #include "screen/screen_results.hpp"
+#include "screen/screen_title.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -69,13 +69,13 @@ namespace px {
         smith_panel = make_panel<craft_smith>(stack, game);
         alchemy_panel = make_panel<craft_alchemy>(stack, game);
 
-        title_panel = make_panel<title_screen>(stack, game, &open_options, &open_credits);
-        make_panel<ui::levelup_screen>(stack, game);
+        title_panel = make_panel<screen_title>(stack, game, &open_options, &open_credits);
+        make_panel<ui::screen_levelup>(stack, game);
         make_panel<ui::screen_results>(stack, game);
 
-        make_panel<ui::escape_screen>(stack, game, &open_escape, &open_options);
+        make_panel<ui::screen_escape>(stack, game, &open_escape, &open_options);
         make_panel<ui::options>(stack, game, config, &open_options);
-        make_panel<credits_screen>(stack, &open_credits);
+        make_panel<screen_credits>(stack, &open_credits);
     }
 
     // methods
@@ -97,23 +97,23 @@ namespace px {
     }
 
     bool menu::click(unsigned int mouse_button, bool is_down) {
-        return nexus->click(mouse_button, is_down);
+        return nexus && nexus->click(mouse_button, is_down);
     }
 
     bool menu::text(unsigned int codepoint) {
-        return nexus->text(codepoint);
+        return nexus && nexus->text(codepoint);
     }
 
     bool menu::hover(unsigned int x, unsigned int y) {
-        return nexus->hover(x, y);
+        return nexus && nexus->hover(x, y);
     }
 
     bool menu::scroll(double horisontal, double vertical) {
-        return nexus->scroll(horisontal, vertical);
+        return nexus && nexus->scroll(horisontal, vertical);
     }
 
     bool menu::takes_input() {
-        return nexus->takes_input()
+        return nexus && nexus->takes_input()
             || open_credits
             || open_escape
             || open_options;

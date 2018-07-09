@@ -10,6 +10,8 @@
 #include "design.hpp"
 #include "immediate.hpp"
 
+#include "../app/settings.hpp"
+
 namespace px {
 
     class craft_alchemy final
@@ -18,7 +20,7 @@ namespace px {
     public:
         bool cancel_alchemy() {
             release_items();
-            return game->close_workshop();
+            return game && game->close_workshop();
         }
 
         bool can_execute() const noexcept {
@@ -28,8 +30,8 @@ namespace px {
     public:
         virtual ~craft_alchemy() override = default;
 
-        craft_alchemy(environment * context)
-            : craft_station(context) {
+        craft_alchemy(environment * ctx)
+            : craft_station(ctx) {
             reset_recipe();
         }
 
@@ -70,6 +72,7 @@ namespace px {
                 game->popup("+ " + item->name(), { 1, 1, 1 });
                 container->acquire(std::move(item));
                 game->end_turn(1);
+                game->play_sound(settings::sound_path + std::string("snd_ui_brew_0") + std::to_string(game->roll(0, 7)) + ".wav", 1.0f);
             }
         }
 

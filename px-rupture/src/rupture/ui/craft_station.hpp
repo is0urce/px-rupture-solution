@@ -34,11 +34,11 @@ namespace px {
     public:
         virtual ~craft_station() override = default;
 
-        craft_station(environment * context)
-            : game(context)
+        craft_station(environment * ctx)
+            : game(ctx)
             , container(nullptr)
             , inventory_select(-1) {
-            generator.assign_environment(context);
+            generator.assign_environment(ctx);
         }
 
     protected:

@@ -10,6 +10,7 @@
 #include "immediate.hpp"
 #include "design.hpp"
 
+#include "../app/settings.hpp"
 #include "../es/transform_component.hpp"
 #include "../es/body_component.hpp"
 #include "../es/container_component.hpp"
@@ -73,6 +74,7 @@ namespace px {
                 game->popup("+ " + item->name(), { 1, 1, 1 });
                 container->acquire(std::move(item));
                 game->end_turn(1);
+                game->play_sound(settings::sound_path + std::string("snd_ui_smith.wav"), 1.0f);
             }
         }
 
