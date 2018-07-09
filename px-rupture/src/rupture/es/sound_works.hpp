@@ -34,28 +34,39 @@ namespace px {
         }
 
         void update() {
-            std::vector<channel_map::iterator> releasing;
-            for (auto it = channels.begin(), end = channels.end(); it != end; ++it) {
-                bool is_playing = false;
-                it->second->isPlaying(&is_playing);
-                if (!is_playing) {
-                    releasing.push_back(it);
+            if (system) {
+                std::vector<channel_map::iterator> releasing;
+                for (auto it = channels.begin(), end = channels.end(); it != end; ++it) {
+                    bool is_playing = false;
+                    it->second->isPlaying(&is_playing);
+                    if (!is_playing) {
+                        releasing.push_back(it);
+                    }
                 }
-            }
-            for (auto it : releasing) {
-                channels.erase(it);
-            }
+                for (auto it : releasing) {
+                    channels.erase(it);
+                }
 
-            FMOD_VECTOR const position = to_fmod(camera ? camera->position() : vector2{0, 0});
-            static FMOD_VECTOR const velocity{ 0, 0, 0 };
-            static FMOD_VECTOR const forward{ 0, 0, 1 };
-            static FMOD_VECTOR const up{ 0, 1, 0 };
-            system->set3DListenerAttributes(0, &position, &velocity, &forward, &up);
-
-            system->update();
+                FMOD_VECTOR const position = to_fmod(camera ? camera->position() : vector2(0, 0));
+                static FMOD_VECTOR const velocity{ 0, 0, 0 };
+                static FMOD_VECTOR const forward{ 0, 0, 1 };
+                static FMOD_VECTOR const up{ 0, 1, 0 };
+                system->set3DListenerAttributes(0, &position, &velocity, &forward, &up);
+                system->update();
+            }
         }
 
-        void play_music() {
+        // returns channel_id
+        unsigned int play_sound(std::string const& name, double volume, vector2 const& location) {
+            return play(load_sound(name, true, false, false), sfx, volume, location, false);
+        }
+
+        unsigned int play_sound(std::string const& name, double volume) {
+            return play(load_sound(name, true, false, false), sfx, volume, { 0, 0 }, true);
+        }
+
+        unsigned int play_music(std::string const& name, double volume) {
+            return play(load_sound(name, false, false, true), music, volume, { 0, 0 }, true);
         }
 
         void stop_music() {
@@ -90,47 +101,46 @@ namespace px {
             }
         }
 
-        // returns channel_id
-        unsigned int play_sound(std::string const& name, double volume, vector2 const& location) {
-            return play_sound(name, volume, location, false);
-        }
+        FMOD::Sound * load_sound(std::string const& name, bool positioned, bool looped, bool streamed) {
+            if (system) {
+                auto it = sounds.find(name);
+                if (it == sounds.end()) {
+                    FMOD::Sound * sound = nullptr;
+                    FMOD_MODE const mode = FMOD_DEFAULT
+                        | (positioned ? FMOD_2D : FMOD_3D)
+                        | (looped ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF)
+                        | (streamed ? FMOD_CREATESTREAM : FMOD_CREATECOMPRESSEDSAMPLE);
+                    FMOD_RESULT const result_code = system->createSound(name.c_str(), mode, nullptr, &sound);
 
-        unsigned int play_sound(std::string const& name, double volume) {
-            return play_sound(name, volume, { 0, 0 }, true);
-        }
+                    if (result_code != FMOD_OK) {
+                        px_debug(std::string("px::sound_works::load_sound - cannot load sound, error=") + std::string(FMOD_ErrorString(result_code)));
+                    }
 
-        void load_sound(std::string const& name, bool positioned, bool looped, bool streamed) {
-            auto it = sounds.find(name);
-            if (it == sounds.end()) {
-                FMOD::Sound * sound = nullptr;
-                FMOD_MODE mode = FMOD_DEFAULT;
-                mode |= (positioned ? FMOD_2D : FMOD_3D);
-                mode |= (looped ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
-                mode |= (streamed ? FMOD_CREATESTREAM : FMOD_CREATECOMPRESSEDSAMPLE);
-                FMOD_RESULT result = system->createSound(name.c_str(), mode, nullptr, &sound);
-                
-                if (result != FMOD_OK) {
-                    px_debug(std::string("px::sound_works::load_sound - cannot load sound, error=") + std::string(FMOD_ErrorString(result)));
+                    if (sound) {
+                        sounds[name] = sound;
+                    }
+                    return sound;
                 }
-
-                if (sound) {
-                    sounds[name] = sound;
+                else {
+                    return it->second;
                 }
             }
+            return nullptr;
         }
 
-        void unload_sound(std::string const& name) {
+        bool release_sound(std::string const& name) {
             auto it = sounds.find(name);
             if (it != sounds.end()) {
                 it->second->release();
                 sounds.erase(it);
+                return true;
             }
+            return false;
         }
 
     public:
         ~sound_works() {
-            clear_sounds();
-            system->release();
+            release();
         }
 
         sound_works()
@@ -139,27 +149,49 @@ namespace px {
             , channel_id(0)
             , camera(nullptr) {
             init();
-            //load_sound("data/snd/a.mp3", false, true, true);
-            //set_master_volume(0.1);
-            //play_sound("data/snd/a.mp3", { 0, 0 }, 0.1);
         }
 
     private:
-        void init() {
-            FMOD_RESULT result = FMOD::System_Create(&system);
-            if (result != FMOD_OK) {
-                throw std::runtime_error(std::string("px::sound_works::init() - cannot create sound system, error=") + std::string(FMOD_ErrorString(result)));
+        ///
+        /// release system object memory
+        ///
+        void release() {
+            clear_sounds();
+            if (system) {
+                auto result_code = system->release();
+                if (result_code != FMOD_OK) {
+                    px_debug(std::string("px::sound_works::release() - error while releasing sound system, error=") + std::string(FMOD_ErrorString(result_code)));
+                }
+                system = nullptr;
             }
-            result = system->init(64, FMOD_INIT_NORMAL, nullptr);
-            if (result != FMOD_OK) {
-                throw std::runtime_error(std::string("px::sound_works::init() - cannot init sound system, error=") + std::string(FMOD_ErrorString(result)));
+        }
+
+        bool init() {
+            FMOD_RESULT result_code = FMOD::System_Create(&system);
+            if (result_code != FMOD_OK) {
+                px_debug(std::string("px::sound_works::init() - cannot create sound system, error=") + std::string(FMOD_ErrorString(result_code)));
+                return false;
             }
 
+            result_code = system->init(64, FMOD_INIT_NORMAL, nullptr);
+            if (result_code != FMOD_OK) {
+                px_debug(std::string("px::sound_works::init() - cannot init sound system, error=") + std::string(FMOD_ErrorString(result_code)));
+                release();
+                return false;
+            }
+
+            // mixing groups
             create_group("master", &master);
             create_group("music", &music);
             create_group("sfx", &sfx);
-            master->addGroup(music);
-            master->addGroup(sfx);
+
+            // groups hierarchy
+            if (master) {
+                master->addGroup(music);
+                master->addGroup(sfx);
+            }
+
+            return true;
         }
 
         void clear_sounds() {
@@ -170,57 +202,47 @@ namespace px {
         }
 
         // returns channel_id
-        unsigned int play_sound(std::string const& name, double volume, vector2 const& location, bool relative) {
+        unsigned int play(FMOD::Sound * sound, FMOD::ChannelGroup * group, double volume, vector2 const& location, bool head_relative) {
             unsigned int const id = ++channel_id;
-
-            FMOD::Channel * channel = nullptr;
-            if (auto snd = acquire_sound(name, true, false, false)) {
-                system->playSound(snd, master, true, &channel);
-            }
-            else {
-                px_debug("px::sound_works::play_sound(..) - no sound by name=" + name);
-            }
-
-            if (channel) {
-                FMOD_VECTOR const position = to_fmod(location);
-                static FMOD_VECTOR const velocity{ 0, 0, 0 };
-                channel->set3DAttributes(&position, &velocity);
-                channel->setVolume(static_cast<float>(volume));
-                channel->setPaused(false);
-                if (relative) {
-                    channel->setMode(FMOD_3D_HEADRELATIVE);
+            if (system) {
+                FMOD::Channel * channel(nullptr);
+                FMOD_RESULT result_code = system->playSound(sound, group, true, &channel);
+                if (result_code != FMOD_OK) {
+                    px_debug("px::sound_works::play() - cannot play sound" + std::string(FMOD_ErrorString(result_code)));
                 }
-                channels[id] = channel;
-            }
 
+                if (channel) {
+                    FMOD_VECTOR const position = to_fmod(location);
+                    FMOD_VECTOR const velocity{ 0, 0, 0 };
+                    channel->set3DAttributes(&position, &velocity);
+                    channel->setVolume(static_cast<float>(volume));
+                    channel->setPaused(false);
+                    channel->setMode(head_relative ? FMOD_3D_HEADRELATIVE : FMOD_3D_WORLDRELATIVE);
+                    channels[id] = channel;
+                }
+            }
             return id;
         }
 
-        FMOD::Sound * acquire_sound(std::string const& name, bool positioned, bool looped, bool streamed) {
-            auto it = sounds.find(name);
-            if (it == sounds.end()) {
-                load_sound(name, positioned, looped, streamed);
-                it = sounds.find(name);
+        ///
+        /// create mixing group
+        ///
+        bool create_group(char const* name, FMOD::ChannelGroup ** group) {
+            if (system) {
+                FMOD_RESULT const result = system->createChannelGroup(name, group);
+                if (result != FMOD_OK) {
+                    throw std::runtime_error(std::string("px::sound_works::create_group() - cannot init sound group name=") + std::string(name) + ", error=" + std::string(FMOD_ErrorString(result)));
+                }
+                return true;
             }
-            return it == sounds.end() ? nullptr : it->second;
+            return false;
         }
 
-        bool create_group(const char* name, FMOD::ChannelGroup ** group) {
-            FMOD_RESULT result = system->createChannelGroup(name, group);
-            if (result != FMOD_OK) {
-                throw std::runtime_error(std::string("px::sound_works::create_group() - cannot init sound group name=") + std::string(name) + ", error=" + std::string(FMOD_ErrorString(result)));
-            }
-            return true;
-        }
-
-
-        // +X = right, +Y = up, +Z = forward.
-        static FMOD_VECTOR to_fmod(vector2 const& location) {
-            FMOD_VECTOR result;
-            result.x = static_cast<float>(location.x());
-            result.y = static_cast<float>(location.y());
-            result.z = 0;
-            return result;
+        ///
+        /// Converts px::vector2 to FMOD_VECTOR
+        ///
+        static constexpr FMOD_VECTOR to_fmod(vector2 const& location) {
+            return { static_cast<float>(location.x()), static_cast<float>(location.y()), 0 };
         }
 
         static double volume_to_db(double volume) {

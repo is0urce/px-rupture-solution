@@ -51,10 +51,10 @@ namespace px {
         return works->play_sound(name, volume);
     }
 
-    void sound_system::play_music() {
-        works->play_music();
+    unsigned int sound_system::play_music(std::string const& name, double volume) {
+        return works->play_music(name, volume);
     }
     void sound_system::stop_music() {
-        works->play_music();
+        works->stop_music();
     }
 }

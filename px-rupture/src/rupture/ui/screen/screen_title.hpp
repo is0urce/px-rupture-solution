@@ -12,6 +12,7 @@
 #include "../immediate.hpp"
 #include "../design.hpp"
 
+#include "../../app/settings.hpp"
 #include "../../environment.hpp"
 #include "../../es/transform_component.hpp"
 
@@ -49,11 +50,10 @@ namespace px {
     protected:
         virtual void combine_panel() override {
             if (is_open()) {
-                float const screen_width = ImGui::GetIO().DisplaySize.x;
-                float const screen_height = ImGui::GetIO().DisplaySize.y;
-                combine_title({ screen_width / 2 - design::options_width() / 2, screen_height / 3 }, design::options_width());
+                auto const& screen = ImGui::GetIO().DisplaySize;
+                combine_title({ screen.x * 0.5f - design::options_width() / 2, screen.y * 0.33f }, design::options_width());
                 if (greetings) {
-                    combine_logo({ 20, screen_height - 100 });
+                    combine_logo({ 20, screen.y - 100 });
                     immediate::splash_version();
                 }
             }
@@ -127,6 +127,8 @@ namespace px {
         void press_continue() {
             update_saves();
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+
                 if (exitsave) {
                     context->load("exitsave");
                 }
@@ -136,12 +138,13 @@ namespace px {
                 else if (autosave) {
                     context->load("autosave");
                 }
+                greetings = false;
             }
-            greetings = false;
         }
 
         void press_start() {
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
                 context->begin();
                 greetings = false;
             }
@@ -149,19 +152,26 @@ namespace px {
 
         void press_exit() {
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
                 context->shutdown();
                 greetings = false;
             }
         }
 
         void press_options() {
-            set_flag(open_options);
-            greetings = false;
+            if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                set_flag(open_options);
+                greetings = false;
+            }
         }
 
         void press_credits() {
-            set_flag(open_credits);
-            greetings = false;
+            if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                set_flag(open_options);
+                greetings = false;
+            }
         }
 
     private:

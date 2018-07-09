@@ -10,6 +10,7 @@
 #include "../panel.hpp"
 #include "../immediate.hpp"
 
+#include "../../app/settings.hpp"
 #include "../../environment.hpp"
 #include "../../es/transform_component.hpp"
 #include "../../es/body_component.hpp"
@@ -118,16 +119,21 @@ namespace px::ui {
         }
         void press_load() {
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
                 context->load("quicksave");
             }
         }
 
         void press_resume(character_component & character) {
-            character.remove_trait("t_game_over");
+            if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                character.remove_trait("t_game_over");
+            }
         }
 
         void press_restart() {
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
                 context->end();
                 context->begin();
             }
@@ -135,6 +141,7 @@ namespace px::ui {
 
         void press_title() {
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
                 context->end();
             }
         }

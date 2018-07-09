@@ -70,34 +70,42 @@ namespace px::ui {
             ImGui::PopStyleColor(1);    // window background
         }
 
-        bool is_open() const {
+        bool is_open() const noexcept {
             return context && is_true(open_flag) && !is_hidden_by_options();
         }
 
-        bool is_hidden_by_options() const {
+        bool is_hidden_by_options() const noexcept {
             return is_true(open_options);
         }
 
         void press_contunue() {
-            set_flag(open_flag, false);
+            if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                set_flag(open_flag, false);
+            }
         }
 
         void press_options() {
-            set_flag(open_options, true);
+            if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+                set_flag(open_options, true);
+            }
         }
 
         void press_title() {
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
                 context->end();
+                set_flag(open_flag, false);
             }
-            set_flag(open_flag, false);
         }
 
         void press_desctop() {
             if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
                 context->shutdown();
+                set_flag(open_flag, false);
             }
-            set_flag(open_flag, false);
         }
 
     private:

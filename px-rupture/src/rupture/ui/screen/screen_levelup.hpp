@@ -58,7 +58,7 @@ namespace px::ui {
                         traits = features.select_traits(*body);
                     }
 
-                    ImVec2 const& screen_size = ImGui::GetIO().DisplaySize;
+                    auto const& screen_size = ImGui::GetIO().DisplaySize;
                     ImVec2 const gz_position(0, 50);
                     ImVec2 const gz_size(screen_size.x, 75);
                     ImVec2 const cards_offset(gz_position.x, gz_position.y + gz_size.y);
@@ -125,6 +125,9 @@ namespace px::ui {
         }
 
         void levelup(unsigned int trait_id) {
+            if (context) {
+                context->play_sound(settings::sound_path + std::string("snd_ui_click.wav"), 1.0f);
+            }
 
             // mod stats
             switch (trait_id) {

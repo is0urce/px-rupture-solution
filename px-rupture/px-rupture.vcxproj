@@ -478,6 +478,8 @@
     <Media Include="data\snd\snd_ui_brew_05.wav" />
     <Media Include="data\snd\snd_ui_brew_06.wav" />
     <Media Include="data\snd\snd_ui_brew_07.wav" />
+    <Media Include="data\snd\snd_ui_click.wav" />
+    <Media Include="data\snd\snd_ui_select.wav" />
     <Media Include="data\snd\snd_ui_smith.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
