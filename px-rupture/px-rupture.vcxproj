@@ -202,6 +202,7 @@
     <ClInclude Include="src\px\algorithm\bresenham.hpp" />
     <ClInclude Include="src\px\algorithm\fov.hpp" />
     <ClInclude Include="src\px\algorithm\recursive_shadowcasting.hpp" />
+    <ClInclude Include="src\px\algorithm\random.hpp" />
     <ClInclude Include="src\px\app\cfg.hpp" />
     <ClInclude Include="src\px\common\b_uint.hpp" />
     <ClInclude Include="src\px\common\bindings.hpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="src\rupture\es\sound_system.hpp" />
     <ClInclude Include="src\rupture\es\sound_works.hpp" />
     <ClInclude Include="src\rupture\es\value_component.hpp" />
+    <ClInclude Include="src\px\algorithm\shuffle.hpp" />
     <ClInclude Include="src\rupture\snd\sound.hpp" />
     <ClInclude Include="src\px\es\useable.hpp" />
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
@@ -462,6 +464,8 @@
     <None Include="data\shaders\ui.frag" />
     <None Include="data\shaders\ui.vert" />
     <None Include="data\skills.json" />
+    <None Include="data\snd\mu_gnomi_cell.flac" />
+    <None Include="data\snd\mu_gnomi_deadend.flac" />
     <None Include="data\textures.json" />
     <None Include="data\tiles.json" />
     <None Include="fmod64.dll" />

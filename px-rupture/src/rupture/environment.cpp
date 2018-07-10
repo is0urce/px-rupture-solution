@@ -23,10 +23,11 @@
 #include "es/sprite_component.hpp"
 #include "es/transform_component.hpp"
 
+#include <px/algorithm/bresenham.hpp>
+#include <px/algorithm/fov.hpp>
+#include <px/algorithm/random.hpp>
 #include <px/dev/assert.hpp>
 #include <px/memory/memory.hpp>
-#include <px/algorithm/fov.hpp>
-#include <px/algorithm/bresenham.hpp>
 
 #include <algorithm>
 #include <utility>
@@ -622,14 +623,18 @@ namespace px {
     }
 
     void environment::seed(unsigned int seed) {
-        std::mt19937::result_type noize[rng.state_size];
-        std::random_device device;
-        std::generate(std::begin(noize), std::end(noize), [&]() { return device() ^ seed; });
-        std::seed_seq seq(std::begin(noize), std::end(noize));
-        rng = std::mt19937(seq);
+        random::seed_noize(rng, seed);
     }
 
     void environment::set_volume(sound_channel group, double volume) {
         sounds.set_volume(group, volume);
+    }
+
+    void environment::play_music(std::string const& track_name) {
+        sounds.play_music(track_name, 1.0f);
+    }
+
+    void environment::enqueue_music(std::string const &name) {
+        sounds.enqueue_music(name);
     }
 }

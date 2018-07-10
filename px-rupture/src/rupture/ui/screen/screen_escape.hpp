@@ -36,7 +36,7 @@ namespace px::ui {
 
     private:
         void combine_escape(ImVec2 position, float width) {
-            immediate::dim();
+            immediate::dimmed_background();
 
             // main options
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);

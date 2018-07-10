@@ -45,6 +45,10 @@ namespace px {
             , autosave(false)
             , greetings(true) {
             update_saves();
+            if (ctx) {
+                ctx->enqueue_music(settings::sound_path + std::string("mu_gnomi_cell.flac"));
+                ctx->play_music(settings::sound_path + std::string("mu_gnomi_deadend.flac"));
+            }
         }
 
     protected:

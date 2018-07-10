@@ -84,6 +84,8 @@ namespace px {
         void                                emit_light(point2 position, color const& light);
         void                                play_sound(std::string const& sound, double volume, point2 const& location);
         void                                play_sound(std::string const& sound, double volume);
+        void                                play_music(std::string const& track);
+        void                                enqueue_music(std::string const &track);
         rl::hit_result                      hit(body_component const& source, body_component const& target);
         std::tuple<float, rl::damage_type>  dps(body_component const& source) const;
         int                                 damage(body_component & target, int damage, rl::damage_type source);    // returns damage done

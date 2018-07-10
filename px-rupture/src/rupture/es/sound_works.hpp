@@ -8,6 +8,7 @@
 #include "sound_component.hpp"
 #include "transform_component.hpp"
 
+#include <px/algorithm/shuffle.hpp>
 #include <px/dev/assert.hpp>
 #include <px/common/pool_chain.hpp>
 #include <px/common/vector.hpp>
@@ -47,6 +48,15 @@ namespace px {
                     channels.erase(it);
                 }
 
+                // music playlist
+                if (!playlist.is_empty()) {
+                    auto playing = channels.find(music_id);
+                    if (playing == channels.end()) {
+                        music_id = play(playlist.next(), music, 1.0f, { 0, 0 }, true);
+                    }
+                }
+                
+                // listener position
                 FMOD_VECTOR const position = to_fmod(camera ? camera->position() : vector2(0, 0));
                 static FMOD_VECTOR const velocity{ 0, 0, 0 };
                 static FMOD_VECTOR const forward{ 0, 0, 1 };
@@ -66,7 +76,13 @@ namespace px {
         }
 
         unsigned int play_music(std::string const& name, double volume) {
-            return play(load_sound(name, false, false, true), music, volume, { 0, 0 }, true);
+            playlist.enqueue_front(load_sound(name, false, false, true));
+            return music_id = play(load_sound(name, false, false, true), music, volume, { 0, 0 }, true);
+            //playlist.enqueue_front(load_sound(name, false, false, true));
+        }
+
+        void enqueue_music(std::string const& name) {
+            playlist.enqueue(load_sound(name, false, false, true));
         }
 
         void stop_music() {
@@ -147,6 +163,7 @@ namespace px {
             : system(nullptr)
             , master(nullptr)
             , channel_id(0)
+            , music_id(static_cast<unsigned int>(-1))
             , camera(nullptr) {
             init();
         }
@@ -262,5 +279,7 @@ namespace px {
         sound_map                           sounds;
         channel_map                         channels;
         unsigned int                        channel_id;
+        unsigned int                        music_id;
+        shuffle<FMOD::Sound*>               playlist;
     };
 }

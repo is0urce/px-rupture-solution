@@ -77,37 +77,22 @@ namespace px {
         }
 
         // dim
-        static void dim() {
+        static void dimmed_background() {
+            style_color(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.5f });
             ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_Always);
             ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.5f });
-            ImGui::Begin("##dim_overlay", nullptr, 0
-                | ImGuiWindowFlags_NoTitleBar
-                | ImGuiWindowFlags_NoResize
-                | ImGuiWindowFlags_NoMove
-                | ImGuiWindowFlags_NoScrollbar
-                | ImGuiWindowFlags_NoScrollWithMouse
-                | ImGuiWindowFlags_NoCollapse
-                | ImGuiWindowFlags_NoSavedSettings);
+            ImGui::Begin("##dimmed_overlay", nullptr, 0 | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
             ImGui::SetWindowFocus();
             ImGui::End();
-            ImGui::PopStyleColor(1);
         }
 
         static void splash_version() {
-            ImGui::SetNextWindowPos({ 20, ImGui::GetIO().DisplaySize.y - 50 }, ImGuiCond_Always);
             ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0.0f, 0.0f, 0.0f, 0.0f });
-            ImGui::Begin("##splash_version", nullptr, 0
-                | ImGuiWindowFlags_NoTitleBar
-                | ImGuiWindowFlags_NoResize
-                | ImGuiWindowFlags_NoMove
-                | ImGuiWindowFlags_NoScrollbar
-                | ImGuiWindowFlags_NoScrollWithMouse
-                | ImGuiWindowFlags_NoCollapse
-                | ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::SetNextWindowPos({ 20, ImGui::GetIO().DisplaySize.y - 50 }, ImGuiCond_Always);
+            ImGui::Begin("##splash_version", nullptr, 0 | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::SetWindowFocus();
             ImGui::PushStyleColor(ImGuiCol_Text, { 0.6f, 0.6f, 0.6f, 1.0f });
-            ImGui::Text("Gnomi: Caves of Nschryldamdshuncz, 2018, version 0.0.9.0 (x64)");
+            ImGui::Text("Gnomi: Caves of N., 2018, version 0.0.9.0 (x64)");
             ImGui::PopStyleColor(1); // text color
             ImGui::End();
             ImGui::PopStyleColor(1); // window bg

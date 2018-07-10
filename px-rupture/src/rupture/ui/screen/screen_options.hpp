@@ -41,7 +41,7 @@ namespace px {
 
     private:
         void combine_options(ImVec2 position, float width) {
-            immediate::dim();
+            immediate::dimmed_background();
 
             ImGui::SetNextWindowPos(position, ImGuiCond_Always);
             ImGui::SetNextWindowSize({ width, 600 });

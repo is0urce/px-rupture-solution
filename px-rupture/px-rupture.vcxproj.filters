@@ -684,6 +684,12 @@
     <ClInclude Include="src\rupture\ui\screen\screen_options.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\px\algorithm\random.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\px\algorithm\shuffle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rupture\main.cpp">
@@ -817,6 +823,8 @@
     <None Include="msvcp140.dll" />
     <None Include="vcruntime140.dll" />
     <None Include="data\scripts\sk_v_explosives.lua" />
+    <None Include="data\snd\mu_gnomi_cell.flac" />
+    <None Include="data\snd\mu_gnomi_deadend.flac" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\snd\snd_ui_brew_00.wav">

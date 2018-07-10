@@ -54,6 +54,13 @@ namespace px {
     unsigned int sound_system::play_music(std::string const& name, double volume) {
         return works->play_music(name, volume);
     }
+
+    void sound_system::enqueue_music(std::string const& name) {
+        if (works) {
+            works->enqueue_music(name);
+        }
+    }
+
     void sound_system::stop_music() {
         works->stop_music();
     }
