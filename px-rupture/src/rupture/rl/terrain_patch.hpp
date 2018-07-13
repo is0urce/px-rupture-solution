@@ -42,30 +42,40 @@ namespace px {
         }
 
         void pset(std::uint32_t block_id, point2 const& location) {
-            library.setup(block_id, tiles.at(location));
+            library.setup(tiles.at(location), block_id);
         }
 
-        bool write(std::string const& path) const {
-            std::ofstream out_stream(path, std::ios_base::binary);
-            if (!out_stream.is_open()) return false;
-
-            tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile const& block) {
-                out_stream.write(reinterpret_cast<char const*>(&block.block_id), sizeof block.block_id);
-            });
-
-            return true;
+        bool write_file(std::string const& path) const {
+            return write_stream(std::ofstream(path, std::ios_base::binary));
         }
 
-        bool read(std::string const& path) {
-            std::ifstream in_stream(path, std::ios_base::binary);
-            if (!in_stream.is_open()) return false;
+        bool read_file(std::string const& path) {
+            return read_stream(std::ifstream(path, std::ios_base::binary));
+        }
 
-            tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
-                in_stream.read(reinterpret_cast<char*>(&block.block_id), sizeof block.block_id);
-                library(block);
-            });
+        template <typename In>
+        bool read_stream(In && in_stream) {
+            bool success = false;
+            if (in_stream.is_open()) {
+                tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
+                    in_stream.read(reinterpret_cast<char*>(&block.block_id), sizeof block.block_id);
+                    invalidate(block);
+                });
+                success = true;
+            }
+            return success;
+        }
 
-            return true;
+        template <typename Out>
+        bool write_stream(Out && out_stream) const {
+            bool success = false;
+            if (out_stream.is_open()) {
+                tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile const& block) {
+                    out_stream.write(reinterpret_cast<char const*>(&block.block_id), sizeof block.block_id);
+                });
+                success = true;
+            }
+            return success;
         }
 
         template <typename Operator>
@@ -80,8 +90,12 @@ namespace px {
 
         void invalidate() {
             tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
-                library(block);
+                invalidate(block);
             });
+        }
+
+        void invalidate(tile & block) {
+            library.setup(block, block.block_id);
         }
 
     public:

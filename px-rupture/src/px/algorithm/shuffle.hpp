@@ -27,14 +27,14 @@ namespace px {
         using position_type = typename container_type::size_type;
 
     public:
-        void enqueue(value_type && element) {
+        void enqueue(value_type element) {
             container.push_back(element);
             ++size;
 
             shuffle_last(0);
         }
 
-        void enqueue_front(value_type && element) {
+        void enqueue_front(value_type element) {
             container.push_back(element);
             ++size;
 

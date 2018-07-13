@@ -400,7 +400,7 @@ namespace px {
             if (auto body = player->linked<body_component>()) {
                 if (!body->is_dead()) {
 
-                    auto lvl = body->level();
+                    auto const lvl = body->level();
 
                     // apply softcap
                     if (lvl == source_level + 1) exp /= 2;

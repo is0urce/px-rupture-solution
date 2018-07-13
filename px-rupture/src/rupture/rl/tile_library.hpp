@@ -25,7 +25,7 @@ namespace px {
             sprites = system;
         }
 
-        void setup(std::uint32_t block_id, tile & block) {
+        void setup(tile & block, std::uint32_t block_id) {
             tile_prototype const& prototype = library[block_id];
 
             block.block_id = prototype.block_id;
@@ -35,14 +35,6 @@ namespace px {
                 block.sprite->connect(&block.transform);
                 block.sprite->activate();
             }
-        }
-
-        void setup(tile & block) {
-            setup(block.block_id, block);
-        }
-
-        void operator()(tile & block) {
-            setup(block);
         }
 
     public:
@@ -56,12 +48,12 @@ namespace px {
             auto doc = document::load_document(settings::tiles_path);
             auto tile_list = doc["tiles"];
             for (auto const& tile_node : tile_list) {
-                unsigned int block_id = tile_node["block_id"];
-                std::string name = tile_node["name"];
-                bool transparent = tile_node["transparent"];
-                unsigned int traverse_mask = tile_node["traversable"];
+                unsigned int const block_id = tile_node["block_id"];
+                std::string const name = tile_node["name"];
+                bool const transparent = tile_node["transparent"];
+                unsigned int const traverse_mask = tile_node["traversable"];
 
-                rl::mass<rl::traverse>::bitset_type blocking_bits{ traverse_mask };
+                rl::mass<rl::traverse>::bitset_type const blocking_bits{ traverse_mask };
 
                 add_prototype(block_id, name, { transparent, ~blocking_bits });
             }

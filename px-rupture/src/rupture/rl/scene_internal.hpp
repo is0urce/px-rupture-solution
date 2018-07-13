@@ -93,7 +93,7 @@ namespace px {
         void export_terrain() {
             surface.enumerate([&](point2 const& location, auto & ptr) {
                 if (ptr && ptr->is_loaded()) {
-                    ptr->data().write(depot_name(location));
+                    ptr->data().write_file(depot_name(location));
                 }
             });
         }
@@ -232,7 +232,7 @@ namespace px {
             terrain.load([&](patch_type & chunk) {
                 chunk.assign_sprites(sprites);
                 chunk.assign_cell(grid_cell);
-                chunk.read(depot_name(grid_cell));
+                chunk.read_file(depot_name(grid_cell));
             });
             if (enter_fn) {
                 enter_fn(grid_cell);

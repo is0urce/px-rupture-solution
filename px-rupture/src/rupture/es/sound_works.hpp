@@ -76,9 +76,9 @@ namespace px {
         }
 
         unsigned int play_music(std::string const& name, double volume) {
-            playlist.enqueue_front(load_sound(name, false, false, true));
-            return music_id = play(load_sound(name, false, false, true), music, volume, { 0, 0 }, true);
-            //playlist.enqueue_front(load_sound(name, false, false, true));
+            auto const sound = load_sound(name, false, false, true);
+            playlist.enqueue_front(sound);
+            return music_id = play(sound, music, volume, { 0, 0 }, true);
         }
 
         void enqueue_music(std::string const& name) {
@@ -86,6 +86,7 @@ namespace px {
         }
 
         void stop_music() {
+            playlist.clear();
         }
 
         void set_master_volume(double volume) {

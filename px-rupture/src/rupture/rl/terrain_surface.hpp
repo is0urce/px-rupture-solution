@@ -22,7 +22,7 @@ namespace px {
     template <size_t L, size_t R>
     class terrain_surface {
     private:
-        static const size_t range = R * 2 + 1;
+        static size_t const range = R * 2 + 1;
 
     public:
         using patch_type = terrain_patch<L, L>;
