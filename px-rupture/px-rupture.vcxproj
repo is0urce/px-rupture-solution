@@ -233,6 +233,7 @@
     <ClInclude Include="src\px\es\light_source.hpp" />
     <ClInclude Include="src\px\es\pool_manager.hpp" />
     <ClInclude Include="src\px\es\values.hpp" />
+    <ClInclude Include="src\px\io\resource_file.hpp" />
     <ClInclude Include="src\rupture\draw\animation_set.hpp" />
     <ClInclude Include="src\rupture\es\sound_system.hpp" />
     <ClInclude Include="src\rupture\es\sound_works.hpp" />

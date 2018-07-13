@@ -9,7 +9,7 @@
 
 #define PX_RUN_TESTS 0
 #define PX_INGAME_PERFORMANCE_TEST 0
-#define PX_INGAME_EDITOR 1              // ::DEPLOY:: set this to zero also
+#define PX_INGAME_EDITOR 0              // ::DEPLOY:: set this to zero also
 
 #else
 

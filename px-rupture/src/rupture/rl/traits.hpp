@@ -134,8 +134,8 @@ namespace px {
 
         void register_traits() {
             register_trait({ 1, "t_class_warrior", "The Strongest Gnome Underground", "* +10 health \n* learns melee skills" });
-            register_trait({ 2, "t_class_archer", "Kinfe Juggler, Jentleman", "* more starting items \n* learns stealth archery skills" });
-            register_trait({ 3, "t_class_mage", "Medium", "* +10 energy \n* learns magic skills \n* beard" });
+            register_trait({ 2, "t_class_archer", "Knife Juggler, Jentleman", "* more starting items \n* learns stealth archery skills" });
+            register_trait({ 3, "t_class_mage", "Mystification Guild Covert Mastermind", "* +10 energy \n* learns magic skills \n* beard" });
         }
 
         void register_options() {

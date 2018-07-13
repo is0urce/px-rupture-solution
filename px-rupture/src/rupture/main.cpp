@@ -22,18 +22,6 @@
 
 namespace px {
 
-    // create main window from configuration
-    glfw_window create_window(char const* name, bool is_fullscreen, unsigned int width, unsigned int height, GLFWmonitor * monitor) {
-        if (monitor && is_fullscreen) {
-            auto const mode = glfwGetVideoMode(monitor);
-            glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-            glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-            glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-            glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        }
-        return glfwCreateWindow(width, height, name, monitor, nullptr);
-    }
-
     // enable context and load opengl extensions
     void create_context(glfw_window const& win, int swap_interval) {
         glfwMakeContextCurrent(win);        // context
@@ -58,10 +46,21 @@ namespace px {
         // create windows
 
         bool const is_fullscreen = configuration["screen.fullscreen"];
+        bool const is_border = configuration["screen.border"];
         int const window_width = is_fullscreen ? video_mode->width : configuration["screen.width"];
         int const window_height = is_fullscreen ? video_mode->height : configuration["screen.height"];
 
-        glfw_window win = create_window(settings::application_name, is_fullscreen, window_width, window_height, is_fullscreen ? monitor : nullptr);
+        if (!is_border) {
+            glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        }
+        if (is_fullscreen) {
+            glfwWindowHint(GLFW_RED_BITS, video_mode->redBits);
+            glfwWindowHint(GLFW_GREEN_BITS, video_mode->greenBits);
+            glfwWindowHint(GLFW_BLUE_BITS, video_mode->blueBits);
+            glfwWindowHint(GLFW_REFRESH_RATE, video_mode->refreshRate);
+        }
+
+        glfw_window win = glfwCreateWindow(window_width, window_height, settings::application_name, is_fullscreen ? monitor : nullptr, nullptr);
         create_context(win, configuration["screen.vsync"]);
 
         // create environment & register events
