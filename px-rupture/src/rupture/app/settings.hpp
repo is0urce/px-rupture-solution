@@ -28,7 +28,7 @@ namespace px {
             static char const* const sound_path;
         };
 
-        char const* const settings::application_name = "px-rupture";
+        char const* const settings::application_name = "Gnomi";
         char const* const settings::bindings_path = "data/controls.json";
         char const* const settings::configuration_path = "data/config.json";
         char const* const settings::texture_path = "data/textures.json";

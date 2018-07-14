@@ -1,6 +1,6 @@
 // name: tests.cpp
 
-#include "rupture/app/bootstrap.hpp"
+#include "rupture/app/macro.hpp"
 
 #if PX_RUN_TESTS
 

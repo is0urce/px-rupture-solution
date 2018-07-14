@@ -151,6 +151,8 @@ namespace px {
                     idx_buffer_offset += pcmd->ElemCount;
                 }
             }
+
+            glScissor(0, 0, framebuffer_width, framebuffer_height); // stop scissors! this somehow can interfere with video recording software
         }
 
         void create_pipeline() {

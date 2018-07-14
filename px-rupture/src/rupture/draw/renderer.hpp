@@ -43,12 +43,12 @@ namespace px {
             // sprites drawed to offscreen A
 
             glBindFramebuffer(GL_FRAMEBUFFER, diffuse.framebuffer);
-            if (sprite_data) {
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // alpha blending for sprites
-                glUseProgram(sprite_program);
-                for (size_t i = 0, size = sprite_data->size(); i != size; ++i) {
-                    sprites[i].draw_arrays(GL_QUADS, GL_STREAM_DRAW, (*sprite_data)[i]);
-                }
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // alpha blending for sprites
+            glUseProgram(sprite_program);
+            for (size_t i = 0, size = sprite_data ? sprite_data->size() : 0; i != size; ++i) {
+                sprites[i].draw_arrays(GL_QUADS, GL_STREAM_DRAW, (*sprite_data)[i]);
             }
 
             // lightmap drawed to offscreen B
@@ -154,6 +154,7 @@ namespace px {
             glClearColor(0, 0, 0, 1);
             glEnable(GL_BLEND);
             glEnable(GL_TEXTURE_2D);
+            glEnable(GL_SCISSOR_TEST);
 
             // compile shaders
 
@@ -186,7 +187,7 @@ namespace px {
             light_pass.output(light.framebuffer, screen_width, screen_height);
             light_pass.bind_textures({ light_current, light_last });
             light_pass.bind_uniform(camera);
-            light_pass.clear_color(0.0, 0.0, 0.0, 1.0);
+            light_pass.clear_color(0.0, 0.0, 0.0, 0.0);
 
             postprocess = { 0, 0, static_cast<GLsizei>(screen_width), static_cast<GLsizei>(screen_height) }; // main framebuffer, no vao
             postprocess.bind_textures({ diffuse.texture, light.texture });

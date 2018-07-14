@@ -3,8 +3,6 @@
 // auth: is0urce
 // desc: programm entry point
 
-#include <px/app/cfg.hpp>
-
 #include "app/bootstrap.hpp"
 #include "app/document.hpp"
 #include "app/settings.hpp"
@@ -12,6 +10,7 @@
 #include "key.hpp"
 #include "shell.hpp"
 
+#include <px/app/cfg.hpp>
 #include <px/common/bindings.hpp>
 #include <px/common/timer.hpp>
 #include <px/dev/logger.hpp>
@@ -60,7 +59,7 @@ namespace px {
             glfwWindowHint(GLFW_REFRESH_RATE, video_mode->refreshRate);
         }
 
-        glfw_window win = glfwCreateWindow(window_width, window_height, settings::application_name, is_fullscreen ? monitor : nullptr, nullptr);
+        glfw_window win(glfwCreateWindow(window_width, window_height, settings::application_name, is_fullscreen ? monitor : nullptr, nullptr));
         create_context(win, configuration["screen.vsync"]);
 
         // create environment & register events
@@ -99,6 +98,8 @@ namespace px {
         while (game.is_running() && win.process()) {
             game.frame(time);
         }
+
+        glfwMakeContextCurrent(nullptr);
     }
 
     int run_application() {

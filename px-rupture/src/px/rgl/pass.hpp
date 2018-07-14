@@ -28,6 +28,8 @@ namespace px {
             std::swap(m_height, that.m_height);
             std::swap(m_textures, that.m_textures);
             std::swap(m_uniforms, that.m_uniforms);
+            std::swap(m_clear, that.m_clear);
+            std::swap(m_clear_color, that.m_clear_color);
         }
 
         void output(GLuint framebuffer, GLsizei width, GLsizei height) {

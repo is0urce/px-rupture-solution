@@ -65,10 +65,8 @@ namespace px {
         }
 
         glfw_window & operator=(GLFWwindow * window) {
-            if (m_window != window) {
-                close();
-                m_window = window;
-            }
+            glfw_window that(window);
+            swap(that);
             return *this;
         }
 
