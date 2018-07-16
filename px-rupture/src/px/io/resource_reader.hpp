@@ -1,3 +1,5 @@
+// name: resource_reader.hpp
+
 #pragma once
 
 #include "resource_file.hpp"
@@ -16,6 +18,10 @@ namespace px {
         std::istream & get(std::string const& name) {
             seek_record(name);
             return stream;
+        }
+
+        bool has_record(std::string const& name) {
+            return seek_record(name);
         }
 
         std::istream & operator[](std::string const& name) {
@@ -44,17 +50,18 @@ namespace px {
                 stream.read(reinterpret_cast<char*>(&stride[1]), sizeof stride[1]);
                 stream.read(reinterpret_cast<char*>(&stride[2]), sizeof stride[2]);
 
-                auto cmp = compare(lh_str, name.c_str());
+                auto cmp = compare(name.c_str(), lh_str);
+                auto next = stride[cmp < 0 ? 1 : 2];
 
                 if (cmp == 0) {
                     stream.seekg(stride[0], std::ios::beg);
                     return true;
                 }
-                else {
-                    pos_t next = stride[cmp < 0 ? stride[1] : stride[2]];
-                    if (!is_valid(next)) return false;
-                    stream.seekg(next, std::ios::beg);
+                if (!is_valid(next)) {
+                    return false;
                 }
+
+                stream.seekg(next, std::ios::beg);
             }
         }
 

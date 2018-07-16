@@ -15,27 +15,39 @@ void test_resources() {
 
     test::section("io resource test");
     {
+        struct kv {
+            std::string name;
+            char        data[1024];
+        };
+
+        std::vector<kv> values = { { "1-terrain", "one" }
+                                 , { "2-terrain", "two" }
+                                 , { "3-terrain", "three" }
+                                 , { "4-terrain", "four" }
+                                 , { "5-terrain", "five" } };
+
         std::string const filename = "src/tests/data/resource.hex";
-        char write_data[] = "SUPPOSEDTOBERAWDATA but this is a string";
+
         test::section("write resource data file");
         {
             resource_writer file;
 
-            file.add("abc.terrain", write_data, sizeof write_data);
-            file.add("resource_name.terrain", write_data, sizeof write_data);
-            file.add("cave_of_schurlymndanschuntszc_lower_level.terrain", write_data, sizeof write_data);
-            file.add("xyz.terrain", write_data, sizeof write_data);
+            for (auto & rec : values) {
+                file.add(rec.name, rec.data, std::strlen(rec.data) + 1);
+            }
             file.write(filename);
         }
         test::section("read resource data file");
         {
             resource_reader reader(filename);
 
-            auto & point = reader.get("abc.terrain");
-            char read_data[1024];
-            point.read(read_data, sizeof write_data);
-
-            test::require(std::strcmp(write_data, read_data) == 0);
+            for (auto & rec : values) {
+                auto & point = reader.get(rec.name);
+                char read_data[1024];
+                test::require(reader.has_record(rec.name));
+                point.read(read_data, std::strlen(rec.data) + 1);
+                test::require(std::strcmp(rec.data, read_data) == 0);
+            }
         }
     }
 }

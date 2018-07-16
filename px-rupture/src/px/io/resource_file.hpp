@@ -1,4 +1,20 @@
+// name: resource_file.hpp
+
 #pragma once
+
+// This 'documentation' was saved by git after storm outage
+// Chunk format
+// ID SIZE DATA
+
+// File format
+
+// RESF
+// KEYS
+// EXTR
+// DATA
+
+// Keys data:
+// strz:key pos:CURR pos:LEFT pos:RIGHT
 
 #include "resource_file.hpp"
 
