@@ -14,6 +14,7 @@
 #include "case/common/memory_test.hpp"
 #include "case/common/label_test.hpp"
 #include "case/common/row_test.hpp"
+#include "case/io/resources.hpp"
 
 #include "case/link_test.hpp"
 
@@ -38,6 +39,7 @@ namespace px {
         test_bigint();
         test_row();
         test_label();
+        test_resources();
 
         test_traverse();
         test_craft();

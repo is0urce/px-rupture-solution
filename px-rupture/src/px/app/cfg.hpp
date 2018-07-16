@@ -21,19 +21,25 @@ namespace px {
 
         template <typename T>
         class value_record {
-        private:
-            T &     ref;
-            bool &  dirt;
         public:
-            T operator=(T value) {
-                ref = value;
-                dirt = true;
+            using value_type = T;
+        private:
+            value_type &    ref;
+            bool &          dirt;
+
+        public:
+            value_record & operator=(value_type value) {
+                if (ref != value) {
+                    ref = value;
+                    dirt = true;
+                }
+                return *this;
             }
-            operator T() const {
+            operator value_type() const {
                 return ref;
             }
         public:
-            value_record(T & r, bool & flag_ref)
+            value_record(value_type & r, bool & flag_ref)
                 : ref(r)
                 , dirt(flag_ref) {
             }

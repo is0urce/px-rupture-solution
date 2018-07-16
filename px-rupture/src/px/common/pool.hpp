@@ -61,7 +61,7 @@ namespace px {
         // it's safe to release already released objects - it's an nop
         bool release(T * ptr) {
             bool flag = false;
-            auto index = to_index(ptr);
+            auto const index = to_index(ptr);
             if (index >= 0 && index < Size) {
                 links * rec = &m_links[index];
                 if (rec->live) { // ensure it's not double release

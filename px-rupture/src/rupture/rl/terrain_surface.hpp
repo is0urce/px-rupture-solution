@@ -8,7 +8,7 @@
 #include "terrain_patch.hpp"
 #include "tile_library.hpp"
 
-#include <px/io/resource_file.hpp>
+#include <px/io/resource_reader.hpp>
 
 #include <px/common/matrix.hpp>
 #include <px/common/point.hpp>
@@ -174,6 +174,6 @@ namespace px {
     private:
         container_type  terrain;
         point2          current_cell;
-        resource_file   file;
+        resource_reader file;
     };
 }

@@ -27,6 +27,17 @@ namespace px {
             }
         }
 
+        template <typename Operation>
+        static void require_nothrow(Operation && fn) {
+            try {
+                fn();
+                ++total;
+            }
+            catch (...) {
+                write_fail();
+            }
+        }
+
         static void require_nocompile(const char * /*code*/) {
         }
 

@@ -51,31 +51,31 @@ namespace px {
         template <typename Operator>
         static void enumerate_utf8(std::string const& text, Operator && fn) {
             size_t i = 0;
-            const auto len = text.length();
+            auto const len = text.length();
             while (i < len) {
-                const unsigned char ch = text[i];
+                unsigned char const ch0 = text[i];
                 unsigned int letter = replacement_character;
 
-                if (ch < 192) {
-                    letter = ch;
+                if (ch0 < 192) {
+                    letter = ch0;
                     ++i;
                 }
                 else if (i + 1 < len) {
-                    const unsigned char ch2 = text[i + 1];
-                    if (ch < 224 && ch2 > 127) {
-                        letter = ((ch & 0x1f) << 6) | (ch2 & 0x3f);
+                    unsigned char const ch1 = text[i + 1];
+                    if (ch0 < 224 && ch1 > 127) {
+                        letter = ((ch0 & 0x1f) << 6) | (ch1 & 0x3f);
                         i += 2;
                     }
                     else if (i + 2 < len) {
-                        const unsigned char ch3 = text[i + 2];
-                        if (ch < 240 && ch2 > 127 && ch3 > 127) {
-                            letter = ((ch & 0x0f) << 12) | ((ch2 & 0x3f) << 6) | (ch3 & 0x3f);
+                        unsigned char const ch2 = text[i + 2];
+                        if (ch0 < 240 && ch1 > 127 && ch2 > 127) {
+                            letter = ((ch0 & 0x0f) << 12) | ((ch1 & 0x3f) << 6) | (ch2 & 0x3f);
                             i += 3;
                         }
                         else if (i + 3 < len) {
-                            const unsigned char ch4 = text[i + 3];
-                            if (ch < 248 && ch2 > 127 && ch3 > 127 && ch4 > 127) {
-                                letter = ((ch & 0x07) << 18) | ((ch2 & 0x3f) << 12) | ((ch3 & 0x3f) << 6) | (ch4 & 0x3f);
+                            unsigned char const ch3 = text[i + 3];
+                            if (ch0 < 248 && ch1 > 127 && ch2 > 127 && ch3 > 127) {
+                                letter = ((ch0 & 0x07) << 18) | ((ch1 & 0x3f) << 12) | ((ch2 & 0x3f) << 6) | (ch3 & 0x3f);
                                 i += 4;
                             }
                             else {

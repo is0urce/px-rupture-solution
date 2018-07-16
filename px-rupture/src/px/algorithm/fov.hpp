@@ -22,7 +22,7 @@ namespace px {
             grid.fill(false);
 
             recursive_shadowcasting::light(center.x(), center.y(), reach, std::forward<Predicate>(predicate), [this](int x, int y) {
-                point2 relative = point2(x, y) - center + point2(reach, reach);
+                point2 const relative = point2(x, y) - center + point2(reach, reach);
                 if (grid.contains(relative)) {
                     grid.set(true, relative);
                 }
@@ -30,7 +30,7 @@ namespace px {
         }
 
         bool contains(point2 const& absolute) const {
-            point2 relative = absolute - center + point2(reach, reach);
+            point2 const relative = absolute - center + point2(reach, reach);
             return grid.contains(relative) ? grid.get(relative) : false;
         }
 
