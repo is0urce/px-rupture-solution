@@ -21,7 +21,7 @@ namespace px {
 
         void assign_cell(point2 cell) {
             grid_cell = cell;
-            point2 start = grid_cell * point2(W, H);
+            point2 const start = grid_cell * point2(W, H);
             tiles.enumerate([&](size_t x, size_t y, tile & block) {
                 block.block_id = 0;
                 block.transform.place(start + point2(static_cast<int>(x), static_cast<int>(y)));
@@ -55,15 +55,11 @@ namespace px {
 
         template <typename In>
         bool read_stream(In && in_stream) {
-            bool success = false;
-            if (in_stream.is_open()) {
-                tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
-                    in_stream.read(reinterpret_cast<char*>(&block.block_id), sizeof block.block_id);
-                    invalidate(block);
-                });
-                success = true;
-            }
-            return success;
+            tiles.enumerate([&](size_t /*x*/, size_t /*y*/, tile & block) {
+                in_stream.read(reinterpret_cast<char*>(&block.block_id), sizeof block.block_id);
+                invalidate(block);
+            });
+            return true;
         }
 
         template <typename Out>

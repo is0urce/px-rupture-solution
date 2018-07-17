@@ -470,6 +470,7 @@
     <None Include="data\skills.json" />
     <None Include="data\snd\mu_gnomi_cell.flac" />
     <None Include="data\snd\mu_gnomi_deadend.flac" />
+    <None Include="data\terrain.res" />
     <None Include="data\textures.json" />
     <None Include="data\tiles.json" />
     <None Include="fmod64.dll" />

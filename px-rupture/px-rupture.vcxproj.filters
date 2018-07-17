@@ -837,6 +837,7 @@
     <None Include="data\scripts\sk_v_explosives.lua" />
     <None Include="data\snd\mu_gnomi_cell.flac" />
     <None Include="data\snd\mu_gnomi_deadend.flac" />
+    <None Include="data\terrain.res" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\snd\snd_ui_brew_00.wav">

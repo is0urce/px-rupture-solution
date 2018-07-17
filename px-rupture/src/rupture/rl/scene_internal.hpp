@@ -5,15 +5,17 @@
 
 #pragma once
 
-#include "rupture/es/transform_component.hpp"
-#include "rupture/es/composite_component.hpp"
-#include "rupture/es/body_component.hpp"
+#include "../app/settings.hpp"
+#include "../es/transform_component.hpp"
+#include "../es/composite_component.hpp"
+#include "../es/body_component.hpp"
 
 #include "terrain_patch.hpp"
 #include "terrain_surface.hpp"
 
 #include <px/common/point.hpp>
 #include <px/common/qtree.hpp>
+#include <px/io/resource_reader.hpp>
 #include <px/memory/uq_ptr.hpp>
 #include <px/memory/abstract_release_block.hpp>
 
@@ -33,8 +35,8 @@ namespace px {
 
     public:
         using surface_type = terrain_surface<terrain_len, 1>;
-        using patch_type = typename surface_type::patch_type;
-        using stream_type = typename surface_type::stream_type;
+        using patch_type = surface_type::patch_type;
+        using stream_type = surface_type::stream_type;
         using patch_event = std::function<void(point2 const&)>;
 
     private:
@@ -214,12 +216,13 @@ namespace px {
 
     public:
         scene_internal()
-            : space(64) {
+            : space(64)
+            , resource(settings::terrain_resource) {
         }
 
     private:
         std::string depot_name(point2 const& grid) const {
-            return settings::terrrain_path + std::to_string(grid.x()) + "_" + std::to_string(grid.y()) + ".dat";
+            return std::to_string(grid.x()) + "_" + std::to_string(grid.y()) + ".terrain";
         }
 
         void on_leave(point2 const& grid_cell, stream_type & /*terrain*/) {
@@ -232,7 +235,11 @@ namespace px {
             terrain.load([&](patch_type & chunk) {
                 chunk.assign_sprites(sprites);
                 chunk.assign_cell(grid_cell);
-                chunk.read_file(depot_name(grid_cell));
+                resource_reader::header info;
+                auto & stream = resource.get(depot_name(grid_cell), info);
+                if (info.name == resource_reader::void_name()) {
+                    chunk.read_stream(stream);
+                }
             });
             if (enter_fn) {
                 enter_fn(grid_cell);
@@ -250,6 +257,7 @@ namespace px {
         sprite_system *                             sprites;
         std::function<void(point2 const&)>          enter_fn;
         std::function<void(point2 const&)>          leave_fn;
+        resource_reader                             resource;
 
         // nested class
         class terrain_release_block final

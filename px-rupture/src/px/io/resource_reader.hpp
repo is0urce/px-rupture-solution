@@ -16,8 +16,12 @@ namespace px {
         : public resource_file {
     public:
         std::istream & get(std::string const& name, header & info) {
-            seek_record(name);
-            read_header(info);
+            if (seek_record(name)) {
+                read_header(info);
+            }
+            else {
+                info = { '!LCK' };
+            }
             return stream;
         }
 
