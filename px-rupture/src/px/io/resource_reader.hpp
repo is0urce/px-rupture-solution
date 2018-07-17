@@ -15,9 +15,15 @@ namespace px {
     class resource_reader
         : public resource_file {
     public:
-        std::istream & get(std::string const& name) {
+        std::istream & get(std::string const& name, header & info) {
             seek_record(name);
+            read_header(info);
             return stream;
+        }
+
+        std::istream & get(std::string const& name) {
+            header discard;
+            return get(name, discard);
         }
 
         bool has_record(std::string const& name) {
@@ -28,11 +34,22 @@ namespace px {
             return get(name);
         }
 
+        void read(std::string const& name, char * dest, size_t n) {
+            auto & point = get(name);
+            point.read(dest, n);
+        }
+
+        void read(std::string const& name, char * dest) {
+            header info;
+            auto & point = get(name, info);
+            point.read(dest, info.size);
+        }
+
     public:
         resource_reader(std::string const& path) {
             stream.open(path, std::ios::binary | std::ios::in);
             if (!stream.is_open()) {
-                throw std::runtime_error("resource_file::seek(name) - file not opened, path=" + path);
+                throw std::runtime_error("resource_reader::ctor(name) - file not opened, path=" + path);
             }
         }
 
@@ -69,12 +86,12 @@ namespace px {
             stream.seekg(0, std::ios::beg);
 
             while (true) {
-                header h;
-                read_header(h);
+                header info;
+                read_header(info);
 
-                if (h.name == 'KEYS') return true;
+                if (info.name == keys_name()) return true;
 
-                stream.seekg(h.size, std::ios::cur);
+                stream.seekg(info.size, std::ios::cur);
 
                 // terminate
                 if (stream.eof()) {
@@ -83,9 +100,9 @@ namespace px {
             }
         }
 
-        void read_header(header & h) {
-            stream.read(reinterpret_cast<char*>(&h.name), sizeof h.name);
-            stream.read(reinterpret_cast<char*>(&h.size), sizeof h.size);
+        void read_header(header & info) {
+            stream.read(reinterpret_cast<char*>(&info.name), sizeof info.name);
+            stream.read(reinterpret_cast<char*>(&info.size), sizeof info.size);
         }
 
     private:

@@ -33,19 +33,39 @@ void test_resources() {
             resource_writer file;
 
             for (auto & rec : values) {
-                file.add(rec.name, rec.data, std::strlen(rec.data) + 1);
+                file.link(rec.name, rec.data, std::strlen(rec.data) + 1);
             }
             file.write(filename);
         }
         test::section("read resource data file");
         {
             resource_reader reader(filename);
+            char read_data[1024];
 
-            for (auto & rec : values) {
-                auto & point = reader.get(rec.name);
-                char read_data[1024];
+            for (auto const& rec : values) {
                 test::require(reader.has_record(rec.name));
-                point.read(read_data, std::strlen(rec.data) + 1);
+
+                std::memset(read_data, 0x00, sizeof read_data);
+                reader.read(rec.name, read_data, std::strlen(rec.data) + 1);
+                test::require(std::strcmp(rec.data, read_data) == 0);
+
+                std::memset(read_data, 0x00, sizeof read_data);
+                reader.read(rec.name, read_data);
+                test::require(std::strcmp(rec.data, read_data) == 0);
+
+                // known size
+                std::memset(read_data, 0x00, sizeof read_data);
+                auto & p1 = reader.get(rec.name);
+                p1.read(read_data, std::strlen(rec.data) + 1);
+                test::require(std::strcmp(rec.data, read_data) == 0);
+
+                // unknown size, fetch
+                std::memset(read_data, 0x00, sizeof read_data);
+                resource_reader::header info;
+                auto & p2 = reader.get(rec.name, info);
+                test::require(info.name = resource_reader::void_name());
+                test::require(info.size == std::strlen(rec.data) + 1);
+                p2.read(read_data, info.size);
                 test::require(std::strcmp(rec.data, read_data) == 0);
             }
         }

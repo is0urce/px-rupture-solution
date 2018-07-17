@@ -12,8 +12,7 @@ namespace px {
 
     class vector2
         : public coordinate<double, 2>
-        , public coordinate_operation<vector2>
-    {
+        , public coordinate_operation<vector2> {
     public:
         constexpr component x() const noexcept {
             return m_array[0];

@@ -8,10 +8,10 @@
 
 // File format
 
-// RESF
+// RESF optional
 // KEYS
-// EXTR
-// DATA
+// EXTR optional
+// DATA = VOID*
 
 // Keys data:
 // strz:key pos:CURR pos:LEFT pos:RIGHT
@@ -40,6 +40,18 @@ namespace px {
 
         static constexpr bool is_valid(pos_t position) {
             return position > 0;
+        }
+
+        static constexpr name_t keys_name() {
+            return 'KEYS';
+        }
+
+        static constexpr name_t data_name() {
+            return 'DATA';
+        }
+
+        static constexpr name_t void_name() {
+            return 'VOID';
         }
     };
 }
