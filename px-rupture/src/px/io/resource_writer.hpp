@@ -27,6 +27,7 @@ namespace px {
             pos_t       absoulte;
             size_t      l_index;
             size_t      r_index;
+            size_t      sequence_index;
         };
 
         struct rec_data {
@@ -34,6 +35,12 @@ namespace px {
             char const*         data;
             pos_t               size;
             pos_t               absolute;
+        };
+
+        struct sequence {
+            size_t index;
+            size_t l_index;
+            size_t r_index;
         };
 
         struct kv {
@@ -61,7 +68,7 @@ namespace px {
             if (!out_stream.is_open()) {
                 throw std::runtime_error("resource_writer::write(name) - file not opened, path=" + filename);
             }
-            sort();
+            sort_sequental();
             generate();
             dump(out_stream);
         }
@@ -73,16 +80,56 @@ namespace px {
         }
 
     private:
-        void sort() {
-            sort_binary(0, resources.size());
+        void sort_sequental() {
+            size_t const size = resources.size();
+
+            // sort
+            std::sort(resources.begin(), resources.end(), compare_records);
+
+            // place sequental
+            keys_sequence.resize(size);
+            arrange_sequence(0, size, 0);
+            for (size_t i = 0; i != size; ++i) {
+                resources[keys_sequence[i].index].k.sequence_index = i;
+            }
+            std::sort(resources.begin(), resources.end(), compare_sequence);
+
+            // link keys
+            for (size_t i = 0; i != size; ++i) {
+                resources[i].k.l_index = keys_sequence[i].l_index;
+                resources[i].k.r_index = keys_sequence[i].r_index;
+            }
         }
 
+        void arrange_sequence(size_t start, size_t end, size_t index) {
+            if (start == end) return;
+
+            size_t const size = end - start;
+            size_t const average = size / 2 + index;
+
+            size_t const l_start = start + 1;
+            size_t const l_end = size / 2 + l_start;
+            size_t const l_index = index;
+
+            size_t const r_start = l_end;
+            size_t const r_end = end;
+            size_t const r_index = average + 1;
+
+            arrange_sequence(l_start, l_end, l_index);
+            arrange_sequence(r_start, r_end, r_index);
+
+            keys_sequence[start].index = average;
+            keys_sequence[start].l_index = l_start < l_end ? l_start : -1;
+            keys_sequence[start].r_index = r_start < r_end ? r_start : -1;
+        }
+
+        // use sort sequental, this is for fallback
         void sort_binary(size_t start, size_t end) {
             if (start == end) return;
 
-            size_t mid = (start + end) / 2;
-            size_t l_start = start + 1 > end ? end : start + 1;
-            size_t l_end = mid + 1 > end ? end : mid + 1;
+            size_t const l_start = start + 1;
+            size_t const mid = (start + end) / 2;
+            size_t const l_end = mid + 1 > end ? end : mid + 1;
 
             std::nth_element(resources.begin() + start, resources.begin() + mid, resources.begin() + end, compare_records);
             std::swap(resources[start], resources[mid]);
@@ -90,7 +137,7 @@ namespace px {
             sort_binary(l_start, l_end);
             sort_binary(l_end, end);
 
-            resources[start].k.l_index = l_start < end ? l_start : -1;
+            resources[start].k.l_index = l_start < l_end ? l_start : -1;
             resources[start].k.r_index = l_end < end ? l_end : -1;
         }
 
@@ -154,9 +201,14 @@ namespace px {
             return compare(lh.k.name.c_str(), rh.k.name.c_str()) < 0;
         }
 
+        static bool compare_sequence(kv const& lh, kv const& rh) {
+            return lh.k.sequence_index < rh.k.sequence_index;
+        }
+
     private:
-        std::vector<kv> resources;
-        header          keys_header;
-        header          data_header;
+        std::vector<kv>         resources;
+        std::vector<sequence>   keys_sequence;
+        header                  keys_header;
+        header                  data_header;
     };
 }

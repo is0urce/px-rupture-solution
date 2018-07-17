@@ -20,11 +20,12 @@ void test_resources() {
             char        data[1024];
         };
 
-        std::vector<kv> values = { { "1-terrain", "one" }
-                                 , { "2-terrain", "two" }
-                                 , { "3-terrain", "three" }
-                                 , { "4-terrain", "four" }
-                                 , { "5-terrain", "five" } };
+        std::vector<kv> values = { { "00-terrain", "zero" }
+                                 , { "01-terrain", "one" }
+                                 , { "02-terrain", "two" }
+                                 , { "03-terrain", "three" }
+                                 , { "04-terrain", "four" }
+                                 , { "05-terrain", "five" } };
 
         std::string const filename = "src/tests/data/resource.hex";
 
@@ -42,31 +43,43 @@ void test_resources() {
             resource_reader reader(filename);
             char read_data[1024];
 
-            for (auto const& rec : values) {
-                test::require(reader.has_record(rec.name));
+            for (size_t j = 0, size = values.size(); j != size; ++j) {
 
-                std::memset(read_data, 0x00, sizeof read_data);
-                reader.read(rec.name, read_data, std::strlen(rec.data) + 1);
-                test::require(std::strcmp(rec.data, read_data) == 0);
+                resource_writer file;
+                for (size_t i = 0; i != j; ++i) {
+                    auto & rec = values[i];
+                   file.link(rec.name, rec.data, std::strlen(rec.data) + 1);
+                }
+                file.write(filename);
 
-                std::memset(read_data, 0x00, sizeof read_data);
-                reader.read(rec.name, read_data);
-                test::require(std::strcmp(rec.data, read_data) == 0);
+                for (size_t i = 0; i != j; ++i) {
+                    auto & rec = values[i];
 
-                // known size
-                std::memset(read_data, 0x00, sizeof read_data);
-                auto & p1 = reader.get(rec.name);
-                p1.read(read_data, std::strlen(rec.data) + 1);
-                test::require(std::strcmp(rec.data, read_data) == 0);
+                    test::require(reader.has_record(rec.name));
 
-                // unknown size, fetch
-                std::memset(read_data, 0x00, sizeof read_data);
-                resource_reader::header info;
-                auto & p2 = reader.get(rec.name, info);
-                test::require(info.name = resource_reader::void_name());
-                test::require(info.size == std::strlen(rec.data) + 1);
-                p2.read(read_data, info.size);
-                test::require(std::strcmp(rec.data, read_data) == 0);
+                    std::memset(read_data, 0x00, sizeof read_data);
+                    reader.read(rec.name, read_data, std::strlen(rec.data) + 1);
+                    test::require(std::strcmp(rec.data, read_data) == 0);
+
+                    std::memset(read_data, 0x00, sizeof read_data);
+                    reader.read(rec.name, read_data);
+                    test::require(std::strcmp(rec.data, read_data) == 0);
+
+                    // known size
+                    std::memset(read_data, 0x00, sizeof read_data);
+                    auto & p1 = reader.get(rec.name);
+                    p1.read(read_data, std::strlen(rec.data) + 1);
+                    test::require(std::strcmp(rec.data, read_data) == 0);
+
+                    // unknown size, fetch
+                    std::memset(read_data, 0x00, sizeof read_data);
+                    resource_reader::header info;
+                    auto & p2 = reader.get(rec.name, info);
+                    test::require(info.name = resource_reader::void_name());
+                    test::require(info.size == std::strlen(rec.data) + 1);
+                    p2.read(read_data, info.size);
+                    test::require(std::strcmp(rec.data, read_data) == 0);
+                }
             }
         }
     }
