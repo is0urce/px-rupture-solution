@@ -30,37 +30,48 @@ namespace px {
     bool deposite_component::can_use_useable(body_component * user, environment * environment) const {
         if (!environment || !user) return false;
         if (!user->linked<container_component>() || !this->linked<container_component>()) return false;
-        auto [unit, location] = this->unwind<composite_component, transform_component>();
+        auto[unit, location] = this->unwind<composite_component, transform_component>();
         auto pawn = user->linked<transform_component>();
         return unit && pawn && environment->distance(pawn->position(), location->position()) <= 1;
     }
 
     void deposite_component::use_useable(body_component * user, environment * context) {
-        if (user && context) {
+        if (!context) return;
+
+        if (user) {
             auto dest = user->linked<container_component>();
             auto source = linked<container_component>();
             if (source && dest) {
-                auto pawn = user->linked<transform_component>();
+                auto obj_unit = linked<composite_component>();
+                auto obj_body = linked<body_component>();
 
                 // transfer items with popups
-                dest->give(*source, [&](auto const& item) {
-                    if (pawn) {
-                        context->popup("+ " + item.name(), 0xffffff, pawn->position());
-                    }
-                });
-
-                if (auto unit = linked<composite_component>()) {
-                    // disable lights on depletion
-                    if (auto spot = unit->query<light_component>()) {
-                        spot->is_on = false;
-                    }
-
-                    // start destruction
-                    if (dissolve) {
-                        unit->destroy(0);
+                if (source->is_empty()) {
+                    auto obj_pawn = obj_body ? obj_body->linked<transform_component>() : nullptr;
+                    if (obj_pawn) {
+                        context->popup("depleted", 0xffffff, obj_pawn->position());
                     }
                 }
-                
+                else {
+                    auto user_pawn = user->linked<transform_component>();
+                    dest->give(*source, [&](auto const& item) {
+                        if (user_pawn) {
+                            context->popup("+ " + item.name(), 0xffffff, user_pawn->position());
+                        }
+                    });
+                }
+
+                // turn light off
+                auto obj_light = obj_unit ? obj_unit->query<light_component>() : nullptr;
+                if (obj_light) {
+                    obj_light->is_on = false;
+                }
+
+                // start composite unit destruction
+                if (obj_unit && dissolve) {
+                    obj_unit->destroy(0);
+                }
+
                 if (use_duration > 0) {
                     context->end_turn(use_duration);
                 }

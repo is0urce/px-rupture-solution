@@ -260,6 +260,7 @@ namespace px {
         // useables
         if (deposite) {
             deposite->connect(container);
+            deposite->connect(body);
             deposite->connect(unit.get());
         }
         if (door) {

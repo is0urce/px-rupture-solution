@@ -120,6 +120,8 @@ namespace px::ui {
                 door_component * door = current->query<door_component>();
                 workshop_component * workshop = current->query<workshop_component>();
 
+                value_component * vault = current->query<value_component>();
+
                 // composite
 
                 ImGui::Separator();
@@ -204,6 +206,7 @@ namespace px::ui {
                 // control
                 combine_player(player);
                 combine_npc(npc);
+                combine_values(vault);
 
                 ImGui::Separator();
                 if (ImGui::Button("add...")) ImGui::OpenPopup("add##add_component");
@@ -228,6 +231,9 @@ namespace px::ui {
                     }
                     if (!container && ImGui::MenuItem("container##add")) {
                         PX_BUILD(add_container());
+                    }
+                    if (!vault && ImGui::MenuItem("value vault##add_value_vault")) {
+                        PX_BUILD(add_value());
                     }
                     if (!deposite && !door && !workshop) {
                         if (ImGui::BeginMenu("useables..##add")) {
@@ -636,6 +642,7 @@ namespace px::ui {
                 }
             }
         }
+
         void combine_deposite(deposite_component * deposite) {
             if (!deposite) return;
 
@@ -657,6 +664,7 @@ namespace px::ui {
                 }
             }
         }
+
         void combine_door(door_component * door) {
             if (!door) return;
 
@@ -690,6 +698,7 @@ namespace px::ui {
                 }
             }
         }
+
         void combine_player(player_component * player) {
             if (!player) return;
 
@@ -700,6 +709,7 @@ namespace px::ui {
                 PX_BUILD(remove_player());
             }
         }
+
         void combine_npc(npc_component * npc) {
             if (!npc) return;
 
@@ -721,6 +731,7 @@ namespace px::ui {
                 if (ImGui::InputInt("alert##npc_range", &npc_range_alert)) npc->set_range(npc_range_idle, npc_range_alert);
             }
         }
+
         void combine_light(light_component * light) {
             if (!light) return;
             ImGui::Separator();
@@ -756,6 +767,7 @@ namespace px::ui {
                 }
             }
         }
+
         void combine_workshop(workshop_component * workshop) {
             if (!workshop) return;
 
@@ -782,6 +794,28 @@ namespace px::ui {
                     workshop_variant = static_cast<int>(rl::craft_activity::alchemy);
                     workshop->set_activity(rl::craft_activity::alchemy);
                 }
+            }
+        }
+
+        void combine_values(value_component * vault) {
+            if (!vault) return;
+
+            ImGui::Separator();
+            ImGui::Text("values");
+            if (ImGui::IsItemHovered()) {
+                ImGui::BeginTooltip();
+                ImGui::Text("empty: %s", vault->is_empty() ? "true" : "false");
+                ImGui::EndTooltip();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("x##remove_values_valult_component")) {
+                PX_BUILD(remove_value());
+            }
+            else {
+                ImGui::Text("strings:");
+                vault->enumerate_strings([](auto const& k, auto const& v) {
+                    ImGui::Text("%s = %s", k.c_str(), v.c_str());
+                });
             }
         }
 
@@ -830,28 +864,32 @@ namespace px::ui {
         }
 
         void load_schema(std::string const& schema_name) {
-            if (!game) return;
-
-            builder factory(game);
-            current = schema::load(document::load_document(settings::schemata_path + schema_name), factory);
-            update_props();
+            if (game) {
+                builder factory(game);
+                current = schema::load(document::load_document(settings::schemata_path + schema_name), factory);
+                update_props();
+            }
         }
+
         void load_blueprint(std::string const& blueprint_name) {
-            if (!game) return;
-
-            builder factory(game);
-            auto input = input_stream(settings::blueprints_path + blueprint_name);
-            current = blueprint::assemble(SAVE_INPUT_ARCHIVE(input), factory);
-            update_props();
+            if (game) {
+                builder factory(game);
+                auto input = input_stream(settings::blueprints_path + blueprint_name);
+                current = blueprint::assemble(SAVE_INPUT_ARCHIVE(input), factory);
+                update_props();
+            }
         }
+
         void export_composite() {
             auto output = output_stream(settings::blueprints_path + current->name() + ".dat");
             blueprint::store(SAVE_OUTPUT_ARCHIVE(output), *current);
         }
+
         void refresh_template_items() {
             load_items(blueprint_selected, blueprints, settings::blueprints_path);
             load_items(schema_selected, schemata, settings::schemata_path);
         }
+
         static void load_items(int & selected, std::vector<std::string> & names, std::string const& path) {
             namespace fs = std::experimental::filesystem;
 
@@ -863,16 +901,19 @@ namespace px::ui {
                 }
             }
         }
+
         void load_current_schema() {
             if (schema_selected >= 0) {
                 load_schema(schemata[schema_selected]);
             }
         }
+
         void load_current_blueprint() {
             if (blueprint_selected >= 0) {
                 load_blueprint(blueprints[blueprint_selected]);
             }
         }
+
         void update_props() {
             if (current) {
                 current->enable();

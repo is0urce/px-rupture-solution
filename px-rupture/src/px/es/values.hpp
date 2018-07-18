@@ -59,6 +59,17 @@ namespace px {
             archive(ints, floats, strings);
         }
 
+        bool is_empty() const {
+            return ints.empty() && floats.empty() && strings.empty();
+        }
+
+        template <typename E>
+        void enumerate_strings(E && fn) const {
+            for (auto const& str_kv : strings) {
+                fn(str_kv.first, str_kv.second);
+            }
+        }
+
     public:
         values() = default;
 

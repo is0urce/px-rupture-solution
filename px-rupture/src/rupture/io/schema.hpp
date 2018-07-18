@@ -11,6 +11,7 @@
 #include "../es/body_component.hpp"
 #include "../es/container_component.hpp"
 #include "../es/character_component.hpp"
+#include "../es/value_component.hpp"
 
 #include <bitset>	// movement mask
 #include <string>	// keys
@@ -36,6 +37,7 @@ namespace px {
             load_node(doc, factory, "npc", &load_npc);
             load_node(doc, factory, "deposite", &load_deposite);
             load_node(doc, factory, "light", &load_light);
+            load_node(doc, factory, "values", &load_values);
 
             auto result = factory.request();
 
@@ -169,6 +171,17 @@ namespace px {
             light->elevation = node.value("elevation", 0.0f);
             light->is_on = node.value("on", true);
             light->source = static_cast<light_source>(node.value("source", static_cast<int>(light_source::point)));
+        }
+
+        template <typename Document>
+        static void load_values(Document && node, builder & factory) {
+            auto vault = factory.add_value();
+
+            auto const str_values = node["strings"];
+
+            for (auto const& value_node : str_values) {
+                vault->set_string(value_node.value("key", "unnamed"), value_node.value("value", ""));
+            }
         }
 
         // fill entity props

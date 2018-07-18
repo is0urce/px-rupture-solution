@@ -21,6 +21,7 @@ namespace px {
     class deposite_component final
         : public component
         , public link<container_component>
+        , public link<body_component>
         , public link<composite_component>
         , public link_dispatcher<deposite_component>
         , public useable<body_component *, environment *>
