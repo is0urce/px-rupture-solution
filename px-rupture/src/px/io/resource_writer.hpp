@@ -53,7 +53,7 @@ namespace px {
             std::vector<char> raw;
             raw.reserve(n);
             std::copy(source, source + n, std::back_inserter(raw));
-            char * data_ptr = raw.data();
+            char const* data_ptr = raw.data();
 
             resources.push_back(kv{ rec_key{ name }, rec_data{ std::move(raw), data_ptr, static_cast<pos_t>(n) } });
         }
@@ -150,17 +150,17 @@ namespace px {
             pos_t const keys_begin = pen;
             for (size_t i = 0; i != size; ++i) {
                 resources[i].k.absoulte = pen;
-                pen += static_cast<pos_t>(resources[i].k.name.size()) + 1;
-                pen += sizeof(pos_t) * 3;
+                pen += static_cast<pos_t>(resources[i].k.name.size() + 1);  // key name with trailing zero
+                pen += sizeof(pos_t) * 3;                                   // navigation nodes
             }
             keys_header.size = pen - keys_begin;
 
             pen += sizeof data_header; 
             pos_t const data_begin = pen;
             for (size_t i = 0; i != size; ++i) {
-                resources[i].k.current = resources[i].v.absolute = pen;
-                pen += sizeof(data_header);
-                pen += resources[i].v.size;
+                resources[i].k.current = resources[i].v.absolute = pen;     
+                pen += sizeof(header);                                      // datatype header i.e. 'VOID'
+                pen += resources[i].v.size;                                 // raw data
             }
             data_header.size = pen - data_begin;
 
@@ -178,15 +178,15 @@ namespace px {
             dump_header(stream, keys_header);
             for (size_t i = 0; i != size; ++i) {
                 stream.write(resources[i].k.name.c_str(), resources[i].k.name.size() + 1);
-                stream.write(reinterpret_cast<char const*>(&resources[i].k.current), sizeof(pos_t));
-                stream.write(reinterpret_cast<char const*>(&resources[i].k.l_absolute), sizeof(pos_t));
-                stream.write(reinterpret_cast<char const*>(&resources[i].k.r_absolute), sizeof(pos_t));
+                stream.write(reinterpret_cast<char const*>(&resources[i].k.l_absolute), sizeof resources[i].k.l_absolute);
+                stream.write(reinterpret_cast<char const*>(&resources[i].k.r_absolute), sizeof resources[i].k.r_absolute);
+                stream.write(reinterpret_cast<char const*>(&resources[i].k.current), sizeof resources[i].k.current);
             }
 
             // data
             dump_header(stream, data_header);
             for (size_t i = 0; i != size; ++i) {
-                dump_header(stream, { void_name(), static_cast<pos_t>(resources[i].v.size) });
+                dump_header(stream, { void_name(), resources[i].v.size });
                 stream.write(resources[i].v.data, resources[i].v.size);
             }
         }

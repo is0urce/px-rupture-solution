@@ -72,9 +72,9 @@ namespace px::ui {
 
             transform_component * camera = game->controlled();
 
-            const float window_width = 250.0f;
-            const float screen_width = ImGui::GetIO().DisplaySize.x;
-            const float screen_height = ImGui::GetIO().DisplaySize.y;
+            float const window_width = 250.0f;
+            float const screen_width = ImGui::GetIO().DisplaySize.x;
+            float const screen_height = ImGui::GetIO().DisplaySize.y;
             ImGui::SetNextWindowPos({ screen_width - window_width, 0 }, ImGuiCond_Always);
             ImGui::SetNextWindowSize({ window_width, screen_height });
             ImGui::SetNextWindowCollapsed(true, ImGuiCond_Once);
@@ -82,13 +82,14 @@ namespace px::ui {
 
             // template selection
 
-            ImGui::Combo("##shemata_list", &schema_selected, vector_getter, static_cast<void*>(&schemata), static_cast<int>(schemata.size()));
+            int const combosize = 50;
+            ImGui::Combo("##shemata_list", &schema_selected, vector_getter, static_cast<void*>(&schemata), static_cast<int>(schemata.size()), combosize);
             ImGui::SameLine();
             if (ImGui::Button("load##load_schema")) {
                 load_current_schema();
             }
 
-            ImGui::Combo("##blueprints_list", &blueprint_selected, vector_getter, static_cast<void*>(&blueprints), static_cast<int>(blueprints.size()));
+            ImGui::Combo("##blueprints_list", &blueprint_selected, vector_getter, static_cast<void*>(&blueprints), static_cast<int>(blueprints.size()), combosize);
             ImGui::SameLine();
             if (ImGui::Button("load##load_blueprint")) {
                 load_current_blueprint();

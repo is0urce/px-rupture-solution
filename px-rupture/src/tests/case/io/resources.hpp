@@ -38,6 +38,18 @@ void test_resources() {
             }
             file.write(filename);
         }
+        
+        test::section("resource data file fetch info");
+        {
+            resource_reader reader(filename);
+            test::require(!reader.has_record("invalid-name"));
+
+            resource_file::header info;
+            reader.get("invalid-name", info);
+            test::require(info.name == resource_file::noluck_name());
+            test::require(info.size == 0);
+        }
+
         test::section("read resource data file");
         {
             resource_reader reader(filename);

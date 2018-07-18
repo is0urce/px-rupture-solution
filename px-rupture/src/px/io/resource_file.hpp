@@ -14,7 +14,7 @@
 // DATA = VOID*
 
 // Keys data:
-// strz:key pos:CURR pos:LEFT pos:RIGHT
+// strz:key pos:LEFT pos:RIGHT pos:CURR
 
 #include "resource_file.hpp"
 
@@ -52,6 +52,10 @@ namespace px {
 
         static constexpr name_t void_name() {
             return 'VOID';
+        }
+
+        static constexpr name_t noluck_name() {
+            return '!LCK';
         }
     };
 }

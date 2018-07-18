@@ -20,6 +20,14 @@ namespace px::rl {
         using item_ptr = uq_ptr<item_type>;
 
     public:
+        bool is_empty() const noexcept {
+            return items.empty();
+        }
+
+        size_t item_count() const noexcept {
+            return items.size();
+        }
+
         item_ptr & add(item_ptr item) {
             items.push_back(std::move(item));
             return items.back();
@@ -57,10 +65,6 @@ namespace px::rl {
         template <typename Op>
         void sort(Op && comparator) {
             std::sort(items.begin(), items.end(), std::forward<Op>(comparator));
-        }
-
-        size_t item_count() const noexcept {
-            return items.size();
         }
 
         template <typename Op>

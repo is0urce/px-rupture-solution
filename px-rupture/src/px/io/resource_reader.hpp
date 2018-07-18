@@ -20,9 +20,27 @@ namespace px {
                 read_header(info);
             }
             else {
-                info = { '!LCK' };
+                info = { noluck_name() };
             }
             return stream;
+        }
+
+        bool read(std::string const& name, char * dest) {
+            if (seek_record(name)) {
+                header info = read_header();
+                stream.read(dest, info.size);
+                return true;
+            }
+            return false;
+        }
+
+        bool read(std::string const& name, char * dest, size_t n_max) {
+            if (seek_record(name)) {
+                header info = read_header();
+                stream.read(dest, n_max = n_max > info.size ? info.size : n_max);
+                return true;
+            }
+            return false;
         }
 
         std::istream & get(std::string const& name) {
@@ -38,17 +56,6 @@ namespace px {
             return get(name);
         }
 
-        void read(std::string const& name, char * dest, size_t n) {
-            auto & point = get(name);
-            point.read(dest, n);
-        }
-
-        void read(std::string const& name, char * dest) {
-            header info;
-            auto & point = get(name, info);
-            point.read(dest, info.size);
-        }
-
     public:
         resource_reader(std::string const& path) {
             stream.open(path, std::ios::binary | std::ios::in);
@@ -61,23 +68,26 @@ namespace px {
         bool seek_record(std::string const& name) {
             if (!seek_keys()) return false;
             char lh_str[1024];
-            pos_t stride[3];
+            pos_t left;
+            pos_t right;
+
             while (true) {
                 // read key string
                 stream.get(lh_str, sizeof lh_str, 0x00);
                 stream.get(); // skip trailing zero
                 // read 'next' positions current data node, left tree branch, right tree branch
-                stream.read(reinterpret_cast<char*>(&stride[0]), sizeof stride[0]);
-                stream.read(reinterpret_cast<char*>(&stride[1]), sizeof stride[1]);
-                stream.read(reinterpret_cast<char*>(&stride[2]), sizeof stride[2]);
-
+                stream.read(reinterpret_cast<char*>(&left), sizeof left);
+                stream.read(reinterpret_cast<char*>(&right), sizeof right);
                 auto cmp = compare(name.c_str(), lh_str);
-                auto next = stride[cmp < 0 ? 1 : 2];
 
                 if (cmp == 0) {
-                    stream.seekg(stride[0], std::ios::beg);
+                    pos_t current;
+                    stream.read(reinterpret_cast<char*>(&current), sizeof current);
+                    stream.seekg(current, std::ios::beg);
                     return true;
                 }
+
+                pos_t next = cmp < 0 ? left : right;
                 if (!is_valid(next)) {
                     return false;
                 }
@@ -107,6 +117,12 @@ namespace px {
         void read_header(header & info) {
             stream.read(reinterpret_cast<char*>(&info.name), sizeof info.name);
             stream.read(reinterpret_cast<char*>(&info.size), sizeof info.size);
+        }
+
+        header read_header() {
+            header result;
+            read_header(result);
+            return result;
         }
 
     private:

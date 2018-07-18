@@ -189,20 +189,26 @@ namespace px {
         auto pawn = unit_builder.add_transform({ 1966, 860 });
 
         auto light = unit_builder.add_light();
-        light->tint = color(0.7, 0.7, 0.7);
-        light->elevation = 0.5;
-        light->is_on = true;
+        if (light) {
+            light->tint = { 0.2, 0.2, 0.2 };
+            light->elevation = 0.5;
+            light->is_on = true;
+        }
 
         // stats
         auto body = unit_builder.add_body();
         body->set_name("Gnome");
         body->set_level(0);
         body->set_experience(0);
-        body->join_faction(1);
         body->movement().make_traversable(rl::traverse::floor);
         body->blocking().make_transparent();
         body->health().emplace(50);
         body->energy().emplace(100);
+#ifdef NDEBUG
+        body->join_faction(1);
+#else
+        body->join_faction(0);
+#endif // !NDEBUG
 
         auto character = unit_builder.add_character();
         character->learn("sk_v_melee");                                             // basic attack
@@ -516,22 +522,20 @@ namespace px {
         auto pawn = make_uq<transform_component>();
         auto lamp = lights.make();
 
-        // setup
+        if (!pawn) return;
+        if (!lamp) return;
 
+        // setup
         lamp->tint = light;
         lamp->elevation = 0;
         lamp->is_on = true;
         lamp->source = light_source::point;
+        lamp->connect(pawn.get());
+        lamp->activate();
 
         pawn->store(location);
         pawn->place(location);
-
-        lamp->connect(pawn.get());
-
-        // activate
-
         pawn->activate();
-        lamp->activate();
 
         vfx.push_back({ location, location, std::move(pawn), nullptr, nullptr, std::move(lamp), nullptr });
     }

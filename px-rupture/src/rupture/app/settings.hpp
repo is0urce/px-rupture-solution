@@ -24,7 +24,6 @@ namespace px {
             static char const* const skills_path;
             static char const* const log_path;
             static char const* const save_path;
-            //static char const* const terrain_path;
             static char const* const terrain_resource;
             static char const* const sound_path;
         };
@@ -40,7 +39,6 @@ namespace px {
         char const* const settings::blueprints_path = "data/blueprints/";
         char const* const settings::scripts_path = "data/scripts/";
         char const* const settings::save_path = "data/save/";
-        //char const* const settings::terrain_path = "data/";
         char const* const settings::terrain_resource = "data/terrain.res";
         char const* const settings::sound_path = "data/snd/";
     }

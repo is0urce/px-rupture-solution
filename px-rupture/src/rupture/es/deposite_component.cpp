@@ -5,6 +5,8 @@
 
 #include "deposite_component.hpp"
 
+#include "../app/settings.hpp"
+
 #include "../environment.hpp"
 #include "body_component.hpp"
 #include "container_component.hpp"
@@ -33,17 +35,17 @@ namespace px {
         return unit && pawn && environment->distance(pawn->position(), location->position()) <= 1;
     }
 
-    void deposite_component::use_useable(body_component * user, environment * environment) {
-        if (user && environment) {
+    void deposite_component::use_useable(body_component * user, environment * context) {
+        if (user && context) {
             auto dest = user->linked<container_component>();
             auto source = linked<container_component>();
             if (source && dest) {
+                auto pawn = user->linked<transform_component>();
 
                 // transfer items with popups
-                auto pawn = user->linked<transform_component>();
                 dest->give(*source, [&](auto const& item) {
                     if (pawn) {
-                        environment->popup("+ " + item.name(), 0xffffff, pawn->position());
+                        context->popup("+ " + item.name(), 0xffffff, pawn->position());
                     }
                 });
 
@@ -60,7 +62,7 @@ namespace px {
                 }
                 
                 if (use_duration > 0) {
-                    environment->end_turn(use_duration);
+                    context->end_turn(use_duration);
                 }
             }
         }

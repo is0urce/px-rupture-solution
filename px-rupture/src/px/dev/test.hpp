@@ -46,7 +46,7 @@ namespace px {
         }
 
         static void print() {
-            unsigned int success = total - fails;
+            unsigned int const success = total - fails;
             if (fails == 0) {
                 std::cout << "ALL " << std::to_string(success) << " TESTS PASS ";
             }
