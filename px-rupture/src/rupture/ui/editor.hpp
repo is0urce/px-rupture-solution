@@ -812,6 +812,14 @@ namespace px::ui {
                 PX_BUILD(remove_value());
             }
             else {
+                ImGui::Text("ints:");
+                vault->enumerate_ints([](auto const& k, auto const& v) {
+                    ImGui::Text("%s = %d", k.c_str(), v);
+                });
+                ImGui::Text("floats:");
+                vault->enumerate_floats([](auto const& k, auto const& v) {
+                    ImGui::Text("%s = %f", k.c_str(), v);
+                });
                 ImGui::Text("strings:");
                 vault->enumerate_strings([](auto const& k, auto const& v) {
                     ImGui::Text("%s = %s", k.c_str(), v.c_str());

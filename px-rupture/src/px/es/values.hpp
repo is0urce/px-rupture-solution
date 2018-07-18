@@ -70,6 +70,20 @@ namespace px {
             }
         }
 
+        template <typename E>
+        void enumerate_ints(E && fn) const {
+            for (auto const& int_kv : ints) {
+                fn(int_kv.first, int_kv.second);
+            }
+        }
+
+        template <typename E>
+        void enumerate_floats(E && fn) const {
+            for (auto const& float_kv : floats) {
+                fn(float_kv.first, float_kv.second);
+            }
+        }
+
     public:
         values() = default;
 

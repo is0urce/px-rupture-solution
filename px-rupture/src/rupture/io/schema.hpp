@@ -177,10 +177,25 @@ namespace px {
         static void load_values(Document && node, builder & factory) {
             auto vault = factory.add_value();
 
-            auto const str_values = node["strings"];
+            auto str_node = node.find("strings");
+            if (str_node != node.end()) {
+                for (auto const& value_node : *str_node) {
+                    vault->set_string(value_node.value("key", "unnamed"), value_node.value("value", ""));
+                }
+            }
 
-            for (auto const& value_node : str_values) {
-                vault->set_string(value_node.value("key", "unnamed"), value_node.value("value", ""));
+            auto int_node = node.find("ints");
+            if (int_node != node.end()) {
+                for (auto const& value_node : *str_node) {
+                    vault->set_int(value_node.value("key", "unnamed"), value_node.value("value", 0));
+                }
+            }
+
+            auto float_node = node.find("floats");
+            if (float_node != node.end()) {
+                for (auto const& value_node : *str_node) {
+                    vault->set_float(value_node.value("key", "unnamed"), value_node.value("value", 0.0f));
+                }
             }
         }
 
