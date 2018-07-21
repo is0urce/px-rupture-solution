@@ -86,6 +86,8 @@ namespace px {
         engine.add(&bodies);        // effects ticks, deaths, exp gains
         engine.add(&lights);        // make shadowmap
         engine.add(&messages);      // popups
+
+        engine.add(&mashine);
     }
 
     void shell::frame(double timer) {

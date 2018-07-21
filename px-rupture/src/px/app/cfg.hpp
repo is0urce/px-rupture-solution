@@ -35,9 +35,11 @@ namespace px {
                 }
                 return *this;
             }
+
             operator value_type() const {
                 return ref;
             }
+
         public:
             value_record(value_type & r, bool & flag_ref)
                 : ref(r)
@@ -53,27 +55,35 @@ namespace px {
             int_type & operator=(int_type value) {
                 return config.set_int(key, value);
             }
+
             float_type & operator=(float_type value) {
                 return config.set_float(key, value);
             }
+
             string_type & operator=(string_type value) {
                 return config.set_string(key, value);
             }
+
             bool & operator=(bool value) {
                 return config.set_boolean(key, value);
             }
+
             operator int_type() {
                 return config.get_int(key);
             }
+
             operator float_type() {
                 return config.get_float(key);
             }
+
             operator string_type() {
                 return config.get_string(key);
             }
+
             operator bool() {
                 return config.get_boolean(key);
             }
+
         public:
             option_record(std::string const& k, cfg & c)
                 : key(k)
