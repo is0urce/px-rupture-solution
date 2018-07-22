@@ -8,6 +8,7 @@
 #include "script_unit.hpp"
 #include "script_effect.hpp"
 
+#include "../app/settings.hpp"
 #include "../environment.hpp"
 
 #include "../es/composite_component.hpp"
@@ -44,6 +45,11 @@ namespace px {
         // emit light effect
         void light(point2 location, float r, float g, float b) {
             game->emit_light(location, color(r, g, b));
+        }
+
+        // emit visual effect
+        void sfx(std::string const& name, float volume, point2 start, point2 /* finish */, script_unit & /* track */) {
+            game->play_sound(settings::sound_path + name, volume, start);
         }
 
         // simulate melee hit event ang get it results

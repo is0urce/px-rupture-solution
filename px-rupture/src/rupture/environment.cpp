@@ -125,6 +125,9 @@ namespace px {
             if (stage.is_traversable(destination, body->movement())) {
                 start_turn();
                 player->place(destination);
+                unsigned int sound_variant = std::uniform_int_distribution<unsigned int>{ 0, 2 }(rng) + ((turn_number % 2 == 0) ? 0 : 3);
+                std::string sound_name = settings::sound_path + std::string("snd_foot") + std::to_string(sound_variant) + ".wav";
+                play_sound(sound_name, 0.2, destination);
                 end_turn(1);
             }
             else {

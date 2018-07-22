@@ -159,6 +159,7 @@ namespace px {
                 , "distance", &script_environment::distance
                 , "popup", &script_environment::popup
                 , "vfx", &script_environment::vfx
+                , "sfx", &script_environment::sfx
                 , "clip", &script_environment::clip
                 , "light", &script_environment::light
                 , "spawn", &script_environment::spawn
