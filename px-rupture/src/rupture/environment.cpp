@@ -207,11 +207,8 @@ namespace px {
         body->blocking().make_transparent();
         body->health().emplace(50);
         body->energy().emplace(100);
-#ifdef NDEBUG
+
         body->join_faction(1);
-#else
-        body->join_faction(0);
-#endif // !NDEBUG
 
         auto character = unit_builder.add_character();
         character->learn("sk_v_melee");                                             // basic attack

@@ -113,7 +113,12 @@ namespace px {
                             }
                             time_last = time;
 
-                            clip.frames.push_back({ frames.at(frame_id), time });
+                            if (frame_id < frames.size()) {
+                                clip.frames.push_back({ frames[frame_id], time });
+                            }
+                            else {
+                                throw std::runtime_error("px::animator_works::load(..) - frame index out of range, clip_name=" + clip_name + " frame_id=" + std::to_string(frame_id));
+                            }
                         }
 
                         ++clip_index;

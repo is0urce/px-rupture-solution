@@ -47,7 +47,7 @@ namespace px {
             game->emit_light(location, color(r, g, b));
         }
 
-        // emit visual effect
+        // emit sound effect
         void sfx(std::string const& name, float volume, point2 start, point2 /* finish */, script_unit & /* track */) {
             game->play_sound(settings::sound_path + name, volume, start);
         }
@@ -65,7 +65,7 @@ namespace px {
             rl::damage_type damage_type = rl::damage_type::pure;
 
             if (user_body && target_body) {
-                rl::hit_result hit = game->hit(*user_body, *target_body);
+                rl::hit_result const hit = game->hit(*user_body, *target_body);
                 std::tie(damage, damage_type) = game->dps(*user_body);
                 switch (hit) {
                 case rl::hit_result::connects:
