@@ -14,8 +14,7 @@
 namespace px::ui {
 
     class inspector final
-        : public inspector_common
-    {
+        : public inspector_common {
     public:
         virtual ~inspector() override = default;
 
