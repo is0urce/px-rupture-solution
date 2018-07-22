@@ -22,6 +22,7 @@
 #include "es/player_component.hpp"
 #include "es/sprite_component.hpp"
 #include "es/transform_component.hpp"
+#include "es/value_component.hpp"
 
 #include <px/algorithm/bresenham.hpp>
 #include <px/algorithm/fov.hpp>
@@ -345,24 +346,34 @@ namespace px {
     // execute after npc turn
     void environment::return_turn() {
 
+        auto player_body = player ? player->linked<body_component>() : nullptr;
+
         if (player) {
             // stream world
             stage.focus(player->position());
 
             // results screen
-            auto[body, person] = player->unwind<body_component, character_component>();
-            if (body && person && body->is_dead()) {
+            auto person = player_body ? player_body->linked<character_component>() : nullptr;
+            if (person && player_body->is_dead()) {
                 person->add_trait("c_game_over");
             }
         }
 
+        auto player_unit = player_body ? player_body->linked<composite_component>() : nullptr;
+        auto player_vault = player_unit ? player_unit->query<value_component>() : nullptr;
+
         // death of units
         stage.discard([&](composite_component & composite) {
-            auto[pawn, body, loot] = composite.unwind<transform_component, body_component, container_component>();
-            if (body && loot && loot->item_count() != 0) {
-                auto & bag = spawn("bag", pawn->position());
-                if (auto drop = bag->qlink<container_component, body_component, transform_component>()) {
-                    drop->give(*loot);
+            auto[pawn, discarded_body, loot] = composite.unwind<transform_component, body_component, container_component>();
+            if (discarded_body) {
+                if (loot && loot->item_count() != 0) {
+                    auto & bag = spawn("bag", pawn->position());
+                    if (auto drop = bag->qlink<container_component, body_component, transform_component>()) {
+                        drop->give(*loot);
+                    }
+                }
+                if (discarded_body->has_health() && player_vault) {
+                    player_vault->mod_int("slayed", 1);
                 }
             }
         });
@@ -450,7 +461,7 @@ namespace px {
 
     // finish any workshop activity
     bool environment::close_workshop() {
-        bool was_active = opened_workshop != rl::craft_activity::none;
+        bool const was_active = opened_workshop != rl::craft_activity::none;
         opened_workshop = rl::craft_activity::none;
         return was_active;
     }

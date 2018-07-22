@@ -28,6 +28,10 @@ namespace px {
             return it == ints.end() ? fallback : it->second;
         }
 
+        I mod_int(std::string const& key, I mod) {
+            return ints[key] += mod;
+        }
+
         void set_float(std::string const& key, F value) {
             floats[key] = value;
         }
@@ -39,6 +43,10 @@ namespace px {
         F float_value(std::string const& key, F fallback) const {
             auto it = floats.find(key);
             return it == floats.end() ? fallback : it->second;
+        }
+
+        I mod_float(std::string const& key, F mod) {
+            return floats[key] += mod;
         }
 
         void set_string(std::string const& key, std::string const& value) {
@@ -86,6 +94,7 @@ namespace px {
 
     public:
         values() = default;
+        ~values() = default;
 
     private:
         std::map<std::string, I>            ints;
