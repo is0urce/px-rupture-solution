@@ -59,8 +59,8 @@ namespace px {
         auto const& textures = document["textures"];
         unsigned int texture_index = 0;
         for (auto const& texture : textures) {
-            std::string atlas = texture["atlas"];   // conversion constructors
-            std::string bitmap = texture["texture"];
+            std::string const atlas = texture["atlas"];   // conversion constructors
+            std::string const bitmap = texture["texture"];
 
             add_texture(bitmap.c_str());
             add_atlas(atlas.c_str(), texture_index);
@@ -68,7 +68,7 @@ namespace px {
         }
         ui.assign_logo(add_texture("data/img/extras/fmod.png"));
 
-        characters.load(&mashine);
+        characters.load_skills(&mashine);
         animators.load(&sprites);
     }
 

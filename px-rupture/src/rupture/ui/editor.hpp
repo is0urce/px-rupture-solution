@@ -9,7 +9,9 @@
 
 #include "../app/document.hpp"
 #include "../app/settings.hpp"
+
 #include "../es/builder.hpp"
+
 #include "../es/animator_component.hpp"
 #include "../es/composite_component.hpp"
 #include "../es/character_component.hpp"
@@ -22,14 +24,16 @@
 #include "../es/sprite_component.hpp"
 #include "../es/transform_component.hpp"
 #include "../es/workshop_component.hpp"
+#include "../script/script_component.hpp"
+
 #include "../io/schema.hpp"
 #include "../io/blueprint.hpp"
 #include "../io/serialization.hpp"
 #include "../environment.hpp"
 
-#include <px/memory/memory.hpp>
-
 #include <imgui/imgui.h>
+
+#include <px/memory/memory.hpp>
 
 #include <algorithm>
 #include <array>
@@ -78,7 +82,7 @@ namespace px::ui {
             ImGui::SetNextWindowPos({ screen_width - window_width, 0 }, ImGuiCond_Always);
             ImGui::SetNextWindowSize({ window_width, screen_height });
             ImGui::SetNextWindowCollapsed(true, ImGuiCond_Once);
-            ImGui::Begin("Editor", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+            ImGui::Begin("[editor]", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
             // template selection
 
@@ -121,6 +125,8 @@ namespace px::ui {
                 workshop_component * workshop = current->query<workshop_component>();
 
                 value_component * vault = current->query<value_component>();
+
+                script_component * script = current->query<script_component>();
 
                 // composite
 
@@ -207,6 +213,10 @@ namespace px::ui {
                 combine_player(player);
                 combine_npc(npc);
                 combine_values(vault);
+                if (script) {
+                    ImGui::Separator();
+                    combine_script(*script);
+                }
 
                 ImGui::Separator();
                 if (ImGui::Button("add...")) ImGui::OpenPopup("add##add_component");
@@ -234,6 +244,9 @@ namespace px::ui {
                     }
                     if (!vault && ImGui::MenuItem("value vault##add_value_vault")) {
                         PX_BUILD(add_value());
+                    }
+                    if (!script && ImGui::MenuItem("script##add_component")) {
+                        PX_BUILD(add_script());
                     }
                     if (!deposite && !door && !workshop) {
                         if (ImGui::BeginMenu("useables..##add")) {
@@ -827,6 +840,30 @@ namespace px::ui {
             }
         }
 
+        void combine_script(script_component & script) {
+            ImGui::Text("script");
+            if (ImGui::IsItemHovered()) {
+                ImGui::BeginTooltip();
+                ImGui::Text("name: %s", script.name().c_str());
+                ImGui::Text("distance: %d", script.distance());
+                ImGui::Text("machine: %p", script.get_machine());
+                ImGui::EndTooltip();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("x##remove_values_valult_component")) {
+                PX_BUILD(remove_script());
+            }
+            else {
+                std::array<char, 64> script_name_edit;
+                copy_str(script.name(), script_name_edit);
+
+                if (ImGui::InputText("##script_name_edit", script_name_edit.data(), script_name_edit.size())) {
+                    script_name_edit[script_name_edit.size() - 1] = '0';
+                    script.set_script_name(script_name_edit.data());
+                }
+            }
+        }
+
         void combine_entity(rl::entity const& subject) {
             ImGui::Text("tag:         '%s'", subject.tag().c_str());
             ImGui::Text("name:        '%s'", subject.name().c_str());
@@ -1020,7 +1057,7 @@ namespace px::ui {
 
         // copy string to char array
         template <size_t Max>
-        void copy_str(std::string str, std::array<char, Max> & ar) {
+        void copy_str(std::string const& str, std::array<char, Max> & ar) {
             static_assert(Max > 1);
             ar.fill(0);
             std::copy(str.cbegin(), str.cbegin() + std::min(str.length(), ar.size() - 2), ar.begin()); // reserve extra zero for end of a string

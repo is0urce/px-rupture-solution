@@ -8,7 +8,7 @@
 
 #include "../app/document.hpp"
 #include "../app/settings.hpp"
-#include "../script/script.hpp"
+#include "../script/script_system.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -34,7 +34,7 @@ namespace px {
         return works->make();
     }
 
-    void character_system::load(script * mashine) {
+    void character_system::load_skills(script_system * mashine) {
         auto doc = document::load_document(settings::skills_path);
         auto skill_list = doc["skills"];
         for (auto const& skill_node : skill_list) {

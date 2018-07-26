@@ -8,6 +8,8 @@
 #include "script_unit.hpp"
 #include "script_environment.hpp"
 
+#include "../app/settings.hpp"
+
 #include <px/dev/assert.hpp>
 
 #include <sol.hpp>
@@ -24,11 +26,27 @@ namespace px {
         }
 
         void run(std::string const& code) {
-            lua.script(code);
+            try {
+                lua.script(code);
+            }
+            catch (sol::error const& error) {
+                px_debug(error.what());
+            }
+            catch (...) {
+                throw std::runtime_error("px::script_internal::run(code), unhandled exception, code=" + code);
+            }
         }
 
-        void execute(std::string const& path) {
-            lua.script_file(path);
+        void execute(std::string const& script_name) {
+            try {
+                lua.script_file(settings::scripts_path + script_name + ".lua");
+            }
+            catch (sol::error const& error) {
+                px_debug(error.what());
+            }
+            catch (...) {
+                throw std::runtime_error("px::script_internal::execute(script_name), unhandled exception, script_name=" + script_name);
+            }
         }
 
         rl::skill_functional<body_component *, body_component *, point2> impact(std::string const& path) {
@@ -98,7 +116,7 @@ namespace px {
                 return {};
             }
             catch (...) {
-                throw std::runtime_error("px::script::load_skill(path), path=" + path);
+                throw std::runtime_error("px::script_internal::impact(path), path=" + path);
             }
         }
 
@@ -170,6 +188,7 @@ namespace px {
                 , "neighbour", &script_environment::neighbour
                 , "get_first", &script_environment::get_first
                 , "get_next", &script_environment::get_next
+                , "rest", &script_environment::rest
                 );
         }
 

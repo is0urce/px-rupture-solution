@@ -28,6 +28,7 @@ namespace px {
     class transform_component;
     class workshop_component;
     class value_component;
+    class script_component;
 
     class builder final {
     public:
@@ -45,6 +46,7 @@ namespace px {
         transform_component *       add_transform(point2 const& location);
         workshop_component *        add_workshop();
         value_component *           add_value();
+        script_component *          add_script();
         void                        begin();
         void                        begin(uq_ptr<composite_component> strip);
         transform_component *       get_transform() const;
@@ -62,6 +64,7 @@ namespace px {
         void                        remove_transform();
         void                        remove_workshop();
         void                        remove_value();
+        void                        remove_script();
         uq_ptr<composite_component> request();
         transform_component *       created_player() const;
 
@@ -89,6 +92,7 @@ namespace px {
         transform_component *       transform;
         workshop_component *        workshop;
         value_component *           value;
+        script_component *          script;
         transform_component *       last_player;
     };
 }

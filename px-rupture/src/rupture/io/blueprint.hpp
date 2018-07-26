@@ -24,6 +24,7 @@
 #include "../es/transform_component.hpp"
 #include "../es/workshop_component.hpp"
 #include "../es/value_component.hpp"
+#include "../script/script_component.hpp"
 
 namespace px {
 
@@ -88,6 +89,10 @@ namespace px {
                 else if (value_component const * values = dynamic_cast<value_component const*>(raw)) {
                     archive(composition_element::values);
                     archive(*values);
+                }
+                else if (auto const script = dynamic_cast<script_component const*>(raw)) {
+                    archive(composition_element::script);
+                    archive(*script);
                 }
                 else {
                     archive(composition_element::undefined);
@@ -162,6 +167,10 @@ namespace px {
                 }
                 case composition_element::values: {
                     archive(*factory.add_value());
+                    break;
+                }
+                case composition_element::script: {
+                    archive(*factory.add_script());
                     break;
                 }
                 case composition_element::undefined: {

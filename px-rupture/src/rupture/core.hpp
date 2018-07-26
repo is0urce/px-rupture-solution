@@ -14,7 +14,7 @@
 #include "es/sound_system.hpp"
 #include "es/transform_system.hpp"  // store position
 
-#include "script/script.hpp"
+#include "script/script_system.hpp"
 
 namespace px {
 
@@ -27,7 +27,7 @@ namespace px {
         core();
 
     protected:
-        script              mashine;    // script system
+        script_system       mashine;    // script system
 
         animator_system     animators;
         body_system         bodies;

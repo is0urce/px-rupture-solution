@@ -22,6 +22,7 @@
 #include "transform_component.hpp"
 #include "workshop_component.hpp"
 #include "value_component.hpp"
+#include "../script/script_component.hpp"
 
 #include <px/memory/memory.hpp>
 
@@ -164,6 +165,13 @@ namespace px {
         return value;
     }
 
+    script_component * builder::add_script() {
+        auto part = factory->mashine.make("");
+        script = part.get();
+        unit->add(std::move(part));
+        return script;
+    }
+
     void builder::remove_animator() {
         unit->remove<animator_component>();
         animator = nullptr;
@@ -229,6 +237,11 @@ namespace px {
         value = nullptr;
     }
 
+    void builder::remove_script() {
+        unit->remove<script_component>();
+        script = nullptr;
+    }
+
     void builder::link_components() {
         // presentation
         if (transform) {
@@ -251,10 +264,21 @@ namespace px {
             body->connect(container);
             body->connect(unit.get());
 
-            if (deposite) body->assign_useable(deposite);
-            if (door) body->assign_useable(door);
-            if (storage) body->assign_useable(storage);
-            if (workshop) body->assign_useable(workshop);
+            if (deposite) {
+                body->assign_useable(deposite);
+            }
+            if (door) {
+                body->assign_useable(door);
+            }
+            if (storage) {
+                body->assign_useable(storage);
+            }
+            if (workshop) {
+                body->assign_useable(workshop);
+            }
+            if (script) {
+                body->assign_useable(script);
+            }
         }
 
         // useables
@@ -301,6 +325,7 @@ namespace px {
         transform = nullptr;
         workshop = nullptr;
         value = nullptr;
+        script = nullptr;
 
         unit = make_uq<composite_component>();
     }
@@ -321,6 +346,7 @@ namespace px {
             transform = unit->query<transform_component>();
             workshop = unit->query<workshop_component>();
             value = unit->query<value_component>();
+            script = unit->query<script_component>();
         }
         else {
             begin();

@@ -147,6 +147,19 @@ namespace px {
             return script_unit(target);
         }
 
+        void rest() {
+            auto player = game->controlled();
+            auto body = player ? player->linked<body_component>() : nullptr;
+            if (body && game) {
+                game->start_turn();
+                if (auto & hp = body->health()) {
+                    hp->restore();
+                }
+                game->popup("resting...", 0xffffff);
+                game->end_turn(1);
+            }
+        }
+
     public:
         script_environment() noexcept
             : game(nullptr) {

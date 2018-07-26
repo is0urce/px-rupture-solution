@@ -192,7 +192,8 @@
     <ClCompile Include="src\rupture\main.cpp" />
     <ClCompile Include="src\rupture\main_extras.cpp" />
     <ClCompile Include="src\rupture\rl\scene.cpp" />
-    <ClCompile Include="src\rupture\script\script.cpp" />
+    <ClCompile Include="src\rupture\script\script_component.cpp" />
+    <ClCompile Include="src\rupture\script\script_system.cpp" />
     <ClCompile Include="src\rupture\shell.cpp" />
     <ClCompile Include="src\rupture\ui\menu.cpp" />
     <ClCompile Include="src\tests\tests.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="src\rupture\es\sound_works.hpp" />
     <ClInclude Include="src\rupture\es\value_component.hpp" />
     <ClInclude Include="src\px\algorithm\shuffle.hpp" />
+    <ClInclude Include="src\rupture\script\script_component.hpp" />
     <ClInclude Include="src\rupture\snd\sound.hpp" />
     <ClInclude Include="src\px\es\useable.hpp" />
     <ClInclude Include="src\px\fn\ant_generator.hpp" />
@@ -381,7 +383,7 @@
     <ClInclude Include="src\rupture\rl\tile_library.hpp" />
     <ClInclude Include="src\rupture\script\script_effect.hpp" />
     <ClInclude Include="src\rupture\script\script_environment.hpp" />
-    <ClInclude Include="src\rupture\script\script.hpp" />
+    <ClInclude Include="src\rupture\script\script_system.hpp" />
     <ClInclude Include="src\rupture\script\script_internal.hpp" />
     <ClInclude Include="src\rupture\script\script_unit.hpp" />
     <ClInclude Include="src\px\snd\sound_channel.hpp" />
@@ -457,6 +459,7 @@
     <None Include="data\scripts\sk_v_swipe.lua" />
     <None Include="data\scripts\sk_v_vampiric.lua" />
     <None Include="data\scripts\sk_v_zap.lua" />
+    <None Include="data\scripts\use_rest.lua" />
     <None Include="data\shaders\light.frag" />
     <None Include="data\shaders\light.vert" />
     <None Include="data\shaders\process.frag" />

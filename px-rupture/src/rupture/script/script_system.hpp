@@ -1,4 +1,4 @@
-// name: script.hpp
+// name: script_system.hpp
 // type: c++ header
 // auth: is0urce
 // desc: class declaration
@@ -16,20 +16,24 @@
 namespace px {
 
     class body_component;
-    class script_internal;
     class environment;
+    class script_component;
+    class script_internal;
 
-    class script final
+    class script_system final
         : public system<delta> {
     public:
         void                                                                assign_environment(environment * game);
-        void                                                                execute(std::string const& file);
+        void                                                                execute(std::string const& script_name);
         void                                                                run(std::string const& code);
-        rl::skill_functional<body_component *, body_component *, point2>    impact(std::string const& name);
+        rl::skill_functional<body_component *, body_component *, point2>    impact(std::string const& skill_name);
+        uq_ptr<script_component>                                            make(std::string const& script_name);
 
     public:
-        virtual ~script();
-        script();
+        virtual ~script_system();
+        script_system();
+        script_system(script_system const&) = delete;
+        script_system & operator=(script_system const&) = delete;
 
     public:
         virtual void                                                        turn_update_system(delta_type const& delta_time) override;
