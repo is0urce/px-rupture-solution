@@ -92,11 +92,16 @@ namespace px {
             return trait_selection[bucket(skill_branch)][level];
         }
 
-    private:
         // returns level attainable with specified experience points
         static unsigned int level_by_experience(unsigned int experience) {
             return 1 + (static_cast<unsigned int>(std::sqrt(2500 + 200 * experience)) - 50) / 100;
         }
+
+        static unsigned int experience_to_level(unsigned int level) {
+            return level * (level + 1) * 500;
+        }
+
+    private:
 
         // limit level by maximum level cap
         // returns capped level

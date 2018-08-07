@@ -27,8 +27,8 @@ namespace px::ui {
             if (auto target = game ? game->target() : nullptr) {
                 if (auto body = target->linked<body_component>()) {
                     ImVec2 const& screen = ImGui::GetIO().DisplaySize;
-                    ImVec2 const window_size(300.0f, 125.0f);
-                    ImVec2 const window_padding(16, 65);
+                    ImVec2 const window_size(300, 125);
+                    ImVec2 const window_padding(16, 100);
                     ImVec2 const position(screen.x - window_size.x - window_padding.x, screen.y - window_size.y - window_padding.y);
 
                     combine_status("##inspector", position, window_size, *body);

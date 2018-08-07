@@ -10,6 +10,7 @@
 #include "../environment.hpp"
 #include "../es/transform_component.hpp"
 #include "../es/body_component.hpp"
+#include "../rl/traits.hpp"
 
 namespace px::ui {
 
@@ -30,10 +31,20 @@ namespace px::ui {
             if (body) {
                 ImVec2 const& screen = ImGui::GetIO().DisplaySize;
                 ImVec2 const window_size(300, 125);
-                ImVec2 const window_padding(16, 65);
+                ImVec2 const window_padding(16, 100);
                 ImVec2 const position(window_padding.x, screen.y - window_size.y - window_padding.y);
                 combine_status("##player_status", position, window_size, *body);
 
+                // exp
+                ImGui::PushStyleColor(ImGuiCol_WindowBg, { 0, 0, 0, 0 });
+                ImGui::SetNextWindowPos({ position.x, position.y + window_size.y }, ImGuiCond_Always);
+                ImGui::SetNextWindowSize(window_size);
+                ImGui::Begin("##status_exp", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse);
+                ImGui::Text("Experience: %d/%d", body->experience(), traits::experience_to_level(body->level()));
+                ImGui::End();
+                ImGui::PopStyleColor(1);
+
+                // health popup
                 if (auto const& hp = body->health()) {
                     float const percent = static_cast<float>(hp->current()) / static_cast<float>(hp->maximum());
 

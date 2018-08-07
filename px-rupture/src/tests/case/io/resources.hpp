@@ -34,7 +34,7 @@ void test_resources() {
             resource_writer file;
 
             for (auto & rec : values) {
-                file.link(rec.name, rec.data, std::strlen(rec.data) + 1);
+                file.copy(rec.name, rec.data, std::strlen(rec.data) + 1);
             }
             file.write(filename);
         }

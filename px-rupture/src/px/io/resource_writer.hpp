@@ -50,9 +50,8 @@ namespace px {
 
     public:
         void copy(std::string const& name, char const* source, size_t n) {
-            std::vector<char> raw;
-            raw.reserve(n);
-            std::copy(source, source + n, std::back_inserter(raw));
+            std::vector<char> raw(n);
+            std::copy(source, source + n, raw.begin());
             char const* data_ptr = raw.data();
 
             resources.push_back(kv{ rec_key{ name }, rec_data{ std::move(raw), data_ptr, static_cast<pos_t>(n) } });

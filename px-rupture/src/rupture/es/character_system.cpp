@@ -38,11 +38,11 @@ namespace px {
         auto doc = document::load_document(settings::skills_path);
         auto skill_list = doc["skills"];
         for (auto const& skill_node : skill_list) {
-            std::string script = skill_node.at("script");
-            std::string tag = skill_node.at("tag");
+            std::string const script = skill_node.at("script");
+            std::string const tag = skill_node.at("tag");
 
-            std::string name = skill_node.value("name", tag);
-            std::string alias = skill_node.value("alias", name);
+            std::string const name = skill_node.value("name", tag);
+            std::string const alias = skill_node.value("alias", name);
 
             skill::state_type state;
             state.set_tag(tag);

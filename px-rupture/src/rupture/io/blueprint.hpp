@@ -86,11 +86,11 @@ namespace px {
                     archive(composition_element::npc);
                     archive(*npc);
                 }
-                else if (value_component const * values = dynamic_cast<value_component const*>(raw)) {
+                else if (value_component const* values = dynamic_cast<value_component const*>(raw)) {
                     archive(composition_element::values);
                     archive(*values);
                 }
-                else if (auto const script = dynamic_cast<script_component const*>(raw)) {
+                else if (script_component const* script = dynamic_cast<script_component const*>(raw)) {
                     archive(composition_element::script);
                     archive(*script);
                 }

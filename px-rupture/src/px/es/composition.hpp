@@ -102,6 +102,5 @@ namespace px {
 
     private:
         std::vector<component_ptr> m_components;
-        //row<component_ptr, 16> m_components;
     };
 }

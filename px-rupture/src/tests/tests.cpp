@@ -39,7 +39,7 @@ namespace px {
         test_bigint();
         test_row();
         test_label();
-        //test_resources();
+        test_resources();
 
         test_traverse();
         test_craft();
