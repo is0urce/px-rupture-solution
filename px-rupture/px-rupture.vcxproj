@@ -234,6 +234,7 @@
     <ClInclude Include="src\px\es\light_source.hpp" />
     <ClInclude Include="src\px\es\pool_manager.hpp" />
     <ClInclude Include="src\px\es\values.hpp" />
+    <ClInclude Include="src\px\fn\roll_list.hpp" />
     <ClInclude Include="src\px\io\resource_file.hpp" />
     <ClInclude Include="src\px\io\resource_reader.hpp" />
     <ClInclude Include="src\px\io\resource_writer.hpp" />
@@ -422,6 +423,7 @@
     <ClInclude Include="src\tests\case\common\label_test.hpp" />
     <ClInclude Include="src\tests\case\common\memory_test.hpp" />
     <ClInclude Include="src\tests\case\common\row_test.hpp" />
+    <ClInclude Include="src\tests\case\fn\roll_list_test.hpp" />
     <ClInclude Include="src\tests\case\link_test.hpp" />
     <ClInclude Include="src\tests\case\common\pool_test.hpp" />
     <ClInclude Include="src\tests\case\common\qtree_test.hpp" />

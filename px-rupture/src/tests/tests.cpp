@@ -21,6 +21,8 @@
 #include "case/rl/traverse_test.hpp"
 #include "case/rl/craft_test.hpp"
 
+#include "case/fn/roll_list_test.hpp"
+
 #include <px/dev/benchmark.hpp>
 
 namespace px {
@@ -30,6 +32,7 @@ namespace px {
     char const* test::lastmsg = "not specified";
 
     void run_tests() {
+        // common
         test_coordinate();
         test_pool();
         test_qtree();
@@ -39,8 +42,14 @@ namespace px {
         test_bigint();
         test_row();
         test_label();
+
+        // fn
+        test_roll_list();
+
+        // io
         test_resources();
 
+        // rl
         test_traverse();
         test_craft();
         test::print();

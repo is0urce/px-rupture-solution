@@ -8,7 +8,7 @@
 void test_row() {
     using namespace px;
 
-    test::section("make");
+    test::section("row");
     {
         row<int, 3> x;
         x.push_back(1);
