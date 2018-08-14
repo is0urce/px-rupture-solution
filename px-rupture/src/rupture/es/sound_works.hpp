@@ -12,6 +12,7 @@
 #include <px/dev/assert.hpp>
 #include <px/common/pool_chain.hpp>
 #include <px/common/vector.hpp>
+#include <px/memory/memory.hpp>
 
 #include <fmod/fmod.hpp>
 #include <fmod/fmod_errors.h>
@@ -32,6 +33,10 @@ namespace px {
     public:
         void target(transform_component const* pan) noexcept {
             camera = pan;
+        }
+
+        uq_ptr<sound_component> make() {
+            return make_uq<sound_component>();
         }
 
         void update() {

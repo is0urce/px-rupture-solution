@@ -32,6 +32,7 @@ namespace px {
         void                    set_volume(sound_channel channel, double volume);
         void                    stop_music();
         void                    target(transform_component const* camera) noexcept;
+        uq_ptr<sound_component> make();
 
     public:
         virtual                 ~sound_system() override;

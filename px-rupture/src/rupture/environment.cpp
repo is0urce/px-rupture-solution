@@ -83,7 +83,7 @@ namespace px {
         stage.unload();
         stage.clear_units();
         vfx.clear();
-        lights.clear_lightmap();
+        get_factory<light_system>().clear_lightmap();
         current->clear();
 
         player = nullptr;
@@ -110,11 +110,11 @@ namespace px {
         }
 
         player = camera;
-        sprites.target(camera);
+        get_factory<sprite_system>().target(camera);
         messages.target(camera);
-        sounds.target(camera);
-        lights.target(camera);
-        lights.recalculate();
+        get_factory<sound_system>().target(camera);
+        get_factory<light_system>().target(camera);
+        get_factory<light_system>().recalculate();
     }
 
     // player move action
@@ -342,8 +342,8 @@ namespace px {
     }
 
     void environment::start_turn() {
-        transforms.store();
-        animators.finish_animations();
+        get_factory<transform_system>().store();
+        get_factory<animator_system>().finish_animations();
         opened_workshop = rl::craft_activity::none;
         vfx.clear();
     }
@@ -475,15 +475,15 @@ namespace px {
     }
 
     void environment::play_sound(std::string const& sound, double volume, point2 const& location) {
-        sounds.play_sound(sound, volume, location);
+        get_factory<sound_system>().play_sound(sound, volume, location);
     }
 
     void environment::play_sound(std::string const& sound, double volume) {
-        sounds.play_sound(sound, volume);
+        get_factory<sound_system>().play_sound(sound, volume);
     }
 
     void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track) {
-        if (auto sprite = sprites.make(name)) {
+        if (auto sprite = get_factory<sprite_system>().make(name)) {
             auto pawn = make_uq<transform_component>();
 
             // setup
@@ -506,8 +506,8 @@ namespace px {
     }
 
     void environment::emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track) {
-        auto sprite = sprites.make("e_empty");
-        auto animation = animators.make(name);
+        auto sprite = get_factory<sprite_system>().make("e_empty");
+        auto animation = get_factory<animator_system>().make(name);
         if (sprite && animation) {
             auto pawn = make_uq<transform_component>();
 
@@ -536,7 +536,7 @@ namespace px {
 
     void environment::emit_light(point2 location, color const& light) {
         auto pawn = make_uq<transform_component>();
-        auto lamp = lights.make();
+        auto lamp = get_factory<light_system>().make();
 
         if (!pawn) return;
         if (!lamp) return;
@@ -647,14 +647,14 @@ namespace px {
     }
 
     void environment::set_volume(sound_channel group, double volume) {
-        sounds.set_volume(group, volume);
+        get_factory<sound_system>().set_volume(group, volume);
     }
 
     void environment::play_music(std::string const& track_name) {
-        sounds.play_music(track_name, 1.0f);
+        get_factory<sound_system>().play_music(track_name, 1.0f);
     }
 
     void environment::enqueue_music(std::string const &name) {
-        sounds.enqueue_music(name);
+        get_factory<sound_system>().enqueue_music(name);
     }
 }

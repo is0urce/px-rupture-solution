@@ -18,7 +18,7 @@ namespace px {
     struct sprite_vertex;
     struct sprite;
 
-    class sprite_system final
+    class sprite_system
         : public system<delta>
     {
     public:

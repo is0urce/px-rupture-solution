@@ -92,14 +92,14 @@ namespace px {
                     current += i.chance;
                     if (roll < current) {
                         callback_function(i.value);
-                        goto end_roll;
+                        goto end_roll;  // break to the end of case
                     }
                 }
                 for (auto const& i : expand) {
                     current += i.chance;
                     if (roll < current) {
                         i.list->evaluate(rng, callback_function);
-                        goto end_roll;
+                        goto end_roll;  // break to the end of case
                     }
                 }
             end_roll:

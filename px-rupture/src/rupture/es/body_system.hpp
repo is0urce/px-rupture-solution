@@ -18,7 +18,7 @@ namespace px {
     class body_works;
     class environment;
 
-    class body_system final
+    class body_system
         : public system<delta>
     {
     public:

@@ -18,7 +18,7 @@ namespace px {
     class animator_works;
     class sprite_system;
 
-    class animator_system final
+    class animator_system
         : public system<delta>
     {
     public:

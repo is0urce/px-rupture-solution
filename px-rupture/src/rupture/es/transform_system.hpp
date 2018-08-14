@@ -15,7 +15,7 @@ namespace px {
     class transform_component;
     class transform_works;
 
-    class transform_system final
+    class transform_system
         : public system<delta>
     {
     public:

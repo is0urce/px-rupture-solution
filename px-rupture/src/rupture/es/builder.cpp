@@ -49,7 +49,7 @@ namespace px {
     }
 
     sprite_component * builder::add_sprite(std::string const& name) {
-        auto part = factory->sprites.make(name);
+        auto part = factory->produce<sprite_system, sprite_component>(name);
         sprite = part.get();
         if (sprite) {
             unit->add(std::move(part));
@@ -59,7 +59,7 @@ namespace px {
     }
 
     animator_component * builder::add_animator(std::string const& name) {
-        auto part = factory->animators.make(name);
+        auto part = factory->produce<animator_system, animator_component>(name);
         animator = part.get();
         if (animator) {
             unit->add(std::move(part));
@@ -69,7 +69,7 @@ namespace px {
     }
 
     transform_component * builder::add_transform(point2 const& location) {
-        auto part = factory->transforms.make();
+        auto part = factory->produce<transform_system, transform_component>();
         transform = part.get();
         part->place(location);
         part->store();
@@ -78,7 +78,8 @@ namespace px {
     }
 
     light_component * builder::add_light() {
-        auto part = factory->lights.make();
+        auto part = factory->produce<light_system, light_component>();
+        //auto part = factory->create<light_component>();
         light = part.get();
         unit->add(std::move(part));
 
@@ -86,7 +87,7 @@ namespace px {
     }
 
     body_component * builder::add_body() {
-        auto part = factory->bodies.make();
+        auto part = factory->produce<body_system, body_component>();
         body = part.get();
         unit->add(std::move(part));
 
@@ -94,7 +95,7 @@ namespace px {
     }
 
     npc_component * builder::add_npc() {
-        auto part = factory->npcs.make();
+        auto part = factory->produce<npc_system, npc_component>();
         npc = part.get();
         unit->add(std::move(part));
 
@@ -102,7 +103,7 @@ namespace px {
     }
 
     character_component * builder::add_character() {
-        auto part = factory->characters.make();
+        auto part = factory->produce<character_system, character_component>();
         character = part.get();
         unit->add(std::move(part));
 
@@ -166,7 +167,7 @@ namespace px {
     }
 
     script_component * builder::add_script() {
-        auto part = factory->mashine.make("");
+        auto part = factory->produce<script_system, script_component>("");
         script = part.get();
         unit->add(std::move(part));
         return script;

@@ -20,8 +20,9 @@ namespace px {
     class script_component;
     class script_internal;
 
-    class script_system final
-        : public system<delta> {
+    class script_system
+        : public system<delta>
+    {
     public:
         void                                                                assign_environment(environment * game);
         void                                                                execute(std::string const& script_name);

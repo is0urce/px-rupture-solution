@@ -42,14 +42,14 @@ namespace px {
     }
 
     void shell::connect_managers() {
-        renderer.assign_sprite_data(sprites.data());
-        renderer.assign_lightmap_data(lights.current_data(), lights.last_data());
+        renderer.assign_sprite_data(get_factory<sprite_system>().data());
+        renderer.assign_lightmap_data(get_factory<light_system>().current_data(), get_factory<light_system>().last_data());
         renderer.assigm_message_data(messages.data());
-        lights.assign_scene(&stage);
-        stage.assign_sprites(&sprites);
-        npcs.assign_scene(&stage);
-        mashine.assign_environment(this);
-        bodies.assign_environment(this);
+        get_factory<light_system>().assign_scene(&stage);
+        stage.assign_sprites(&get_factory<sprite_system>());
+        get_factory<npc_system>().assign_scene(&stage);
+        get_factory<script_system>().assign_environment(this);
+        get_factory<body_system>().assign_environment(this);
     }
 
     void shell::load_data() {
@@ -68,26 +68,26 @@ namespace px {
         }
         ui.assign_logo(add_texture("data/img/extras/fmod.png"));
 
-        characters.load_skills(&mashine);
-        animators.load(&sprites);
+        get_factory<character_system>().load_skills(&get_factory<script_system>());
+        get_factory<animator_system>().load(&get_factory<sprite_system>());
     }
 
     void shell::register_systems() {
-        engine.add(&animators);
-        engine.add(&sprites);
+        engine.add(&get_factory<animator_system>());
+        engine.add(&get_factory<sprite_system>());
         engine.add(&renderer);
-        engine.add(&sounds);
+        engine.add(&get_factory<sound_system>());
         engine.add(&ui);
 
         // order is important
-        engine.add(&transforms);
-        engine.add(&characters);    // skill cooldowns
-        engine.add(&npcs);          // ai
-        engine.add(&bodies);        // effects ticks, deaths, exp gains
-        engine.add(&lights);        // make shadowmap
+        engine.add(&get_factory<transform_system>());
+        engine.add(&get_factory<character_system>());    // skill cooldowns
+        engine.add(&get_factory<npc_system>());          // ai
+        engine.add(&get_factory<body_system>());        // effects ticks, deaths, exp gains
+        engine.add(&get_factory<light_system>());        // make shadowmap
         engine.add(&messages);      // popups
 
-        engine.add(&mashine);
+        engine.add(&get_factory<script_system>());
     }
 
     void shell::frame(double timer) {
@@ -242,6 +242,6 @@ namespace px {
 
     void shell::add_atlas(const char * name, unsigned int texture_index) {
         auto const document = document::load_document(name);
-        sprites.load_atlas(document, texture_index, true);
+        get_factory<sprite_system>().load_atlas(document, texture_index, true);
     }
 }

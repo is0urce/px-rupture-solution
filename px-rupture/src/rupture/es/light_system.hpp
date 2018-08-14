@@ -15,7 +15,7 @@ namespace px {
     class lightmap_data;
     class scene;
 
-    class light_system final
+    class light_system
         : public system<delta>
     {
     public:

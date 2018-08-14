@@ -16,26 +16,26 @@
 
 #include "script/script_system.hpp"
 
+#include <px/es/factory_line.hpp>
+
 namespace px {
 
     class builder;
 
-    class core {
-        friend class builder;
+    class core
+        : public factory_dispatcher<core>
+        , public factory_line<animator_component, animator_system>
+        , public factory_line<body_component, body_system>
+        , public factory_line<character_component, character_system>
+        , public factory_line<light_component, light_system>
+        , public factory_line<npc_component, npc_system>
+        , public factory_line<script_component, script_system>
+        , public factory_line<sprite_component, sprite_system>
+        , public factory_line<sound_component, sound_system>
+        , public factory_line<transform_component, transform_system>
+    {
     public:
-        virtual             ~core();
+        virtual ~core();
         core();
-
-    protected:
-        script_system       mashine;    // script system
-
-        animator_system     animators;
-        body_system         bodies;
-        character_system    characters;
-        light_system        lights;
-        npc_system          npcs;       // non player characters manager
-        sound_system        sounds;
-        sprite_system       sprites;
-        transform_system    transforms;
     };
 }

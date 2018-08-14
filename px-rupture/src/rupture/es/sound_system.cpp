@@ -27,9 +27,9 @@ namespace px {
 
     // methods
 
-    //uq_ptr<sound_component> sound_system::make() {
-    //    return works->make();
-    //}
+    uq_ptr<sound_component> sound_system::make() {
+        return works->make();
+    }
 
     void sound_system::target(transform_component const* camera) noexcept {
         works->target(camera);
