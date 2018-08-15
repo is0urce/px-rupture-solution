@@ -18,6 +18,7 @@ namespace px {
     public:
         uq_ptr<character_component> make();
         void                        load_skills(script_system * scripts);
+        void                        close();
 
     public:
         virtual                     ~character_system() override;

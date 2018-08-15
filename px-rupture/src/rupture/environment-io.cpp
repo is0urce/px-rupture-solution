@@ -23,8 +23,8 @@ namespace px {
         auto input = input_stream(settings::blueprints_path + blueprint_name + ".dat");
         SAVE_INPUT_ARCHIVE archive(input);
 
-        builder factory(this);
-        auto unit = blueprint::assemble(archive, factory);
+        builder production(factory);
+        auto unit = blueprint::assemble(archive, production);
         auto transform = unit->query<transform_component>();
         transform->place(position);
         transform->store();
@@ -82,18 +82,18 @@ namespace px {
         auto istream = input_stream(current->depot_main());
         SAVE_INPUT_ARCHIVE archive(istream);
 
-        builder factory(this);
+        builder prod(factory);
 
         stage.clear_units();
 
         size_t count;
         archive(count);
         for (size_t i = 0; i != count; ++i) {
-            auto & unit = stage.spawn(blueprint::assemble(archive, factory));
+            auto & unit = stage.spawn(blueprint::assemble(archive, prod));
             unit->activate();
         }
 
-        incarnate(factory.created_player());
+        incarnate(prod.created_player());
     }
 
     void environment::save_scene(point2 const& cell) {
@@ -120,12 +120,12 @@ namespace px {
         auto istream = input_stream(name);
         SAVE_INPUT_ARCHIVE archive(istream);
 
-        builder factory(this);
+        builder prodution_facility(factory);
 
         size_t count;
         archive(count);
         for (size_t i = 0; i != count; ++i) {
-            auto & unit = stage.spawn(blueprint::assemble(archive, factory));
+            auto & unit = stage.spawn(blueprint::assemble(archive, prodution_facility));
             unit->activate();
         }
     }

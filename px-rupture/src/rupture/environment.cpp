@@ -5,6 +5,8 @@
 
 #include "environment.hpp"
 
+#include "facility.hpp"
+
 #include "app/settings.hpp"
 #include "draw/message.hpp"
 #include "draw/visual.hpp"
@@ -41,9 +43,14 @@ namespace px {
         end();
     }
 
-    environment::environment()
-        : run(true)
-        , ingame(false) {
+    environment::environment(facility * core)
+        : factory(core)
+        , run(true)
+        , ingame(false)
+        , player(nullptr)
+        , opened_workshop(rl::craft_activity::none)
+        , turn_number(0)
+        , turn_pass(true) {
         parent = make_uq<repository>(std::string(settings::save_path) + "base");
         current = make_uq<repository>(std::string(settings::save_path) + "current", parent.get());
 
@@ -83,7 +90,7 @@ namespace px {
         stage.unload();
         stage.clear_units();
         vfx.clear();
-        get_factory<light_system>().clear_lightmap();
+        factory->get_factory<light_system>().clear_lightmap();
         current->clear();
 
         player = nullptr;
@@ -105,16 +112,21 @@ namespace px {
     }
 
     void environment::incarnate(transform_component * camera) {
+        player = camera;
+
+        factory->get_factory<sprite_system>().target(camera);
+        factory->get_factory<sound_system>().target(camera);
+        factory->get_factory<light_system>().target(camera);
+
+        messages.target(camera);
+
         if (camera) {
             stage.focus(camera->position());
+            factory->get_factory<light_system>().recalculate();
         }
-
-        player = camera;
-        get_factory<sprite_system>().target(camera);
-        messages.target(camera);
-        get_factory<sound_system>().target(camera);
-        get_factory<light_system>().target(camera);
-        get_factory<light_system>().recalculate();
+        else {
+            factory->get_factory<light_system>().clear_lightmap();
+        }
     }
 
     // player move action
@@ -130,7 +142,7 @@ namespace px {
                 player->place(destination);
 
                 // play step sound
-                unsigned int sound_variant = std::uniform_int_distribution<unsigned int>{ 0, 2 }(rng) + ((turn_number % 2 == 0) ? 0 : 3);
+                unsigned int sound_variant = std::uniform_int_distribution<unsigned int>{ 0, 2 }(rng)+((turn_number % 2 == 0) ? 0 : 3);
                 std::string sound_name = settings::sound_path + std::string("snd_foot") + std::to_string(sound_variant) + ".wav";
                 play_sound(sound_name, 0.2, destination);
 
@@ -192,7 +204,7 @@ namespace px {
     }
 
     transform_component * environment::create_player(unsigned int specialization) {
-        builder unit_builder(this);
+        builder unit_builder(factory);
 
         // position
         auto pawn = unit_builder.add_transform({ 1966, 860 });
@@ -342,8 +354,8 @@ namespace px {
     }
 
     void environment::start_turn() {
-        get_factory<transform_system>().store();
-        get_factory<animator_system>().finish_animations();
+        factory->get_factory<transform_system>().store();
+        factory->get_factory<animator_system>().finish_animations();
         opened_workshop = rl::craft_activity::none;
         vfx.clear();
     }
@@ -475,15 +487,15 @@ namespace px {
     }
 
     void environment::play_sound(std::string const& sound, double volume, point2 const& location) {
-        get_factory<sound_system>().play_sound(sound, volume, location);
+        factory->get_factory<sound_system>().play_sound(sound, volume, location);
     }
 
     void environment::play_sound(std::string const& sound, double volume) {
-        get_factory<sound_system>().play_sound(sound, volume);
+        factory->get_factory<sound_system>().play_sound(sound, volume);
     }
 
     void environment::emit_visual(std::string const& name, point2 start, point2 finish, transform_component const* track) {
-        if (auto sprite = get_factory<sprite_system>().make(name)) {
+        if (auto sprite = factory->get_factory<sprite_system>().make(name)) {
             auto pawn = make_uq<transform_component>();
 
             // setup
@@ -506,8 +518,8 @@ namespace px {
     }
 
     void environment::emit_animation(std::string const& name, unsigned int clip_id, point2 start, point2 finish, transform_component const* track) {
-        auto sprite = get_factory<sprite_system>().make("e_empty");
-        auto animation = get_factory<animator_system>().make(name);
+        auto sprite = factory->get_factory<sprite_system>().make("e_empty");
+        auto animation = factory->get_factory<animator_system>().make(name);
         if (sprite && animation) {
             auto pawn = make_uq<transform_component>();
 
@@ -536,7 +548,7 @@ namespace px {
 
     void environment::emit_light(point2 location, color const& light) {
         auto pawn = make_uq<transform_component>();
-        auto lamp = get_factory<light_system>().make();
+        auto lamp = factory->get_factory<light_system>().make();
 
         if (!pawn) return;
         if (!lamp) return;
@@ -647,14 +659,26 @@ namespace px {
     }
 
     void environment::set_volume(sound_channel group, double volume) {
-        get_factory<sound_system>().set_volume(group, volume);
+        factory->get_factory<sound_system>().set_volume(group, volume);
     }
 
     void environment::play_music(std::string const& track_name) {
-        get_factory<sound_system>().play_music(track_name, 1.0f);
+        factory->get_factory<sound_system>().play_music(track_name, 1.0f);
     }
 
     void environment::enqueue_music(std::string const &name) {
-        get_factory<sound_system>().enqueue_music(name);
+        factory->get_factory<sound_system>().enqueue_music(name);
+    }
+
+    facility * environment::get_facility() noexcept {
+        return factory;
+    }
+
+    notification_system * environment::get_notifications() noexcept {
+        return &messages;
+    }
+
+    scene * environment::get_scene() noexcept {
+        return &stage;
     }
 }

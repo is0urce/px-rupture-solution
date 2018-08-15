@@ -14,7 +14,7 @@ namespace px {
 
     class animator_component;
     class body_component;
-    class core;
+    class facility;
     class character_component;
     class composite_component;
     class container_component;
@@ -32,7 +32,7 @@ namespace px {
 
     class builder final {
     public:
-        animator_component *        add_animator(std::string const& name);
+        animator_component * add_animator(std::string const& name);
         body_component *            add_body();
         character_component *       add_character();
         container_component *       add_container();
@@ -70,14 +70,16 @@ namespace px {
 
     public:
         ~builder();
-        builder(core * production_factory);
+        builder(facility * production_factory);
 
     private:
         void                        link_components();
 
     private:
-        core *                      factory;
         uq_ptr<composite_component> unit;
+
+        facility *                  factory;
+
         animator_component *        animator;
         body_component *            body;
         character_component *       character;

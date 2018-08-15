@@ -29,6 +29,10 @@ namespace px {
 
     // methods
 
+    void script_system::close() {
+        works.reset();
+    }
+
     void script_system::assign_environment(environment * game) {
         if (works) {
             works->assign_environment(game);

@@ -29,6 +29,7 @@ namespace px {
         void                                                                run(std::string const& code);
         rl::skill_functional<body_component *, body_component *, point2>    impact(std::string const& skill_name);
         uq_ptr<script_component>                                            make(std::string const& script_name);
+        void                                                                close();
 
     public:
         virtual ~script_system();

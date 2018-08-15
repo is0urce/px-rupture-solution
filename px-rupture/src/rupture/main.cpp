@@ -44,8 +44,8 @@ namespace px {
 
         // create windows
 
-        bool const is_fullscreen = configuration["screen.fullscreen"];
-        bool const is_border = configuration["screen.border"];
+        bool const is_fullscreen = configuration["screen.mode"] == "fullscreen";
+        bool const is_border = configuration["screen.mode"] == "window";
         int const window_width = is_fullscreen ? video_mode->width : configuration["screen.width"];
         int const window_height = is_fullscreen ? video_mode->height : configuration["screen.height"];
 

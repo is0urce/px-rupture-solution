@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "core.hpp"
-
 #include "es/notification_system.hpp"
 #include "rl/scene.hpp"
 #include <px/snd/sound_channel.hpp>
@@ -24,6 +22,8 @@
 
 namespace px {
 
+    class facility;
+
     class body_component;
     class transform_component;
     class composite_component;
@@ -32,7 +32,6 @@ namespace px {
     struct visual;
 
     class environment
-        : public core
     {
     public:
         point2                              area() const noexcept;                                                  // hovered point
@@ -73,6 +72,9 @@ namespace px {
         void                                update_blueprints(std::string const& out_path, std::string const& blueprint);
         void                                seed(unsigned int);
         void                                set_volume(sound_channel channel, double volume);
+        facility *                          get_facility() noexcept;
+        notification_system *               get_notifications() noexcept;
+        scene *                             get_scene() noexcept;
 
         // script bindings
     public:
@@ -94,8 +96,8 @@ namespace px {
         int                                 roll(int min, int max);
 
     public:
-        virtual                             ~environment() override;
-        environment();
+        virtual                             ~environment();
+        environment(facility * core);
 
     private:
         void                                lock_target();
@@ -110,9 +112,10 @@ namespace px {
         scene                               stage;
 
     private:
-        transform_component *               player;
         uq_ptr<repository>                  current;
         uq_ptr<repository>                  parent;
+        facility *                          factory;
+        transform_component *               player;
         unsigned int                        turn_number;
         bool                                turn_pass;                          // true if it's the world processing stage
         point2                              target_hover;                       // offset of target area

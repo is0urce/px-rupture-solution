@@ -24,9 +24,10 @@ namespace px {
     shell::shell(unsigned int start_width, unsigned int start_height, cfg * settings)
         : renderer(start_width, start_height)
         , config(settings)
-        , ui(start_width, start_height, this, settings)
+        , ui(start_width, start_height, &context, settings)
         , width(start_width)
-        , height(start_height) {
+        , height(start_height)
+        , context(&core) {
         connect_managers();
         load_data();
         register_systems();
@@ -42,14 +43,14 @@ namespace px {
     }
 
     void shell::connect_managers() {
-        renderer.assign_sprite_data(get_factory<sprite_system>().data());
-        renderer.assign_lightmap_data(get_factory<light_system>().current_data(), get_factory<light_system>().last_data());
-        renderer.assigm_message_data(messages.data());
-        get_factory<light_system>().assign_scene(&stage);
-        stage.assign_sprites(&get_factory<sprite_system>());
-        get_factory<npc_system>().assign_scene(&stage);
-        get_factory<script_system>().assign_environment(this);
-        get_factory<body_system>().assign_environment(this);
+        renderer.assign_sprite_data(core.get_factory<sprite_system>().data());
+        renderer.assign_lightmap_data(core.get_factory<light_system>().current_data(), core.get_factory<light_system>().last_data());
+        renderer.assigm_message_data(context.get_notifications()->data());
+        core.get_factory<light_system>().assign_scene(context.get_scene());
+        context.get_scene()->assign_sprites(&core.get_factory<sprite_system>());
+        core.get_factory<npc_system>().assign_scene(context.get_scene());
+        core.get_factory<script_system>().assign_environment(&context);
+        core.get_factory<body_system>().assign_environment(&context);
     }
 
     void shell::load_data() {
@@ -68,55 +69,54 @@ namespace px {
         }
         ui.assign_logo(add_texture("data/img/extras/fmod.png"));
 
-        get_factory<character_system>().load_skills(&get_factory<script_system>());
-        get_factory<animator_system>().load(&get_factory<sprite_system>());
+        core.get_factory<character_system>().load_skills(&core.get_factory<script_system>());
+        core.get_factory<animator_system>().load(&core.get_factory<sprite_system>());
     }
 
     void shell::register_systems() {
-        engine.add(&get_factory<animator_system>());
-        engine.add(&get_factory<sprite_system>());
+        engine.add(&core.get_factory<animator_system>());
+        engine.add(&core.get_factory<sprite_system>());
         engine.add(&renderer);
-        engine.add(&get_factory<sound_system>());
+        engine.add(&core.get_factory<sound_system>());
         engine.add(&ui);
 
         // order is important
-        engine.add(&get_factory<transform_system>());
-        engine.add(&get_factory<character_system>());    // skill cooldowns
-        engine.add(&get_factory<npc_system>());          // ai
-        engine.add(&get_factory<body_system>());        // effects ticks, deaths, exp gains
-        engine.add(&get_factory<light_system>());        // make shadowmap
-        engine.add(&messages);      // popups
-
-        engine.add(&get_factory<script_system>());
+        engine.add(&core.get_factory<transform_system>());  // world positions
+        engine.add(&core.get_factory<character_system>());  // skill cooldowns
+        engine.add(&core.get_factory<npc_system>());        // ai
+        engine.add(&core.get_factory<body_system>());       // effects ticks, deaths, exp gains
+        engine.add(&core.get_factory<light_system>());      // make shadowmap
+        engine.add(&core.get_factory<script_system>());     // scripted behaviour
+        engine.add(context.get_notifications());            // popups
     }
 
     void shell::frame(double timer) {
-        if (!is_running()) return;
+        if (!context.is_running()) return;
 
         time.advance(timer);
-        if (turn_passed()) {
-            time.advance_turn(current_turn());
+        if (context.turn_passed()) {
+            time.advance_turn(context.current_turn());
             engine.turn_update(time);
-            return_turn();
+            context.return_turn();
         }
         engine.update(time);
     }
 
     void shell::text(unsigned int codepoint) {
-        if (!is_running() || turn_passed()) return;
+        if (!context.is_running() || context.turn_passed()) return;
         ui.text(codepoint);
     }
 
     void shell::click(int mouse_button, bool is_down) {
-        if (!is_running() || turn_passed()) return;
+        if (!context.is_running() || context.turn_passed()) return;
         if (ui.click(mouse_button, is_down)) return;
         if (mouse_button == 0 && is_down) {
-            advance();
+            context.advance();
         }
     }
 
     void shell::hover(double x, double y) {
-        if (!is_running() || turn_passed()) return;
+        if (!context.is_running() || context.turn_passed()) return;
         if (ui.hover(static_cast<unsigned int>(x), static_cast<unsigned int>(y))) return;
 
         vector2 position(x, y);
@@ -125,95 +125,95 @@ namespace px {
         position *= { 2.0, -2.0 * height / width }; // account aspect
         position /= renderer.get_scale();
         position += { 0.5, 0.5 };                   // tile center offset
-        target(position.floor());
+        context.target(position.floor());
     }
 
     void shell::scroll(double horisontal, double vertical) {
-        if (!is_running() || turn_passed()) return;
+        if (!context.is_running() || context.turn_passed()) return;
         if (ui.scroll(horisontal, vertical)) return;
         renderer.zoom(horisontal + vertical > 0);
     }
 
     void shell::press(key action_index) {
-        if (!is_running() || turn_passed()) return;
+        if (!context.is_running() || context.turn_passed()) return;
         if (ui.takes_input() && action_index != key::escape) return;    // escape is special
 
         switch (action_index) {
         case key::quick_save: {
             ui.rollback();
             //popup("quicksave...", { 1, 1, 1 });
-            save("quicksave");
+            context.save("quicksave");
             break;
         }
         case key::quick_load: {
             ui.rollback();
-            load("quicksave");
+            context.load("quicksave");
             //popup("quickload", { 1, 1, 1 });
-            time.advance_turn(current_turn());
+            time.advance_turn(context.current_turn());
             break;
         }
 
         case key::move_east:
             ui.rollback();
-            step({ 1, 0 });
+            context.step({ 1, 0 });
             break;
         case key::move_west:
             ui.rollback();
-            step({ -1, 0 });
+            context.step({ -1, 0 });
             break;
         case key::move_north:
             ui.rollback();
-            step({ 0, 1 });
+            context.step({ 0, 1 });
             break;
         case key::move_south:
             ui.rollback();
-            step({ 0, -1 });
+            context.step({ 0, -1 });
             break;
         case key::move_northeast:
             ui.rollback();
-            step({ 1, 1 });
+            context.step({ 1, 1 });
             break;
         case key::move_northwest:
             ui.rollback();
-            step({ -1, 1 });
+            context.step({ -1, 1 });
             break;
         case key::move_southeast:
             ui.rollback();
-            step({ 1, -1 });
+            context.step({ 1, -1 });
             break;
         case key::move_southwest:
             ui.rollback();
-            step({ -1, -1 });
+            context.step({ -1, -1 });
             break;
 
         case key::action_use:
             ui.rollback();
-            use(0);
+            context.use(0);
             break;
 
         case key::action0:
             ui.rollback();
-            action(0);
+            context.action(0);
             break;
         case key::action1:
             ui.rollback();
-            action(1);
+            context.action(1);
             break;
         case key::action2:
             ui.rollback();
-            action(2);
+            context.action(2);
             break;
         case key::action3:
             ui.rollback();
-            action(3);
+            context.action(3);
             break;
         case key::action4:
             ui.rollback();
-            action(4);
+            context.action(4);
             break;
         case key::action5:
             ui.rollback();
-            action(5);
+            context.action(5);
             break;
 
         case key::panel_inventory:
@@ -224,7 +224,7 @@ namespace px {
             break;
 
         case key::function_edit:
-            function_edit(0);
+            context.function_edit(0);
             break;
         default:
             break;
@@ -242,6 +242,14 @@ namespace px {
 
     void shell::add_atlas(const char * name, unsigned int texture_index) {
         auto const document = document::load_document(name);
-        get_factory<sprite_system>().load_atlas(document, texture_index, true);
+        core.get_factory<sprite_system>().load_atlas(document, texture_index, true);
+    }
+
+    void shell::seed(unsigned int random_number) {
+        context.seed(random_number);
+    }
+
+    bool shell::is_running() const {
+        return context.is_running();
     }
 }

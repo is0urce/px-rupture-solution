@@ -5,7 +5,7 @@
 
 #include "builder.hpp"
 
-#include "rupture/core.hpp"
+#include "rupture/facility.hpp"
 
 #include "animator_component.hpp"
 #include "body_component.hpp"
@@ -32,7 +32,7 @@ namespace px {
 
     builder::~builder() = default;
 
-    builder::builder(core * production_factory)
+    builder::builder(facility * production_factory)
         : factory(production_factory)
         , last_player(nullptr) {
         begin();
@@ -49,7 +49,7 @@ namespace px {
     }
 
     sprite_component * builder::add_sprite(std::string const& name) {
-        auto part = factory->produce<sprite_system, sprite_component>(name);
+        auto part = factory->product<sprite_system>(name);
         sprite = part.get();
         if (sprite) {
             unit->add(std::move(part));
@@ -59,7 +59,7 @@ namespace px {
     }
 
     animator_component * builder::add_animator(std::string const& name) {
-        auto part = factory->produce<animator_system, animator_component>(name);
+        auto part = factory->product<animator_system>(name);
         animator = part.get();
         if (animator) {
             unit->add(std::move(part));
@@ -69,7 +69,7 @@ namespace px {
     }
 
     transform_component * builder::add_transform(point2 const& location) {
-        auto part = factory->produce<transform_system, transform_component>();
+        auto part = factory->product<transform_system>();
         transform = part.get();
         part->place(location);
         part->store();
@@ -78,7 +78,7 @@ namespace px {
     }
 
     light_component * builder::add_light() {
-        auto part = factory->produce<light_system, light_component>();
+        auto part = factory->product<light_system>();
         //auto part = factory->create<light_component>();
         light = part.get();
         unit->add(std::move(part));
@@ -87,7 +87,7 @@ namespace px {
     }
 
     body_component * builder::add_body() {
-        auto part = factory->produce<body_system, body_component>();
+        auto part = factory->product<body_system>();
         body = part.get();
         unit->add(std::move(part));
 
@@ -95,7 +95,7 @@ namespace px {
     }
 
     npc_component * builder::add_npc() {
-        auto part = factory->produce<npc_system, npc_component>();
+        auto part = factory->product<npc_system>();
         npc = part.get();
         unit->add(std::move(part));
 
@@ -103,7 +103,7 @@ namespace px {
     }
 
     character_component * builder::add_character() {
-        auto part = factory->produce<character_system, character_component>();
+        auto part = factory->product<character_system>();
         character = part.get();
         unit->add(std::move(part));
 
@@ -167,7 +167,7 @@ namespace px {
     }
 
     script_component * builder::add_script() {
-        auto part = factory->produce<script_system, script_component>("");
+        auto part = factory->product<script_system>("");
         script = part.get();
         unit->add(std::move(part));
         return script;

@@ -84,6 +84,30 @@ namespace px {
                 return config.get_boolean(key);
             }
 
+            bool operator==(std::string const& cmp) {
+                return config.get_string(key) == cmp;
+            }
+
+            bool operator!=(std::string const& cmp) {
+                return !operator==(cmp);
+            }
+
+            bool operator==(int_type i) {
+                return config.get_int(key) == i;
+            }
+
+            bool operator!=(int_type i) {
+                return !operator==(i);
+            }
+
+            bool operator==(float_type f) {
+                return config.get_float(key) == f;
+            }
+
+            bool operator!=(float_type f) {
+                return !operator==(f);
+            }
+
         public:
             option_record(std::string const& k, cfg & c)
                 : key(k)

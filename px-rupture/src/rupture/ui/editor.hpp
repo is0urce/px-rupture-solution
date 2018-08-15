@@ -42,10 +42,10 @@
 #include <vector>
 
 #define PX_BUILD(OP)    { \
-                            builder factory(game); \
-                            factory.begin(std::move(current)); \
-                            factory.OP; \
-                            current = factory.request(); \
+                            builder f(game->get_facility()); \
+                            f.begin(std::move(current)); \
+                            f.OP; \
+                            current = f.request(); \
                             update_props(); \
                         }
 
@@ -910,7 +910,7 @@ namespace px::ui {
 
         void load_schema(std::string const& schema_name) {
             if (game) {
-                builder factory(game);
+                builder factory(game->get_facility());
                 current = schema::load(document::load_document(settings::schemata_path + schema_name), factory);
                 update_props();
             }
@@ -918,7 +918,7 @@ namespace px::ui {
 
         void load_blueprint(std::string const& blueprint_name) {
             if (game) {
-                builder factory(game);
+                builder factory(game->get_facility());
                 auto input = input_stream(settings::blueprints_path + blueprint_name);
                 current = blueprint::assemble(SAVE_INPUT_ARCHIVE(input), factory);
                 update_props();

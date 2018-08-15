@@ -6,6 +6,8 @@
 #pragma once
 
 #include "environment.hpp"
+#include "facility.hpp"
+
 #include "key.hpp"
 
 #include "es/render_system.hpp"
@@ -19,7 +21,6 @@ namespace px {
     class cfg;
 
     class shell final
-        : public environment
     {
     public:
         void            frame(double timer);
@@ -29,9 +30,11 @@ namespace px {
         void            scroll(double horisontal, double vertical);
         void            press(key action_index);
         void            resize(unsigned int screen_width, unsigned int screen_height);
+        void            seed(unsigned int random_number);
+        bool            is_running() const;
 
     public:
-        virtual         ~shell() override;
+        ~shell();
         shell(unsigned int start_widht, unsigned int start_height, cfg * settings);
 
     private:
@@ -42,6 +45,8 @@ namespace px {
         void            add_atlas(const char * name, unsigned int texture_id);
 
     private:
+        facility        core;
+        environment     context;
         delta           time;
         engine<delta>   engine;
         render_system   renderer;

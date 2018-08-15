@@ -168,7 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\rupture\core.cpp" />
+    <ClCompile Include="src\rupture\facility.cpp" />
     <ClCompile Include="src\rupture\environment-io.cpp" />
     <ClCompile Include="src\rupture\environment.cpp" />
     <ClCompile Include="src\rupture\es\animator_component.cpp" />
@@ -231,6 +231,7 @@
     <ClInclude Include="src\px\dev\test.hpp" />
     <ClInclude Include="src\px\es\delta.hpp" />
     <ClInclude Include="src\px\es\component.hpp" />
+    <ClInclude Include="src\px\es\factory_dispatcher.hpp" />
     <ClInclude Include="src\px\es\factory_line.hpp" />
     <ClInclude Include="src\px\es\light_source.hpp" />
     <ClInclude Include="src\px\es\pool_manager.hpp" />
@@ -297,7 +298,7 @@
     <ClInclude Include="src\px\rl\standing.hpp" />
     <ClInclude Include="src\px\rl\traverse.hpp" />
     <ClInclude Include="src\px\rl\traverse_options.hpp" />
-    <ClInclude Include="src\rupture\core.hpp" />
+    <ClInclude Include="src\rupture\facility.hpp" />
     <ClInclude Include="src\rupture\draw\glyph_vertex.hpp" />
     <ClInclude Include="src\rupture\draw\lightmap_control.hpp" />
     <ClInclude Include="src\rupture\draw\lightmap_data.hpp" />

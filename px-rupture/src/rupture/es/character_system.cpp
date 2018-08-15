@@ -30,6 +30,10 @@ namespace px {
 
     // methods
 
+    void character_system::close() {
+        works.reset();
+    }
+
     uq_ptr<character_component> character_system::make() {
         return works->make();
     }
